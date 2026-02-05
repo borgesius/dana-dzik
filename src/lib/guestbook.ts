@@ -44,7 +44,7 @@ async function fetchAndDisplayEntries(): Promise<void> {
     }
 }
 
-function extractMessage(body: string | null): string {
+export function extractMessage(body: string | null): string {
     if (!body) return "(no message)"
 
     const message = body
@@ -84,7 +84,7 @@ function renderEntry(issue: GitHubIssue): string {
     `
 }
 
-function escapeHtml(text: string): string {
+export function escapeHtml(text: string): string {
     const div = document.createElement("div")
     div.textContent = text
     return div.innerHTML

@@ -1,3 +1,5 @@
+import { PHOTO_VARIANTS } from "./analytics"
+
 interface Stats {
     totalViews: number
     uniqueVisitors: number
@@ -161,12 +163,6 @@ function renderFunnel(funnel: Record<string, number>): void {
         .join("")
 }
 
-const PHOTO_VARIANTS: Record<string, string> = {
-    A: "/assets/dana/IMG_5099.jpg",
-    B: "/assets/dana/IMG_5531.jpg",
-    C: "/assets/dana/IMG_5576.jpg",
-}
-
 function renderAbTest(abTest: Stats["abTest"]): void {
     const container = document.getElementById("ab-results")
     if (!container) return
@@ -185,7 +181,8 @@ function renderAbTest(abTest: Stats["abTest"]): void {
                 data.assigned > 0
                     ? ((data.converted / data.assigned) * 100).toFixed(1)
                     : "0.0"
-            const photo = PHOTO_VARIANTS[name] || ""
+            const variantData = PHOTO_VARIANTS.find((v) => v.id === name)
+            const photo = variantData?.photo || ""
             return `
                 <div class="ab-variant">
                     <div class="ab-variant-header">

@@ -1,29 +1,16 @@
-const MEOW_RESPONSES = ["Meow!", "Mrrrow?", "Meow meow!", "*purrs*", "Mew!"]
+export const MEOW_RESPONSES = [
+    "Meow!",
+    "Mrrrow?",
+    "Meow meow!",
+    "*purrs*",
+    "Mew!",
+]
 
-const SPECIAL_RESPONSES: Record<string, string[]> = {}
-
-function getRandomItem<T>(arr: T[]): T {
+export function getRandomItem<T>(arr: T[]): T {
     return arr[Math.floor(Math.random() * arr.length)]
 }
 
-function generateResponse(input: string): string {
-    const lower = input.toLowerCase()
-
-    for (const [keyword, responses] of Object.entries(SPECIAL_RESPONSES)) {
-        if (lower.includes(keyword)) {
-            return getRandomItem(responses)
-        }
-    }
-
-    if (lower.includes("?")) {
-        return getRandomItem([
-            "Meow? *tilts head*",
-            "Mrrrow... *contemplates*",
-            "*stares blankly* Meow.",
-            "Mew? *confused*",
-        ])
-    }
-
+export function generateResponse(_input: string): string {
     return getRandomItem(MEOW_RESPONSES)
 }
 

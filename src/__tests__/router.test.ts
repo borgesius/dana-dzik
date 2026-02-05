@@ -1,6 +1,10 @@
-import { describe, expect, it } from "vitest"
+/**
+ * @vitest-environment jsdom
+ */
+import { beforeEach, describe, expect, it, vi } from "vitest"
 
-import { ROUTABLE_WINDOWS, ROUTE_MAP } from "../config"
+import { ROUTABLE_WINDOWS, type RoutableWindow, ROUTE_MAP } from "../config"
+import { Router } from "../lib/router"
 
 describe("Router Configuration", () => {
     it("has valid route mappings", () => {
@@ -27,5 +31,127 @@ describe("Router Configuration", () => {
 
     it("root path maps to welcome", () => {
         expect(ROUTE_MAP["/"]).toBe("welcome")
+    })
+})
+
+describe("Router Class", () => {
+    let navigatedTo: RoutableWindow | null
+    let router: Router
+    let pushStateSpy: ReturnType<typeof vi.spyOn>
+
+    beforeEach(() => {
+        navigatedTo = null
+        vi.restoreAllMocks()
+
+        Object.defineProperty(window, "location", {
+            value: {
+                pathname: "/",
+                hash: "",
+            },
+            writable: true,
+        })
+
+        pushStateSpy = vi
+            .spyOn(window.history, "pushState")
+            .mockImplementation(() => {})
+    })
+
+    describe("constructor", () => {
+        it("creates a router with navigation callback", () => {
+            router = new Router((windowId) => {
+                navigatedTo = windowId
+            })
+            expect(router).toBeDefined()
+        })
+    })
+
+    describe("init", () => {
+        it("navigates to window from root path", () => {
+            window.location.pathname = "/"
+            router = new Router((windowId) => {
+                navigatedTo = windowId
+            })
+            router.init()
+            expect(navigatedTo).toBe("welcome")
+        })
+
+        it("navigates to window from /about path", () => {
+            window.location.pathname = "/about"
+            router = new Router((windowId) => {
+                navigatedTo = windowId
+            })
+            router.init()
+            expect(navigatedTo).toBe("about")
+        })
+
+        it("navigates to window from hash route", () => {
+            window.location.pathname = "/"
+            window.location.hash = "#/projects"
+            router = new Router((windowId) => {
+                navigatedTo = windowId
+            })
+            router.init()
+            expect(navigatedTo).toBe("projects")
+        })
+
+        it("handles path without leading slash", () => {
+            window.location.pathname = "/resume"
+            router = new Router((windowId) => {
+                navigatedTo = windowId
+            })
+            router.init()
+            expect(navigatedTo).toBe("resume")
+        })
+
+        it("does not navigate for unknown paths", () => {
+            window.location.pathname = "/unknown"
+            router = new Router((windowId) => {
+                navigatedTo = windowId
+            })
+            router.init()
+            expect(navigatedTo).toBeNull()
+        })
+    })
+
+    describe("updateUrl", () => {
+        it("updates URL for routable windows", () => {
+            router = new Router(() => {})
+            router.updateUrl("about")
+            expect(pushStateSpy).toHaveBeenCalledWith(
+                { windowId: "about" },
+                "",
+                "/about"
+            )
+        })
+
+        it("updates URL to / for welcome window", () => {
+            router = new Router(() => {})
+            router.updateUrl("welcome")
+            expect(pushStateSpy).toHaveBeenCalledWith(
+                { windowId: "welcome" },
+                "",
+                "/"
+            )
+        })
+
+        it("does not update URL for non-routable windows", () => {
+            router = new Router(() => {})
+            router.updateUrl("some-popup")
+            expect(pushStateSpy).not.toHaveBeenCalled()
+        })
+    })
+
+    describe("popstate handling", () => {
+        it("responds to popstate events", () => {
+            window.location.pathname = "/"
+            router = new Router((windowId) => {
+                navigatedTo = windowId
+            })
+
+            window.location.pathname = "/about"
+            window.dispatchEvent(new PopStateEvent("popstate"))
+
+            expect(navigatedTo).toBe("about")
+        })
     })
 })

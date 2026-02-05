@@ -68,7 +68,7 @@ export function calculateEquivalentTime(
 /**
  * Formats seconds into HH:MM:SS or MM:SS.
  */
-function formatTime(seconds: number): string {
+export function formatTime(seconds: number): string {
     const hrs = Math.floor(seconds / 3600)
     const mins = Math.floor((seconds % 3600) / 60)
     const secs = Math.floor(seconds % 60)
