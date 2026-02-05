@@ -1,6 +1,8 @@
+import { trackWindowOpen } from "../lib/analytics"
 import { initFelixGPT } from "../lib/felixgpt"
 import { initNowPlaying } from "../lib/nowPlaying"
 import { initPhotoSlideshows } from "../lib/photoSlideshow"
+import { initSiteStats } from "../lib/siteStats"
 import { getWindowContent } from "../lib/windowContent"
 
 export interface WindowConfig {
@@ -70,11 +72,15 @@ export class Window {
     }
 
     private initContentFeatures(): void {
+        trackWindowOpen(this.config.contentType)
+
         if (this.config.contentType === "about") {
             initPhotoSlideshows()
             initNowPlaying()
         } else if (this.config.contentType === "felixgpt") {
             initFelixGPT()
+        } else if (this.config.contentType === "stats") {
+            initSiteStats()
         }
     }
 

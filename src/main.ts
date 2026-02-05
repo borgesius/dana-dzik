@@ -10,12 +10,16 @@ import { Desktop } from "./components/Desktop"
 import { PopupManager } from "./components/PopupManager"
 import { Widgets } from "./components/Widgets"
 import { setupErrorHandlers } from "./core/ErrorHandler"
+import { getAbVariant, trackFunnelStep, trackPageview } from "./lib/analytics"
 import { createAudioManager } from "./lib/audio"
 import { GlitchManager } from "./lib/glitchEffects"
 import { Router } from "./lib/router"
 import { SafeMode } from "./lib/safeMode"
 
 setupErrorHandlers()
+trackPageview()
+trackFunnelStep("landed")
+getAbVariant()
 
 const app = document.getElementById("app")
 if (app) {
