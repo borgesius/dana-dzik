@@ -1,4 +1,3 @@
-import { SOCIAL } from "../config"
 import { initStrava } from "../lib/strava"
 
 /**
@@ -35,14 +34,6 @@ export class Toolbars {
         weather.innerHTML = "☀️ Loading..."
         this.weatherEl = weather
         toolbar.appendChild(weather)
-
-        const strava = document.createElement("a")
-        strava.className = "toolbar-button"
-        strava.id = "strava-activity"
-        strava.textContent = "🏃 Strava"
-        strava.href = SOCIAL.strava.url
-        strava.target = "_blank"
-        toolbar.appendChild(strava)
 
         return toolbar
     }
