@@ -59,6 +59,18 @@ if (app) {
         }
     })
 
+    document.addEventListener("click", (e) => {
+        const target = e.target as HTMLElement
+        const link = target.closest("[data-open-window]")
+        if (link) {
+            e.preventDefault()
+            const windowId = link.getAttribute("data-open-window")
+            if (windowId) {
+                windowManager.openWindow(windowId)
+            }
+        }
+    })
+
     addFloatingGifs(desktop)
 }
 
