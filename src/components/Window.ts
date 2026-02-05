@@ -1,3 +1,4 @@
+import { initFelixGPT } from "../lib/felixgpt"
 import { initNowPlaying } from "../lib/nowPlaying"
 import { initPhotoSlideshows } from "../lib/photoSlideshow"
 import { getWindowContent } from "../lib/windowContent"
@@ -72,6 +73,8 @@ export class Window {
         if (this.config.contentType === "about") {
             initPhotoSlideshows()
             initNowPlaying()
+        } else if (this.config.contentType === "felixgpt") {
+            initFelixGPT()
         }
     }
 
