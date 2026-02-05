@@ -1,3 +1,10 @@
+# [1.15.0](https://github.com/borgesius/dana-dzik/compare/v1.14.2...v1.15.0) (2026-02-05)
+
+
+### Features
+
+* **ui:** remove p95 now that no longer available ([5ecea3e](https://github.com/borgesius/dana-dzik/commit/5ecea3e074c7b72da2edd9512d2c515c23e95cbe))
+
 ## [1.14.2](https://github.com/borgesius/dana-dzik/compare/v1.14.1...v1.14.2) (2026-02-05)
 
 
