@@ -26,3 +26,7 @@ coverage/
 
 *.bak
 *.tmp
+
+# Playwright
+playwright-report/
+test-results/
