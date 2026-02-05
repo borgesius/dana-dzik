@@ -44,6 +44,22 @@ async function fetchAndDisplayEntries(): Promise<void> {
     }
 }
 
+function extractMessage(body: string | null): string {
+    if (!body) return "(no message)"
+
+    let message = body
+        .replace(/<!--[\s\S]*?-->/g, "")
+        .replace(/^##\s*.*/gm, "")
+        .replace(/---/g, "")
+        .trim()
+
+    const lines = message.split("\n").filter((line) => line.trim())
+    message = lines.join(" ").trim()
+
+    if (!message) return "(no message)"
+    return message.substring(0, 200)
+}
+
 function renderEntry(issue: GitHubIssue): string {
     const date = new Date(issue.created_at).toLocaleDateString("en-US", {
         year: "numeric",
@@ -51,9 +67,7 @@ function renderEntry(issue: GitHubIssue): string {
         day: "numeric",
     })
 
-    const message = issue.body
-        ? escapeHtml(issue.body).substring(0, 200)
-        : "(no message)"
+    const message = escapeHtml(extractMessage(issue.body))
 
     return `
         <div class="guestbook-entry">
