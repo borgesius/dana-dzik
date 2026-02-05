@@ -1,3 +1,10 @@
+## [1.11.2](https://github.com/borgesius/dana-dzik/compare/v1.11.1...v1.11.2) (2026-02-05)
+
+
+### Bug Fixes
+
+* **analytics:** fix json parsing ([8e2d4d1](https://github.com/borgesius/dana-dzik/commit/8e2d4d1d942d04d5bfb36d379b4afbf615e8d1c2))
+
 ## [1.11.1](https://github.com/borgesius/dana-dzik/compare/v1.11.0...v1.11.1) (2026-02-05)
 
 
