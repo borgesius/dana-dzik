@@ -176,15 +176,23 @@ async function recordEvent(redis: Redis, event: AnalyticsEvent): Promise<void> {
 }
 
 async function getStats(redis: Redis): Promise<Stats> {
-    const [totalViews, windowViews, funnel, abAssigned, abConverted, perfSamples] =
-        await Promise.all([
-            redis.get<number>("stats:views:total"),
-            redis.hgetall<Record<string, number>>("stats:windows"),
-            redis.hgetall<Record<string, number>>("stats:funnel"),
-            redis.hgetall<Record<string, number>>("stats:ab:assigned"),
-            redis.hgetall<Record<string, number>>("stats:ab:converted"),
-            redis.lrange<string | PerfSample>("stats:perf:samples", 0, 999),
-        ])
+    const [
+        totalViews,
+        windowViews,
+        funnel,
+        abAssigned,
+        abConverted,
+        perfCounts,
+        perfTotals,
+    ] = await Promise.all([
+        redis.get<number>("stats:views:total"),
+        redis.hgetall<Record<string, number>>("stats:windows"),
+        redis.hgetall<Record<string, number>>("stats:funnel"),
+        redis.hgetall<Record<string, number>>("stats:ab:assigned"),
+        redis.hgetall<Record<string, number>>("stats:ab:converted"),
+        redis.hgetall<Record<string, number>>("stats:perf:counts"),
+        redis.hgetall<Record<string, number>>("stats:perf:totals"),
+    ])
 
     const variants: Record<string, { assigned: number; converted: number }> = {}
     const variantKeys = new Set([
@@ -199,7 +207,7 @@ async function getStats(redis: Redis): Promise<Stats> {
         }
     }
 
-    const perf = computePerfStats(perfSamples || [])
+    const perf = computePerfStats(perfCounts || {}, perfTotals || {})
 
     return {
         totalViews: totalViews || 0,
@@ -214,42 +222,35 @@ async function getStats(redis: Redis): Promise<Stats> {
     }
 }
 
-interface PerfSample {
-    resource: string
-    duration: number
-    type: string
-}
+function computePerfStats(
+    counts: Record<string, number>,
+    totals: Record<string, number>
+): Stats["perf"] {
+    const types = Object.keys(counts)
 
-function computePerfStats(samples: (string | PerfSample)[]): Stats["perf"] {
-    if (samples.length === 0) {
+    if (types.length === 0) {
         return { avgLoadTime: 0, p95LoadTime: 0, byType: {} }
     }
 
-    const parsed: PerfSample[] = samples.map((s) =>
-        typeof s === "string" ? (JSON.parse(s) as PerfSample) : s
-    )
-    const durations = parsed.map((p) => p.duration).sort((a, b) => a - b)
-
-    const avg = durations.reduce((a, b) => a + b, 0) / durations.length
-    const p95Index = Math.floor(durations.length * 0.95)
-    const p95 = durations[p95Index] || durations[durations.length - 1]
-
     const byType: Record<string, { avg: number; count: number }> = {}
-    for (const sample of parsed) {
-        if (!byType[sample.type]) {
-            byType[sample.type] = { avg: 0, count: 0 }
-        }
-        byType[sample.type].count++
-        byType[sample.type].avg += sample.duration
+    let totalCount = 0
+    let totalDuration = 0
+
+    for (const type of types) {
+        const count = counts[type] || 0
+        const total = totals[type] || 0
+        const avg = count > 0 ? Math.round(total / count) : 0
+
+        byType[type] = { avg, count }
+        totalCount += count
+        totalDuration += total
     }
 
-    for (const type of Object.keys(byType)) {
-        byType[type].avg = Math.round(byType[type].avg / byType[type].count)
-    }
+    const avgLoadTime = totalCount > 0 ? Math.round(totalDuration / totalCount) : 0
 
     return {
-        avgLoadTime: Math.round(avg),
-        p95LoadTime: Math.round(p95),
+        avgLoadTime,
+        p95LoadTime: 0,
         byType,
     }
 }
