@@ -132,7 +132,7 @@ async function getStats(redis: Redis): Promise<Stats> {
             redis.hgetall<Record<string, number>>("stats:funnel"),
             redis.hgetall<Record<string, number>>("stats:ab:assigned"),
             redis.hgetall<Record<string, number>>("stats:ab:converted"),
-            redis.lrange<string>("stats:perf:samples", 0, 999),
+            redis.lrange<string | PerfSample>("stats:perf:samples", 0, 999),
         ])
 
     const variants: Record<string, { assigned: number; converted: number }> = {}
@@ -169,12 +169,14 @@ interface PerfSample {
     type: string
 }
 
-function computePerfStats(samples: string[]): Stats["perf"] {
+function computePerfStats(samples: (string | PerfSample)[]): Stats["perf"] {
     if (samples.length === 0) {
         return { avgLoadTime: 0, p95LoadTime: 0, byType: {} }
     }
 
-    const parsed: PerfSample[] = samples.map((s) => JSON.parse(s) as PerfSample)
+    const parsed: PerfSample[] = samples.map((s) =>
+        typeof s === "string" ? (JSON.parse(s) as PerfSample) : s
+    )
     const durations = parsed.map((p) => p.duration).sort((a, b) => a - b)
 
     const avg = durations.reduce((a, b) => a + b, 0) / durations.length
