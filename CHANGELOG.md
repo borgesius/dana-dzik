@@ -1,3 +1,10 @@
+# [1.5.0](https://github.com/borgesius/dana-dzik/compare/v1.4.0...v1.5.0) (2026-02-05)
+
+
+### Features
+
+* **ui:** upgrade to compu97 ([87eaf72](https://github.com/borgesius/dana-dzik/commit/87eaf72018f52ae7ec3a04e2c6ef291122e90a98))
+
 # [1.4.0](https://github.com/borgesius/dana-dzik/compare/v1.3.0...v1.4.0) (2026-02-05)
 
 
