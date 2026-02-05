@@ -10,7 +10,12 @@ import { Desktop } from "./components/Desktop"
 import { PopupManager } from "./components/PopupManager"
 import { Widgets } from "./components/Widgets"
 import { setupErrorHandlers } from "./core/ErrorHandler"
-import { getAbVariant, trackFunnelStep, trackPageview } from "./lib/analytics"
+import {
+    getAbVariant,
+    initPerfTracking,
+    trackFunnelStep,
+    trackPageview,
+} from "./lib/analytics"
 import { createAudioManager } from "./lib/audio"
 import { GlitchManager } from "./lib/glitchEffects"
 import { Router } from "./lib/router"
@@ -21,6 +26,7 @@ trackPageview()
 trackFunnelStep("launched")
 trackFunnelStep("boot_complete")
 getAbVariant()
+initPerfTracking()
 
 const app = document.getElementById("app")
 if (app) {

@@ -9,10 +9,15 @@ function getRedis(): Redis | null {
 }
 
 interface AnalyticsEvent {
-    type: "pageview" | "window" | "funnel" | "ab_assign" | "ab_convert"
+    type: "pageview" | "window" | "funnel" | "ab_assign" | "ab_convert" | "perf"
     windowId?: string
     funnelStep?: string
     variant?: string
+    perf?: {
+        resource: string
+        duration: number
+        type: string
+    }
 }
 
 interface Stats {
@@ -23,6 +28,11 @@ interface Stats {
     abTest: {
         name: string
         variants: Record<string, { assigned: number; converted: number }>
+    }
+    perf: {
+        avgLoadTime: number
+        p95LoadTime: number
+        byType: Record<string, { avg: number; count: number }>
     }
 }
 
@@ -101,17 +111,28 @@ async function recordEvent(redis: Redis, event: AnalyticsEvent): Promise<void> {
                 await redis.hincrby("stats:ab:converted", event.variant, 1)
             }
             break
+
+        case "perf":
+            if (event.perf) {
+                await redis.lpush(
+                    "stats:perf:samples",
+                    JSON.stringify(event.perf)
+                )
+                await redis.ltrim("stats:perf:samples", 0, 999)
+            }
+            break
     }
 }
 
 async function getStats(redis: Redis): Promise<Stats> {
-    const [totalViews, windowViews, funnel, abAssigned, abConverted] =
+    const [totalViews, windowViews, funnel, abAssigned, abConverted, perfSamples] =
         await Promise.all([
             redis.get<number>("stats:views:total"),
             redis.hgetall<Record<string, number>>("stats:windows"),
             redis.hgetall<Record<string, number>>("stats:funnel"),
             redis.hgetall<Record<string, number>>("stats:ab:assigned"),
             redis.hgetall<Record<string, number>>("stats:ab:converted"),
+            redis.lrange<string>("stats:perf:samples", 0, 999),
         ])
 
     const variants: Record<string, { assigned: number; converted: number }> = {}
@@ -127,6 +148,8 @@ async function getStats(redis: Redis): Promise<Stats> {
         }
     }
 
+    const perf = computePerfStats(perfSamples || [])
+
     return {
         totalViews: totalViews || 0,
         uniqueVisitors: 0,
@@ -136,5 +159,44 @@ async function getStats(redis: Redis): Promise<Stats> {
             name: "welcome_cta",
             variants,
         },
+        perf,
+    }
+}
+
+interface PerfSample {
+    resource: string
+    duration: number
+    type: string
+}
+
+function computePerfStats(samples: string[]): Stats["perf"] {
+    if (samples.length === 0) {
+        return { avgLoadTime: 0, p95LoadTime: 0, byType: {} }
+    }
+
+    const parsed: PerfSample[] = samples.map((s) => JSON.parse(s) as PerfSample)
+    const durations = parsed.map((p) => p.duration).sort((a, b) => a - b)
+
+    const avg = durations.reduce((a, b) => a + b, 0) / durations.length
+    const p95Index = Math.floor(durations.length * 0.95)
+    const p95 = durations[p95Index] || durations[durations.length - 1]
+
+    const byType: Record<string, { avg: number; count: number }> = {}
+    for (const sample of parsed) {
+        if (!byType[sample.type]) {
+            byType[sample.type] = { avg: 0, count: 0 }
+        }
+        byType[sample.type].count++
+        byType[sample.type].avg += sample.duration
+    }
+
+    for (const type of Object.keys(byType)) {
+        byType[type].avg = Math.round(byType[type].avg / byType[type].count)
+    }
+
+    return {
+        avgLoadTime: Math.round(avg),
+        p95LoadTime: Math.round(p95),
+        byType,
     }
 }
