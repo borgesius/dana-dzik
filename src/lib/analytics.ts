@@ -1,5 +1,47 @@
 import { ANALYTICS_CONFIG } from "../config"
 
+function isBot(): boolean {
+    const ua = navigator.userAgent.toLowerCase()
+    const botPatterns = [
+        "bot",
+        "crawl",
+        "spider",
+        "slurp",
+        "facebookexternalhit",
+        "linkedinbot",
+        "twitterbot",
+        "whatsapp",
+        "telegram",
+        "discord",
+        "slack",
+        "googlebot",
+        "bingbot",
+        "yandex",
+        "baidu",
+        "duckduck",
+        "semrush",
+        "ahref",
+        "mj12bot",
+        "dotbot",
+        "petalbot",
+        "bytespider",
+        "gptbot",
+        "claudebot",
+        "anthropic",
+        "headless",
+        "phantom",
+        "selenium",
+        "puppeteer",
+        "playwright",
+        "webdriver",
+        "lighthouse",
+        "pagespeed",
+        "pingdom",
+        "uptimerobot",
+    ]
+    return botPatterns.some((pattern) => ua.includes(pattern))
+}
+
 const AB_TEST_KEY = "ab_variant"
 const AB_TRACKED_KEY = "ab_variant_tracked"
 const VISITOR_KEY = "visitor_id"
@@ -37,6 +79,8 @@ function getVisitorId(): string {
 }
 
 async function sendEvent(event: AnalyticsEvent): Promise<void> {
+    if (isBot()) return
+
     try {
         await fetch("/api/analytics", {
             method: "POST",
