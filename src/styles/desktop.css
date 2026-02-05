@@ -28,9 +28,6 @@ body {
     position: fixed;
     inset: 0;
     background: var(--win95-bg);
-    background-image: url("/assets/backgrounds/bliss.jpg");
-    background-size: cover;
-    background-position: center;
     display: flex;
     flex-direction: column;
 }
