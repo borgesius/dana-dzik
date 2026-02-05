@@ -53,13 +53,32 @@ if (app) {
     new GlitchManager()
     new Widgets(app)
 
+    let userHasInteracted = false
+    let safeModeEnabled = safeMode.isEnabled()
+
+    const maybeStartPopups = (): void => {
+        if (userHasInteracted && !safeModeEnabled) {
+            popupManager.start()
+        }
+    }
+
+    document.addEventListener(
+        "mousemove",
+        () => {
+            userHasInteracted = true
+            maybeStartPopups()
+        },
+        { once: true }
+    )
+
     safeMode.onChange((enabled) => {
+        safeModeEnabled = enabled
         if (enabled) {
             popupManager.stop()
             cursorTrail.disable()
             audioManager.setEnabled(false)
         } else {
-            popupManager.start()
+            maybeStartPopups()
             cursorTrail.enable()
             audioManager.setEnabled(true)
         }
