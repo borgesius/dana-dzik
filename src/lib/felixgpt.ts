@@ -1,60 +1,6 @@
-const MEOW_RESPONSES = [
-    "Meow!",
-    "Mrrrow?",
-    "Meow meow!",
-    "*purrs*",
-    "Mew!",
-    "Meooooow...",
-    "*stares at you*",
-    "Prrrr...",
-    "*blinks slowly*",
-    "Meow? Meow meow.",
-    "*knocks something off your desk*",
-    "Mrow!",
-    "*stretches*",
-    "Meow! *headbutts screen*",
-    "*yawns*",
-    "Mrrp!",
-    "*flicks tail*",
-    "Meow meow meow!",
-    "*sits in your lap*",
-    "Prrrrrrrr...",
-    "*demands treats*",
-    "Meow! (Translation: I require tuna)",
-    "*judges you silently*",
-    "Mew mew!",
-    "*zooms away suddenly*",
-    "Meow? *tilts head*",
-    "*kneads your keyboard*",
-    "Mrrrrow! *shows belly (it's a trap)*",
-    "*chases invisible bug*",
-    "Meow! *sits on your work*",
-]
+const MEOW_RESPONSES = ["Meow!", "Mrrrow?", "Meow meow!", "*purrs*", "Mew!"]
 
-const SPECIAL_RESPONSES: Record<string, string[]> = {
-    tuna: [
-        "MEOW!!! 🐟",
-        "*ears perk up* MEOW MEOW MEOW!",
-        "*runs to kitchen* MRRROW!",
-    ],
-    treat: [
-        "Meow! Meow! Meow! *spins in circle*",
-        "*sits pretty* Mew!",
-        "PRRRRRR! *drools*",
-    ],
-    "good boy": ["*purrs loudly* Prrrrrrr...", "Mrrrow! *rubs against screen*"],
-    "good kitty": [
-        "*purrs loudly* Prrrrrrr...",
-        "Mrrrow! *rubs against screen*",
-    ],
-    hello: ["Mrrp! *chirps*", "Meow! *blinks slowly*"],
-    hi: ["Mrrp! *chirps*", "Meow! *blinks slowly*"],
-    love: ["*slow blink* Prrrr...", "*headbutts you* Mrrrow!"],
-    pet: ["Prrrrrrr... *leans into it*", "*purrs intensely*"],
-    hungry: ["MEOW! MEOW! *runs to food bowl*", "*screams* MRRROOOOW!"],
-    sleep: ["*curls into ball* Prrrr...", "*yawns* Mrrr... zzz"],
-    play: ["*pounces* Mrrrow!", "*wiggles butt* Meow!"],
-}
+const SPECIAL_RESPONSES: Record<string, string[]> = {}
 
 function getRandomItem<T>(arr: T[]): T {
     return arr[Math.floor(Math.random() * arr.length)]
