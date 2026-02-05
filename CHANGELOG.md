@@ -1,3 +1,10 @@
+# [1.14.0](https://github.com/borgesius/dana-dzik/compare/v1.13.0...v1.14.0) (2026-02-05)
+
+
+### Features
+
+* don't start popups until interaction ([e255758](https://github.com/borgesius/dana-dzik/commit/e2557589ff4ad248129206c9125f71b04cd31f33))
+
 # [1.13.0](https://github.com/borgesius/dana-dzik/compare/v1.12.1...v1.13.0) (2026-02-05)
 
 
