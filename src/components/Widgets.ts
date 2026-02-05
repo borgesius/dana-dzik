@@ -240,9 +240,9 @@ export class Widgets {
             const { bestRun, bestRide, longestRide } = result.data
 
             content.innerHTML = `
-                ${this.renderStravaStat("🏃 Best Run (3mo)", bestRun, "5K eq")}
-                ${this.renderStravaStat("🚴 Best Ride (3mo)", bestRide, "avg")}
-                ${this.renderStravaStat("🚴 Longest Ride (3mo)", longestRide, "")}
+                ${this.renderStravaStat("🏃 Best Run (3mo)", bestRun)}
+                ${this.renderStravaStat("🚴 Best Ride (3mo)", bestRide)}
+                ${this.renderStravaStat("🚴 Longest Ride (3mo)", longestRide)}
             `
         } catch (error) {
             console.error("[Widgets] Strava error:", error)
@@ -252,8 +252,7 @@ export class Widgets {
 
     private renderStravaStat(
         label: string,
-        stat: ActivitySummary | null,
-        valueLabel: string
+        stat: ActivitySummary | null
     ): string {
         if (!stat) {
             return `<div class="strava-stat empty"><span class="stat-label">${label}</span><span class="stat-value">—</span></div>`
@@ -261,7 +260,7 @@ export class Widgets {
         return `
             <div class="strava-stat">
                 <span class="stat-label">${label}</span>
-                <span class="stat-value">${stat.value}${valueLabel ? ` <small>${valueLabel}</small>` : ""}</span>
+                <span class="stat-value">${stat.value}</span>
                 <span class="stat-detail">${stat.detail || ""}</span>
             </div>
         `

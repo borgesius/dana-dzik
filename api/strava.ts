@@ -17,6 +17,10 @@ interface StravaActivity {
     elapsed_time: number
     start_date: string
     average_speed: number
+    total_elevation_gain: number
+    average_watts?: number
+    weighted_average_watts?: number
+    device_watts?: boolean
 }
 
 interface CachedTokens {
@@ -171,9 +175,14 @@ function findBestRun(activities: StravaActivity[]): ActivitySummary | null {
     return {
         name: best.name,
         date: best.start_date,
-        value: formatTime(bestScore),
-        detail: `${formatDistance(best.distance)} @ ${formatPace(best.average_speed)}`,
+        value: `${formatDistance(best.distance)} in ${formatTime(best.moving_time)}`,
+        detail: formatPace(best.average_speed),
     }
+}
+
+function formatElevation(meters: number): string {
+    const feet = meters * 3.281
+    return `${Math.round(feet).toLocaleString()} ft`
 }
 
 function findBestRide(activities: StravaActivity[]): ActivitySummary | null {
@@ -181,6 +190,30 @@ function findBestRide(activities: StravaActivity[]): ActivitySummary | null {
         (a) => a.type === "Ride" && a.distance >= 5000 && a.moving_time >= 600
     )
     if (rides.length === 0) return null
+
+    const ridesWithPower = rides.filter((r) => r.device_watts && r.weighted_average_watts)
+
+    if (ridesWithPower.length > 0) {
+        let best: StravaActivity | null = null
+        let bestPower = 0
+
+        for (const ride of ridesWithPower) {
+            const np = ride.weighted_average_watts ?? 0
+            if (np > bestPower) {
+                bestPower = np
+                best = ride
+            }
+        }
+
+        if (best) {
+            return {
+                name: best.name,
+                date: best.start_date,
+                value: `${best.weighted_average_watts}W NP`,
+                detail: `${formatDistance(best.distance)} ↑${formatElevation(best.total_elevation_gain)}`,
+            }
+        }
+    }
 
     let best: StravaActivity | null = null
     let bestSpeed = 0
@@ -197,8 +230,8 @@ function findBestRide(activities: StravaActivity[]): ActivitySummary | null {
     return {
         name: best.name,
         date: best.start_date,
-        value: formatSpeed(best.average_speed),
-        detail: `${formatDistance(best.distance)} in ${formatTime(best.moving_time)}`,
+        value: `${formatSpeed(best.average_speed)} avg`,
+        detail: `${formatDistance(best.distance)} ↑${formatElevation(best.total_elevation_gain)}`,
     }
 }
 
