@@ -129,7 +129,14 @@ export class Toolbars {
         if (!this.qaEl) return
 
         try {
-            const response = await fetch("/api/reports")
+            const controller = new AbortController()
+            const timeoutId = setTimeout(() => controller.abort(), 3000)
+
+            const response = await fetch("/api/reports", {
+                signal: controller.signal,
+            })
+            clearTimeout(timeoutId)
+
             const result = (await response.json()) as ReportsResponse
 
             if (!result.ok || !result.data) {
