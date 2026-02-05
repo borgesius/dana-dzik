@@ -1,0 +1,54 @@
+{
+  "name": "web-template",
+  "version": "1.0.0",
+  "description": "Web application template with Vite, TypeScript, and modern tooling",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "lint": "eslint . && stylelint \"src/**/*.css\"",
+    "lint:fix": "eslint . --fix && stylelint \"src/**/*.css\" --fix",
+    "lint:styles": "stylelint \"src/**/*.css\"",
+    "lint:styles:fix": "stylelint \"src/**/*.css\" --fix",
+    "format": "prettier --write \"src/**/*.ts\"",
+    "format:check": "prettier --check \"src/**/*.ts\"",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest",
+    "test:unit": "vitest run",
+    "test:watch": "vitest watch",
+    "test:coverage": "vitest run --coverage"
+  },
+  "keywords": [
+    "template",
+    "vite",
+    "typescript"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@commitlint/cli": "^19.6.1",
+    "@commitlint/config-conventional": "^19.6.0",
+    "@eslint/js": "^9.18.0",
+    "@semantic-release/changelog": "^6.0.3",
+    "@semantic-release/git": "^10.0.1",
+    "@types/debug": "^4.1.12",
+    "@types/node": "^20.11.0",
+    "eslint": "^9.18.0",
+    "eslint-config-prettier": "^10.0.1",
+    "eslint-plugin-prettier": "^5.2.3",
+    "eslint-plugin-simple-import-sort": "^12.1.1",
+    "eslint-plugin-unused-imports": "^4.1.4",
+    "prettier": "^3.4.2",
+    "semantic-release": "^24.2.1",
+    "stylelint": "^17.1.1",
+    "stylelint-config-standard": "^40.0.0",
+    "typescript": "^5.3.3",
+    "typescript-eslint": "^8.21.0",
+    "vite": "^5.0.11",
+    "vitest": "^2.1.8"
+  },
+  "dependencies": {
+    "debug": "^4.4.3"
+  }
+}
