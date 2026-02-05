@@ -30,6 +30,8 @@ interface CachedTokens {
 }
 
 const REDIS_KEY = "strava_tokens"
+const STATS_CACHE_KEY = "strava_stats"
+const STATS_TTL_SECONDS = 6 * 60 * 60
 
 function getRedis(): Redis | null {
     const url = process.env.UPSTASH_REDIS_REST_URL
@@ -86,7 +88,7 @@ async function getAccessToken(): Promise<string> {
 
 async function fetchActivities(token: string): Promise<StravaActivity[]> {
     const response = await fetch(
-        "https://www.strava.com/api/v3/athlete/activities?per_page=30",
+        "https://www.strava.com/api/v3/athlete/activities?per_page=100",
         {
             headers: { Authorization: `Bearer ${token}` },
         }
@@ -281,12 +283,28 @@ export default async function handler(
         return
     }
 
+    const redis = getRedis()
+
     try {
+        const forceRefresh = req.query.refresh === "true"
+
+        if (!forceRefresh && redis) {
+            const cached = await redis.get<StravaStats>(STATS_CACHE_KEY)
+            if (cached) {
+                res.status(200).json({ ok: true, data: cached, cached: true })
+                return
+            }
+        }
+
         const token = await getAccessToken()
         const activities = await fetchActivities(token)
         const stats = computeStats(activities)
 
-        res.status(200).json({ ok: true, data: stats })
+        if (redis) {
+            await redis.set(STATS_CACHE_KEY, stats, { ex: STATS_TTL_SECONDS })
+        }
+
+        res.status(200).json({ ok: true, data: stats, cached: false })
     } catch (error) {
         console.error("Strava API error:", error)
         res.status(500).json({
