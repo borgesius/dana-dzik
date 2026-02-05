@@ -1,3 +1,11 @@
+# [1.7.0](https://github.com/borgesius/dana-dzik/compare/v1.6.1...v1.7.0) (2026-02-05)
+
+
+### Features
+
+* add and track guestbook cta ([657ea26](https://github.com/borgesius/dana-dzik/commit/657ea26b8f0e2a08841782519c8c90a73c3c21ca))
+* add link to github ([e64961d](https://github.com/borgesius/dana-dzik/commit/e64961d61003421102c3a1fbd023b4c95e27aa29))
+
 ## [1.6.1](https://github.com/borgesius/dana-dzik/compare/v1.6.0...v1.6.1) (2026-02-05)
 
 
