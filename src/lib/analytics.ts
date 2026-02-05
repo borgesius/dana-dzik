@@ -41,9 +41,17 @@ export function trackPageview(): void {
     void sendEvent({ type: "pageview" })
 }
 
+const ENGAGED_KEY = "user_engaged"
+
 export function trackWindowOpen(windowId: string): void {
     void sendEvent({ type: "window", windowId })
-    void sendEvent({ type: "funnel", funnelStep: `window:${windowId}` })
+    trackEngagement()
+}
+
+export function trackEngagement(): void {
+    if (localStorage.getItem(ENGAGED_KEY)) return
+    localStorage.setItem(ENGAGED_KEY, "true")
+    void sendEvent({ type: "funnel", funnelStep: "engaged" })
 }
 
 export function trackFunnelStep(step: string): void {
