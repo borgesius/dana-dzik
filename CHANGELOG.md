@@ -1,3 +1,10 @@
+# [1.13.0](https://github.com/borgesius/dana-dzik/compare/v1.12.1...v1.13.0) (2026-02-05)
+
+
+### Features
+
+* **analytics:** skip analytics for bots ([699863a](https://github.com/borgesius/dana-dzik/commit/699863acd822ed8a2eaf64a44fdfb40b8a1fef04))
+
 ## [1.12.1](https://github.com/borgesius/dana-dzik/compare/v1.12.0...v1.12.1) (2026-02-05)
 
 
