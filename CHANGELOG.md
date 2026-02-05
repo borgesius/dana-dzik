@@ -1,3 +1,11 @@
+## [1.14.2](https://github.com/borgesius/dana-dzik/compare/v1.14.1...v1.14.2) (2026-02-05)
+
+
+### Performance Improvements
+
+* **analytics:** finish previous ([eaa607c](https://github.com/borgesius/dana-dzik/commit/eaa607c3783864ca73c67b746c85b6ced83f5dbf))
+* **analytics:** store perf samples as counter ([ea87965](https://github.com/borgesius/dana-dzik/commit/ea8796574322d603c784c1feb67ea6095340d135))
+
 ## [1.14.1](https://github.com/borgesius/dana-dzik/compare/v1.14.0...v1.14.1) (2026-02-05)
 
 
