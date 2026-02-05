@@ -1,3 +1,11 @@
+# [1.3.0](https://github.com/borgesius/dana-dzik/compare/v1.2.0...v1.3.0) (2026-02-05)
+
+
+### Features
+
+* **launch:** speed up launch animation ([b224f78](https://github.com/borgesius/dana-dzik/commit/b224f78214c900698cc60fa8e868ff7778bd7490))
+* **strava:** expand widget ([074abe0](https://github.com/borgesius/dana-dzik/commit/074abe0c8e5984863bf61780e1ca3a2d188bd367))
+
 # [1.2.0](https://github.com/borgesius/dana-dzik/compare/v1.1.0...v1.2.0) (2026-02-05)
 
 
