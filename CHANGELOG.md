@@ -1,3 +1,10 @@
+## [1.11.1](https://github.com/borgesius/dana-dzik/compare/v1.11.0...v1.11.1) (2026-02-05)
+
+
+### Performance Improvements
+
+* **analytics:** limit analytics tracking and dedupe funnel events ([a348a24](https://github.com/borgesius/dana-dzik/commit/a348a2422d986b0fc3c2f5e87b3e85bc13d2ccd4))
+
 # [1.11.0](https://github.com/borgesius/dana-dzik/compare/v1.10.0...v1.11.0) (2026-02-05)
 
 
