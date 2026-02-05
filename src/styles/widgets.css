@@ -299,6 +299,22 @@
     margin-left: auto;
 }
 
+.stat-detail {
+    font-size: 9px;
+    color: #aaddff;
+    width: 100%;
+}
+
+.stat-value small {
+    font-size: 9px;
+    font-weight: normal;
+    color: #88ccff;
+}
+
+.strava-stat.empty .stat-value {
+    color: #667788;
+}
+
 /* === Safe Mode === */
 .safe-mode .audio-visualizer.playing .bar {
     animation: none;
