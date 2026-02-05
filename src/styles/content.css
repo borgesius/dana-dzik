@@ -325,6 +325,7 @@
     border: 1px solid #cccc99;
     padding: 10px;
     margin-bottom: 10px;
+    overflow: visible;
 }
 
 .entry-header {
@@ -361,6 +362,8 @@
 .entry-message {
     margin: 0;
     line-height: 1.4;
+    overflow-wrap: break-word;
+    white-space: pre-wrap;
 }
 
 /* === FelixGPT === */

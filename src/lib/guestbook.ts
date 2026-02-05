@@ -47,17 +47,18 @@ async function fetchAndDisplayEntries(): Promise<void> {
 function extractMessage(body: string | null): string {
     if (!body) return "(no message)"
 
-    let message = body
+    const message = body
         .replace(/<!--[\s\S]*?-->/g, "")
-        .replace(/^##\s*.*/gm, "")
-        .replace(/---/g, "")
+        .replace(/^##\s*.*\n?/gm, "")
+        .replace(/👋\s*Thanks for signing my guestbook!\s*/gi, "")
+        .replace(
+            /Write your message below\.?\s*It will appear on my website automatically!?\s*/gi,
+            ""
+        )
+        .replace(/^---+\s*$/gm, "")
         .trim()
 
-    const lines = message.split("\n").filter((line) => line.trim())
-    message = lines.join(" ").trim()
-
-    if (!message) return "(no message)"
-    return message.substring(0, 200)
+    return message || "(no message)"
 }
 
 function renderEntry(issue: GitHubIssue): string {
