@@ -1,3 +1,16 @@
+# [1.6.0](https://github.com/borgesius/dana-dzik/compare/v1.5.0...v1.6.0) (2026-02-05)
+
+
+### Bug Fixes
+
+* **routing:** serve index.html for all routes ([2512af6](https://github.com/borgesius/dana-dzik/commit/2512af6a09f70f9d7d8200d336a49fa80066a6e3))
+
+
+### Features
+
+* **strava:** add strava stat caching ([3442914](https://github.com/borgesius/dana-dzik/commit/3442914c85d5a3f50bf5ff884768df800338526f))
+* **tracking:** update funnel ([1b3674c](https://github.com/borgesius/dana-dzik/commit/1b3674c02cb0a532734703456b032939850a255d))
+
 # [1.5.0](https://github.com/borgesius/dana-dzik/compare/v1.4.0...v1.5.0) (2026-02-05)
 
 
