@@ -1,3 +1,10 @@
+## [1.12.1](https://github.com/borgesius/dana-dzik/compare/v1.12.0...v1.12.1) (2026-02-05)
+
+
+### Performance Improvements
+
+* **redis:** more limiting and caching ([fc8f200](https://github.com/borgesius/dana-dzik/commit/fc8f200082eae6d5d26a06510aac49ad7b340177))
+
 # [1.12.0](https://github.com/borgesius/dana-dzik/compare/v1.11.3...v1.12.0) (2026-02-05)
 
 
