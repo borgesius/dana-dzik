@@ -1,3 +1,4 @@
+import { getBuildInfo } from "../lib/buildInfo"
 import type { WindowManager } from "./WindowManager"
 
 const TRAY_ICONS = [
@@ -141,12 +142,28 @@ export class Taskbar {
 
         const footer = document.createElement("div")
         footer.className = "start-menu-footer"
+
+        const buildInfo = getBuildInfo()
+        const versionInfo = document.createElement("div")
+        versionInfo.className = "start-menu-version"
+        const commitShort = buildInfo.gitCommit.substring(0, 7)
+        const commitLink =
+            buildInfo.gitCommit !== "local"
+                ? `<a href="https://github.com/borgesius/dana-dzik/commit/${buildInfo.gitCommit}" target="_blank">${commitShort}</a>`
+                : commitShort
+        versionInfo.innerHTML = `v${buildInfo.version} · ${commitLink} · <a href="https://github.com/borgesius/dana-dzik/blob/main/CHANGELOG.md" target="_blank">changelog</a>`
+        footer.appendChild(versionInfo)
+
+        const buttons = document.createElement("div")
+        buttons.className = "start-menu-footer-buttons"
         const logOff = document.createElement("button")
         logOff.innerHTML = "🚪 Log Off"
         const shutdown = document.createElement("button")
         shutdown.innerHTML = "⏻ Shut Down"
-        footer.appendChild(logOff)
-        footer.appendChild(shutdown)
+        buttons.appendChild(logOff)
+        buttons.appendChild(shutdown)
+        footer.appendChild(buttons)
+
         menu.appendChild(footer)
 
         return menu
