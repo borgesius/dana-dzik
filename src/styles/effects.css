@@ -39,14 +39,14 @@
 .rainbow-text {
     background: linear-gradient(
         90deg,
-        #ff0000,
-        #ff7f00,
-        #ffff00,
-        #00ff00,
-        #0000ff,
+        #cc0000,
+        #cc5500,
+        #b8860b,
+        #228b22,
+        #0000cc,
         #4b0082,
-        #8b00ff,
-        #ff0000
+        #8b008b,
+        #cc0000
     );
     background-size: 200% 100%;
     background-clip: text;
