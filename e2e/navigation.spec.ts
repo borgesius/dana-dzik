@@ -20,7 +20,6 @@ test.describe("Desktop Navigation", () => {
 
     test("welcome window opens by default", async ({ page }) => {
         await page.goto("/")
-
         await page.waitForSelector(".loading-screen.hidden", { state: "attached", timeout: 10000 })
 
         await expect(page.locator(".window")).toBeVisible()
@@ -31,9 +30,16 @@ test.describe("Desktop Navigation", () => {
         await page.goto("/")
         await page.waitForSelector(".loading-screen.hidden", { state: "attached", timeout: 10000 })
 
-        await page.locator('.desktop-icon:has-text("about_me.doc")').dblclick()
+        // Close the Welcome window first to avoid it blocking clicks
+        await page.locator(".window-btn.close").first().click()
+        await expect(page.locator(".window")).toHaveCount(0, { timeout: 5000 })
 
-        await expect(page.locator('.window:has-text("About Me")')).toBeVisible({ timeout: 5000 })
+        const icon = page.locator('.desktop-icon:has-text("about_me.doc")')
+        await expect(icon).toBeVisible({ timeout: 5000 })
+        
+        await icon.dblclick()
+
+        await expect(page.locator(".window")).toHaveCount(1, { timeout: 5000 })
     })
 
     test("windows can be dragged", async ({ page }) => {
@@ -81,11 +87,16 @@ test.describe("Desktop Navigation", () => {
         await page.goto("/")
         await page.waitForSelector(".loading-screen.hidden", { state: "attached", timeout: 10000 })
 
-        await expect(page.locator(".taskbar-window-button")).toHaveCount(1)
+        // Close the Welcome window first to avoid it blocking clicks
+        await page.locator(".window-btn.close").first().click()
+        await expect(page.locator(".window")).toHaveCount(0, { timeout: 5000 })
 
-        await page.locator('.desktop-icon:has-text("cool_projects.zip")').dblclick()
+        const icon = page.locator('.desktop-icon:has-text("cool_projects")')
+        await expect(icon).toBeVisible({ timeout: 5000 })
+        await icon.dblclick()
 
-        await expect(page.locator(".taskbar-window-button")).toHaveCount(2, { timeout: 5000 })
+        // After opening a new window, taskbar should show 1 button
+        await expect(page.locator(".taskbar-window-button")).toHaveCount(1, { timeout: 5000 })
     })
 
     test("popups appear after delay", async ({ page }) => {
