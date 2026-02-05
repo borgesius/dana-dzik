@@ -1,3 +1,10 @@
+# [1.12.0](https://github.com/borgesius/dana-dzik/compare/v1.11.3...v1.12.0) (2026-02-05)
+
+
+### Features
+
+* add google verification meta tag ([fb72925](https://github.com/borgesius/dana-dzik/commit/fb72925b039ca203272f32f12a0bedcbb7a9884c))
+
 ## [1.11.3](https://github.com/borgesius/dana-dzik/compare/v1.11.2...v1.11.3) (2026-02-05)
 
 
