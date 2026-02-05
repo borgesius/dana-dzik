@@ -1,3 +1,11 @@
+# [1.9.0](https://github.com/borgesius/dana-dzik/compare/v1.8.4...v1.9.0) (2026-02-05)
+
+
+### Features
+
+* **accessibility:** add empty alt text to decorative gifs ([a7683f8](https://github.com/borgesius/dana-dzik/commit/a7683f8d47496b30b93fb0b3cb6ef3c2dcdc36b2))
+* **accessibility:** use high contrast fonts ([9e6418e](https://github.com/borgesius/dana-dzik/commit/9e6418ee026fb13dfcde0339ede38b72933c218b))
+
 ## [1.8.4](https://github.com/borgesius/dana-dzik/compare/v1.8.3...v1.8.4) (2026-02-05)
 
 
