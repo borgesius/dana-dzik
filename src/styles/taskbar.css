@@ -202,11 +202,32 @@
 
 .start-menu-footer {
     display: flex;
-    justify-content: flex-end;
+    flex-direction: column;
     gap: 4px;
     padding: 4px 8px;
     background: linear-gradient(to top, #3169c6 0%, #4d84e4 100%);
     border-top: 1px solid #1941a5;
+}
+
+.start-menu-version {
+    font-size: 9px;
+    color: rgb(255 255 255 / 70%);
+    text-align: center;
+}
+
+.start-menu-version a {
+    color: rgb(255 255 255 / 90%);
+    text-decoration: none;
+}
+
+.start-menu-version a:hover {
+    text-decoration: underline;
+}
+
+.start-menu-footer-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 4px;
 }
 
 .start-menu-footer button {
