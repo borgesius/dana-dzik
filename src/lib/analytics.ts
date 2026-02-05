@@ -1,4 +1,5 @@
 const AB_TEST_KEY = "ab_variant"
+const AB_TRACKED_KEY = "ab_variant_tracked"
 const VISITOR_KEY = "visitor_id"
 
 export const PHOTO_VARIANTS = [
@@ -70,6 +71,10 @@ export function getAbVariant(): PhotoVariant {
         const idx = Math.floor(Math.random() * PHOTO_VARIANTS.length)
         variant = PHOTO_VARIANTS[idx].id
         localStorage.setItem(AB_TEST_KEY, variant)
+    }
+
+    if (!localStorage.getItem(AB_TRACKED_KEY)) {
+        localStorage.setItem(AB_TRACKED_KEY, "true")
         void sendEvent({ type: "ab_assign", variant })
     }
 
