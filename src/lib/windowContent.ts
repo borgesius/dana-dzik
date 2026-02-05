@@ -14,6 +14,8 @@ export function getWindowContent(contentType: string): string {
             return getGuestbookContent()
         case "felixgpt":
             return getFelixGPTContent()
+        case "stats":
+            return getSiteStatsContent()
         default:
             return "<p>Content not found</p>"
     }
@@ -229,6 +231,49 @@ function getFelixGPTContent(): string {
                 />
                 <button type="submit">Send</button>
             </form>
+        </div>
+    `
+}
+
+function getSiteStatsContent(): string {
+    return `
+        <div class="stats-content">
+            <div class="stats-header">
+                <h2>📊 Site Statistics</h2>
+                <p class="stats-subtitle">Real-time analytics powered by Upstash</p>
+            </div>
+
+            <div class="stats-loading" id="stats-loading">Loading analytics...</div>
+
+            <div class="stats-grid" id="stats-grid" style="display: none;">
+                <div class="stat-card">
+                    <div class="stat-icon">👁️</div>
+                    <div class="stat-value" id="stat-views">0</div>
+                    <div class="stat-label">Total Views</div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon">🖱️</div>
+                    <div class="stat-value" id="stat-clicks">0</div>
+                    <div class="stat-label">Window Opens</div>
+                </div>
+            </div>
+
+            <div class="stats-section" id="stats-heatmap" style="display: none;">
+                <h3>🔥 View Heatmap</h3>
+                <div class="heatmap-grid" id="heatmap-bars"></div>
+            </div>
+
+            <div class="stats-section" id="stats-funnel" style="display: none;">
+                <h3>📈 Conversion Funnel</h3>
+                <div class="funnel-chart" id="funnel-chart"></div>
+            </div>
+
+            <div class="stats-section" id="stats-ab" style="display: none;">
+                <h3>🧪 A/B Test: Boot Screen Photo</h3>
+                <p style="font-size: 11px; color: #666; margin: 0 0 10px;">Which photo gets more engagement?</p>
+                <div class="ab-results" id="ab-results"></div>
+            </div>
         </div>
     `
 }

@@ -16,6 +16,7 @@ describe("Router Configuration", () => {
         expect(ROUTE_MAP["/links"]).toBe("links")
         expect(ROUTE_MAP["/guestbook"]).toBe("guestbook")
         expect(ROUTE_MAP["/felixgpt"]).toBe("felixgpt")
+        expect(ROUTE_MAP["/stats"]).toBe("stats")
     })
 
     it("all routes map to valid routable windows", () => {

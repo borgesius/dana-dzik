@@ -86,11 +86,17 @@
                 width: 80px;
                 height: 80px;
                 margin-bottom: 20px;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                font-size: 48px;
+                border-radius: 8px;
+                overflow: hidden;
                 animation: logo-glitch 3s infinite;
+                image-rendering: pixelated;
+            }
+            .loading-logo img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                filter: contrast(1.2) saturate(0.8);
+                image-rendering: pixelated;
             }
             @keyframes logo-glitch {
                 0%, 95%, 100% { filter: none; transform: none; }
@@ -127,7 +133,7 @@
 
         <!-- compu94 loading -->
         <div class="loading-screen" id="loading-screen">
-            <div class="loading-logo">💾</div>
+            <div class="loading-logo" id="loading-logo"></div>
             <div style="font-size: 24px; margin-bottom: 30px;" class="chromatic-text">compu94</div>
             <div class="loading-bar">
                 <div class="loading-bar-fill" id="loading-bar-fill"></div>
@@ -138,6 +144,31 @@
         <div id="app"></div>
 
         <script>
+            const PHOTO_VARIANTS = [
+                { id: 'A', photo: '/assets/dana/IMG_5099.jpg' },
+                { id: 'B', photo: '/assets/dana/IMG_5531.jpg' },
+                { id: 'C', photo: '/assets/dana/IMG_5576.jpg' },
+            ];
+
+            function getVariantPhoto() {
+                let variant = localStorage.getItem('ab_variant');
+                if (!variant || !PHOTO_VARIANTS.find(v => v.id === variant)) {
+                    const idx = Math.floor(Math.random() * PHOTO_VARIANTS.length);
+                    variant = PHOTO_VARIANTS[idx].id;
+                    localStorage.setItem('ab_variant', variant);
+                }
+                const found = PHOTO_VARIANTS.find(v => v.id === variant);
+                return found ? found.photo : PHOTO_VARIANTS[0].photo;
+            }
+
+            const logoContainer = document.getElementById('loading-logo');
+            if (logoContainer) {
+                const img = document.createElement('img');
+                img.src = getVariantPhoto();
+                img.alt = 'Loading';
+                logoContainer.appendChild(img);
+            }
+
             const bootMessages = [
                 { text: 'BIOS v4.51 (C) 1994', cls: 'bios-header', delay: 80 },
                 { text: 'Memory: 16384K OK', delay: 60 },

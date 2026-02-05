@@ -73,6 +73,15 @@ const WINDOW_CONFIGS: Record<RoutableWindow, WindowConfig> = {
         style: "winxp",
         contentType: "felixgpt",
     },
+    stats: {
+        id: "stats",
+        title: "Site Statistics",
+        icon: "📊",
+        width: 450,
+        height: 500,
+        style: "winxp",
+        contentType: "stats",
+    },
 }
 
 /**
