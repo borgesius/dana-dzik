@@ -1,3 +1,15 @@
+# [1.11.0](https://github.com/borgesius/dana-dzik/compare/v1.10.0...v1.11.0) (2026-02-05)
+
+
+### Bug Fixes
+
+* **analytics:** fix a/b test race condition ([a6be28e](https://github.com/borgesius/dana-dzik/commit/a6be28e5eb92d3aaef63cc0b7c5d2a2eee7605ea))
+
+
+### Features
+
+* **ui:** adjust welcome text ([caddf26](https://github.com/borgesius/dana-dzik/commit/caddf2658a3e9496d2a3056fd385c160de4ad726))
+
 # [1.10.0](https://github.com/borgesius/dana-dzik/compare/v1.9.0...v1.10.0) (2026-02-05)
 
 
