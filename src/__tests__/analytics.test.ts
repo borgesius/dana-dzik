@@ -8,6 +8,7 @@ import {
     getVariantPhoto,
     getVisitorId,
     PHOTO_VARIANTS,
+    trackAbConversion,
     trackFunnelStep,
 } from "../lib/analytics"
 
@@ -134,6 +135,51 @@ describe("Analytics", () => {
             trackFunnelStep("engaged")
 
             expect(fetchSpy).toHaveBeenCalledTimes(3)
+        })
+    })
+
+    describe("trackAbConversion", () => {
+        it("does not fire if no variant is assigned", () => {
+            const fetchSpy = vi
+                .spyOn(globalThis, "fetch")
+                .mockResolvedValue(new Response())
+
+            trackAbConversion()
+
+            expect(fetchSpy).not.toHaveBeenCalled()
+        })
+
+        it("fires once when variant is assigned", () => {
+            const fetchSpy = vi
+                .spyOn(globalThis, "fetch")
+                .mockResolvedValue(new Response())
+
+            localStorage.setItem("ab_variant", "A")
+            trackAbConversion()
+
+            expect(fetchSpy).toHaveBeenCalledTimes(1)
+        })
+
+        it("only fires once per visitor", () => {
+            const fetchSpy = vi
+                .spyOn(globalThis, "fetch")
+                .mockResolvedValue(new Response())
+
+            localStorage.setItem("ab_variant", "B")
+            trackAbConversion()
+            trackAbConversion()
+            trackAbConversion()
+
+            expect(fetchSpy).toHaveBeenCalledTimes(1)
+        })
+
+        it("sets converted flag in localStorage", () => {
+            vi.spyOn(globalThis, "fetch").mockResolvedValue(new Response())
+
+            localStorage.setItem("ab_variant", "C")
+            trackAbConversion()
+
+            expect(localStorage.getItem("ab_converted")).toBe("true")
         })
     })
 })
