@@ -1,3 +1,10 @@
+## [1.8.3](https://github.com/borgesius/dana-dzik/compare/v1.8.2...v1.8.3) (2026-02-05)
+
+
+### Bug Fixes
+
+* **guestbook:** strip headers and html comments ([a64b1c7](https://github.com/borgesius/dana-dzik/commit/a64b1c72e65f1373e840c4a51b9c16c7169cac23))
+
 ## [1.8.2](https://github.com/borgesius/dana-dzik/compare/v1.8.1...v1.8.2) (2026-02-05)
 
 
