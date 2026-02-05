@@ -51,6 +51,10 @@ function getWelcomeContent(): string {
                 Welcome to my website! Feel free to explore by clicking the icons on the desktop.
             </p>
 
+            <p class="guestbook-cta">
+                <a href="#" data-open-window="guestbook">📖 Sign my guestbook!</a>
+            </p>
+
             <div class="blink construction">🚧 UNDER CONSTRUCTION 🚧</div>
 
             <hr />
