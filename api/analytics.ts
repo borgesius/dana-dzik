@@ -164,11 +164,12 @@ async function recordEvent(redis: Redis, event: AnalyticsEvent): Promise<void> {
 
         case "perf":
             if (event.perf) {
-                await redis.lpush(
-                    "stats:perf:samples",
-                    JSON.stringify(event.perf)
+                await redis.hincrby("stats:perf:counts", event.perf.type, 1)
+                await redis.hincrby(
+                    "stats:perf:totals",
+                    event.perf.type,
+                    event.perf.duration
                 )
-                await redis.ltrim("stats:perf:samples", 0, 999)
             }
             break
     }
