@@ -64,6 +64,15 @@ const WINDOW_CONFIGS: Record<RoutableWindow, WindowConfig> = {
         style: "win95",
         contentType: "guestbook",
     },
+    felixgpt: {
+        id: "felixgpt",
+        title: "FelixGPT",
+        icon: "🐱",
+        width: 400,
+        height: 450,
+        style: "winxp",
+        contentType: "felixgpt",
+    },
 }
 
 /**

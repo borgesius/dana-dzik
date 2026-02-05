@@ -12,6 +12,8 @@ export function getWindowContent(contentType: string): string {
             return getLinksContent()
         case "guestbook":
             return getGuestbookContent()
+        case "felixgpt":
+            return getFelixGPTContent()
         default:
             return "<p>Content not found</p>"
     }
@@ -197,6 +199,36 @@ function getGuestbookContent(): string {
             <div id="guestbook-entries" class="entries">
                 <p class="loading">Loading entries...</p>
             </div>
+        </div>
+    `
+}
+
+function getFelixGPTContent(): string {
+    return `
+        <div class="felixgpt-content">
+            <div class="felixgpt-header">
+                <img src="/assets/felix/IMG_7187.jpg" alt="Felix" class="felix-avatar" />
+                <div class="felix-info">
+                    <h2>🐱 FelixGPT</h2>
+                    <p class="felix-status">Online • Ready to assist</p>
+                </div>
+            </div>
+
+            <div class="chat-messages" id="felix-messages">
+                <div class="message felix">
+                    <span class="message-text">Meow! I'm FelixGPT, your feline AI assistant. Ask me anything!</span>
+                </div>
+            </div>
+
+            <form class="chat-input" id="felix-form">
+                <input
+                    type="text"
+                    id="felix-input"
+                    placeholder="Type a message..."
+                    autocomplete="off"
+                />
+                <button type="submit">Send</button>
+            </form>
         </div>
     `
 }

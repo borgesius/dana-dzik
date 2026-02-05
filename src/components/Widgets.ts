@@ -1,14 +1,15 @@
 import { LASTFM_POLL_INTERVAL } from "../config"
 
-const LASTFM_API_KEY = import.meta.env.VITE_LASTFM_API_KEY
-const LASTFM_USERNAME = import.meta.env.VITE_LASTFM_USERNAME
-
-interface LastFmTrack {
-    name: string
-    artist: { "#text": string }
-    album: { "#text": string }
-    image: Array<{ "#text": string; size: string }>
-    "@attr"?: { nowplaying: string }
+interface LastFmApiResponse {
+    ok: boolean
+    data: {
+        name: string
+        artist: string
+        album: string
+        image: string | null
+        isPlaying: boolean
+    } | null
+    error?: string
 }
 
 interface StravaApiResponse {
@@ -128,8 +129,6 @@ export class Widgets {
     }
 
     private createNowPlayingWidget(): void {
-        if (!LASTFM_API_KEY || !LASTFM_USERNAME) return
-
         const widget = this.createWidgetFrame(
             "🎧 Last.fm",
             "now-playing-widget"
@@ -167,26 +166,31 @@ export class Widgets {
         ) as HTMLImageElement
 
         try {
-            const url = `https://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=${LASTFM_USERNAME}&api_key=${LASTFM_API_KEY}&format=json&limit=1`
-            const response = await fetch(url)
-            const data = (await response.json()) as {
-                recenttracks: { track: LastFmTrack[] }
+            const response = await fetch("/api/lastfm")
+
+            const contentType = response.headers.get("content-type")
+            if (!contentType?.includes("application/json")) {
+                statusEl.textContent = "API not available"
+                return
             }
 
-            const track = data.recenttracks.track[0]
-            if (track) {
-                const isPlaying = track["@attr"]?.nowplaying === "true"
-                statusEl.textContent = isPlaying
-                    ? "▶ Now Playing"
-                    : "⏸ Last Played"
-                statusEl.className = `np-status ${isPlaying ? "playing" : ""}`
-                trackEl.textContent = track.name
-                artistEl.textContent = track.artist["#text"]
+            const result = (await response.json()) as LastFmApiResponse
 
-                const img = track.image.find((i) => i.size === "medium")
-                if (img && img["#text"]) {
-                    albumArt.src = img["#text"]
-                }
+            if (!result.ok || !result.data) {
+                statusEl.textContent = "No data"
+                return
+            }
+
+            const track = result.data
+            statusEl.textContent = track.isPlaying
+                ? "▶ Now Playing"
+                : "⏸ Last Played"
+            statusEl.className = `np-status ${track.isPlaying ? "playing" : ""}`
+            trackEl.textContent = track.name
+            artistEl.textContent = track.artist
+
+            if (track.image) {
+                albumArt.src = track.image
             }
         } catch {
             statusEl.textContent = "Offline"

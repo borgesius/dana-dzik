@@ -31,24 +31,27 @@ Open http://localhost:5173
 
 ## API Integrations
 
-### Last.fm (Now Playing)
-
-Shows your currently playing track on the About page.
+All API keys are kept server-side via Vercel serverless functions — nothing is exposed to the client.
 
 ```bash
 cp .env.example .env
-# Add your Last.fm API key and username
+# Add your credentials
 ```
+
+### Last.fm (Now Playing)
+
+Shows your currently playing track in the widget. Uses `/api/lastfm` serverless function.
+
+- `LASTFM_API_KEY` - Get from https://www.last.fm/api/account/create
+- `LASTFM_USERNAME` - Your Last.fm username
 
 ### Strava (Race Equivalency)
 
-Shows your best recent run with predicted race times using the Riegel formula.
+Shows your best recent run with predicted race times using the Riegel formula. Uses `/api/strava` serverless function with automatic token refresh.
 
-```bash
-# Add Strava credentials to .env
-VITE_STRAVA_CLIENT_ID=your_client_id
-VITE_STRAVA_ACCESS_TOKEN=your_access_token
-```
+- `STRAVA_CLIENT_ID` - From https://www.strava.com/settings/api
+- `STRAVA_CLIENT_SECRET` - From your Strava API settings
+- `STRAVA_REFRESH_TOKEN` - Obtained via OAuth flow (see Strava docs)
 
 ## Scripts
 

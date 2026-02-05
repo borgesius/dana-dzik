@@ -46,6 +46,13 @@ const DESKTOP_ICONS: IconConfig[] = [
         action: "window",
         windowId: "guestbook",
     },
+    {
+        id: "felixgpt",
+        label: "FelixGPT.exe",
+        icon: "🐱",
+        action: "window",
+        windowId: "felixgpt",
+    },
 ]
 
 export class Desktop {
