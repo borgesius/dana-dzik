@@ -109,6 +109,7 @@ export class Desktop {
     public addFloatingGif(src: string, x: number, y: number): void {
         const img = document.createElement("img")
         img.src = src
+        img.alt = ""
         img.className = "floating-gif gif-bounce"
         img.style.left = `${x}px`
         img.style.top = `${y}px`
