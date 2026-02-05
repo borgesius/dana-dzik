@@ -10,11 +10,13 @@ import {
     PHOTO_VARIANTS,
     trackAbConversion,
     trackFunnelStep,
+    trackWindowOpen,
 } from "../lib/analytics"
 
 describe("Analytics", () => {
     beforeEach(() => {
         localStorage.clear()
+        sessionStorage.clear()
         vi.restoreAllMocks()
     })
 
@@ -180,6 +182,70 @@ describe("Analytics", () => {
             trackAbConversion()
 
             expect(localStorage.getItem("ab_converted")).toBe("true")
+        })
+    })
+
+    describe("trackWindowOpen", () => {
+        it("fires window event on first open", () => {
+            const fetchSpy = vi
+                .spyOn(globalThis, "fetch")
+                .mockResolvedValue(new Response())
+
+            trackWindowOpen("about")
+
+            expect(fetchSpy).toHaveBeenCalled()
+            const calls = fetchSpy.mock.calls
+            const windowCall = calls.find((call) => {
+                const body = JSON.parse(call[1]?.body as string) as {
+                    type: string
+                }
+                return body.type === "window"
+            })
+            expect(windowCall).toBeDefined()
+        })
+
+        it("only fires once per window per session", () => {
+            const fetchSpy = vi
+                .spyOn(globalThis, "fetch")
+                .mockResolvedValue(new Response())
+
+            trackWindowOpen("about")
+            trackWindowOpen("about")
+            trackWindowOpen("about")
+
+            const windowCalls = fetchSpy.mock.calls.filter((call) => {
+                const body = JSON.parse(call[1]?.body as string) as {
+                    type: string
+                }
+                return body.type === "window"
+            })
+            expect(windowCalls).toHaveLength(1)
+        })
+
+        it("fires separately for different windows", () => {
+            const fetchSpy = vi
+                .spyOn(globalThis, "fetch")
+                .mockResolvedValue(new Response())
+
+            trackWindowOpen("about")
+            trackWindowOpen("projects")
+            trackWindowOpen("resume")
+
+            const windowCalls = fetchSpy.mock.calls.filter((call) => {
+                const body = JSON.parse(call[1]?.body as string) as {
+                    type: string
+                }
+                return body.type === "window"
+            })
+            expect(windowCalls).toHaveLength(3)
+        })
+
+        it("uses sessionStorage for window tracking", () => {
+            vi.spyOn(globalThis, "fetch").mockResolvedValue(new Response())
+
+            trackWindowOpen("about")
+
+            expect(sessionStorage.getItem("window_tracked_about")).toBe("true")
         })
     })
 })

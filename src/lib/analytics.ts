@@ -3,8 +3,8 @@ import { ANALYTICS_CONFIG } from "../config"
 const AB_TEST_KEY = "ab_variant"
 const AB_TRACKED_KEY = "ab_variant_tracked"
 const VISITOR_KEY = "visitor_id"
-
-let perfEventCount = 0
+const PERF_COUNT_KEY = "perf_event_count"
+const WINDOW_TRACKED_PREFIX = "window_tracked_"
 
 export const PHOTO_VARIANTS = [
     { id: "A", photo: "/assets/dana/IMG_5099.jpg" },
@@ -54,7 +54,11 @@ export function trackPageview(): void {
 const FUNNEL_PREFIX = "funnel_"
 
 export function trackWindowOpen(windowId: string): void {
-    void sendEvent({ type: "window", windowId })
+    const key = `${WINDOW_TRACKED_PREFIX}${windowId}`
+    if (!sessionStorage.getItem(key)) {
+        sessionStorage.setItem(key, "true")
+        void sendEvent({ type: "window", windowId })
+    }
     trackFunnelStep("engaged")
     trackAbConversion()
 }
@@ -100,14 +104,27 @@ export function trackAbConversion(): void {
     }
 }
 
+function getPerfEventCount(): number {
+    const stored = localStorage.getItem(PERF_COUNT_KEY)
+    return stored ? parseInt(stored, 10) : 0
+}
+
+function incrementPerfEventCount(): number {
+    const count = getPerfEventCount() + 1
+    localStorage.setItem(PERF_COUNT_KEY, count.toString())
+    return count
+}
+
 export function initPerfTracking(): void {
     if (typeof PerformanceObserver === "undefined") return
 
     const { maxPerfEvents, minPerfDuration } = ANALYTICS_CONFIG
 
+    if (getPerfEventCount() >= maxPerfEvents) return
+
     const observer = new PerformanceObserver((list) => {
         for (const entry of list.getEntries()) {
-            if (perfEventCount >= maxPerfEvents) {
+            if (getPerfEventCount() >= maxPerfEvents) {
                 observer.disconnect()
                 return
             }
@@ -119,7 +136,7 @@ export function initPerfTracking(): void {
                 const type = getResourceType(ext)
 
                 if (resource.duration > minPerfDuration) {
-                    perfEventCount++
+                    incrementPerfEventCount()
                     void sendEvent({
                         type: "perf",
                         perf: {
@@ -134,10 +151,6 @@ export function initPerfTracking(): void {
     })
 
     observer.observe({ entryTypes: ["resource"] })
-}
-
-export function getPerfEventCount(): number {
-    return perfEventCount
 }
 
 function getResourceType(ext: string): string {
