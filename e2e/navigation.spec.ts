@@ -99,9 +99,11 @@ test.describe("Desktop Navigation", () => {
         await expect(page.locator(".taskbar-window-button")).toHaveCount(1, { timeout: 5000 })
     })
 
-    test("popups appear after delay", async ({ page }) => {
+    test("popups appear after mouse interaction", async ({ page }) => {
         await page.goto("/")
         await page.waitForSelector(".loading-screen.hidden", { state: "attached", timeout: 10000 })
+
+        await page.mouse.move(100, 100)
 
         await page.waitForTimeout(12000)
 
