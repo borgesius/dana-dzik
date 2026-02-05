@@ -1,11 +1,28 @@
 import { initStrava } from "../lib/strava"
 
-/**
- * Creates the fake browser toolbars with search bars, weather, stocks, and links.
- */
+interface ReportsResponse {
+    ok: boolean
+    data?: {
+        lighthouse: {
+            url: string | null
+            workflowUrl: string
+            status: string
+            score: number | null
+            updatedAt: string | null
+        }
+        playwright: {
+            artifactUrl: string | null
+            workflowUrl: string
+            status: string
+            updatedAt: string | null
+        }
+    }
+}
+
 export class Toolbars {
     private element: HTMLElement
     private weatherEl: HTMLElement | null = null
+    private qaEl: HTMLElement | null = null
 
     constructor() {
         this.element = this.createElement()
@@ -34,6 +51,12 @@ export class Toolbars {
         weather.innerHTML = "☀️ Loading..."
         this.weatherEl = weather
         toolbar.appendChild(weather)
+
+        const qa = document.createElement("div")
+        qa.className = "toolbar-qa"
+        qa.innerHTML = "🔬 QA: Loading..."
+        this.qaEl = qa
+        toolbar.appendChild(qa)
 
         return toolbar
     }
@@ -98,7 +121,41 @@ export class Toolbars {
 
     private initDynamicData(): void {
         this.setHistoricalWeather()
+        void this.fetchQAReports()
         void initStrava()
+    }
+
+    private async fetchQAReports(): Promise<void> {
+        if (!this.qaEl) return
+
+        try {
+            const response = await fetch("/api/reports")
+            const result = (await response.json()) as ReportsResponse
+
+            if (!result.ok || !result.data) {
+                this.qaEl.innerHTML = "🔬 QA: N/A"
+                return
+            }
+
+            const { lighthouse, playwright } = result.data
+
+            const lhStatus = lighthouse.status === "success" ? "✅" : "❌"
+            const pwStatus = playwright.status === "success" ? "✅" : "❌"
+
+            const lhLink = lighthouse.url || lighthouse.workflowUrl
+            const pwLink = playwright.artifactUrl || playwright.workflowUrl
+
+            this.qaEl.innerHTML = `
+                <a href="${lhLink}" target="_blank" class="qa-badge qa-${lighthouse.status}" title="Lighthouse Report">
+                    ${lhStatus} LH
+                </a>
+                <a href="${pwLink}" target="_blank" class="qa-badge qa-${playwright.status}" title="Playwright Report">
+                    ${pwStatus} E2E
+                </a>
+            `
+        } catch {
+            this.qaEl.innerHTML = "🔬 QA: N/A"
+        }
     }
 
     private setHistoricalWeather(): void {

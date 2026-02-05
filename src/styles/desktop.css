@@ -176,3 +176,44 @@ body {
     font-size: 10px;
     border: 1px solid #4682b4;
 }
+
+.toolbar-qa {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px 6px;
+    font-size: 10px;
+    background: #e0e0e0;
+    border: 1px solid #808080;
+}
+
+.qa-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 6px;
+    font-size: 9px;
+    text-decoration: none;
+    color: #000000;
+    border: 1px solid #808080;
+    background: #c0c0c0;
+    min-height: 24px;
+}
+
+.qa-badge:hover {
+    background: #d0d0d0;
+}
+
+.qa-badge.qa-success {
+    background: #90ee90;
+    border-color: #228b22;
+}
+
+.qa-badge.qa-failure {
+    background: #ffcccb;
+    border-color: #cc0000;
+}
+
+.qa-badge.qa-unknown {
+    background: #fffacd;
+    border-color: #b8860b;
+}
