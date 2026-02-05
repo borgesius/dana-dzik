@@ -1,54 +1,53 @@
-# Web Template
+# Dana's Desktop
 
-A modern web application template with Vite, TypeScript, and comprehensive tooling.
+Dana's homepage.
+
+![Desktop Screenshot](docs/screenshot.png)
 
 ## Features
 
-- **Vite** - Fast build tool with hot module replacement
-- **TypeScript** - Strict type checking enabled
-- **Vitest** - Fast unit testing framework
-- **ESLint** - Code linting with TypeScript support
-- **Prettier** - Code formatting
-- **Stylelint** - CSS linting
-- **Commitlint** - Conventional commit message enforcement
-- **Semantic Release** - Automated versioning and changelog generation
-- **GitHub Actions** - CI/CD workflows for PRs and releases
+**The Experience:**
+- Full Windows XP desktop shell with draggable, resizable windows
+- Periodic spam popups (you're the 1,000,000th visitor!)
+- Sparkle cursor trails
+- 1997 weather and stock ticker
+- Loading screen with progress bar
 
-## Getting Started
+**Under the Hood:**
+- TypeScript with strict type checking
+- Vite for fast development and optimized builds
+- Semantic versioning with automated releases
+- Comprehensive CI/CD (lint, typecheck, unit tests, E2E, Lighthouse)
+- URL routing for direct page access (`/about`, `/resume`, etc.)
 
-### Prerequisites
-
-- Node.js 20+
-- npm
-
-### Installation
+## Quick Start
 
 ```bash
 npm install
-```
-
-### Development
-
-Start the development server:
-
-```bash
 npm run dev
 ```
 
-Open http://localhost:5173 in your browser.
+Open http://localhost:5173
 
-### Building
+## API Integrations
 
-Build for production:
+### Last.fm (Now Playing)
+
+Shows your currently playing track on the About page.
 
 ```bash
-npm run build
+cp .env.example .env
+# Add your Last.fm API key and username
 ```
 
-Preview the production build:
+### Strava (Race Equivalency)
+
+Shows your best recent run with predicted race times using the Riegel formula.
 
 ```bash
-npm run preview
+# Add Strava credentials to .env
+VITE_STRAVA_CLIENT_ID=your_client_id
+VITE_STRAVA_ACCESS_TOKEN=your_access_token
 ```
 
 ## Scripts
@@ -59,51 +58,38 @@ npm run preview
 | `npm run build` | Build for production |
 | `npm run preview` | Preview production build |
 | `npm run lint` | Run ESLint and Stylelint |
-| `npm run lint:fix` | Fix linting issues |
-| `npm run format` | Format code with Prettier |
 | `npm run typecheck` | Run TypeScript type checking |
 | `npm run test` | Run tests in watch mode |
 | `npm run test:unit` | Run all tests once |
-| `npm run test:coverage` | Run tests with coverage |
 
 ## Project Structure
 
 ```
 src/
-├── __tests__/       # Test files
-├── core/            # Core utilities
-│   ├── ErrorHandler.ts
-│   └── Logger.ts
-├── styles/          # CSS stylesheets
-│   └── main.css
+├── components/      # UI components (Desktop, Window, Taskbar, etc.)
+├── lib/             # Utilities (router, strava, nowPlaying, etc.)
+├── styles/          # CSS organized by component
+├── config.ts        # Centralized configuration
 └── main.ts          # Application entry point
 ```
 
-## Logging
+## Routes
 
-This template includes a debug-based logging utility. Enable it in the browser console:
+| Path | Window |
+|------|--------|
+| `/` | Welcome |
+| `/about` | About Me |
+| `/projects` | Projects |
+| `/resume` | Resume |
+| `/links` | Links |
+| `/guestbook` | Guestbook |
 
-```javascript
-localStorage.debug = "app:*"
-```
+## Safe Mode
 
-Or enable specific namespaces:
-
-```javascript
-localStorage.debug = "app:api,app:auth"
-```
-
-## Commit Convention
-
-This project uses [Conventional Commits](https://www.conventionalcommits.org/). Commit messages are validated on PR.
-
-Format: `<type>(<scope>): <subject>`
-
-Types: `feat`, `fix`, `docs`, `style`, `refactor`, `perf`, `test`, `chore`, `build`
-
-Examples:
-- `feat(auth): add login form`
-- `fix(api): handle timeout errors`
+Press the "Safe Mode" button in the taskbar to disable:
+- Popup spam
+- Cursor effects
+- Sound effects
 
 ## License
 

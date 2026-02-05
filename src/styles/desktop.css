@@ -1,0 +1,203 @@
+:root {
+    --win95-bg: #008080;
+    --win95-gray: #c0c0c0;
+    --win95-dark: #808080;
+    --win95-light: #dfdfdf;
+    --win95-blue: #000080;
+    --winxp-blue: #0a246a;
+    --winxp-start: #2f8e29;
+    --winxp-taskbar: linear-gradient(to bottom, #1f5fa6 0%, #3a7fcb 3%, #3c81cc 6%, #2e6ab8 10%, #2663b0 12%, #2663b0 90%, #2663b0 100%);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html,
+body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    font-family: Tahoma, "MS Sans Serif", sans-serif;
+    font-size: 11px;
+}
+
+.desktop {
+    position: fixed;
+    inset: 0;
+    background: var(--win95-bg);
+    background-image: url("/assets/backgrounds/bliss.jpg");
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    flex-direction: column;
+}
+
+.desktop-area {
+    flex: 1;
+    position: relative;
+    padding: 10px;
+    overflow: hidden;
+}
+
+.desktop-icons {
+    display: flex;
+    flex-flow: column wrap;
+    align-content: flex-start;
+    gap: 20px;
+    height: 100%;
+    padding: 10px;
+}
+
+.desktop-icon {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 75px;
+    padding: 4px;
+    cursor: pointer;
+    user-select: none;
+}
+
+.desktop-icon:hover {
+    background: rgb(0 0 128 / 30%);
+}
+
+.desktop-icon.selected {
+    background: rgb(0 0 128 / 50%);
+}
+
+.desktop-icon > span:first-child {
+    font-size: 32px;
+    line-height: 1;
+    pointer-events: none;
+}
+
+.desktop-icon span {
+    margin-top: 4px;
+    color: #ffffff;
+    text-shadow:
+        1px 1px 1px #000000,
+        -1px -1px 1px #000000,
+        1px -1px 1px #000000,
+        -1px 1px 1px #000000;
+    text-align: center;
+    font-size: 11px;
+    overflow-wrap: break-word;
+    max-width: 70px;
+}
+
+.floating-gifs {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 5;
+}
+
+.floating-gif {
+    position: absolute;
+    pointer-events: none;
+    image-rendering: pixelated;
+}
+
+.toolbars-area {
+    background: var(--win95-gray);
+    border-bottom: 2px solid var(--win95-dark);
+}
+
+.toolbar {
+    display: flex;
+    align-items: center;
+    padding: 2px 4px;
+    background: linear-gradient(to bottom, #f0f0f0, #d0d0d0);
+    border-bottom: 1px solid #808080;
+    gap: 4px;
+    flex-wrap: wrap;
+}
+
+.toolbar-button {
+    background: var(--win95-gray);
+    border: 2px outset var(--win95-light);
+    padding: 2px 8px;
+    font-size: 10px;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.toolbar-button:active {
+    border-style: inset;
+}
+
+.toolbar-button.green {
+    background: #00ff00;
+    color: #000000;
+    font-weight: bold;
+    animation: toolbar-flash 0.5s infinite;
+}
+
+@keyframes toolbar-flash {
+    0%,
+    100% {
+        background: #00ff00;
+    }
+
+    50% {
+        background: #ffff00;
+    }
+}
+
+.toolbar-search {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+}
+
+.toolbar-search input {
+    width: 120px;
+    padding: 2px;
+    border: 2px inset var(--win95-dark);
+    font-size: 11px;
+}
+
+.toolbar-search button {
+    background: var(--win95-gray);
+    border: 2px outset var(--win95-light);
+    padding: 2px 6px;
+    cursor: pointer;
+}
+
+.toolbar-ticker {
+    background: #000000;
+    color: #00ff00;
+    padding: 2px 8px;
+    font-family: "Courier New", monospace;
+    font-size: 10px;
+    overflow: hidden;
+    white-space: nowrap;
+    max-width: 200px;
+}
+
+.toolbar-ticker span {
+    display: inline-block;
+    animation: ticker-scroll 10s linear infinite;
+}
+
+@keyframes ticker-scroll {
+    0% {
+        transform: translateX(100%);
+    }
+
+    100% {
+        transform: translateX(-100%);
+    }
+}
+
+.toolbar-weather {
+    background: #87ceeb;
+    padding: 2px 6px;
+    font-size: 10px;
+    border: 1px solid #4682b4;
+}

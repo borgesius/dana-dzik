@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200">
+  <rect width="200" height="200" fill="#c0c0c0"/>
+  <rect x="10" y="10" width="180" height="180" fill="#808080"/>
+  <!-- Cat head -->
+  <ellipse cx="100" cy="110" rx="45" ry="40" fill="#c0c0c0"/>
+  <!-- Ears -->
+  <polygon points="60,80 75,50 90,80" fill="#c0c0c0"/>
+  <polygon points="110,80 125,50 140,80" fill="#c0c0c0"/>
+  <!-- Eyes -->
+  <ellipse cx="85" cy="105" rx="8" ry="10" fill="#000"/>
+  <ellipse cx="115" cy="105" rx="8" ry="10" fill="#000"/>
+  <!-- Nose -->
+  <polygon points="100,115 95,125 105,125" fill="#ffc0cb"/>
+  <!-- Whiskers -->
+  <line x1="55" y1="120" x2="80" y2="118" stroke="#000" stroke-width="1"/>
+  <line x1="55" y1="125" x2="80" y2="125" stroke="#000" stroke-width="1"/>
+  <line x1="120" y1="118" x2="145" y2="120" stroke="#000" stroke-width="1"/>
+  <line x1="120" y1="125" x2="145" y2="125" stroke="#000" stroke-width="1"/>
+  <text x="100" y="195" text-anchor="middle" font-family="Arial" font-size="12" fill="#000">YOUR CAT</text>
+</svg>
