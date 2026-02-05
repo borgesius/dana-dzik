@@ -11,7 +11,6 @@ interface Stats {
     }
     perf: {
         avgLoadTime: number
-        p95LoadTime: number
         byType: Record<string, { avg: number; count: number }>
     }
 }
@@ -224,10 +223,6 @@ function renderPerf(perf: Stats["perf"]): void {
             <div class="perf-stat">
                 <span class="perf-value">${perf.avgLoadTime}ms</span>
                 <span class="perf-label">Avg Load</span>
-            </div>
-            <div class="perf-stat">
-                <span class="perf-value">${perf.p95LoadTime}ms</span>
-                <span class="perf-label">P95 Load</span>
             </div>
         </div>
         <div class="perf-breakdown">

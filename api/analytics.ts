@@ -66,7 +66,6 @@ interface Stats {
     }
     perf: {
         avgLoadTime: number
-        p95LoadTime: number
         byType: Record<string, { avg: number; count: number }>
     }
 }
@@ -229,7 +228,7 @@ function computePerfStats(
     const types = Object.keys(counts)
 
     if (types.length === 0) {
-        return { avgLoadTime: 0, p95LoadTime: 0, byType: {} }
+        return { avgLoadTime: 0, byType: {} }
     }
 
     const byType: Record<string, { avg: number; count: number }> = {}
@@ -250,7 +249,6 @@ function computePerfStats(
 
     return {
         avgLoadTime,
-        p95LoadTime: 0,
         byType,
     }
 }
