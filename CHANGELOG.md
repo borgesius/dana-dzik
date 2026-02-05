@@ -1,3 +1,10 @@
+## [1.14.1](https://github.com/borgesius/dana-dzik/compare/v1.14.0...v1.14.1) (2026-02-05)
+
+
+### Bug Fixes
+
+* **google verification:** update vf tag ([c34ff27](https://github.com/borgesius/dana-dzik/commit/c34ff2704ae5605dcc5eb564f8c62481279dc9a8))
+
 # [1.14.0](https://github.com/borgesius/dana-dzik/compare/v1.13.0...v1.14.0) (2026-02-05)
 
 
