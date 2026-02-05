@@ -12,7 +12,6 @@ interface GitHubIssue {
 }
 
 const REPO = "borgesius/dana-dzik"
-const GUESTBOOK_LABEL = "guestbook"
 
 export function initGuestbook(): void {
     void fetchAndDisplayEntries()
@@ -24,7 +23,7 @@ async function fetchAndDisplayEntries(): Promise<void> {
 
     try {
         const response = await fetch(
-            `https://api.github.com/repos/${REPO}/issues?labels=${GUESTBOOK_LABEL}&state=open&per_page=20`
+            `https://api.github.com/repos/${REPO}/issues?state=open&per_page=20`
         )
 
         if (!response.ok) {
