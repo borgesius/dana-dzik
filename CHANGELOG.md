@@ -1,3 +1,10 @@
+# [1.1.0](https://github.com/borgesius/dana-dzik/compare/v1.0.0...v1.1.0) (2026-02-05)
+
+
+### Features
+
+* felixgpt, move lastfm keys out of client ([6d9b8c5](https://github.com/borgesius/dana-dzik/commit/6d9b8c5a1979014add7a7e6339be80012e79508c))
+
 # 1.0.0 (2026-02-05)
 
 
