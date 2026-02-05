@@ -10,10 +10,15 @@ export const PHOTO_VARIANTS = [
 export type PhotoVariant = (typeof PHOTO_VARIANTS)[number]["id"]
 
 interface AnalyticsEvent {
-    type: "pageview" | "window" | "funnel" | "ab_assign" | "ab_convert"
+    type: "pageview" | "window" | "funnel" | "ab_assign" | "ab_convert" | "perf"
     windowId?: string
     funnelStep?: string
     variant?: string
+    perf?: {
+        resource: string
+        duration: number
+        type: string
+    }
 }
 
 function getVisitorId(): string {
@@ -82,6 +87,55 @@ export function trackAbConversion(): void {
     if (variant) {
         void sendEvent({ type: "ab_convert", variant })
     }
+}
+
+export function initPerfTracking(): void {
+    if (typeof PerformanceObserver === "undefined") return
+
+    const observer = new PerformanceObserver((list) => {
+        for (const entry of list.getEntries()) {
+            if (entry.entryType === "resource") {
+                const resource = entry as PerformanceResourceTiming
+                const url = new URL(resource.name, window.location.origin)
+                const ext = url.pathname.split(".").pop() || "other"
+                const type = getResourceType(ext)
+
+                if (resource.duration > 50) {
+                    void sendEvent({
+                        type: "perf",
+                        perf: {
+                            resource: url.pathname,
+                            duration: Math.round(resource.duration),
+                            type,
+                        },
+                    })
+                }
+            }
+        }
+    })
+
+    observer.observe({ entryTypes: ["resource"] })
+}
+
+function getResourceType(ext: string): string {
+    const types: Record<string, string> = {
+        js: "script",
+        css: "style",
+        jpg: "image",
+        jpeg: "image",
+        png: "image",
+        gif: "image",
+        webp: "image",
+        svg: "image",
+        woff: "font",
+        woff2: "font",
+        ttf: "font",
+        mp3: "audio",
+        wav: "audio",
+        mid: "audio",
+        midi: "audio",
+    }
+    return types[ext.toLowerCase()] || "other"
 }
 
 export { getVisitorId }

@@ -278,6 +278,11 @@ function getSiteStatsContent(): string {
                 <p style="font-size: 11px; color: #666; margin: 0 0 10px;">Which photo gets more engagement?</p>
                 <div class="ab-results" id="ab-results"></div>
             </div>
+
+            <div class="stats-section" id="stats-perf" style="display: none;">
+                <h3>⚡ Performance</h3>
+                <div id="perf-stats"></div>
+            </div>
         </div>
     `
 }
