@@ -1,3 +1,10 @@
+# [1.8.0](https://github.com/borgesius/dana-dzik/compare/v1.7.0...v1.8.0) (2026-02-05)
+
+
+### Features
+
+* add build info to taskbar ([f4526bc](https://github.com/borgesius/dana-dzik/commit/f4526bc23d956b6f284558f37c90e57a45b9ac16))
+
 # [1.7.0](https://github.com/borgesius/dana-dzik/compare/v1.6.1...v1.7.0) (2026-02-05)
 
 
