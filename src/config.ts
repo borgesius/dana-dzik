@@ -42,6 +42,14 @@ export const SLIDESHOW_CONFIG = {
 /** Last.fm polling interval (ms) */
 export const LASTFM_POLL_INTERVAL = 30000
 
+/** Analytics settings */
+export const ANALYTICS_CONFIG = {
+    /** Maximum number of performance events to send per page load */
+    maxPerfEvents: 10,
+    /** Minimum resource duration (ms) to track */
+    minPerfDuration: 50,
+} as const
+
 /** Window content types that can be routed to */
 export const ROUTABLE_WINDOWS = [
     "welcome",
