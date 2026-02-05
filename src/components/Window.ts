@@ -1,5 +1,6 @@
 import { trackFunnelStep, trackWindowOpen } from "../lib/analytics"
 import { initFelixGPT } from "../lib/felixgpt"
+import { initGuestbook } from "../lib/guestbook"
 import { initNowPlaying } from "../lib/nowPlaying"
 import { initPhotoSlideshows } from "../lib/photoSlideshow"
 import { initSiteStats } from "../lib/siteStats"
@@ -76,6 +77,7 @@ export class Window {
 
         if (this.config.contentType === "guestbook") {
             trackFunnelStep("guestbook")
+            initGuestbook()
         }
 
         if (this.config.contentType === "about") {
