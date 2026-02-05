@@ -1,6 +1,41 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node"
 import { Redis } from "@upstash/redis"
 
+const BOT_PATTERNS = [
+    "bot",
+    "crawl",
+    "spider",
+    "slurp",
+    "facebookexternalhit",
+    "linkedinbot",
+    "twitterbot",
+    "googlebot",
+    "bingbot",
+    "yandex",
+    "baidu",
+    "semrush",
+    "ahref",
+    "mj12bot",
+    "dotbot",
+    "petalbot",
+    "bytespider",
+    "gptbot",
+    "claudebot",
+    "headless",
+    "phantom",
+    "selenium",
+    "puppeteer",
+    "playwright",
+    "lighthouse",
+    "pagespeed",
+]
+
+function isBot(userAgent: string | undefined): boolean {
+    if (!userAgent) return true
+    const ua = userAgent.toLowerCase()
+    return BOT_PATTERNS.some((pattern) => ua.includes(pattern))
+}
+
 function getRedis(): Redis | null {
     const url = process.env.UPSTASH_REDIS_REST_URL
     const token = process.env.UPSTASH_REDIS_REST_TOKEN
@@ -60,6 +95,11 @@ export default async function handler(
 
     try {
         if (req.method === "POST") {
+            if (isBot(req.headers["user-agent"])) {
+                res.status(200).json({ ok: true, skipped: "bot" })
+                return
+            }
+
             const event = req.body as AnalyticsEvent
             await recordEvent(redis, event)
             res.status(200).json({ ok: true })
