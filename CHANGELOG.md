@@ -1,3 +1,10 @@
+## [1.6.1](https://github.com/borgesius/dana-dzik/compare/v1.6.0...v1.6.1) (2026-02-05)
+
+
+### Bug Fixes
+
+* **strava:** include indoor rides with power data ([886a302](https://github.com/borgesius/dana-dzik/commit/886a302181046e779e1ee7dfdeb3f1c34c3af154))
+
 # [1.6.0](https://github.com/borgesius/dana-dzik/compare/v1.5.0...v1.6.0) (2026-02-05)
 
 
