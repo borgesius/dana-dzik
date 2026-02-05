@@ -6,6 +6,7 @@ import { initStrava } from "../lib/strava"
  */
 export class Toolbars {
     private element: HTMLElement
+    private weatherEl: HTMLElement | null = null
 
     constructor() {
         this.element = this.createElement()
@@ -31,17 +32,9 @@ export class Toolbars {
 
         const weather = document.createElement("div")
         weather.className = "toolbar-weather"
-        weather.id = "toolbar-weather"
         weather.innerHTML = "☀️ Loading..."
+        this.weatherEl = weather
         toolbar.appendChild(weather)
-
-        const ticker = document.createElement("div")
-        ticker.className = "toolbar-ticker"
-        const tickerText = document.createElement("span")
-        tickerText.id = "toolbar-ticker"
-        tickerText.textContent = "Loading stocks..."
-        ticker.appendChild(tickerText)
-        toolbar.appendChild(ticker)
 
         const strava = document.createElement("a")
         strava.className = "toolbar-button"
@@ -100,50 +93,97 @@ export class Toolbars {
 
     private initDynamicData(): void {
         this.setHistoricalWeather()
-        this.setHistoricalStocks()
         void initStrava()
     }
 
     private setHistoricalWeather(): void {
-        const weather = document.getElementById("toolbar-weather")
-        if (!weather) return
+        if (!this.weatherEl) return
 
         const today = new Date()
         const month = today.toLocaleString("en-US", { month: "short" })
         const day = today.getDate()
 
-        const historicalWeather: Record<string, string> = {
-            Jan: "32°F ❄️",
-            Feb: "35°F 🌨️",
-            Mar: "45°F 🌧️",
-            Apr: "55°F 🌤️",
-            May: "65°F ☀️",
-            Jun: "75°F ☀️",
-            Jul: "82°F ☀️",
-            Aug: "80°F ☀️",
-            Sep: "70°F 🌤️",
-            Oct: "58°F 🍂",
-            Nov: "45°F 🌧️",
-            Dec: "36°F ❄️",
+        this.weatherEl.innerHTML = `☀️ ${month} ${day}, 1997`
+
+        if (!navigator.geolocation) {
+            this.setFallbackWeather()
+            return
         }
 
-        const temp = historicalWeather[month] || "72°F ☀️"
-        weather.innerHTML = `${temp} SF - ${month} ${day}, 1997`
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                void this.fetchHistoricalWeather(
+                    position.coords.latitude,
+                    position.coords.longitude
+                )
+            },
+            () => {
+                this.setFallbackWeather()
+            },
+            { timeout: 5000 }
+        )
     }
 
-    private setHistoricalStocks(): void {
-        const ticker = document.getElementById("toolbar-ticker")
-        if (!ticker) return
+    private async fetchHistoricalWeather(
+        lat: number,
+        lon: number
+    ): Promise<void> {
+        if (!this.weatherEl) return
 
-        const stocks1997 = [
-            "AAPL: $0.47 ▼",
-            "MSFT: $20.12 ▲",
-            "AMZN: $1.73 ▲",
-            "INTC: $18.50 ▲",
-            "CSCO: $8.25 ▲",
-        ]
+        const today = new Date()
+        const month = today.toLocaleString("en-US", { month: "short" })
+        const day = today.getDate()
+        const historicalDate = `1997-${String(today.getMonth() + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`
 
-        ticker.textContent = stocks1997.join(" | ")
+        try {
+            const url = `https://archive-api.open-meteo.com/v1/archive?latitude=${lat}&longitude=${lon}&start_date=${historicalDate}&end_date=${historicalDate}&daily=temperature_2m_max,temperature_2m_min,precipitation_sum&temperature_unit=fahrenheit&timezone=auto`
+            const response = await fetch(url)
+            const data = (await response.json()) as {
+                daily: {
+                    temperature_2m_max: number[]
+                    temperature_2m_min: number[]
+                    precipitation_sum: number[]
+                }
+            }
+
+            const maxTemp = Math.round(data.daily.temperature_2m_max[0])
+            const precip = data.daily.precipitation_sum[0]
+
+            let emoji = "☀️"
+            if (precip > 5) emoji = "🌧️"
+            else if (precip > 0) emoji = "🌤️"
+            else if (maxTemp < 40) emoji = "❄️"
+
+            this.weatherEl.innerHTML = `${maxTemp}°F ${emoji} - ${month} ${day}, 1997`
+        } catch {
+            this.setFallbackWeather()
+        }
+    }
+
+    private setFallbackWeather(): void {
+        if (!this.weatherEl) return
+
+        const today = new Date()
+        const month = today.toLocaleString("en-US", { month: "short" })
+        const day = today.getDate()
+
+        const fallback: Record<string, string> = {
+            Jan: "52°F 🌧️",
+            Feb: "55°F 🌤️",
+            Mar: "58°F ☀️",
+            Apr: "62°F ☀️",
+            May: "65°F ☀️",
+            Jun: "68°F ☀️",
+            Jul: "68°F 🌫️",
+            Aug: "69°F 🌫️",
+            Sep: "72°F ☀️",
+            Oct: "68°F ☀️",
+            Nov: "58°F 🌧️",
+            Dec: "52°F 🌧️",
+        }
+
+        const temp = fallback[month] || "65°F ☀️"
+        this.weatherEl.innerHTML = `${temp} SF - ${month} ${day}, 1997`
     }
 
     public getElement(): HTMLElement {

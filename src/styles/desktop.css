@@ -166,31 +166,6 @@ body {
     cursor: pointer;
 }
 
-.toolbar-ticker {
-    background: #000000;
-    color: #00ff00;
-    padding: 2px 8px;
-    font-family: "Courier New", monospace;
-    font-size: 10px;
-    overflow: hidden;
-    white-space: nowrap;
-    max-width: 200px;
-}
-
-.toolbar-ticker span {
-    display: inline-block;
-    animation: ticker-scroll 10s linear infinite;
-}
-
-@keyframes ticker-scroll {
-    0% {
-        transform: translateX(100%);
-    }
-
-    100% {
-        transform: translateX(-100%);
-    }
-}
 
 .toolbar-weather {
     background: #87ceeb;
