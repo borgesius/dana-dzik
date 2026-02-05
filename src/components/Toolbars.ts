@@ -43,18 +43,32 @@ export class Toolbars {
         toolbar.className = "toolbar"
 
         const buttons = [
-            { text: "FREE SMILEYS 😀", className: "green" },
-            { text: "CURSOR MANIA ✨", className: "green" },
-            { text: "FREE SCREENSAVERS", className: "" },
-            { text: "💰 MAKE $$$ FAST", className: "green" },
-            { text: "FREE RINGTONES", className: "" },
+            { text: "FREE SMILEYS 😀", className: "green", href: "" },
+            { text: "CURSOR MANIA ✨", className: "green", href: "" },
+            { text: "FREE SCREENSAVERS", className: "", href: "" },
+            { text: "💰 MAKE $$$ FAST", className: "green", href: "" },
+            { text: "FREE RINGTONES", className: "", href: "" },
+            {
+                text: "🐙 GitHub",
+                className: "",
+                href: "https://github.com/borgesius",
+            },
         ]
 
-        buttons.forEach(({ text, className }) => {
-            const btn = document.createElement("button")
-            btn.className = `toolbar-button ${className}`
-            btn.textContent = text
-            toolbar.appendChild(btn)
+        buttons.forEach(({ text, className, href }) => {
+            if (href) {
+                const link = document.createElement("a")
+                link.className = `toolbar-button ${className}`
+                link.textContent = text
+                link.href = href
+                link.target = "_blank"
+                toolbar.appendChild(link)
+            } else {
+                const btn = document.createElement("button")
+                btn.className = `toolbar-button ${className}`
+                btn.textContent = text
+                toolbar.appendChild(btn)
+            }
         })
 
         const yahoo = this.createSearchBar("Yahoo!", "Search")
