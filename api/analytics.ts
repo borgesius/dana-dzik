@@ -36,6 +36,9 @@ interface Stats {
     }
 }
 
+const STATS_CACHE_KEY = "stats:cache"
+const STATS_CACHE_TTL = 300
+
 export default async function handler(
     req: VercelRequest,
     res: VercelResponse
@@ -64,8 +67,15 @@ export default async function handler(
         }
 
         if (req.method === "GET") {
+            const cached = await redis.get<Stats>(STATS_CACHE_KEY)
+            if (cached) {
+                res.status(200).json({ ok: true, data: cached, cached: true })
+                return
+            }
+
             const stats = await getStats(redis)
-            res.status(200).json({ ok: true, data: stats })
+            await redis.set(STATS_CACHE_KEY, stats, { ex: STATS_CACHE_TTL })
+            res.status(200).json({ ok: true, data: stats, cached: false })
             return
         }
 

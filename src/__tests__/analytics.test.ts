@@ -10,6 +10,7 @@ import {
     PHOTO_VARIANTS,
     trackAbConversion,
     trackFunnelStep,
+    trackPageview,
     trackWindowOpen,
 } from "../lib/analytics"
 
@@ -246,6 +247,38 @@ describe("Analytics", () => {
             trackWindowOpen("about")
 
             expect(sessionStorage.getItem("window_tracked_about")).toBe("true")
+        })
+    })
+
+    describe("trackPageview", () => {
+        it("fires on first call", () => {
+            const fetchSpy = vi
+                .spyOn(globalThis, "fetch")
+                .mockResolvedValue(new Response())
+
+            trackPageview()
+
+            expect(fetchSpy).toHaveBeenCalledTimes(1)
+        })
+
+        it("only fires once per session", () => {
+            const fetchSpy = vi
+                .spyOn(globalThis, "fetch")
+                .mockResolvedValue(new Response())
+
+            trackPageview()
+            trackPageview()
+            trackPageview()
+
+            expect(fetchSpy).toHaveBeenCalledTimes(1)
+        })
+
+        it("uses sessionStorage for tracking", () => {
+            vi.spyOn(globalThis, "fetch").mockResolvedValue(new Response())
+
+            trackPageview()
+
+            expect(sessionStorage.getItem("pageview_tracked")).toBe("true")
         })
     })
 })

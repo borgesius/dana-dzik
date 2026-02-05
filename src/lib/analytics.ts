@@ -5,6 +5,7 @@ const AB_TRACKED_KEY = "ab_variant_tracked"
 const VISITOR_KEY = "visitor_id"
 const PERF_COUNT_KEY = "perf_event_count"
 const WINDOW_TRACKED_PREFIX = "window_tracked_"
+const PAGEVIEW_TRACKED_KEY = "pageview_tracked"
 
 export const PHOTO_VARIANTS = [
     { id: "A", photo: "/assets/dana/IMG_5099.jpg" },
@@ -48,6 +49,8 @@ async function sendEvent(event: AnalyticsEvent): Promise<void> {
 }
 
 export function trackPageview(): void {
+    if (sessionStorage.getItem(PAGEVIEW_TRACKED_KEY)) return
+    sessionStorage.setItem(PAGEVIEW_TRACKED_KEY, "true")
     void sendEvent({ type: "pageview" })
 }
 
