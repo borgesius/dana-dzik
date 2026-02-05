@@ -1,3 +1,13 @@
+# [1.4.0](https://github.com/borgesius/dana-dzik/compare/v1.3.0...v1.4.0) (2026-02-05)
+
+
+### Features
+
+* analytics ([b15a427](https://github.com/borgesius/dana-dzik/commit/b15a4274bc010f767ac6b3fa29049d04abbbac98))
+* remove strava link ([93d83a7](https://github.com/borgesius/dana-dzik/commit/93d83a7b6f478e8ac7ad67c18234a585c7c79611))
+* **strava:** tweak strava ui ([543ab39](https://github.com/borgesius/dana-dzik/commit/543ab3958bc7720b59f61fed859f5813dd57bafa))
+* update weather to use real api for 1997 weather ([36b3ee7](https://github.com/borgesius/dana-dzik/commit/36b3ee7b8f377bdc42a9ab96c3553981b6411ea9))
+
 # [1.3.0](https://github.com/borgesius/dana-dzik/compare/v1.2.0...v1.3.0) (2026-02-05)
 
 
