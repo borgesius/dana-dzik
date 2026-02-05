@@ -47,11 +47,20 @@ Shows your currently playing track in the widget. Uses `/api/lastfm` serverless 
 
 ### Strava (Race Equivalency)
 
-Shows your best recent run with predicted race times using the Riegel formula. Uses `/api/strava` serverless function with automatic token refresh.
+Shows your best recent run with predicted race times using the Riegel formula. Uses `/api/strava` serverless function with automatic token refresh via Upstash Redis.
 
 - `STRAVA_CLIENT_ID` - From https://www.strava.com/settings/api
 - `STRAVA_CLIENT_SECRET` - From your Strava API settings
-- `STRAVA_REFRESH_TOKEN` - Obtained via OAuth flow (see Strava docs)
+- `STRAVA_REFRESH_TOKEN` - Initial token from OAuth flow (only used once, then stored in Redis)
+
+### Upstash Redis (Token Storage)
+
+Stores rotating Strava tokens so you don't have to re-auth manually.
+
+1. Create free database at https://console.upstash.com/
+2. Copy REST URL and token to your env vars:
+   - `UPSTASH_REDIS_REST_URL`
+   - `UPSTASH_REDIS_REST_TOKEN`
 
 ## Scripts
 

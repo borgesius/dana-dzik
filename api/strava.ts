@@ -1,4 +1,5 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node"
+import { Redis } from "@upstash/redis"
 
 interface TokenResponse {
     access_token: string
@@ -18,19 +19,33 @@ interface StravaActivity {
     average_speed: number
 }
 
-let cachedToken: string | null = null
-let tokenExpiresAt: number = 0
+interface CachedTokens {
+    accessToken: string
+    refreshToken: string
+    expiresAt: number
+}
+
+const REDIS_KEY = "strava_tokens"
+
+function getRedis(): Redis | null {
+    const url = process.env.UPSTASH_REDIS_REST_URL
+    const token = process.env.UPSTASH_REDIS_REST_TOKEN
+    if (!url || !token) return null
+    return new Redis({ url, token })
+}
 
 async function getAccessToken(): Promise<string> {
     const now = Math.floor(Date.now() / 1000)
+    const redis = getRedis()
 
-    if (cachedToken && tokenExpiresAt > now + 60) {
-        return cachedToken
+    const cached = redis ? await redis.get<CachedTokens>(REDIS_KEY) : null
+    if (cached && cached.expiresAt > now + 60) {
+        return cached.accessToken
     }
 
     const clientId = process.env.STRAVA_CLIENT_ID
     const clientSecret = process.env.STRAVA_CLIENT_SECRET
-    const refreshToken = process.env.STRAVA_REFRESH_TOKEN
+    const refreshToken = cached?.refreshToken || process.env.STRAVA_REFRESH_TOKEN
 
     if (!clientId || !clientSecret || !refreshToken) {
         throw new Error("Strava credentials not configured")
@@ -48,14 +63,21 @@ async function getAccessToken(): Promise<string> {
     })
 
     if (!response.ok) {
-        throw new Error(`Token refresh failed: ${response.status}`)
+        const body = await response.text()
+        throw new Error(`Token refresh failed: ${response.status} - ${body}`)
     }
 
     const data = (await response.json()) as TokenResponse
-    cachedToken = data.access_token
-    tokenExpiresAt = data.expires_at
 
-    return cachedToken
+    if (redis) {
+        await redis.set<CachedTokens>(REDIS_KEY, {
+            accessToken: data.access_token,
+            refreshToken: data.refresh_token,
+            expiresAt: data.expires_at,
+        })
+    }
+
+    return data.access_token
 }
 
 async function fetchActivities(token: string): Promise<StravaActivity[]> {
