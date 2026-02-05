@@ -1,3 +1,11 @@
+## [1.8.1](https://github.com/borgesius/dana-dzik/compare/v1.8.0...v1.8.1) (2026-02-05)
+
+
+### Bug Fixes
+
+* **analytics:** add performance monitoring ([7dd51f2](https://github.com/borgesius/dana-dzik/commit/7dd51f2fd534b592a8e1ff1f9e7c57a82fa6d1bb))
+* **guestbook:** wire up guestbook to github for real ([bc183e6](https://github.com/borgesius/dana-dzik/commit/bc183e6f788ccc149e1a74b68a808033a823bc21))
+
 # [1.8.0](https://github.com/borgesius/dana-dzik/compare/v1.7.0...v1.8.0) (2026-02-05)
 
 
