@@ -48,7 +48,7 @@ function getWelcomeContent(): string {
             />
 
             <p class="tagline">
-                Welcome to my website! Feel free to explore by clicking the icons on the desktop.
+                Welcome to my website! Feel free to explore by double-clicking the icons on the desktop.
             </p>
 
             <p class="guestbook-cta">
