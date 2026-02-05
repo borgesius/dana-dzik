@@ -1,3 +1,10 @@
+## [1.8.4](https://github.com/borgesius/dana-dzik/compare/v1.8.3...v1.8.4) (2026-02-05)
+
+
+### Bug Fixes
+
+* **guestbook:** display full message with proper line breaks ([f338a01](https://github.com/borgesius/dana-dzik/commit/f338a01618f293157d978543edaf97002ebf5127))
+
 ## [1.8.3](https://github.com/borgesius/dana-dzik/compare/v1.8.2...v1.8.3) (2026-02-05)
 
 
