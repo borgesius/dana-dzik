@@ -3,11 +3,260 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Web App</title>
-        <link rel="stylesheet" href="/src/styles/main.css" />
+        <meta name="description" content="Dana's Desktop" />
+        <title>Dana's Desktop</title>
+        <link rel="icon" type="image/x-icon" href="/assets/icons/ie.png" />
+
+        <!-- Open Graph / Social -->
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content="Dana's Desktop" />
+        <meta property="og:description" content="Dana's Desktop" />
+        <meta property="og:image" content="/assets/og-image.png" />
+        <meta property="og:url" content="https://dana.dev" />
+
+        <!-- Twitter -->
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Dana's Desktop" />
+        <meta name="twitter:description" content="Dana's Desktop" />
+        <meta name="twitter:image" content="/assets/og-image.png" />
+        <style>
+            @font-face {
+                font-family: 'DOS';
+                src: local('Perfect DOS VGA 437'), local('Courier New'), local('monospace');
+            }
+            body {
+                margin: 0;
+                padding: 0;
+                overflow: hidden;
+                background: #000;
+            }
+            #app {
+                width: 100vw;
+                height: 100vh;
+            }
+
+            /* Boot sequence */
+            .boot-screen {
+                position: fixed;
+                inset: 0;
+                background: #000;
+                color: #aaa;
+                font-family: 'Courier New', monospace;
+                font-size: 14px;
+                padding: 20px;
+                z-index: 100000;
+                overflow: hidden;
+                white-space: pre;
+                line-height: 1.4;
+            }
+            .boot-screen.hidden { display: none; }
+            .boot-screen .bios-header {
+                color: #fff;
+                margin-bottom: 10px;
+            }
+            .boot-screen .success { color: #0f0; }
+            .boot-screen .error { color: #f00; }
+            .boot-screen .warning { color: #ff0; }
+            .boot-screen .info { color: #0ff; }
+            .boot-cursor {
+                display: inline-block;
+                background: #aaa;
+                width: 8px;
+                height: 14px;
+                animation: blink-cursor 0.5s step-end infinite;
+            }
+            @keyframes blink-cursor { 50% { opacity: 0; } }
+
+            /* Windows loading screen */
+            .loading-screen {
+                position: fixed;
+                inset: 0;
+                background: #000;
+                display: none;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                color: #fff;
+                font-family: 'Tahoma', sans-serif;
+                z-index: 99999;
+            }
+            .loading-screen.active { display: flex; }
+            .loading-screen.hidden { display: none; }
+            .loading-logo {
+                width: 80px;
+                height: 80px;
+                margin-bottom: 20px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 48px;
+                animation: logo-glitch 3s infinite;
+            }
+            @keyframes logo-glitch {
+                0%, 95%, 100% { filter: none; transform: none; }
+                96% { filter: hue-rotate(90deg); transform: translate(2px, -1px); }
+                97% { filter: saturate(2) brightness(1.3); transform: translate(-2px, 1px); }
+                98% { filter: invert(0.1); transform: translate(1px, 2px) scale(1.02); }
+                99% { filter: hue-rotate(180deg); transform: translate(-1px, -1px); }
+            }
+            .loading-bar {
+                width: 200px;
+                height: 20px;
+                background: #333;
+                border: 2px solid #666;
+                overflow: hidden;
+            }
+            .loading-bar-fill {
+                height: 100%;
+                width: 0%;
+                background: linear-gradient(90deg, #f90, #fc0, #f90);
+                transition: width 0.3s ease;
+            }
+            .loading-text { margin-top: 15px; font-size: 12px; color: #888; }
+            .chromatic-text {
+                text-shadow: 2px 0 0 rgba(255,0,0,0.7), -2px 0 0 rgba(0,255,255,0.7);
+            }
+        </style>
     </head>
     <body>
+        <!-- BIOS/Boot sequence -->
+        <div class="boot-screen" id="boot-screen">
+            <div id="boot-output"></div>
+            <span class="boot-cursor"></span>
+        </div>
+
+        <!-- compu94 loading -->
+        <div class="loading-screen" id="loading-screen">
+            <div class="loading-logo">💾</div>
+            <div style="font-size: 24px; margin-bottom: 30px;" class="chromatic-text">compu94</div>
+            <div class="loading-bar">
+                <div class="loading-bar-fill" id="loading-bar-fill"></div>
+            </div>
+            <div class="loading-text" id="loading-text">Please wait...</div>
+        </div>
+
         <div id="app"></div>
+
+        <script>
+            const bootMessages = [
+                { text: 'AWARD BIOS v4.51PG (C) 1994 Award Software Inc.', cls: 'bios-header', delay: 100 },
+                { text: 'Processor: Intel Pentium 75MHz', delay: 50 },
+                { text: 'Memory Test: 16384K OK', delay: 100 },
+                { text: '', delay: 50 },
+                { text: 'Detecting IDE drives...', delay: 200 },
+                { text: '  Primary Master: QUANTUM FIREBALL 850MB', delay: 100 },
+                { text: '  Primary Slave:  CREATIVE CD-ROM 4X', delay: 100 },
+                { text: '', delay: 50 },
+                { text: 'Press DEL to enter SETUP, F8 for Boot Menu', cls: 'info', delay: 300 },
+                { text: '', delay: 100 },
+                { text: 'Booting from Hard Disk...', delay: 400 },
+                { text: '', delay: 100 },
+                { text: '╔═══════════════════════════════════════╗', cls: 'bios-header', delay: 50 },
+                { text: '║   compu94 Boot Loader v2.1            ║', cls: 'bios-header', delay: 50 },
+                { text: '║   Personal Edition                    ║', cls: 'bios-header', delay: 50 },
+                { text: '╚═══════════════════════════════════════╝', cls: 'bios-header', delay: 50 },
+                { text: '', delay: 50 },
+                { text: 'Loading kernel...', delay: 200 },
+                { text: '[    0.000000] compu94 kernel 2.1.0', delay: 100 },
+                { text: '[    0.001337] Initializing cgroup subsys cpu', delay: 50 },
+                { text: '[    0.004200] Command line: BOOT_IMAGE=/boot/compu quiet splash', delay: 50 },
+                { text: '[    0.006900] Calibrating delay loop... ', delay: 100, inline: true },
+                { text: '49.87 BogoMIPS', cls: 'success', delay: 200 },
+                { text: '[    0.010000] Memory: 16384k/16384k available', delay: 50 },
+                { text: '[    0.015000] Mounting root filesystem /dev/hda1...', delay: 150 },
+                { text: '[    0.020000] Loading ne2000.ko...', delay: 100, inline: true },
+                { text: ' OK', cls: 'success', delay: 100 },
+                { text: '[    0.025000] Loading sb16.ko...', delay: 100, inline: true },
+                { text: ' OK', cls: 'success', delay: 100 },
+                { text: '[    0.030000] Loading vga256.ko...', delay: 100, inline: true },
+                { text: ' OK', cls: 'success', delay: 100 },
+                { text: '[    0.035000] Loading floppy.ko...', delay: 100, inline: true },
+                { text: ' OK', cls: 'success', delay: 100 },
+                { text: '[    0.040000] Loading cdrom.ko...', delay: 100, inline: true },
+                { text: ' OK', cls: 'success', delay: 100 },
+                { text: '[    0.045000] WARNING: IRQ conflict detected', cls: 'warning', delay: 200 },
+                { text: '[    0.046000] ALERT: Low conventional memory', cls: 'error', delay: 150 },
+                { text: '[    0.047000] Resolved. Resuming boot.', cls: 'success', delay: 200 },
+                { text: '', delay: 50 },
+                { text: 'Starting system services...', delay: 100 },
+                { text: '', delay: 50 },
+                { text: '  * Starting mouse driver...', delay: 100, inline: true },
+                { text: ' [ OK ]', cls: 'success', delay: 100 },
+                { text: '  * Starting network services...', delay: 100, inline: true },
+                { text: ' [FAIL]', cls: 'error', delay: 150 },
+                { text: '  * Starting sound subsystem...', delay: 100, inline: true },
+                { text: ' [ OK ]', cls: 'success', delay: 100 },
+                { text: '  * Loading desktop environment...', delay: 100, inline: true },
+                { text: ' [ OK ]', cls: 'success', delay: 100 },
+                { text: '  * Loading 47 browser toolbars...', delay: 100, inline: true },
+                { text: ' [ OK ]', cls: 'success', delay: 200 },
+                { text: '  * Checking disk space...', delay: 100, inline: true },
+                { text: ' [LOW]', cls: 'warning', delay: 100 },
+                { text: '  * Starting print spooler...', delay: 100, inline: true },
+                { text: ' [ OK ]', cls: 'success', delay: 100 },
+                { text: '', delay: 100 },
+                { text: 'compu94 initialized successfully.', cls: 'success', delay: 200 },
+                { text: 'Starting graphical interface...', cls: 'info', delay: 500 },
+            ];
+
+            const loadingSteps = [
+                { text: 'Please wait...', progress: 10, delay: 300 },
+                { text: 'Loading system files...', progress: 25, delay: 300 },
+                { text: 'Initializing display...', progress: 40, delay: 300 },
+                { text: 'Loading user preferences...', progress: 55, delay: 300 },
+                { text: 'Starting Explorer...', progress: 70, delay: 300 },
+                { text: 'Almost ready...', progress: 85, delay: 300 },
+                { text: 'Welcome to compu94', progress: 100, delay: 400 },
+            ];
+
+            async function sleep(ms) {
+                return new Promise(resolve => setTimeout(resolve, ms));
+            }
+
+            async function runBootSequence() {
+                const output = document.getElementById('boot-output');
+                const bootScreen = document.getElementById('boot-screen');
+                const loadingScreen = document.getElementById('loading-screen');
+
+                for (const msg of bootMessages) {
+                    await sleep(msg.delay);
+
+                    if (msg.inline) {
+                        const span = document.createElement('span');
+                        span.textContent = msg.text;
+                        if (msg.cls) span.className = msg.cls;
+                        output.appendChild(span);
+                    } else {
+                        const line = document.createElement('div');
+                        line.textContent = msg.text;
+                        if (msg.cls) line.className = msg.cls;
+                        output.appendChild(line);
+                    }
+
+                    output.scrollTop = output.scrollHeight;
+                }
+
+                await sleep(500);
+                bootScreen.classList.add('hidden');
+                loadingScreen.classList.add('active');
+
+                const fill = document.getElementById('loading-bar-fill');
+                const text = document.getElementById('loading-text');
+
+                for (const step of loadingSteps) {
+                    await sleep(step.delay);
+                    fill.style.width = step.progress + '%';
+                    text.textContent = step.text;
+                }
+
+                await sleep(300);
+            }
+
+            window.addEventListener('load', async function() {
+                await runBootSequence();
+                document.getElementById('loading-screen').classList.add('hidden');
+            });
+        </script>
         <script type="module" src="/src/main.ts"></script>
     </body>
 </html>

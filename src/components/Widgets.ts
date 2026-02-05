@@ -1,0 +1,290 @@
+import { LASTFM_POLL_INTERVAL } from "../config"
+
+const LASTFM_API_KEY = import.meta.env.VITE_LASTFM_API_KEY
+const LASTFM_USERNAME = import.meta.env.VITE_LASTFM_USERNAME
+
+interface LastFmTrack {
+    name: string
+    artist: { "#text": string }
+    album: { "#text": string }
+    image: Array<{ "#text": string; size: string }>
+    "@attr"?: { nowplaying: string }
+}
+
+interface StravaApiResponse {
+    ok: boolean
+    data: {
+        name: string
+        date: string
+        distance: number
+        time: number
+        equivalent5k: string
+        equivalent10k: string
+        equivalentHalf: string
+        equivalentMarathon: string
+    } | null
+    error?: string
+}
+
+export class Widgets {
+    private container: HTMLElement
+
+    constructor(parent: HTMLElement) {
+        this.container = document.createElement("div")
+        this.container.className = "widgets-container"
+        parent.appendChild(this.container)
+
+        this.createAudioWidget()
+        this.createNowPlayingWidget()
+        this.createStravaWidget()
+    }
+
+    private createAudioWidget(): void {
+        const widget = this.createWidgetFrame("🎵 Audio Player", "audio-widget")
+
+        const content = document.createElement("div")
+        content.className = "widget-content audio-player"
+        content.innerHTML = `
+            <div class="audio-visualizer">
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+            </div>
+            <div class="audio-title">background.mid</div>
+            <div class="audio-controls">
+                <button class="audio-btn" id="audio-prev" title="Previous">⏮</button>
+                <button class="audio-btn play-btn" id="audio-play" title="Play/Pause">▶</button>
+                <button class="audio-btn" id="audio-next" title="Next">⏭</button>
+                <button class="audio-btn" id="audio-stop" title="Stop">⏹</button>
+            </div>
+            <div class="audio-status">Stopped</div>
+        `
+
+        widget.appendChild(content)
+        this.container.appendChild(widget)
+
+        this.initAudioControls(content)
+    }
+
+    private initAudioControls(content: HTMLElement): void {
+        const playBtn = content.querySelector(
+            "#audio-play"
+        ) as HTMLButtonElement
+        const stopBtn = content.querySelector(
+            "#audio-stop"
+        ) as HTMLButtonElement
+        const statusEl = content.querySelector(".audio-status") as HTMLElement
+        const visualizer = content.querySelector(
+            ".audio-visualizer"
+        ) as HTMLElement
+
+        let isPlaying = false
+
+        const updateUI = (): void => {
+            if (isPlaying) {
+                playBtn.textContent = "⏸"
+                statusEl.textContent = "Playing..."
+                visualizer.classList.add("playing")
+            } else {
+                playBtn.textContent = "▶"
+                statusEl.textContent = "Stopped"
+                visualizer.classList.remove("playing")
+            }
+        }
+
+        playBtn.addEventListener("click", () => {
+            const audioManager = (
+                window as unknown as {
+                    audioManager?: {
+                        toggleMidi: () => void
+                        midiEnabled: boolean
+                    }
+                }
+            ).audioManager
+            if (audioManager) {
+                audioManager.toggleMidi()
+                isPlaying = !isPlaying
+                updateUI()
+            }
+        })
+
+        stopBtn.addEventListener("click", () => {
+            const audioManager = (
+                window as unknown as {
+                    audioManager?: { stopMidi: () => void }
+                }
+            ).audioManager
+            if (audioManager) {
+                audioManager.stopMidi()
+                isPlaying = false
+                updateUI()
+            }
+        })
+    }
+
+    private createNowPlayingWidget(): void {
+        if (!LASTFM_API_KEY || !LASTFM_USERNAME) return
+
+        const widget = this.createWidgetFrame(
+            "🎧 Last.fm",
+            "now-playing-widget"
+        )
+
+        const content = document.createElement("div")
+        content.className = "widget-content now-playing"
+        content.innerHTML = `
+            <div class="np-album-art">
+                <img src="/assets/icons/cd.png" alt="Album" onerror="this.src='/assets/cat-placeholder.svg'" />
+            </div>
+            <div class="np-info">
+                <div class="np-status">Loading...</div>
+                <div class="np-track">---</div>
+                <div class="np-artist">---</div>
+            </div>
+        `
+
+        widget.appendChild(content)
+        this.container.appendChild(widget)
+
+        void this.fetchNowPlaying(content)
+        setInterval(
+            () => void this.fetchNowPlaying(content),
+            LASTFM_POLL_INTERVAL
+        )
+    }
+
+    private async fetchNowPlaying(content: HTMLElement): Promise<void> {
+        const statusEl = content.querySelector(".np-status") as HTMLElement
+        const trackEl = content.querySelector(".np-track") as HTMLElement
+        const artistEl = content.querySelector(".np-artist") as HTMLElement
+        const albumArt = content.querySelector(
+            ".np-album-art img"
+        ) as HTMLImageElement
+
+        try {
+            const url = `https://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=${LASTFM_USERNAME}&api_key=${LASTFM_API_KEY}&format=json&limit=1`
+            const response = await fetch(url)
+            const data = (await response.json()) as {
+                recenttracks: { track: LastFmTrack[] }
+            }
+
+            const track = data.recenttracks.track[0]
+            if (track) {
+                const isPlaying = track["@attr"]?.nowplaying === "true"
+                statusEl.textContent = isPlaying
+                    ? "▶ Now Playing"
+                    : "⏸ Last Played"
+                statusEl.className = `np-status ${isPlaying ? "playing" : ""}`
+                trackEl.textContent = track.name
+                artistEl.textContent = track.artist["#text"]
+
+                const img = track.image.find((i) => i.size === "medium")
+                if (img && img["#text"]) {
+                    albumArt.src = img["#text"]
+                }
+            }
+        } catch {
+            statusEl.textContent = "Offline"
+            trackEl.textContent = "---"
+            artistEl.textContent = "---"
+        }
+    }
+
+    private createStravaWidget(): void {
+        const widget = this.createWidgetFrame("🏃 Strava", "strava-widget")
+
+        const content = document.createElement("div")
+        content.className = "widget-content strava"
+        content.innerHTML = `
+            <div class="strava-loading">Loading activities...</div>
+        `
+
+        widget.appendChild(content)
+        this.container.appendChild(widget)
+
+        void this.fetchStrava(content)
+    }
+
+    private async fetchStrava(content: HTMLElement): Promise<void> {
+        try {
+            const response = await fetch("/api/strava")
+
+            const contentType = response.headers.get("content-type")
+            if (!contentType?.includes("application/json")) {
+                content.innerHTML = `<div class="strava-empty">API not available (deploy to Vercel)</div>`
+                return
+            }
+
+            if (!response.ok) {
+                throw new Error(`API error: ${response.status}`)
+            }
+
+            const result = (await response.json()) as StravaApiResponse
+
+            if (!result.ok || !result.data) {
+                content.innerHTML = `<div class="strava-empty">No recent runs</div>`
+                return
+            }
+
+            const best = result.data
+
+            content.innerHTML = `
+                <div class="strava-stat">
+                    <span class="stat-label">${best.name}</span>
+                    <span class="stat-value">${this.formatDistance(best.distance)}</span>
+                    <span class="stat-time">${this.formatTime(best.time)}</span>
+                </div>
+                <div class="strava-stat best">
+                    <span class="stat-label">5K Equivalent</span>
+                    <span class="stat-value">${best.equivalent5k}</span>
+                    <span class="stat-date">${new Date(best.date).toLocaleDateString()}</span>
+                </div>
+            `
+        } catch (error) {
+            console.error("[Widgets] Strava error:", error)
+            content.innerHTML = `<div class="strava-error">Could not load</div>`
+        }
+    }
+
+    private formatDistance(meters: number): string {
+        const km = meters / 1000
+        return `${km.toFixed(2)} km`
+    }
+
+    private formatTime(seconds: number): string {
+        const mins = Math.floor(seconds / 60)
+        const secs = Math.floor(seconds % 60)
+        return `${mins}:${secs.toString().padStart(2, "0")}`
+    }
+
+    private createWidgetFrame(title: string, id: string): HTMLElement {
+        const widget = document.createElement("div")
+        widget.className = "widget"
+        widget.id = id
+
+        const titlebar = document.createElement("div")
+        titlebar.className = "widget-titlebar"
+        titlebar.innerHTML = `
+            <span class="widget-title">${title}</span>
+            <button class="widget-btn minimize" title="Minimize">_</button>
+        `
+
+        const minimizeBtn = titlebar.querySelector(
+            ".minimize"
+        ) as HTMLButtonElement
+        minimizeBtn.addEventListener("click", () => {
+            widget.classList.toggle("minimized")
+            minimizeBtn.textContent = widget.classList.contains("minimized")
+                ? "□"
+                : "_"
+        })
+
+        widget.appendChild(titlebar)
+        return widget
+    }
+}

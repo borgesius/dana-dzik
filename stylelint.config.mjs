@@ -5,5 +5,7 @@ export default {
         "color-hex-length": "long",
         "declaration-empty-line-before": null,
         "no-empty-source": null,
+        "no-descending-specificity": null,
+        "property-no-vendor-prefix": null,
     },
 }

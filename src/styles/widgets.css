@@ -1,0 +1,309 @@
+/* === Widget Container === */
+.widgets-container {
+    position: fixed;
+    top: 60px;
+    right: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    z-index: 100;
+    width: 180px;
+}
+
+/* === Widget Base === */
+.widget {
+    background: linear-gradient(180deg, #3a6ea5 0%, #1e4d7b 100%);
+    border: 2px solid #1e3a5f;
+    border-radius: 6px;
+    box-shadow:
+        2px 2px 8px rgb(0 0 0 / 40%),
+        inset 0 1px 0 rgb(255 255 255 / 20%);
+    overflow: hidden;
+    font-family: Tahoma, "Segoe UI", sans-serif;
+    font-size: 11px;
+}
+
+.widget.minimized .widget-content {
+    display: none;
+}
+
+.widget-titlebar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 3px 6px;
+    background: linear-gradient(180deg, #0a246a 0%, #0a246a 50%, #0c2d7a 100%);
+    color: #ffffff;
+    font-weight: bold;
+    font-size: 10px;
+    cursor: default;
+    user-select: none;
+}
+
+.widget-title {
+    text-shadow: 1px 1px 0 rgb(0 0 0 / 50%);
+}
+
+.widget-btn {
+    width: 16px;
+    height: 14px;
+    background: linear-gradient(180deg, #dfe9f5 0%, #b8c7dc 100%);
+    border: 1px solid #1e3a5f;
+    border-radius: 2px;
+    font-size: 9px;
+    font-weight: bold;
+    color: #1e3a5f;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+}
+
+.widget-btn:hover {
+    background: linear-gradient(180deg, #ffffff 0%, #dfe9f5 100%);
+}
+
+.widget-btn:active {
+    background: linear-gradient(180deg, #b8c7dc 0%, #dfe9f5 100%);
+}
+
+.widget-content {
+    background: linear-gradient(180deg, #3169a5 0%, #225088 100%);
+    padding: 8px;
+    color: #ffffff;
+}
+
+/* === Audio Player Widget === */
+.audio-player {
+    text-align: center;
+}
+
+.audio-visualizer {
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    gap: 2px;
+    height: 24px;
+    margin-bottom: 6px;
+    padding: 4px;
+    background: #000000;
+    border: 1px inset #1e3a5f;
+    border-radius: 2px;
+}
+
+.audio-visualizer .bar {
+    width: 8px;
+    height: 4px;
+    background: linear-gradient(180deg, #00ff00 0%, #008800 100%);
+    border-radius: 1px;
+    transition: height 0.1s ease;
+}
+
+.audio-visualizer.playing .bar {
+    animation: equalizer 0.4s ease-in-out infinite alternate;
+}
+
+.audio-visualizer.playing .bar:nth-child(1) { animation-delay: 0s; }
+.audio-visualizer.playing .bar:nth-child(2) { animation-delay: 0.1s; }
+.audio-visualizer.playing .bar:nth-child(3) { animation-delay: 0.05s; }
+.audio-visualizer.playing .bar:nth-child(4) { animation-delay: 0.15s; }
+.audio-visualizer.playing .bar:nth-child(5) { animation-delay: 0.08s; }
+.audio-visualizer.playing .bar:nth-child(6) { animation-delay: 0.12s; }
+.audio-visualizer.playing .bar:nth-child(7) { animation-delay: 0.03s; }
+.audio-visualizer.playing .bar:nth-child(8) { animation-delay: 0.18s; }
+
+@keyframes equalizer {
+    0% {
+        height: 4px;
+    }
+
+    100% {
+        height: 20px;
+    }
+}
+
+.audio-title {
+    font-size: 9px;
+    color: #88ccff;
+    margin-bottom: 6px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.audio-controls {
+    display: flex;
+    justify-content: center;
+    gap: 4px;
+    margin-bottom: 4px;
+}
+
+.audio-btn {
+    width: 24px;
+    height: 20px;
+    background: linear-gradient(180deg, #4a7eb8 0%, #3a6ea5 50%, #2a5e95 100%);
+    border: 1px solid #1e4d7b;
+    border-radius: 3px;
+    color: #ffffff;
+    font-size: 10px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.audio-btn:hover {
+    background: linear-gradient(180deg, #5a8ec8 0%, #4a7eb8 50%, #3a6ea5 100%);
+}
+
+.audio-btn:active {
+    background: linear-gradient(180deg, #2a5e95 0%, #3a6ea5 100%);
+}
+
+.audio-btn.play-btn {
+    width: 32px;
+    background: linear-gradient(180deg, #44aa44 0%, #339933 50%, #228822 100%);
+    border-color: #116611;
+}
+
+.audio-btn.play-btn:hover {
+    background: linear-gradient(180deg, #55bb55 0%, #44aa44 50%, #339933 100%);
+}
+
+.audio-status {
+    font-size: 9px;
+    color: #88ccff;
+}
+
+/* === Now Playing Widget === */
+.now-playing {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.np-album-art {
+    width: 40px;
+    height: 40px;
+    background: #1e3a5f;
+    border: 1px inset #0a246a;
+    border-radius: 2px;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.np-album-art img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.np-info {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+}
+
+.np-status {
+    font-size: 9px;
+    color: #88ccff;
+    margin-bottom: 2px;
+}
+
+.np-status.playing {
+    color: #44ff44;
+    animation: pulse-text 2s ease-in-out infinite;
+}
+
+@keyframes pulse-text {
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.6;
+    }
+}
+
+.np-track {
+    font-weight: bold;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-bottom: 1px;
+}
+
+.np-artist {
+    font-size: 10px;
+    color: #aaddff;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* === Strava Widget === */
+.strava {
+    padding: 6px 8px;
+}
+
+.strava-loading,
+.strava-error,
+.strava-empty {
+    text-align: center;
+    color: #88ccff;
+    font-size: 10px;
+    padding: 8px 0;
+}
+
+.strava-error {
+    color: #ffaa88;
+}
+
+.strava-stat {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 4px;
+    padding: 4px 0;
+    border-bottom: 1px solid rgb(255 255 255 / 10%);
+}
+
+.strava-stat:last-child {
+    border-bottom: none;
+}
+
+.strava-stat.best {
+    background: rgb(255 215 0 / 10%);
+    margin: 0 -8px;
+    padding: 4px 8px;
+    border-radius: 2px;
+}
+
+.stat-label {
+    font-size: 9px;
+    color: #88ccff;
+    width: 100%;
+}
+
+.stat-value {
+    font-weight: bold;
+    font-size: 12px;
+}
+
+.stat-time,
+.stat-date {
+    font-size: 9px;
+    color: #aaddff;
+    margin-left: auto;
+}
+
+/* === Safe Mode === */
+.safe-mode .audio-visualizer.playing .bar {
+    animation: none;
+}
+
+.safe-mode .np-status.playing {
+    animation: none;
+}
