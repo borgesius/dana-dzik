@@ -1,3 +1,15 @@
+# [1.2.0](https://github.com/borgesius/dana-dzik/compare/v1.1.0...v1.2.0) (2026-02-05)
+
+
+### Bug Fixes
+
+* **copy:** remove llm slop ([c1051bd](https://github.com/borgesius/dana-dzik/commit/c1051bd96c24ab6ebf2f426f265fc4b0fdbff8f9))
+
+
+### Features
+
+* connect upstash redis for persistent strava refresh ([5e5e6c3](https://github.com/borgesius/dana-dzik/commit/5e5e6c3393b563156a12cd8a12c422a7000f0ecc))
+
 # [1.1.0](https://github.com/borgesius/dana-dzik/compare/v1.0.0...v1.1.0) (2026-02-05)
 
 
