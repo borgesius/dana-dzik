@@ -1,3 +1,10 @@
+## [1.8.2](https://github.com/borgesius/dana-dzik/compare/v1.8.1...v1.8.2) (2026-02-05)
+
+
+### Bug Fixes
+
+* **guestbook:** remove label requirement ([554bc9c](https://github.com/borgesius/dana-dzik/commit/554bc9cb3bab73f8b5e543a32a5a9fad93349567))
+
 ## [1.8.1](https://github.com/borgesius/dana-dzik/compare/v1.8.0...v1.8.1) (2026-02-05)
 
 
