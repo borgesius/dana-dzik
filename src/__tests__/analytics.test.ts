@@ -8,7 +8,7 @@ import {
     getVariantPhoto,
     getVisitorId,
     PHOTO_VARIANTS,
-    trackEngagement,
+    trackFunnelStep,
 } from "../lib/analytics"
 
 describe("Analytics", () => {
@@ -106,22 +106,34 @@ describe("Analytics", () => {
         })
     })
 
-    describe("trackEngagement", () => {
-        it("sets engaged flag in localStorage", () => {
-            trackEngagement()
-            expect(localStorage.getItem("user_engaged")).toBe("true")
+    describe("trackFunnelStep", () => {
+        it("sets funnel flag in localStorage", () => {
+            trackFunnelStep("launched")
+            expect(localStorage.getItem("funnel_launched")).toBe("true")
         })
 
-        it("only fires once per session", () => {
+        it("only fires once per step", () => {
             const fetchSpy = vi
                 .spyOn(globalThis, "fetch")
                 .mockResolvedValue(new Response())
 
-            trackEngagement()
-            trackEngagement()
-            trackEngagement()
+            trackFunnelStep("launched")
+            trackFunnelStep("launched")
+            trackFunnelStep("launched")
 
             expect(fetchSpy).toHaveBeenCalledTimes(1)
+        })
+
+        it("fires separately for different steps", () => {
+            const fetchSpy = vi
+                .spyOn(globalThis, "fetch")
+                .mockResolvedValue(new Response())
+
+            trackFunnelStep("launched")
+            trackFunnelStep("boot_complete")
+            trackFunnelStep("engaged")
+
+            expect(fetchSpy).toHaveBeenCalledTimes(3)
         })
     })
 })
