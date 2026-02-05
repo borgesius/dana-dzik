@@ -1,3 +1,15 @@
+## [1.11.3](https://github.com/borgesius/dana-dzik/compare/v1.11.2...v1.11.3) (2026-02-05)
+
+
+### Bug Fixes
+
+* **analytics:** conversion tracking ([4380e1c](https://github.com/borgesius/dana-dzik/commit/4380e1c83dee7decd32afcd9dc0b4872187c1dc6))
+
+
+### Performance Improvements
+
+* **redis:** throttle redis ([1dcb5e9](https://github.com/borgesius/dana-dzik/commit/1dcb5e99acc27e0fa8c57a8f45ddcc8124ebfd25))
+
 ## [1.11.2](https://github.com/borgesius/dana-dzik/compare/v1.11.1...v1.11.2) (2026-02-05)
 
 
