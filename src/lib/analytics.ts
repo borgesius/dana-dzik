@@ -56,6 +56,7 @@ const FUNNEL_PREFIX = "funnel_"
 export function trackWindowOpen(windowId: string): void {
     void sendEvent({ type: "window", windowId })
     trackFunnelStep("engaged")
+    trackAbConversion()
 }
 
 export function trackFunnelStep(step: string): void {
@@ -88,9 +89,13 @@ export function getVariantPhoto(): string {
     return found?.photo ?? PHOTO_VARIANTS[0].photo
 }
 
+const AB_CONVERTED_KEY = "ab_converted"
+
 export function trackAbConversion(): void {
+    if (localStorage.getItem(AB_CONVERTED_KEY)) return
     const variant = localStorage.getItem(AB_TEST_KEY)
     if (variant) {
+        localStorage.setItem(AB_CONVERTED_KEY, "true")
         void sendEvent({ type: "ab_convert", variant })
     }
 }
