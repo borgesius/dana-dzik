@@ -189,7 +189,10 @@ function formatElevation(meters: number): string {
 
 function findBestRide(activities: StravaActivity[]): ActivitySummary | null {
     const rides = activities.filter(
-        (a) => a.type === "Ride" && a.distance >= 5000 && a.moving_time >= 600
+        (a) =>
+            a.type === "Ride" &&
+            a.moving_time >= 600 &&
+            (a.distance >= 5000 || a.device_watts)
     )
     if (rides.length === 0) return null
 
