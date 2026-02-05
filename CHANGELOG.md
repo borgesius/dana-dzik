@@ -1,3 +1,10 @@
+# [1.10.0](https://github.com/borgesius/dana-dzik/compare/v1.9.0...v1.10.0) (2026-02-05)
+
+
+### Features
+
+* link to latest ci reports ([bca7e17](https://github.com/borgesius/dana-dzik/commit/bca7e17f14545801de1a7ccf66a511aa961a1d02))
+
 # [1.9.0](https://github.com/borgesius/dana-dzik/compare/v1.8.4...v1.9.0) (2026-02-05)
 
 
