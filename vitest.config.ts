@@ -7,7 +7,7 @@ export default defineConfig({
         environment: "node",
         include: ["src/**/*.test.ts", "src/**/*.spec.ts"],
         exclude: ["node_modules", "dist"],
-        pool: "vmThreads",
+        pool: "threads",
         coverage: {
             provider: "v8",
             reporter: ["text", "html", "lcov"],
