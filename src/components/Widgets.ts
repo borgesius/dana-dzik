@@ -12,17 +12,19 @@ interface LastFmApiResponse {
     error?: string
 }
 
+interface ActivitySummary {
+    name: string
+    date: string
+    value: string
+    detail?: string
+}
+
 interface StravaApiResponse {
     ok: boolean
     data: {
-        name: string
-        date: string
-        distance: number
-        time: number
-        equivalent5k: string
-        equivalent10k: string
-        equivalentHalf: string
-        equivalentMarathon: string
+        bestRun: ActivitySummary | null
+        bestRide: ActivitySummary | null
+        longestRide: ActivitySummary | null
     } | null
     error?: string
 }
@@ -231,23 +233,16 @@ export class Widgets {
             const result = (await response.json()) as StravaApiResponse
 
             if (!result.ok || !result.data) {
-                content.innerHTML = `<div class="strava-empty">No recent runs</div>`
+                content.innerHTML = `<div class="strava-empty">No recent activities</div>`
                 return
             }
 
-            const best = result.data
+            const { bestRun, bestRide, longestRide } = result.data
 
             content.innerHTML = `
-                <div class="strava-stat">
-                    <span class="stat-label">${best.name}</span>
-                    <span class="stat-value">${this.formatDistance(best.distance)}</span>
-                    <span class="stat-time">${this.formatTime(best.time)}</span>
-                </div>
-                <div class="strava-stat best">
-                    <span class="stat-label">5K Equivalent</span>
-                    <span class="stat-value">${best.equivalent5k}</span>
-                    <span class="stat-date">${new Date(best.date).toLocaleDateString()}</span>
-                </div>
+                ${this.renderStravaStat("🏃 Best Run (3mo)", bestRun, "5K eq")}
+                ${this.renderStravaStat("🚴 Best Ride (3mo)", bestRide, "avg")}
+                ${this.renderStravaStat("🚴 Longest Ride (3mo)", longestRide, "")}
             `
         } catch (error) {
             console.error("[Widgets] Strava error:", error)
@@ -255,15 +250,21 @@ export class Widgets {
         }
     }
 
-    private formatDistance(meters: number): string {
-        const km = meters / 1000
-        return `${km.toFixed(2)} km`
-    }
-
-    private formatTime(seconds: number): string {
-        const mins = Math.floor(seconds / 60)
-        const secs = Math.floor(seconds % 60)
-        return `${mins}:${secs.toString().padStart(2, "0")}`
+    private renderStravaStat(
+        label: string,
+        stat: ActivitySummary | null,
+        valueLabel: string
+    ): string {
+        if (!stat) {
+            return `<div class="strava-stat empty"><span class="stat-label">${label}</span><span class="stat-value">—</span></div>`
+        }
+        return `
+            <div class="strava-stat">
+                <span class="stat-label">${label}</span>
+                <span class="stat-value">${stat.value}${valueLabel ? ` <small>${valueLabel}</small>` : ""}</span>
+                <span class="stat-detail">${stat.detail || ""}</span>
+            </div>
+        `
     }
 
     private createWidgetFrame(title: string, id: string): HTMLElement {

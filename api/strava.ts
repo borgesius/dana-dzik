@@ -95,6 +95,8 @@ async function fetchActivities(token: string): Promise<StravaActivity[]> {
     return (await response.json()) as StravaActivity[]
 }
 
+const THREE_MONTHS_MS = 90 * 24 * 60 * 60 * 1000
+
 function calculateEquivalentTime(
     knownTime: number,
     knownDistance: number,
@@ -114,30 +116,53 @@ function formatTime(seconds: number): string {
     return `${mins}:${secs.toString().padStart(2, "0")}`
 }
 
-interface BestActivity {
-    name: string
-    date: string
-    distance: number
-    time: number
-    equivalent5k: string
-    equivalent10k: string
-    equivalentHalf: string
-    equivalentMarathon: string
+function formatDistance(meters: number): string {
+    const miles = meters / 1609.34
+    return `${miles.toFixed(1)} mi`
 }
 
-function findBestActivity(activities: StravaActivity[]): BestActivity | null {
-    const runs = activities.filter((a) => a.type === "Run" && a.distance >= 1000)
+function formatPace(metersPerSecond: number): string {
+    const minPerMile = 1609.34 / metersPerSecond / 60
+    const mins = Math.floor(minPerMile)
+    const secs = Math.round((minPerMile - mins) * 60)
+    return `${mins}:${secs.toString().padStart(2, "0")}/mi`
+}
 
+function formatSpeed(metersPerSecond: number): string {
+    const mph = metersPerSecond * 2.237
+    return `${mph.toFixed(1)} mph`
+}
+
+interface ActivitySummary {
+    name: string
+    date: string
+    value: string
+    detail?: string
+}
+
+interface StravaStats {
+    bestRun: ActivitySummary | null
+    bestRide: ActivitySummary | null
+    longestRide: ActivitySummary | null
+}
+
+function filterRecent(activities: StravaActivity[]): StravaActivity[] {
+    const cutoff = Date.now() - THREE_MONTHS_MS
+    return activities.filter((a) => new Date(a.start_date).getTime() > cutoff)
+}
+
+function findBestRun(activities: StravaActivity[]): ActivitySummary | null {
+    const runs = activities.filter((a) => a.type === "Run" && a.distance >= 1000)
     if (runs.length === 0) return null
 
     let best: StravaActivity | null = null
     let bestScore = Infinity
 
-    for (const activity of runs) {
-        const eq5k = calculateEquivalentTime(activity.moving_time, activity.distance, 5000)
+    for (const run of runs) {
+        const eq5k = calculateEquivalentTime(run.moving_time, run.distance, 5000)
         if (eq5k < bestScore) {
             bestScore = eq5k
-            best = activity
+            best = run
         }
     }
 
@@ -146,12 +171,67 @@ function findBestActivity(activities: StravaActivity[]): BestActivity | null {
     return {
         name: best.name,
         date: best.start_date,
-        distance: best.distance,
-        time: best.moving_time,
-        equivalent5k: formatTime(calculateEquivalentTime(best.moving_time, best.distance, 5000)),
-        equivalent10k: formatTime(calculateEquivalentTime(best.moving_time, best.distance, 10000)),
-        equivalentHalf: formatTime(calculateEquivalentTime(best.moving_time, best.distance, 21097.5)),
-        equivalentMarathon: formatTime(calculateEquivalentTime(best.moving_time, best.distance, 42195)),
+        value: formatTime(bestScore),
+        detail: `${formatDistance(best.distance)} @ ${formatPace(best.average_speed)}`,
+    }
+}
+
+function findBestRide(activities: StravaActivity[]): ActivitySummary | null {
+    const rides = activities.filter(
+        (a) => a.type === "Ride" && a.distance >= 5000 && a.moving_time >= 600
+    )
+    if (rides.length === 0) return null
+
+    let best: StravaActivity | null = null
+    let bestSpeed = 0
+
+    for (const ride of rides) {
+        if (ride.average_speed > bestSpeed) {
+            bestSpeed = ride.average_speed
+            best = ride
+        }
+    }
+
+    if (!best) return null
+
+    return {
+        name: best.name,
+        date: best.start_date,
+        value: formatSpeed(best.average_speed),
+        detail: `${formatDistance(best.distance)} in ${formatTime(best.moving_time)}`,
+    }
+}
+
+function findLongestRide(activities: StravaActivity[]): ActivitySummary | null {
+    const rides = activities.filter((a) => a.type === "Ride")
+    if (rides.length === 0) return null
+
+    let longest: StravaActivity | null = null
+    let maxDistance = 0
+
+    for (const ride of rides) {
+        if (ride.distance > maxDistance) {
+            maxDistance = ride.distance
+            longest = ride
+        }
+    }
+
+    if (!longest) return null
+
+    return {
+        name: longest.name,
+        date: longest.start_date,
+        value: formatDistance(longest.distance),
+        detail: `${formatTime(longest.moving_time)} @ ${formatSpeed(longest.average_speed)}`,
+    }
+}
+
+function computeStats(activities: StravaActivity[]): StravaStats {
+    const recent = filterRecent(activities)
+    return {
+        bestRun: findBestRun(recent),
+        bestRide: findBestRide(recent),
+        longestRide: findLongestRide(recent),
     }
 }
 
@@ -171,14 +251,9 @@ export default async function handler(
     try {
         const token = await getAccessToken()
         const activities = await fetchActivities(token)
-        const best = findBestActivity(activities)
+        const stats = computeStats(activities)
 
-        if (!best) {
-            res.status(200).json({ ok: true, data: null })
-            return
-        }
-
-        res.status(200).json({ ok: true, data: best })
+        res.status(200).json({ ok: true, data: stats })
     } catch (error) {
         console.error("Strava API error:", error)
         res.status(500).json({
