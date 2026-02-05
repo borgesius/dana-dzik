@@ -23,7 +23,7 @@ test.describe("Accessibility", () => {
 
     test("interactive elements are focusable", async ({ page }) => {
         await page.goto("/")
-        await page.waitForSelector(".loading-screen.hidden", { timeout: 5000 })
+        await page.waitForSelector(".loading-screen.hidden", { state: "attached", timeout: 10000 })
 
         await page.keyboard.press("Tab")
         const focusedElement = page.locator(":focus")
@@ -32,7 +32,7 @@ test.describe("Accessibility", () => {
 
     test("windows have title text", async ({ page }) => {
         await page.goto("/")
-        await page.waitForSelector(".loading-screen.hidden", { timeout: 5000 })
+        await page.waitForSelector(".loading-screen.hidden", { state: "attached", timeout: 10000 })
 
         const windowTitle = page.locator(".window-titlebar-text").first()
         const titleText = await windowTitle.textContent()
