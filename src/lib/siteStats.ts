@@ -123,10 +123,9 @@ function renderFunnel(funnel: Record<string, number>): void {
     if (!container) return
 
     const steps = [
-        { key: "window:welcome", label: "Landed" },
-        { key: "window:about", label: "Viewed About" },
-        { key: "window:projects", label: "Viewed Projects" },
-        { key: "window:links", label: "Viewed Links" },
+        { key: "launched", label: "Launched App" },
+        { key: "boot_complete", label: "Finished Intro" },
+        { key: "engaged", label: "Interacted" },
     ]
 
     const maxCount = Math.max(...steps.map((s) => funnel[s.key] || 0), 1)

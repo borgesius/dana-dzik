@@ -18,7 +18,8 @@ import { SafeMode } from "./lib/safeMode"
 
 setupErrorHandlers()
 trackPageview()
-trackFunnelStep("landed")
+trackFunnelStep("launched")
+trackFunnelStep("boot_complete")
 getAbVariant()
 
 const app = document.getElementById("app")
