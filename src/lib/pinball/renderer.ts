@@ -2,26 +2,26 @@ import type { Ball, Bumper, Flipper, Launcher, Target, Wall } from "./entities"
 import { LOGICAL_HEIGHT, LOGICAL_WIDTH } from "./physics"
 
 const COLORS = {
-    playfieldGradient1: "#16213e",
-    playfieldGradient2: "#0f3460",
-    playfield: "#1a1a2e",
-    wall: "#c0c0c0",
-    wallHighlight: "#ffffff",
-    wallShadow: "#808080",
-    ball: "#c0c0c0",
-    ballHighlight: "#ffffff",
-    ballShadow: "#606060",
-    bumper: "#000080",
-    bumperActive: "#0000ff",
-    bumperHighlight: "#4040ff",
-    flipper: "#808080",
-    flipperHighlight: "#c0c0c0",
-    flipperShadow: "#404040",
-    target: "#008000",
-    targetHit: "#00ff00",
-    scorePanel: "#c0c0c0",
-    text: "#00ff00",
-    launcherChannel: "#0a0a1a",
+    playfieldGradient1: "#2b1810",
+    playfieldGradient2: "#3d2214",
+    playfield: "#1a0e08",
+    wall: "#8B7355",
+    wallHighlight: "#C4A882",
+    wallShadow: "#4A3728",
+    ball: "#C0C0C0",
+    ballHighlight: "#E8E8E8",
+    ballShadow: "#707070",
+    bumper: "#8B0000",
+    bumperActive: "#FF4444",
+    bumperHighlight: "#CC3333",
+    flipper: "#8B7355",
+    flipperHighlight: "#C4A882",
+    flipperShadow: "#3D2214",
+    target: "#DAA520",
+    targetHit: "#FFD700",
+    scorePanel: "#5C4033",
+    text: "#FFD700",
+    launcherChannel: "#0D0806",
 }
 
 export class PinballRenderer {
@@ -70,15 +70,28 @@ export class PinballRenderer {
         this.ctx.fillRect(0, 0, LOGICAL_WIDTH, LOGICAL_HEIGHT)
 
         this.ctx.fillStyle = COLORS.launcherChannel
-        this.ctx.fillRect(295, 48, 50, LOGICAL_HEIGHT - 48)
+        this.ctx.save()
+        this.ctx.beginPath()
+        this.ctx.moveTo(250, 200)
+        this.ctx.lineTo(330, 420)
+        this.ctx.lineTo(335, 445)
+        this.ctx.lineTo(250, 445)
+        this.ctx.closePath()
+        this.ctx.fill()
+        this.ctx.restore()
 
-        this.drawScanlines()
+        this.drawWoodGrain()
     }
 
-    private drawScanlines(): void {
-        this.ctx.fillStyle = "rgba(0, 0, 0, 0.08)"
-        for (let y = 0; y < LOGICAL_HEIGHT; y += 3) {
-            this.ctx.fillRect(0, y, LOGICAL_WIDTH, 1)
+    private drawWoodGrain(): void {
+        this.ctx.strokeStyle = "rgba(139, 115, 85, 0.06)"
+        this.ctx.lineWidth = 0.5
+        for (let y = 0; y < LOGICAL_HEIGHT; y += 5) {
+            const offset = Math.sin(y * 0.1) * 3
+            this.ctx.beginPath()
+            this.ctx.moveTo(0, y + offset)
+            this.ctx.lineTo(LOGICAL_WIDTH, y + offset + 1)
+            this.ctx.stroke()
         }
     }
 
@@ -105,9 +118,30 @@ export class PinballRenderer {
         this.ctx.fillStyle = gradient
         this.ctx.fill()
 
-        this.ctx.strokeStyle = COLORS.wallShadow
+        this.ctx.strokeStyle = "#555555"
         this.ctx.lineWidth = 0.5
         this.ctx.stroke()
+    }
+
+    private drawStar(
+        cx: number,
+        cy: number,
+        outerR: number,
+        innerR: number
+    ): void {
+        this.ctx.beginPath()
+        for (let i = 0; i < 10; i++) {
+            const r = i % 2 === 0 ? outerR : innerR
+            const angle = (Math.PI / 5) * i - Math.PI / 2
+            const sx = cx + Math.cos(angle) * r
+            const sy = cy + Math.sin(angle) * r
+            if (i === 0) {
+                this.ctx.moveTo(sx, sy)
+            } else {
+                this.ctx.lineTo(sx, sy)
+            }
+        }
+        this.ctx.closePath()
     }
 
     public drawBumper(bumper: Bumper): void {
@@ -134,13 +168,13 @@ export class PinballRenderer {
         )
 
         if (bumper.hitAnimation > 0) {
-            gradient.addColorStop(0, "#8080ff")
+            gradient.addColorStop(0, "#FF6666")
             gradient.addColorStop(0.5, COLORS.bumperActive)
-            gradient.addColorStop(1, "#000040")
+            gradient.addColorStop(1, "#3D0000")
         } else {
             gradient.addColorStop(0, COLORS.bumperHighlight)
             gradient.addColorStop(0.5, COLORS.bumper)
-            gradient.addColorStop(1, "#000040")
+            gradient.addColorStop(1, "#3D0000")
         }
 
         this.ctx.beginPath()
@@ -152,11 +186,17 @@ export class PinballRenderer {
         this.ctx.lineWidth = 1.5
         this.ctx.stroke()
 
-        this.ctx.fillStyle = "#ffffff"
-        this.ctx.font = "bold 10px Tahoma, sans-serif"
-        this.ctx.textAlign = "center"
-        this.ctx.textBaseline = "middle"
-        this.ctx.fillText(bumper.points.toString(), x, y)
+        this.ctx.fillStyle = COLORS.text
+        this.drawStar(x, y, r * 0.5, r * 0.2)
+        this.ctx.fill()
+
+        if (bumper.points > 0) {
+            this.ctx.fillStyle = "#FFFFFF"
+            this.ctx.font = "bold 8px Tahoma, sans-serif"
+            this.ctx.textAlign = "center"
+            this.ctx.textBaseline = "middle"
+            this.ctx.fillText(bumper.points.toString(), x, y)
+        }
     }
 
     public drawWall(wall: Wall): void {
@@ -189,17 +229,17 @@ export class PinballRenderer {
 
     public drawFlipper(flipper: Flipper): void {
         const { pivot } = flipper
-        const flipperWidth = 10
+        const flipperWidth = 13
 
         this.ctx.save()
         this.ctx.translate(pivot.x, pivot.y)
         this.ctx.rotate(flipper.angle)
 
         this.ctx.beginPath()
-        this.ctx.ellipse(0, 0, 7, 7, 0, 0, Math.PI * 2)
+        this.ctx.ellipse(0, 0, 9, 9, 0, 0, Math.PI * 2)
         this.ctx.moveTo(0, -flipperWidth / 2)
-        this.ctx.lineTo(flipper.length - 8, -3)
-        this.ctx.arc(flipper.length - 8, 0, 3, -Math.PI / 2, Math.PI / 2)
+        this.ctx.lineTo(flipper.length - 10, -4)
+        this.ctx.arc(flipper.length - 10, 0, 4, -Math.PI / 2, Math.PI / 2)
         this.ctx.lineTo(0, flipperWidth / 2)
         this.ctx.closePath()
 
@@ -221,8 +261,8 @@ export class PinballRenderer {
         this.ctx.stroke()
 
         this.ctx.beginPath()
-        this.ctx.arc(0, 0, 4, 0, Math.PI * 2)
-        this.ctx.fillStyle = "#404040"
+        this.ctx.arc(0, 0, 5, 0, Math.PI * 2)
+        this.ctx.fillStyle = "#2A1A0E"
         this.ctx.fill()
 
         this.ctx.restore()
@@ -242,8 +282,18 @@ export class PinballRenderer {
             1.5
         )
 
+        if (!target.isHit) {
+            this.ctx.fillStyle = "#FFF8DC"
+            const ds = Math.min(halfW, halfH) * 0.5
+            this.ctx.save()
+            this.ctx.translate(x, y)
+            this.ctx.rotate(Math.PI / 4)
+            this.ctx.fillRect(-ds, -ds, ds * 2, ds * 2)
+            this.ctx.restore()
+        }
+
         if (target.hitAnimation > 0) {
-            this.ctx.fillStyle = `rgba(0, 255, 0, ${target.hitAnimation * 0.5})`
+            this.ctx.fillStyle = `rgba(255, 215, 0, ${target.hitAnimation * 0.6})`
             this.ctx.fillRect(x - halfW, y - halfH, target.width, target.height)
         }
     }
@@ -261,7 +311,7 @@ export class PinballRenderer {
             2
         )
 
-        this.ctx.fillStyle = "#000000"
+        this.ctx.fillStyle = "#1A0E08"
         this.ctx.fillRect(x - width / 2, y, width, height)
 
         if (isCharging || power > 0) {
@@ -273,8 +323,8 @@ export class PinballRenderer {
                 y + height - 3 - powerHeight
             )
             gradient.addColorStop(0, "#800000")
-            gradient.addColorStop(0.5, "#ff0000")
-            gradient.addColorStop(1, "#ff8000")
+            gradient.addColorStop(0.5, "#CC3333")
+            gradient.addColorStop(1, "#FF6633")
 
             this.ctx.fillStyle = gradient
             this.ctx.fillRect(
@@ -285,7 +335,7 @@ export class PinballRenderer {
             )
         }
 
-        this.ctx.fillStyle = "#ffffff"
+        this.ctx.fillStyle = COLORS.text
         this.ctx.font = "bold 8px Tahoma, sans-serif"
         this.ctx.textAlign = "center"
         this.ctx.fillText("PWR", x, y + height + 12)
@@ -329,7 +379,7 @@ export class PinballRenderer {
             2
         )
 
-        this.ctx.fillStyle = "#000000"
+        this.ctx.fillStyle = "#1A0E08"
         this.ctx.fillRect(10, panelY + 6, 85, 18)
 
         this.ctx.fillStyle = COLORS.text
@@ -337,14 +387,14 @@ export class PinballRenderer {
         this.ctx.textAlign = "left"
         this.ctx.fillText(score.toString().padStart(8, "0"), 13, panelY + 18)
 
-        this.ctx.fillStyle = "#000000"
+        this.ctx.fillStyle = "#C4A882"
         this.ctx.font = "9px Tahoma, sans-serif"
-        this.ctx.fillText("SCORE", 10, panelY + 38)
+        this.ctx.fillText("BOUNTY", 10, panelY + 38)
 
-        this.ctx.fillStyle = "#000000"
+        this.ctx.fillStyle = "#1A0E08"
         this.ctx.fillRect(105, panelY + 6, 70, 18)
 
-        this.ctx.fillStyle = "#ffff00"
+        this.ctx.fillStyle = COLORS.text
         this.ctx.font = "bold 10px 'Courier New', monospace"
         this.ctx.fillText(
             highScore.toString().padStart(6, "0"),
@@ -352,11 +402,11 @@ export class PinballRenderer {
             panelY + 18
         )
 
-        this.ctx.fillStyle = "#000000"
+        this.ctx.fillStyle = "#C4A882"
         this.ctx.font = "9px Tahoma, sans-serif"
-        this.ctx.fillText("HIGH", 105, panelY + 38)
+        this.ctx.fillText("RECORD", 105, panelY + 38)
 
-        this.ctx.fillStyle = "#000000"
+        this.ctx.fillStyle = "#C4A882"
         this.ctx.font = "11px Tahoma, sans-serif"
         this.ctx.textAlign = "right"
 
@@ -370,9 +420,9 @@ export class PinballRenderer {
         this.ctx.fillText(`BALL ${ballsText}`, LOGICAL_WIDTH - 60, panelY + 18)
 
         if (gameState !== "playing") {
-            this.ctx.fillStyle = gameState === "idle" ? "#008000" : "#800000"
+            this.ctx.fillStyle = gameState === "idle" ? COLORS.text : "#CC3333"
             this.ctx.fillText(
-                gameState === "idle" ? "READY" : gameState.toUpperCase(),
+                gameState === "idle" ? "DRAW!" : gameState.toUpperCase(),
                 LOGICAL_WIDTH - 60,
                 panelY + 36
             )
@@ -383,7 +433,7 @@ export class PinballRenderer {
         const centerX = LOGICAL_WIDTH / 2
         const centerY = LOGICAL_HEIGHT / 2
 
-        this.ctx.fillStyle = "rgba(0, 0, 0, 0.75)"
+        this.ctx.fillStyle = "rgba(26, 14, 8, 0.85)"
         const boxH = subMessage ? 70 : 45
         this.ctx.fillRect(centerX - 110, centerY - 30, 220, boxH)
 
@@ -396,14 +446,14 @@ export class PinballRenderer {
             2
         )
 
-        this.ctx.fillStyle = "#ffffff"
+        this.ctx.fillStyle = COLORS.text
         this.ctx.font = "bold 18px Tahoma, sans-serif"
         this.ctx.textAlign = "center"
         this.ctx.textBaseline = "middle"
         this.ctx.fillText(message, centerX, centerY - (subMessage ? 5 : 0))
 
         if (subMessage) {
-            this.ctx.fillStyle = "#c0c0c0"
+            this.ctx.fillStyle = "#C4A882"
             this.ctx.font = "11px Tahoma, sans-serif"
             this.ctx.fillText(subMessage, centerX, centerY + 20)
         }
@@ -417,7 +467,7 @@ export class PinballRenderer {
         ]
 
         const startY = LOGICAL_HEIGHT - 55
-        this.ctx.fillStyle = "rgba(255, 255, 255, 0.6)"
+        this.ctx.fillStyle = "rgba(196, 168, 130, 0.7)"
         this.ctx.font = "9px Tahoma, sans-serif"
         this.ctx.textAlign = "center"
 

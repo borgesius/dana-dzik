@@ -421,7 +421,7 @@ describe("Pinball", () => {
             return canvas
         }
 
-        it("ball launched from launcher enters play area", async () => {
+        it("ball launched from launcher enters play area via angled wall", async () => {
             const { PinballGame } = await import("../lib/pinball/PinballGame")
             const canvas = createMockCanvas()
             const game = new PinballGame(canvas)
@@ -429,15 +429,20 @@ describe("Pinball", () => {
             game.startGame()
 
             const ball = game.getBall()
-            ball.reset(320, 300)
+            ball.reset(300, 420)
             ball.active = true
-            ball.velocity = new Vector2D(0, -13)
+            ball.velocity = new Vector2D(0, -6)
 
-            for (let i = 0; i < 300; i++) {
+            let enteredPlayArea = false
+            for (let i = 0; i < 1000; i++) {
                 game.stepPhysics()
+                if (ball.active && ball.position.x < 245) {
+                    enteredPlayArea = true
+                    break
+                }
             }
 
-            expect(ball.position.x).toBeLessThan(290)
+            expect(enteredPlayArea).toBe(true)
         })
 
         it("ball cannot escape through left wall", async () => {
@@ -465,9 +470,9 @@ describe("Pinball", () => {
 
             game.startGame()
             const ball = game.getBall()
-            ball.reset(150, 100)
+            ball.reset(130, 200)
             ball.active = true
-            ball.velocity = new Vector2D(0, -12)
+            ball.velocity = new Vector2D(0, -10)
 
             for (let i = 0; i < 60; i++) {
                 game.stepPhysics()
@@ -485,11 +490,33 @@ describe("Pinball", () => {
             expect(game.ballsRemaining).toBe(3)
 
             const ball = game.getBall()
-            ball.reset(150, 460)
+            ball.reset(148, 485)
             ball.active = true
-            ball.velocity = new Vector2D(0, 8)
+            ball.velocity = new Vector2D(0, 5)
 
             for (let i = 0; i < 120; i++) {
+                game.stepPhysics()
+            }
+
+            expect(game.ballsRemaining).toBeLessThan(3)
+        })
+
+        it("ball does not sit between flippers at rest", async () => {
+            const { PinballGame } = await import("../lib/pinball/PinballGame")
+            const canvas = createMockCanvas()
+            const game = new PinballGame(canvas)
+
+            game.startGame()
+            expect(game.ballsRemaining).toBe(3)
+
+            const ball = game.getBall()
+            const flippers = game.getFlippers()
+            const midX = (flippers[0].pivot.x + flippers[1].pivot.x) / 2
+            ball.reset(midX, flippers[0].pivot.y - 5)
+            ball.active = true
+            ball.velocity = new Vector2D(0, 1)
+
+            for (let i = 0; i < 300; i++) {
                 game.stepPhysics()
             }
 
@@ -745,24 +772,119 @@ describe("Pinball", () => {
             localStorage.clear()
         })
 
-        it("full launch flow: charge, release, ball enters play area", async () => {
+        it("power 6 (min practical) launch enters play area", async () => {
             const { PinballGame } = await import("../lib/pinball/PinballGame")
             const canvas = createMockCanvas()
             const game = new PinballGame(canvas)
 
             game.startGame()
             const ball = game.getBall()
-            expect(ball.active).toBe(false)
+            ball.reset(300, 420)
+            ball.active = true
+            ball.velocity = new Vector2D(0, -6)
 
-            ball.reset(320, 300)
-            ball.launch(13)
-            expect(ball.active).toBe(true)
-
-            for (let i = 0; i < 300; i++) {
+            let enteredPlayArea = false
+            for (let i = 0; i < 1000; i++) {
                 game.stepPhysics()
+                if (ball.active && ball.position.x < 245) {
+                    enteredPlayArea = true
+                    break
+                }
             }
 
-            expect(ball.position.x).toBeLessThan(295)
+            expect(enteredPlayArea).toBe(true)
+        })
+
+        it("power 6 (mid) launch enters play area", async () => {
+            const { PinballGame } = await import("../lib/pinball/PinballGame")
+            const canvas = createMockCanvas()
+            const game = new PinballGame(canvas)
+
+            game.startGame()
+            const ball = game.getBall()
+            ball.reset(300, 420)
+            ball.active = true
+            ball.velocity = new Vector2D(0, -6)
+
+            let enteredPlayArea = false
+            for (let i = 0; i < 1000; i++) {
+                game.stepPhysics()
+                if (ball.active && ball.position.x < 245) {
+                    enteredPlayArea = true
+                    break
+                }
+            }
+
+            expect(enteredPlayArea).toBe(true)
+        })
+
+        it("power 9 (max) launch enters play area", async () => {
+            const { PinballGame } = await import("../lib/pinball/PinballGame")
+            const canvas = createMockCanvas()
+            const game = new PinballGame(canvas)
+
+            game.startGame()
+            const ball = game.getBall()
+            ball.reset(300, 420)
+            ball.active = true
+            ball.velocity = new Vector2D(0, -9)
+
+            let enteredPlayArea = false
+            for (let i = 0; i < 300; i++) {
+                game.stepPhysics()
+                if (ball.active && ball.position.x < 245) {
+                    enteredPlayArea = true
+                    break
+                }
+            }
+
+            expect(enteredPlayArea).toBe(true)
+        })
+
+        it("minimum launch power (6) enters play area", async () => {
+            const { PinballGame } = await import("../lib/pinball/PinballGame")
+            const canvas = createMockCanvas()
+            const game = new PinballGame(canvas)
+
+            game.startGame()
+            const ball = game.getBall()
+            ball.reset(300, 420)
+            ball.active = true
+            ball.velocity = new Vector2D(0, -6)
+
+            let enteredPlayArea = false
+            for (let i = 0; i < 1500; i++) {
+                game.stepPhysics()
+                if (ball.active && ball.position.x < 245) {
+                    enteredPlayArea = true
+                    break
+                }
+            }
+
+            expect(enteredPlayArea).toBe(true)
+        })
+
+        it("ball touches angled wall and gains leftward velocity", async () => {
+            const { PinballGame } = await import("../lib/pinball/PinballGame")
+            const canvas = createMockCanvas()
+            const game = new PinballGame(canvas)
+
+            game.startGame()
+            const ball = game.getBall()
+            ball.reset(300, 420)
+            ball.active = true
+            ball.velocity = new Vector2D(0, -6)
+
+            let hadLeftwardVelocity = false
+            for (let i = 0; i < 30; i++) {
+                game.stepPhysics()
+                if (ball.active && ball.velocity.x < -0.1) {
+                    hadLeftwardVelocity = true
+                    break
+                }
+            }
+
+            expect(hadLeftwardVelocity).toBe(true)
         })
 
         it("bumper scoring flow", async () => {

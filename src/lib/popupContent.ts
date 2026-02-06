@@ -33,10 +33,10 @@ const WINNER_POPUPS: PopupContent[] = [
         type: "winner",
         title: "You Won!!!",
         headline: "🎉 VISITOR #0x0F4240 DETECTED! 🎉",
-        body: "You have been selected (randomly, probably)!",
+        body: "You have been selected!",
         buttons: [
             { text: "Claim Prize", className: "green" },
-            { text: "Later (never)", className: "" },
+            { text: "Later", className: "" },
         ],
     },
 ]
@@ -50,56 +50,6 @@ const ERROR_POPUPS: PopupContent[] = [
         buttons: [
             { text: "Download RAM", className: "primary" },
             { text: "Cancel", className: "" },
-        ],
-    },
-    {
-        type: "error",
-        title: "IRQ Conflict",
-        headline: "⚠️ IRQ 7 IS OCCUPIED BY IRQ 7 ⚠️",
-        body: "The interrupt request is interrupting itself.",
-        buttons: [
-            { text: "Ignore", className: "primary" },
-            { text: "Ignore Harder", className: "" },
-        ],
-    },
-    {
-        type: "error",
-        title: "Disk Error",
-        headline: "💽 DISK C:\\ HAS EXCEEDED MAXIMUM ROUNDNESS 💽",
-        body: "Please insert a more circular disk.",
-        buttons: [
-            { text: "OK", className: "primary" },
-            { text: "Make Rounder", className: "" },
-        ],
-    },
-    {
-        type: "error",
-        title: "Temperature Warning",
-        headline: "🌡️ CPU RUNNING TOO COLD 🌡️",
-        body: "Current temperature: -40°C. This is incompatible with the motherboard's blood type.",
-        buttons: [
-            { text: "Warm Up", className: "primary" },
-            { text: "Ignore", className: "" },
-        ],
-    },
-    {
-        type: "error",
-        title: "Memory Error",
-        headline: "🧠 STACK OVERFLOW IN THE HEAP 🧠",
-        body: "The heap has also overflowed into the stack. They are now the same.",
-        buttons: [
-            { text: "Merge Memories", className: "primary" },
-            { text: "Forget", className: "" },
-        ],
-    },
-    {
-        type: "error",
-        title: "Clock Error",
-        headline: "🕐 SYSTEM CLOCK IS 3 DAYS AHEAD OF ITSELF 🕐",
-        body: "Time is no longer linear on this machine.",
-        buttons: [
-            { text: "Accept", className: "primary" },
-            { text: "Wait", className: "" },
         ],
     },
 ]
@@ -119,20 +69,10 @@ const AD_POPUPS: PopupContent[] = [
         type: "ad",
         title: "Speed Up PC",
         headline: "🚀 YOUR PC IS RUNNING 340% TOO SLOW 🚀",
-        body: "Download PCSpeedUp.exe.scr to fix!",
+        body: "Download PCSpeedUp.scr to fix!",
         buttons: [
             { text: "Speed Up", className: "" },
             { text: "Stay Slow", className: "gray" },
-        ],
-    },
-    {
-        type: "ad",
-        title: "Free Screensavers",
-        headline: "✨ 10,000 FREE SCREENSAVERS ✨",
-        body: "Flying toasters, pipes, and more! (Requires 4GB RAM)",
-        buttons: [
-            { text: "Download All", className: "" },
-            { text: "No", className: "gray" },
         ],
     },
 ]

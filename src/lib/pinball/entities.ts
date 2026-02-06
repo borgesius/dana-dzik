@@ -40,7 +40,7 @@ export class Ball {
 
     public launch(power: number): void {
         this.active = true
-        this.velocity = new Vector2D((Math.random() - 0.5) * 0.5, -power)
+        this.velocity = new Vector2D(0, -power)
     }
 }
 
@@ -148,11 +148,11 @@ export class Flipper {
         this.angularVelocity = 0
 
         if (side === "left") {
-            this.restAngle = 0.45
-            this.activeAngle = -0.55
+            this.restAngle = 0.65
+            this.activeAngle = -0.5
         } else {
-            this.restAngle = Math.PI - 0.45
-            this.activeAngle = Math.PI + 0.55
+            this.restAngle = Math.PI - 0.65
+            this.activeAngle = Math.PI + 0.5
         }
 
         this.angle = this.restAngle
@@ -300,18 +300,18 @@ export class Launcher {
         this.width = width
         this.height = height
         this.power = 0
-        this.maxPower = 14
+        this.maxPower = 9
         this.isCharging = false
     }
 
     public startCharge(): void {
         this.isCharging = true
-        this.power = 4
+        this.power = 6
     }
 
     public update(): void {
         if (this.isCharging && this.power < this.maxPower) {
-            this.power += 0.2
+            this.power += 0.12
         }
     }
 

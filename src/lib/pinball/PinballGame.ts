@@ -1,5 +1,5 @@
 import { Ball, Bumper, Flipper, Launcher, Target, Wall } from "./entities"
-import { LOGICAL_HEIGHT, SUBSTEPS } from "./physics"
+import { LOGICAL_HEIGHT, SUBSTEPS, Vector2D } from "./physics"
 import { PinballRenderer } from "./renderer"
 
 export type GameState = "idle" | "launching" | "playing" | "gameOver"
@@ -10,7 +10,7 @@ interface AudioManager {
 
 const STORAGE_KEY = "pinball-high-score"
 
-const BALL_START_X = 320
+const BALL_START_X = 300
 const BALL_START_Y = 420
 const BALL_RADIUS = 8
 
@@ -33,6 +33,7 @@ export class PinballGame {
     private _highScore: number = 0
     private _ballsRemaining: number = 3
     private _gameState: GameState = "idle"
+    private launcherSettleFrames: number = 0
 
     private audioManager: AudioManager | null = null
 
@@ -47,7 +48,7 @@ export class PinballGame {
         this.renderer = new PinballRenderer(ctx, canvas.width, canvas.height)
 
         this.ball = new Ball(BALL_START_X, BALL_START_Y, BALL_RADIUS)
-        this.launcher = new Launcher(320, 370)
+        this.launcher = new Launcher(300, 370)
 
         this.loadHighScore()
         this.buildPlayfield()
@@ -136,43 +137,40 @@ export class PinballGame {
         this.walls = []
 
         this.walls.push(new Wall(15, 55, 15, 415))
-        this.walls.push(new Wall(15, 55, 285, 55))
-        this.walls.push(new Wall(285, 115, 285, 415))
+        this.walls.push(new Wall(15, 55, 250, 55))
 
-        this.walls.push(new Wall(295, 48, 340, 108, 0.55))
-        this.walls.push(new Wall(340, 108, 340, LOGICAL_HEIGHT + 10))
-        this.walls.push(new Wall(300, 115, 300, LOGICAL_HEIGHT + 10))
+        this.walls.push(new Wall(330, 445, 260, 55, 0.95))
 
-        this.walls.push(new Wall(285, 55, 295, 48))
+        this.walls.push(new Wall(200, 445, 330, 445, 0.7))
 
-        this.walls.push(new Wall(15, 415, 95, 450))
-        this.walls.push(new Wall(205, 450, 285, 415))
+        this.walls.push(new Wall(15, 415, 82, 452))
+        this.walls.push(new Wall(230, 460, 250, 415))
 
-        this.walls.push(new Wall(18, 320, 50, 380, 0.8))
-        this.walls.push(new Wall(250, 380, 282, 320, 0.8))
+        this.walls.push(new Wall(18, 320, 42, 380, 0.8))
+        this.walls.push(new Wall(232, 380, 248, 320, 0.8))
 
-        const flipperY = 452
+        const flipperY = 454
         this.flippers = [
-            new Flipper(100, flipperY, 48, "left"),
-            new Flipper(200, flipperY, 48, "right"),
+            new Flipper(90, flipperY, 58, "left"),
+            new Flipper(205, flipperY, 58, "right"),
         ]
 
-        const cx = 150
+        const cx = 130
         this.bumpers = [
-            new Bumper(cx, 155, 18, 100),
-            new Bumper(cx - 55, 210, 16, 100),
-            new Bumper(cx + 55, 210, 16, 100),
-            new Bumper(cx, 265, 15, 150),
+            new Bumper(cx, 215, 18, 100),
+            new Bumper(cx - 50, 270, 16, 100),
+            new Bumper(cx + 50, 270, 16, 100),
+            new Bumper(cx, 325, 15, 150),
         ]
 
         this.targets = [
-            new Target(40, 160, 12, 35, 500),
-            new Target(260, 160, 12, 35, 500),
-            new Target(cx - 35, 320, 10, 28, 300),
-            new Target(cx + 35, 320, 10, 28, 300),
+            new Target(35, 230, 12, 35, 500),
+            new Target(230, 230, 12, 35, 500),
+            new Target(cx - 30, 370, 10, 28, 300),
+            new Target(cx + 30, 370, 10, 28, 300),
         ]
 
-        this.launcher = new Launcher(320, 370, 22, 60)
+        this.launcher = new Launcher(300, 370, 22, 60)
     }
 
     private setupInput(): void {
@@ -314,6 +312,32 @@ export class PinballGame {
             })
         }
 
+        if (
+            this.ball.active &&
+            this.ball.position.x > 260 &&
+            this.ball.position.y > 200
+        ) {
+            this.ball.velocity = new Vector2D(
+                Math.min(this.ball.velocity.x, -1),
+                this.ball.velocity.y
+            )
+        }
+
+        if (
+            this.ball.active &&
+            this.ball.position.y > 435 &&
+            this.ball.position.x > 260 &&
+            this.ball.velocity.magnitude() < 0.5
+        ) {
+            this.launcherSettleFrames++
+            if (this.launcherSettleFrames > 45) {
+                this.ball.reset(BALL_START_X, BALL_START_Y)
+                this.launcherSettleFrames = 0
+            }
+        } else {
+            this.launcherSettleFrames = 0
+        }
+
         if (this.ball.active && this.checkBallLost()) {
             this._ballsRemaining--
             this.playSound("pinball_drain")
@@ -348,10 +372,7 @@ export class PinballGame {
         )
 
         if (this._gameState === "idle") {
-            this.renderer.drawMessage(
-                "PINBALL",
-                "Press SPACE or click to start"
-            )
+            this.renderer.drawMessage("WANTED", "Press SPACE or click to start")
             this.renderer.drawInstructions()
         } else if (this._gameState === "gameOver") {
             this.renderer.drawMessage(

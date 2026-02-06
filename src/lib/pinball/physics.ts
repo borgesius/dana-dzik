@@ -52,12 +52,12 @@ export const LOGICAL_WIDTH = 350
 export const LOGICAL_HEIGHT = 500
 
 export const SUBSTEPS = 4
-export const GRAVITY = 0.15
-export const FRICTION = 0.998
-export const FLIPPER_FORCE = 14
-export const BUMPER_FORCE = 8
-export const WALL_DAMPING = 0.65
-export const MAX_VELOCITY = 15
+export const GRAVITY = 0.05
+export const FRICTION = 0.989
+export const FLIPPER_FORCE = 6
+export const BUMPER_FORCE = 3
+export const WALL_DAMPING = 0.55
+export const MAX_VELOCITY = 7
 
 export function circleCircleCollision(
     pos1: Vector2D,
