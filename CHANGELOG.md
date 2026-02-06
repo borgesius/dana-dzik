@@ -1,3 +1,10 @@
+# [1.21.0](https://github.com/borgesius/dana-dzik/compare/v1.20.0...v1.21.0) (2026-02-06)
+
+
+### Features
+
+* welt ([#11](https://github.com/borgesius/dana-dzik/issues/11)) ([dbdd99b](https://github.com/borgesius/dana-dzik/commit/dbdd99bd873b7404a381804e79883a85ca1a09f3))
+
 # [1.20.0](https://github.com/borgesius/dana-dzik/compare/v1.19.0...v1.20.0) (2026-02-06)
 
 
