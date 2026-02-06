@@ -78,13 +78,18 @@ function getVisitorId(): string {
     return id
 }
 
+const ANALYTICS_TOKEN = "dk-analytics-2026"
+
 async function sendEvent(event: AnalyticsEvent): Promise<void> {
     if (isBot()) return
 
     try {
         await fetch("/api/analytics", {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
+            headers: {
+                "Content-Type": "application/json",
+                "X-Analytics-Token": ANALYTICS_TOKEN,
+            },
             body: JSON.stringify(event),
         })
     } catch {
