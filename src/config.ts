@@ -84,39 +84,87 @@ export const ROUTE_MAP: Record<string, RoutableWindow> = {
     "/terminal": "terminal",
 }
 
-export interface AppItemConfig {
+export interface DesktopItemConfig {
     id: string
-    label: string
+    filename: string
+    label?: string
     icon: string
     windowId: RoutableWindow
+    fileType: "file" | "executable" | "shortcut" | "directory"
 }
 
-export const APP_ITEMS: AppItemConfig[] = [
+export const DESKTOP_ITEMS: DesktopItemConfig[] = [
     {
         id: "internet-explorer",
+        filename: "Internet Explorer.lnk",
         label: "Internet Explorer",
         icon: "🌐",
         windowId: "welcome",
+        fileType: "shortcut",
     },
-    { id: "about-me", label: "about_me.doc", icon: "📄", windowId: "about" },
+    {
+        id: "about-me",
+        filename: "about_me.doc",
+        icon: "📄",
+        windowId: "about",
+        fileType: "file",
+    },
     {
         id: "projects",
-        label: "cool_projects.zip",
+        filename: "cool_projects.zip",
         icon: "📦",
         windowId: "projects",
+        fileType: "file",
     },
-    { id: "resume", label: "resume.pdf", icon: "📕", windowId: "resume" },
-    { id: "links", label: "bookmarks.url", icon: "🔗", windowId: "links" },
+    {
+        id: "resume",
+        filename: "resume.pdf",
+        icon: "📕",
+        windowId: "resume",
+        fileType: "file",
+    },
+    {
+        id: "links",
+        filename: "bookmarks.url",
+        icon: "🔗",
+        windowId: "links",
+        fileType: "shortcut",
+    },
     {
         id: "guestbook",
-        label: "guestbook.exe",
+        filename: "guestbook.exe",
         icon: "📖",
         windowId: "guestbook",
+        fileType: "executable",
     },
-    { id: "felixgpt", label: "FelixGPT.exe", icon: "🐱", windowId: "felixgpt" },
-    { id: "stats", label: "Site Stats.exe", icon: "📊", windowId: "stats" },
-    { id: "terminal", label: "terminal.exe", icon: "💻", windowId: "terminal" },
-    { id: "welt", label: "WELT", icon: "📁", windowId: "explorer" },
+    {
+        id: "felixgpt",
+        filename: "FelixGPT.exe",
+        icon: "🐱",
+        windowId: "felixgpt",
+        fileType: "executable",
+    },
+    {
+        id: "stats",
+        filename: "Site Stats.exe",
+        icon: "📊",
+        windowId: "stats",
+        fileType: "executable",
+    },
+    {
+        id: "terminal",
+        filename: "terminal.exe",
+        icon: "💻",
+        windowId: "terminal",
+        fileType: "executable",
+    },
+    {
+        id: "welt",
+        filename: "WELT",
+        icon: "📁",
+        windowId: "explorer",
+        fileType: "directory",
+    },
 ]
 
 /** Items pinned to the mobile dock */

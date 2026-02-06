@@ -1,3 +1,5 @@
+import { DESKTOP_ITEMS } from "../../config"
+
 export type FileType = "file" | "directory" | "executable" | "shortcut"
 
 export interface FSNode {
@@ -315,34 +317,10 @@ ENDE
 VORSTELLUNG "Open your eyes."
 VERNEINUNG`
 
-const FILESYSTEM_STRUCTURE: FSNode = {
-    name: "C:",
-    type: "directory",
-    children: {
-        Users: {
-            name: "Users",
-            type: "directory",
-            children: {
-                Dana: {
-                    name: "Dana",
-                    type: "directory",
-                    children: {
-                        Desktop: {
-                            name: "Desktop",
-                            type: "directory",
-                            children: {
-                                "Internet Explorer.lnk": {
-                                    name: "Internet Explorer.lnk",
-                                    type: "shortcut",
-                                    windowId: "welcome",
-                                    content:
-                                        "[InternetShortcut]\nURL=file:///C:/Program Files/Internet Explorer/iexplore.exe",
-                                },
-                                "about_me.doc": {
-                                    name: "about_me.doc",
-                                    type: "file",
-                                    windowId: "about",
-                                    content: `=== ABOUT DANA ===
+const DESKTOP_FILE_CONTENT: Partial<Record<string, string>> = {
+    "Internet Explorer.lnk":
+        "[InternetShortcut]\nURL=file:///C:/Program Files/Internet Explorer/iexplore.exe",
+    "about_me.doc": `=== ABOUT DANA ===
 
 Hi, my name is Dana.
 I'm a software engineer who lives in San Francisco.
@@ -357,12 +335,7 @@ Interests:
 Cat: Felix Ramon Vanderbilt
 
 [Use 'open about_me.doc' to view full profile]`,
-                                },
-                                "cool_projects.zip": {
-                                    name: "cool_projects.zip",
-                                    type: "file",
-                                    windowId: "projects",
-                                    content: `Archive: cool_projects.zip
+    "cool_projects.zip": `Archive: cool_projects.zip
   Length      Date    Time    Name
 ---------  ---------- -----   ----
      1337  2026-02-05 12:00   this-website/
@@ -371,12 +344,7 @@ Cat: Felix Ramon Vanderbilt
      3385                     2 files
 
 [Use 'open cool_projects.zip' to extract and view]`,
-                                },
-                                "resume.pdf": {
-                                    name: "resume.pdf",
-                                    type: "file",
-                                    windowId: "resume",
-                                    content: `%PDF-1.4
+    "resume.pdf": `%PDF-1.4
 ================================
         DANA DZIK
 ================================
@@ -393,43 +361,16 @@ University of Chicago
 B.A. with Honors in Mathematics and Philosophy
 
 [Use 'open resume.pdf' to view full document]`,
-                                },
-                                "bookmarks.url": {
-                                    name: "bookmarks.url",
-                                    type: "shortcut",
-                                    windowId: "links",
-                                    content: `[InternetShortcut]
+    "bookmarks.url": `[InternetShortcut]
 URL=about:bookmarks
 IconIndex=0`,
-                                },
-                                "guestbook.exe": {
-                                    name: "guestbook.exe",
-                                    type: "executable",
-                                    windowId: "guestbook",
-                                },
-                                "FelixGPT.exe": {
-                                    name: "FelixGPT.exe",
-                                    type: "executable",
-                                    windowId: "felixgpt",
-                                },
-                                "Site Stats.exe": {
-                                    name: "Site Stats.exe",
-                                    type: "executable",
-                                    windowId: "stats",
-                                },
-                                "terminal.exe": {
-                                    name: "terminal.exe",
-                                    type: "executable",
-                                    windowId: "terminal",
-                                },
-                                WELT: {
-                                    name: "WELT",
-                                    type: "directory",
-                                    children: {
-                                        "README.txt": {
-                                            name: "README.txt",
-                                            type: "file",
-                                            content: `WELT - An esoteric programming language
+}
+
+const WELT_CHILDREN: Record<string, FSNode> = {
+    "README.txt": {
+        name: "README.txt",
+        type: "file",
+        content: `WELT - An esoteric programming language
 =======================================
 
 Quick start:
@@ -447,47 +388,79 @@ Write your own:
   welt myfile.welt    Run it
 
 Full docs: cat MANUAL.txt`,
-                                        },
-                                        "welt.exe": {
-                                            name: "welt.exe",
-                                            type: "executable",
-                                            content:
-                                                "WELT Interpreter v0.3.1 (c) 1994 Fatitech Industries\nUsage: welt <filename.welt>",
-                                        },
-                                        "MANUAL.txt": {
-                                            name: "MANUAL.txt",
-                                            type: "file",
-                                            content: WELT_MANUAL,
-                                        },
-                                        examples: {
-                                            name: "examples",
-                                            type: "directory",
-                                            children: {
-                                                "hello.welt": {
-                                                    name: "hello.welt",
-                                                    type: "file",
-                                                    content: WELT_HELLO,
-                                                },
-                                                "fizzbuzz.welt": {
-                                                    name: "fizzbuzz.welt",
-                                                    type: "file",
-                                                    content: WELT_FIZZBUZZ,
-                                                },
-                                                "quest.welt": {
-                                                    name: "quest.welt",
-                                                    type: "file",
-                                                    content: WELT_QUEST,
-                                                },
-                                                "breathe.welt": {
-                                                    name: "breathe.welt",
-                                                    type: "file",
-                                                    content: WELT_BREATHE,
-                                                },
-                                            },
-                                        },
-                                    },
-                                },
-                            },
+    },
+    "welt.exe": {
+        name: "welt.exe",
+        type: "executable",
+        content:
+            "WELT Interpreter v0.3.1 (c) 1994 Fatitech Industries\nUsage: welt <filename.welt>",
+    },
+    "MANUAL.txt": {
+        name: "MANUAL.txt",
+        type: "file",
+        content: WELT_MANUAL,
+    },
+    examples: {
+        name: "examples",
+        type: "directory",
+        children: {
+            "hello.welt": {
+                name: "hello.welt",
+                type: "file",
+                content: WELT_HELLO,
+            },
+            "fizzbuzz.welt": {
+                name: "fizzbuzz.welt",
+                type: "file",
+                content: WELT_FIZZBUZZ,
+            },
+            "quest.welt": {
+                name: "quest.welt",
+                type: "file",
+                content: WELT_QUEST,
+            },
+            "breathe.welt": {
+                name: "breathe.welt",
+                type: "file",
+                content: WELT_BREATHE,
+            },
+        },
+    },
+}
+
+function buildDesktopChildren(): Record<string, FSNode> {
+    const children: Record<string, FSNode> = {}
+    for (const item of DESKTOP_ITEMS) {
+        const node: FSNode = {
+            name: item.filename,
+            type: item.fileType,
+            windowId: item.windowId,
+            content: DESKTOP_FILE_CONTENT[item.filename],
+        }
+        if (item.fileType === "directory") {
+            node.children = item.filename === "WELT" ? WELT_CHILDREN : {}
+        }
+        children[item.filename] = node
+    }
+    return children
+}
+
+const FILESYSTEM_STRUCTURE: FSNode = {
+    name: "C:",
+    type: "directory",
+    children: {
+        Users: {
+            name: "Users",
+            type: "directory",
+            children: {
+                Dana: {
+                    name: "Dana",
+                    type: "directory",
+                    children: {
+                        Desktop: {
+                            name: "Desktop",
+                            type: "directory",
+                            children: buildDesktopChildren(),
                         },
                     },
                 },
