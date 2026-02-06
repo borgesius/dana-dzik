@@ -1,0 +1,310 @@
+/* ========================================
+   Light/Dark Color Scheme Overrides
+   Each theme has both light and dark variants.
+   The "natural" state of each theme is its light variant,
+   except Apple II and C64 which are naturally dark.
+   ======================================== */
+
+/* === Win95 Dark === */
+[data-theme="win95"][data-color-scheme="dark"] {
+    --theme-desktop-bg: #003333;
+    --theme-desktop-bg-pattern: url("data:image/svg+xml,%3Csvg width='40' height='40' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='40' height='40' fill='%23003333'/%3E%3Ccircle cx='20' cy='20' r='2' fill='%23002222'/%3E%3C/svg%3E");
+    --theme-desktop-icon-hover: rgb(0 60 120 / 40%);
+    --theme-desktop-icon-selected: rgb(0 60 120 / 60%);
+    --theme-window-bg: #404040;
+    --theme-window-content-bg: #2a2a2a;
+    --theme-window-content-text: #e0e0e0;
+    --theme-window-border-light: #606060;
+    --theme-window-border-dark: #202020;
+    --theme-window-title-bg: linear-gradient(to right, #000040, #0a3060);
+    --theme-window-title-inactive: linear-gradient(to right, #303030, #404040);
+    --theme-window-btn-bg: #505050;
+    --theme-window-btn-border: 2px outset #606060;
+    --theme-taskbar-bg: linear-gradient(
+        to bottom,
+        #0f3060 0%,
+        #1a4080 3%,
+        #1a4080 90%,
+        #0f3060 100%
+    );
+    --theme-start-menu-bg: linear-gradient(
+        to bottom,
+        #1a3060 0%,
+        #102050 97%,
+        #0a1840 100%
+    );
+    --theme-start-menu-body-bg: #2a2a2a;
+    --theme-start-menu-right-bg: #1a2a40;
+    --theme-start-menu-header-bg: linear-gradient(to right, #0a1840, #1a3060);
+    --theme-start-menu-footer-bg: linear-gradient(
+        to top,
+        #1a3060 0%,
+        #2a4080 100%
+    );
+    --theme-toolbar-bg: linear-gradient(to bottom, #505050, #383838);
+    --theme-toolbar-border: #202020;
+    --theme-toolbar-btn-bg: #505050;
+    --theme-toolbar-area-bg: #404040;
+    --theme-toolbar-area-border: 2px solid #202020;
+    --theme-surface-primary: #404040;
+    --theme-surface-secondary: #383838;
+    --theme-surface-elevated: #505050;
+    --theme-text-on-surface: #e0e0e0;
+    --theme-text-secondary: #999999;
+    --theme-link: #6699ff;
+    --theme-border-light: #606060;
+    --theme-border-dark: #202020;
+    --theme-tooltip-bg: #404040;
+    --theme-tooltip-border: 2px outset #606060;
+    --theme-tooltip-text: #e0e0e0;
+    --theme-explorer-bg: #404040;
+    --theme-explorer-list-bg: #2a2a2a;
+    --theme-explorer-text: #e0e0e0;
+    --theme-widget-bg: linear-gradient(180deg, #1a3050 0%, #0f2040 100%);
+    --theme-widget-title-bg: linear-gradient(
+        180deg,
+        #0a1840 0%,
+        #0a1840 50%,
+        #102050 100%
+    );
+    --theme-widget-content-bg: linear-gradient(
+        180deg,
+        #1a3050 0%,
+        #0f2040 100%
+    );
+    --theme-qa-bg: #383838;
+    --theme-qa-badge-bg: #404040;
+    --theme-weather-bg: #1a3050;
+    --theme-weather-border: #0f2040;
+}
+
+/* === Mac Classic Dark === */
+[data-theme="mac-classic"][data-color-scheme="dark"] {
+    --theme-desktop-bg: #2a2a3a;
+    --theme-desktop-bg-pattern: url("data:image/svg+xml,%3Csvg width='4' height='4' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='4' height='4' fill='%232a2a3a'/%3E%3Crect x='0' y='0' width='2' height='2' fill='%23222230'/%3E%3Crect x='2' y='2' width='2' height='2' fill='%23222230'/%3E%3C/svg%3E");
+    --theme-desktop-icon-text: #cccccc;
+    --theme-window-bg: #3a3a3a;
+    --theme-window-content-bg: #2a2a2a;
+    --theme-window-content-text: #e0e0e0;
+    --theme-window-border-light: #555555;
+    --theme-window-border-dark: #1a1a1a;
+    --theme-window-title-bg: linear-gradient(
+        to bottom,
+        #555555 0%,
+        #3a3a3a 45%,
+        #3a3a3a 55%,
+        #2a2a2a 100%
+    );
+    --theme-window-title-text: #e0e0e0;
+    --theme-window-title-inactive: linear-gradient(
+        to bottom,
+        #444444 0%,
+        #333333 100%
+    );
+    --theme-window-btn-bg: #3a3a3a;
+    --theme-taskbar-bg: linear-gradient(to bottom, #444444 0%, #333333 100%);
+    --theme-start-btn-text: #e0e0e0;
+    --theme-taskbar-btn-text: #e0e0e0;
+    --theme-clock-text: #cccccc;
+    --theme-start-menu-bg: #2a2a2a;
+    --theme-start-menu-body-bg: #2a2a2a;
+    --theme-start-menu-right-bg: #333333;
+    --theme-start-menu-header-bg: linear-gradient(to bottom, #444444, #333333);
+    --theme-start-menu-footer-bg: #333333;
+    --theme-start-menu-item-hover: #2060b0;
+    --theme-toolbar-bg: linear-gradient(to bottom, #444444, #333333);
+    --theme-toolbar-border: #1a1a1a;
+    --theme-toolbar-btn-bg: #3a3a3a;
+    --theme-toolbar-btn-border: 1px solid #555555;
+    --theme-toolbar-area-bg: #3a3a3a;
+    --theme-toolbar-area-border: 1px solid #1a1a1a;
+    --theme-terminal-bg: #1a1a1a;
+    --theme-terminal-text: #e0e0e0;
+    --theme-terminal-input-bg: #1a1a1a;
+    --theme-terminal-input-border: #333333;
+    --theme-terminal-cursor: #e0e0e0;
+    --theme-explorer-bg: #3a3a3a;
+    --theme-explorer-list-bg: #2a2a2a;
+    --theme-explorer-text: #e0e0e0;
+    --theme-explorer-border: #555555;
+    --theme-surface-primary: #3a3a3a;
+    --theme-surface-secondary: #333333;
+    --theme-text-on-surface: #e0e0e0;
+    --theme-text-secondary: #888888;
+    --theme-link: #6699ff;
+    --theme-accent: #2060b0;
+    --theme-border-light: #555555;
+    --theme-border-dark: #1a1a1a;
+    --theme-tooltip-bg: #3a3a3a;
+    --theme-tooltip-text: #e0e0e0;
+    --theme-widget-bg: linear-gradient(180deg, #3a3a3a 0%, #2a2a2a 100%);
+    --theme-widget-title-bg: linear-gradient(180deg, #444444 0%, #333333 100%);
+    --theme-widget-title-text: #e0e0e0;
+    --theme-widget-content-bg: #2a2a2a;
+    --theme-widget-content-text: #e0e0e0;
+    --theme-qa-bg: #333333;
+    --theme-qa-badge-bg: #3a3a3a;
+    --theme-qa-badge-border: #555555;
+    --theme-weather-bg: #2a3040;
+    --theme-weather-border: #555555;
+}
+
+/* === Apple II Light (printed listing style) === */
+[data-theme="apple2"][data-color-scheme="light"] {
+    --theme-desktop-bg: #f0f0e8;
+    --theme-desktop-bg-pattern: none;
+    --theme-desktop-icon-hover: rgb(0 100 0 / 10%);
+    --theme-desktop-icon-selected: rgb(0 100 0 / 20%);
+    --theme-desktop-icon-text: #1a5a1a;
+    --theme-window-bg: #f0f0e8;
+    --theme-window-content-bg: #fffff0;
+    --theme-window-content-text: #1a5a1a;
+    --theme-window-border-light: #ccccbb;
+    --theme-window-border-dark: #888877;
+    --theme-window-title-bg: #ddddcc;
+    --theme-window-title-text: #1a5a1a;
+    --theme-window-title-inactive: #e0e0d8;
+    --theme-window-btn-bg: #f0f0e8;
+    --theme-window-btn-border: 1px solid #1a5a1a;
+    --theme-window-shadow: 1px 1px 3px rgb(0 0 0 / 15%);
+    --theme-taskbar-bg: #e0e0d0;
+    --theme-taskbar-border-top: 1px solid #1a5a1a;
+    --theme-start-btn-bg: #f0f0e8;
+    --theme-start-btn-hover: #e0e0d0;
+    --theme-start-btn-active: #d0d0c0;
+    --theme-start-btn-text: #1a5a1a;
+    --theme-taskbar-btn-bg: #f0f0e8;
+    --theme-taskbar-btn-active: #d0d0c0;
+    --theme-taskbar-btn-text: #1a5a1a;
+    --theme-systray-bg: #e0e0d0;
+    --theme-clock-text: #1a5a1a;
+    --theme-start-menu-bg: #f0f0e8;
+    --theme-start-menu-border: 1px solid #1a5a1a;
+    --theme-start-menu-header-bg: #e0e0d0;
+    --theme-start-menu-body-bg: #fffff0;
+    --theme-start-menu-right-bg: #f0f0e8;
+    --theme-start-menu-item-hover: #1a5a1a;
+    --theme-start-menu-footer-bg: #e0e0d0;
+    --theme-toolbar-bg: #e8e8d8;
+    --theme-toolbar-border: #888877;
+    --theme-toolbar-btn-bg: #f0f0e8;
+    --theme-toolbar-btn-border: 1px solid #1a5a1a;
+    --theme-toolbar-area-bg: #e8e8d8;
+    --theme-toolbar-area-border: 1px solid #888877;
+    --theme-terminal-bg: #fffff0;
+    --theme-terminal-text: #1a5a1a;
+    --theme-terminal-glow: transparent;
+    --theme-terminal-input-bg: #fffff0;
+    --theme-terminal-input-border: #ccccbb;
+    --theme-terminal-scrollbar-track: #f0f0e8;
+    --theme-terminal-scrollbar-thumb: #1a5a1a;
+    --theme-terminal-dim: #669966;
+    --theme-terminal-cursor: #1a5a1a;
+    --theme-explorer-bg: #f0f0e8;
+    --theme-explorer-list-bg: #fffff0;
+    --theme-explorer-hover-bg: #1a5a1a;
+    --theme-explorer-hover-text: #fffff0;
+    --theme-explorer-text: #1a5a1a;
+    --theme-surface-primary: #f0f0e8;
+    --theme-surface-secondary: #e8e8d8;
+    --theme-text-on-surface: #1a5a1a;
+    --theme-text-secondary: #669966;
+    --theme-link: #1a5a1a;
+    --theme-accent: #1a5a1a;
+    --theme-accent-text: #fffff0;
+    --theme-border-light: #ccccbb;
+    --theme-border-dark: #888877;
+    --theme-tooltip-bg: #fffff0;
+    --theme-tooltip-border: 1px solid #1a5a1a;
+    --theme-tooltip-text: #1a5a1a;
+    --theme-widget-bg: #f0f0e8;
+    --theme-widget-border: 1px solid #1a5a1a;
+    --theme-widget-title-bg: #e0e0d0;
+    --theme-widget-title-text: #1a5a1a;
+    --theme-widget-content-bg: #fffff0;
+    --theme-widget-content-text: #1a5a1a;
+    --theme-qa-bg: #e8e8d8;
+    --theme-qa-badge-bg: #f0f0e8;
+    --theme-qa-badge-border: #888877;
+    --theme-weather-bg: #e0e8d0;
+    --theme-weather-border: #888877;
+}
+
+/* === C64 Light (printed manual style) === */
+[data-theme="c64"][data-color-scheme="light"] {
+    --theme-desktop-bg: #d8d0f0;
+    --theme-desktop-bg-pattern: none;
+    --theme-desktop-icon-hover: rgb(64 49 141 / 15%);
+    --theme-desktop-icon-selected: rgb(64 49 141 / 30%);
+    --theme-desktop-icon-text: #40318d;
+    --theme-window-bg: #e8e0ff;
+    --theme-window-content-bg: #f5f0ff;
+    --theme-window-content-text: #40318d;
+    --theme-window-border-light: #d0c8e8;
+    --theme-window-border-dark: #8878b0;
+    --theme-window-title-bg: #b0a0e0;
+    --theme-window-title-text: #2a1f5e;
+    --theme-window-title-inactive: #d0c8e8;
+    --theme-window-btn-bg: #e8e0ff;
+    --theme-window-btn-border: 2px solid #8878b0;
+    --theme-window-shadow: 2px 2px 0 #b0a0e0;
+    --theme-taskbar-bg: #b0a0e0;
+    --theme-taskbar-border-top: 2px solid #d0c8e8;
+    --theme-start-btn-bg: #e8e0ff;
+    --theme-start-btn-hover: #d0c8e8;
+    --theme-start-btn-active: #b0a0e0;
+    --theme-start-btn-text: #40318d;
+    --theme-taskbar-btn-bg: #e8e0ff;
+    --theme-taskbar-btn-active: #d0c8e8;
+    --theme-taskbar-btn-text: #40318d;
+    --theme-systray-bg: #e8e0ff;
+    --theme-clock-text: #40318d;
+    --theme-start-menu-bg: #e8e0ff;
+    --theme-start-menu-body-bg: #f5f0ff;
+    --theme-start-menu-right-bg: #e8e0ff;
+    --theme-start-menu-header-bg: #b0a0e0;
+    --theme-start-menu-item-hover: #8878b0;
+    --theme-start-menu-footer-bg: #b0a0e0;
+    --theme-toolbar-bg: #d8d0f0;
+    --theme-toolbar-border: #8878b0;
+    --theme-toolbar-btn-bg: #e8e0ff;
+    --theme-toolbar-btn-border: 2px solid #8878b0;
+    --theme-toolbar-area-bg: #d8d0f0;
+    --theme-toolbar-area-border: 2px solid #8878b0;
+    --theme-terminal-bg: #f5f0ff;
+    --theme-terminal-text: #40318d;
+    --theme-terminal-glow: transparent;
+    --theme-terminal-input-bg: #f5f0ff;
+    --theme-terminal-input-border: #d0c8e8;
+    --theme-terminal-scrollbar-track: #e8e0ff;
+    --theme-terminal-scrollbar-thumb: #8878b0;
+    --theme-terminal-cursor: #40318d;
+    --theme-explorer-bg: #e8e0ff;
+    --theme-explorer-list-bg: #f5f0ff;
+    --theme-explorer-hover-bg: #8878b0;
+    --theme-explorer-hover-text: #ffffff;
+    --theme-explorer-text: #40318d;
+    --theme-surface-primary: #e8e0ff;
+    --theme-surface-secondary: #d8d0f0;
+    --theme-text-on-surface: #40318d;
+    --theme-text-secondary: #8878b0;
+    --theme-link: #6050a0;
+    --theme-accent: #8878b0;
+    --theme-accent-text: #ffffff;
+    --theme-border-light: #d0c8e8;
+    --theme-border-dark: #8878b0;
+    --theme-tooltip-bg: #f5f0ff;
+    --theme-tooltip-border: 2px solid #8878b0;
+    --theme-tooltip-text: #40318d;
+    --theme-widget-bg: #e8e0ff;
+    --theme-widget-border: 2px solid #8878b0;
+    --theme-widget-title-bg: #b0a0e0;
+    --theme-widget-title-text: #2a1f5e;
+    --theme-widget-content-bg: #f5f0ff;
+    --theme-widget-content-text: #40318d;
+    --theme-qa-bg: #d8d0f0;
+    --theme-qa-badge-bg: #e8e0ff;
+    --theme-qa-badge-border: #8878b0;
+    --theme-weather-bg: #d8d0f0;
+    --theme-weather-border: #8878b0;
+}

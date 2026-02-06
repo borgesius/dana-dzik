@@ -1,3 +1,4 @@
+import { type ColorScheme, getThemeManager } from "../../lib/themeManager"
 import { MobileAppView } from "./MobileAppView"
 import { MobileHomeScreen } from "./MobileHomeScreen"
 import { MobileLockScreen } from "./MobileLockScreen"
@@ -97,11 +98,43 @@ export class MobilePhone {
         battery.appendChild(batteryIcon)
         right.appendChild(battery)
 
+        const schemeToggle = this.createMobileSchemeToggle()
+        right.appendChild(schemeToggle)
+
         bar.appendChild(left)
         bar.appendChild(center)
         bar.appendChild(right)
 
         return bar
+    }
+
+    private createMobileSchemeToggle(): HTMLElement {
+        const SCHEME_ICONS: Record<ColorScheme, string> = {
+            light: "\u2600",
+            dark: "\uD83C\uDF19",
+            system: "\u25D1",
+        }
+
+        const SCHEME_ORDER: ColorScheme[] = ["light", "dark", "system"]
+        const tm = getThemeManager()
+
+        const btn = document.createElement("span")
+        btn.className = "ios-scheme-toggle"
+        btn.style.cursor = "pointer"
+        btn.style.fontSize = "12px"
+        btn.style.marginLeft = "6px"
+        btn.textContent = SCHEME_ICONS[tm.getColorScheme()]
+
+        btn.addEventListener("click", (e) => {
+            e.stopPropagation()
+            const current = tm.getColorScheme()
+            const idx = SCHEME_ORDER.indexOf(current)
+            const next = SCHEME_ORDER[(idx + 1) % SCHEME_ORDER.length]
+            tm.setColorScheme(next)
+            btn.textContent = SCHEME_ICONS[next]
+        })
+
+        return btn
     }
 
     private formatTime(): string {

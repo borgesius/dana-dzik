@@ -26,7 +26,7 @@ html.is-mobile body {
     flex-direction: column;
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
-    background: #000000;
+    background: var(--theme-terminal-bg, #000000);
     overflow: hidden;
     user-select: none;
     -webkit-user-select: none;
@@ -44,8 +44,8 @@ html.is-mobile body {
     justify-content: space-between;
     height: 20px;
     padding: 0 6px;
-    background: #000000;
-    color: #ffffff;
+    background: var(--theme-taskbar-bg, #000000);
+    color: var(--theme-taskbar-btn-text, #ffffff);
     font-size: 12px;
     font-weight: 600;
     letter-spacing: 0.02em;
@@ -81,7 +81,7 @@ html.is-mobile body {
 
 .ios-signal-dot {
     width: 3px;
-    background: #ffffff;
+    background: currentcolor;
     border-radius: 1px;
 }
 
@@ -124,7 +124,7 @@ html.is-mobile body {
 .ios-battery-icon {
     width: 22px;
     height: 10px;
-    border: 1px solid #ffffff;
+    border: 1px solid currentcolor;
     border-radius: 2px;
     position: relative;
     display: flex;
@@ -139,7 +139,7 @@ html.is-mobile body {
     top: 2px;
     width: 2px;
     height: 4px;
-    background: #ffffff;
+    background: currentcolor;
     border-radius: 0 1px 1px 0;
 }
 
@@ -412,7 +412,8 @@ html.is-mobile body {
     top: 20px;
     display: flex;
     flex-direction: column;
-    background: #efeff4;
+    background: var(--theme-window-content-bg, #efeff4);
+    color: var(--theme-window-content-text, #000000);
     z-index: 40;
     transform: translateX(100%);
     transition: transform 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
@@ -431,8 +432,8 @@ html.is-mobile body {
     align-items: center;
     height: 44px;
     padding: 0 10px;
-    background: linear-gradient(180deg, #b9bec8 0%, #8e929a 100%);
-    border-bottom: 1px solid #6d6d72;
+    background: var(--theme-toolbar-bg, linear-gradient(180deg, #b9bec8 0%, #8e929a 100%));
+    border-bottom: 1px solid var(--theme-border-dark, #6d6d72);
     flex-shrink: 0;
     position: relative;
 }
@@ -443,7 +444,7 @@ html.is-mobile body {
     gap: 2px;
     background: none;
     border: none;
-    color: #007aff;
+    color: var(--theme-accent, #007aff);
     font-size: 18px;
     font-family: "Helvetica Neue", Helvetica, sans-serif;
     cursor: pointer;
@@ -471,7 +472,7 @@ html.is-mobile body {
     text-align: center;
     font-size: 17px;
     font-weight: 600;
-    color: #000000;
+    color: var(--theme-text-on-surface, #000000);
     pointer-events: none;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -511,7 +512,7 @@ html.is-mobile body {
 }
 
 .ios-app-content a {
-    color: #007aff;
+    color: var(--theme-link, #007aff);
 }
 
 .ios-app-content img {
@@ -674,7 +675,7 @@ html.is-mobile body {
     padding: 11px 8px;
     font-size: 17px;
     font-family: "Helvetica Neue", Helvetica, sans-serif;
-    color: #007aff;
+    color: var(--theme-accent, #007aff);
     background: none;
     border: none;
     border-top: 0.5px solid rgb(0 0 0 / 20%);

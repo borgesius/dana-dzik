@@ -1,3 +1,9 @@
+import "./styles/themes/_variables.css"
+import "./styles/themes/win95.css"
+import "./styles/themes/mac-classic.css"
+import "./styles/themes/apple2.css"
+import "./styles/themes/c64.css"
+import "./styles/themes/color-schemes.css"
 import "./styles/business-game.css"
 import "./styles/content.css"
 import "./styles/desktop.css"
@@ -28,8 +34,10 @@ import { createAudioManager } from "./lib/audio"
 import { GlitchManager } from "./lib/glitchEffects"
 import { isMobile } from "./lib/isMobile"
 import { Router } from "./lib/router"
+import { getThemeManager } from "./lib/themeManager"
 
 setupErrorHandlers()
+getThemeManager()
 trackPageview()
 trackFunnelStep("launched")
 trackFunnelStep("boot_complete")

@@ -1,0 +1,187 @@
+:root {
+    /* === Desktop === */
+    --theme-desktop-bg: #008080;
+    --theme-desktop-bg-pattern: url("data:image/svg+xml,%3Csvg width='40' height='40' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='40' height='40' fill='%23008080'/%3E%3Ccircle cx='20' cy='20' r='2' fill='%23006666'/%3E%3C/svg%3E");
+    --theme-desktop-icon-hover: rgb(0 0 128 / 30%);
+    --theme-desktop-icon-selected: rgb(0 0 128 / 50%);
+    --theme-desktop-icon-text: #ffffff;
+
+    /* === Typography === */
+    --theme-font-system: tahoma, "MS Sans Serif", sans-serif;
+    --theme-font-mono: "Courier New", "Lucida Console", monospace;
+    --theme-font-content: "Times New Roman", times, serif;
+    --theme-font-fun: "Comic Neue", "Comic Sans MS", cursive;
+    --theme-font-size-base: 11px;
+
+    /* === Window Chrome === */
+    --theme-window-bg: #c0c0c0;
+    --theme-window-content-bg: #ffffff;
+    --theme-window-content-text: #000000;
+    --theme-window-border-light: #dfdfdf;
+    --theme-window-border-dark: #808080;
+    --theme-window-border-style: solid;
+    --theme-window-title-bg: linear-gradient(to right, #000080, #1084d0);
+    --theme-window-title-text: #ffffff;
+    --theme-window-title-inactive: linear-gradient(to right, #808080, #a0a0a0);
+    --theme-window-btn-bg: #c0c0c0;
+    --theme-window-btn-border: 2px outset #dfdfdf;
+    --theme-window-shadow: 2px 2px 10px rgb(0 0 0 / 30%);
+    --theme-window-resize-bg: linear-gradient(
+        135deg,
+        transparent 50%,
+        #808080 50%,
+        #808080 60%,
+        transparent 60%,
+        transparent 70%,
+        #808080 70%,
+        #808080 80%,
+        transparent 80%
+    );
+
+    /* === Taskbar === */
+    --theme-taskbar-bg: linear-gradient(
+        to bottom,
+        #1f5fa6 0%,
+        #3a7fcb 3%,
+        #3c81cc 6%,
+        #2e6ab8 10%,
+        #2663b0 12%,
+        #2663b0 90%,
+        #2663b0 100%
+    );
+    --theme-taskbar-border-top: 1px solid #6699cc;
+    --theme-taskbar-height: 30px;
+    --theme-start-btn-bg: linear-gradient(
+        to bottom,
+        #5ab446 0%,
+        #3c9a37 50%,
+        #2f8e29 51%,
+        #3c9a37 100%
+    );
+    --theme-start-btn-hover: linear-gradient(
+        to bottom,
+        #6bc956 0%,
+        #4caa47 50%,
+        #3f9e39 51%,
+        #4caa47 100%
+    );
+    --theme-start-btn-active: linear-gradient(
+        to bottom,
+        #3c9a37 0%,
+        #2f8e29 50%,
+        #2f8e29 51%,
+        #3c9a37 100%
+    );
+    --theme-start-btn-text: #ffffff;
+    --theme-start-btn-radius: 0 8px 8px 0;
+    --theme-taskbar-btn-bg: linear-gradient(
+        to bottom,
+        #3c81cc 0%,
+        #2e6ab8 50%,
+        #2663b0 100%
+    );
+    --theme-taskbar-btn-active: linear-gradient(
+        to bottom,
+        #5c9fdc 0%,
+        #4e8ed8 50%,
+        #4683d0 100%
+    );
+    --theme-taskbar-btn-text: #ffffff;
+    --theme-systray-bg: linear-gradient(to bottom, #1e5ca6 0%, #2663b0 100%);
+    --theme-clock-text: #ffffff;
+    --theme-start-menu-bg: linear-gradient(
+        to bottom,
+        #3169c6 0%,
+        #245edb 3%,
+        #245edb 97%,
+        #1941a5 100%
+    );
+    --theme-start-menu-border: 2px solid #1941a5;
+    --theme-start-menu-header-bg: linear-gradient(to right, #1941a5, #2d6ee4);
+    --theme-start-menu-body-bg: #ffffff;
+    --theme-start-menu-right-bg: #d3e5fa;
+    --theme-start-menu-item-hover: #316ac5;
+    --theme-start-menu-footer-bg: linear-gradient(
+        to top,
+        #3169c6 0%,
+        #4d84e4 100%
+    );
+
+    /* === Toolbar === */
+    --theme-toolbar-bg: linear-gradient(to bottom, #f0f0f0, #d0d0d0);
+    --theme-toolbar-border: #808080;
+    --theme-toolbar-btn-bg: #c0c0c0;
+    --theme-toolbar-btn-border: 2px outset #dfdfdf;
+    --theme-toolbar-area-bg: #c0c0c0;
+    --theme-toolbar-area-border: 2px solid #808080;
+
+    /* === Terminal === */
+    --theme-terminal-bg: #0a0a0a;
+    --theme-terminal-text: #00ff41;
+    --theme-terminal-glow: #00ff41;
+    --theme-terminal-input-bg: #0f0f0f;
+    --theme-terminal-input-border: #1a3a1a;
+    --theme-terminal-scrollbar-track: #1a1a1a;
+    --theme-terminal-scrollbar-thumb: #00ff41;
+    --theme-terminal-dim: #00aa2a;
+    --theme-terminal-error: #ff4141;
+    --theme-terminal-info: #41ffff;
+    --theme-terminal-dir: #ffff41;
+    --theme-terminal-cursor: #00ff41;
+
+    /* === Explorer === */
+    --theme-explorer-bg: #c0c0c0;
+    --theme-explorer-list-bg: #ffffff;
+    --theme-explorer-hover-bg: #000080;
+    --theme-explorer-hover-text: #ffffff;
+    --theme-explorer-border: #808080;
+    --theme-explorer-text: #000000;
+
+    /* === Common Surfaces === */
+    --theme-surface-primary: #c0c0c0;
+    --theme-surface-secondary: #e0e0e0;
+    --theme-surface-elevated: #f0f0f0;
+    --theme-text-on-surface: #000000;
+    --theme-text-secondary: #666666;
+    --theme-link: #0000ee;
+    --theme-accent: #000080;
+    --theme-accent-text: #ffffff;
+    --theme-border-light: #dfdfdf;
+    --theme-border-dark: #808080;
+
+    /* === Scrollbar === */
+    --theme-scrollbar-track: #c0c0c0;
+    --theme-scrollbar-thumb: #808080;
+
+    /* === Tooltip / Popup === */
+    --theme-tooltip-bg: #c0c0c0;
+    --theme-tooltip-border: 2px outset #dfdfdf;
+    --theme-tooltip-text: #000000;
+    --theme-tooltip-shadow: 2px 2px 0 #000000;
+
+    /* === Widget === */
+    --theme-widget-bg: linear-gradient(180deg, #3a6ea5 0%, #1e4d7b 100%);
+    --theme-widget-border: 2px solid #1e3a5f;
+    --theme-widget-title-bg: linear-gradient(
+        180deg,
+        #0a246a 0%,
+        #0a246a 50%,
+        #0c2d7a 100%
+    );
+    --theme-widget-title-text: #ffffff;
+    --theme-widget-content-bg: linear-gradient(
+        180deg,
+        #3169a5 0%,
+        #225088 100%
+    );
+    --theme-widget-content-text: #ffffff;
+
+    /* === QA Badges === */
+    --theme-qa-bg: #e0e0e0;
+    --theme-qa-badge-bg: #c0c0c0;
+    --theme-qa-badge-border: #808080;
+
+    /* === Weather === */
+    --theme-weather-bg: #87ceeb;
+    --theme-weather-border: #4682b4;
+}

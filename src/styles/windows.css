@@ -2,17 +2,21 @@
     position: absolute;
     min-width: 200px;
     min-height: 100px;
-    background: var(--win95-gray);
-    border: 2px solid;
-    border-color: var(--win95-light) var(--win95-dark) var(--win95-dark) var(--win95-light);
-    box-shadow: 2px 2px 10px rgb(0 0 0 / 30%);
+    background: var(--theme-window-bg);
+    border: 2px var(--theme-window-border-style);
+    border-color: var(--theme-window-border-light)
+        var(--theme-window-border-dark) var(--theme-window-border-dark)
+        var(--theme-window-border-light);
+    box-shadow: var(--theme-window-shadow);
     display: flex;
     flex-direction: column;
     z-index: 100;
 }
 
 .window.win95 {
-    border-color: var(--win95-light) var(--win95-dark) var(--win95-dark) var(--win95-light);
+    border-color: var(--theme-window-border-light)
+        var(--theme-window-border-dark) var(--theme-window-border-dark)
+        var(--theme-window-border-light);
 }
 
 .window.winxp {
@@ -25,8 +29,8 @@
     display: flex;
     align-items: center;
     padding: 2px 4px;
-    background: linear-gradient(to right, var(--win95-blue), #1084d0);
-    color: #ffffff;
+    background: var(--theme-window-title-bg);
+    color: var(--theme-window-title-text);
     font-weight: bold;
     font-size: 12px;
     cursor: move;
@@ -34,13 +38,23 @@
 }
 
 .window.winxp .window-titlebar {
-    background: linear-gradient(to bottom, #0a246a 0%, #0a246a 20%, #a6caf0 20%, #a6caf0 24%, #0a246a 24%, #3168d5 50%, #4488dd 80%, #0a246a 100%);
+    background: linear-gradient(
+        to bottom,
+        #0a246a 0%,
+        #0a246a 20%,
+        #a6caf0 20%,
+        #a6caf0 24%,
+        #0a246a 24%,
+        #3168d5 50%,
+        #4488dd 80%,
+        #0a246a 100%
+    );
     padding: 4px 6px;
     border-radius: 6px 6px 0 0;
 }
 
 .window.inactive .window-titlebar {
-    background: linear-gradient(to right, #808080, #a0a0a0);
+    background: var(--theme-window-title-inactive);
 }
 
 .window-titlebar-icon {
@@ -64,8 +78,8 @@
 .window-btn {
     width: 16px;
     height: 14px;
-    background: var(--win95-gray);
-    border: 2px outset var(--win95-light);
+    background: var(--theme-window-btn-bg);
+    border: var(--theme-window-btn-border);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -87,21 +101,36 @@
 }
 
 .window.winxp .window-btn.minimize {
-    background: linear-gradient(to bottom, #3c87d5 0%, #2e6ab8 50%, #1d5ba5 100%);
+    background: linear-gradient(
+        to bottom,
+        #3c87d5 0%,
+        #2e6ab8 50%,
+        #1d5ba5 100%
+    );
 }
 
 .window.winxp .window-btn.maximize {
-    background: linear-gradient(to bottom, #3c87d5 0%, #2e6ab8 50%, #1d5ba5 100%);
+    background: linear-gradient(
+        to bottom,
+        #3c87d5 0%,
+        #2e6ab8 50%,
+        #1d5ba5 100%
+    );
 }
 
 .window.winxp .window-btn.close {
-    background: linear-gradient(to bottom, #c75050 0%, #b33b3b 50%, #9a2828 100%);
+    background: linear-gradient(
+        to bottom,
+        #c75050 0%,
+        #b33b3b 50%,
+        #9a2828 100%
+    );
 }
 
 .window-menubar {
     display: flex;
-    background: var(--win95-gray);
-    border-bottom: 1px solid var(--win95-dark);
+    background: var(--theme-window-bg);
+    border-bottom: 1px solid var(--theme-border-dark);
     padding: 2px 0;
 }
 
@@ -111,8 +140,8 @@
 }
 
 .window-menu-item:hover {
-    background: var(--win95-blue);
-    color: #ffffff;
+    background: var(--theme-accent);
+    color: var(--theme-accent-text);
 }
 
 .window-toolbar {
@@ -120,30 +149,30 @@
     align-items: center;
     gap: 4px;
     padding: 2px 4px;
-    background: var(--win95-gray);
-    border-bottom: 1px solid var(--win95-dark);
+    background: var(--theme-window-bg);
+    border-bottom: 1px solid var(--theme-border-dark);
 }
 
 .window-content {
     flex: 1;
-    background: #ffffff;
+    background: var(--theme-window-content-bg);
     overflow: auto;
     padding: 8px;
-    border: 2px inset var(--win95-dark);
+    border: 2px inset var(--theme-border-dark);
     margin: 2px;
 }
 
 .window-statusbar {
     display: flex;
     padding: 2px 4px;
-    background: var(--win95-gray);
-    border-top: 1px solid var(--win95-dark);
+    background: var(--theme-window-bg);
+    border-top: 1px solid var(--theme-border-dark);
     font-size: 11px;
 }
 
 .window-statusbar-section {
     padding: 0 8px;
-    border: 1px inset var(--win95-dark);
+    border: 1px inset var(--theme-border-dark);
 }
 
 .window-resize-handle {
@@ -153,14 +182,16 @@
     width: 16px;
     height: 16px;
     cursor: se-resize;
-    background: linear-gradient(135deg, transparent 50%, var(--win95-dark) 50%, var(--win95-dark) 60%, transparent 60%, transparent 70%, var(--win95-dark) 70%, var(--win95-dark) 80%, transparent 80%);
+    background: var(--theme-window-resize-bg);
 }
 
 .popup-window {
     position: absolute;
-    background: var(--win95-gray);
-    border: 2px solid;
-    border-color: var(--win95-light) var(--win95-dark) var(--win95-dark) var(--win95-light);
+    background: var(--theme-window-bg);
+    border: 2px var(--theme-window-border-style);
+    border-color: var(--theme-window-border-light)
+        var(--theme-window-border-dark) var(--theme-window-border-dark)
+        var(--theme-window-border-light);
     box-shadow: 3px 3px 10px rgb(0 0 0 / 40%);
     z-index: 9000;
 }
@@ -219,8 +250,8 @@
 
 .popup-btn {
     padding: 4px 24px;
-    background: var(--win95-gray);
-    border: 2px outset var(--win95-light);
+    background: var(--theme-window-bg);
+    border: var(--theme-window-btn-border);
     cursor: pointer;
     font-size: 12px;
 }

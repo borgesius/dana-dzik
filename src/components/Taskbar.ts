@@ -1,4 +1,5 @@
 import { getBuildInfo } from "../lib/buildInfo"
+import { getThemeManager } from "../lib/themeManager"
 import type { WindowManager } from "./WindowManager"
 
 function pick<T>(arr: T[]): T {
@@ -74,6 +75,7 @@ export class Taskbar {
     private clockElement: HTMLElement
     private startMenuOpen = false
     private startMenu: HTMLElement
+    private startButtonTextEl: HTMLElement | null = null
 
     constructor(windowManager: WindowManager) {
         this.windowManager = windowManager
@@ -113,6 +115,15 @@ export class Taskbar {
                 this.closeStartMenu()
             }
         })
+
+        getThemeManager().on("themeChanged", () => this.applyThemeLabels())
+    }
+
+    private applyThemeLabels(): void {
+        const labels = getThemeManager().getLabels()
+        if (this.startButtonTextEl) {
+            this.startButtonTextEl.textContent = labels.startButton
+        }
     }
 
     private createStartButton(): HTMLElement {
@@ -123,8 +134,10 @@ export class Taskbar {
         img.textContent = "🪟"
         img.style.fontSize = "16px"
 
+        const labels = getThemeManager().getLabels()
         const text = document.createElement("span")
-        text.textContent = "start"
+        text.textContent = labels.startButton
+        this.startButtonTextEl = text
 
         btn.appendChild(img)
         btn.appendChild(text)
@@ -334,15 +347,17 @@ export class Taskbar {
 
     private updateClock(): void {
         const now = new Date()
+        const prefix = getThemeManager().getLabels().clockPrefix
         const glitchTime = Math.random() > 0.85
         if (glitchTime) {
-            this.clockElement.textContent = pick(GLITCH_TIMES)
+            this.clockElement.textContent = prefix + pick(GLITCH_TIMES)
         } else {
-            this.clockElement.textContent = now.toLocaleTimeString("en-US", {
+            const time = now.toLocaleTimeString("en-US", {
                 hour: "numeric",
                 minute: "2-digit",
                 hour12: true,
             })
+            this.clockElement.textContent = prefix + time
         }
     }
 

@@ -5,6 +5,7 @@ import { initNowPlaying } from "../lib/nowPlaying"
 import { initPhotoSlideshows } from "../lib/photoSlideshow"
 import { initPinball, type PinballGame } from "../lib/pinball"
 import { initSiteStats } from "../lib/siteStats"
+import { getThemeManager } from "../lib/themeManager"
 import { initVisitorCount } from "../lib/visitorCount"
 import { getWindowContent } from "../lib/windowContent"
 import { FileExplorer } from "./FileExplorer"
@@ -156,9 +157,11 @@ export class Window {
         const buttons = document.createElement("div")
         buttons.className = "window-titlebar-buttons"
 
+        const labels = getThemeManager().getLabels()
+
         const minimizeBtn = document.createElement("button")
         minimizeBtn.className = "window-btn minimize"
-        minimizeBtn.textContent = "_"
+        minimizeBtn.textContent = labels.minimizeButton || "_"
         minimizeBtn.setAttribute("aria-label", "Minimize window")
         minimizeBtn.addEventListener("click", (e) => {
             e.stopPropagation()
@@ -168,13 +171,13 @@ export class Window {
 
         const maximizeBtn = document.createElement("button")
         maximizeBtn.className = "window-btn maximize"
-        maximizeBtn.textContent = "□"
+        maximizeBtn.textContent = labels.maximizeButton || "\u25A1"
         maximizeBtn.setAttribute("aria-label", "Maximize window")
         buttons.appendChild(maximizeBtn)
 
         const closeBtn = document.createElement("button")
         closeBtn.className = "window-btn close"
-        closeBtn.textContent = "×"
+        closeBtn.textContent = labels.closeButton || "\u00D7"
         closeBtn.setAttribute("aria-label", "Close window")
         closeBtn.addEventListener("click", (e) => {
             e.stopPropagation()
