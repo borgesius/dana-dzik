@@ -48,6 +48,14 @@ export const ANALYTICS_CONFIG = {
     maxPerfEvents: 10,
     /** Minimum resource duration (ms) to track */
     minPerfDuration: 50,
+    /**
+     * Fraction of visitors in the "sampled" cohort (0.001 = 0.1%).
+     * Only sampled visitors send non-critical events (window opens, funnel,
+     * A/B, perf). Must match the server-side SAMPLE_RATE in redisGateway.
+     */
+    sampleRate: 0.001,
+    /** Max non-critical events a sampled client sends per session */
+    sessionEventBudget: 15,
 } as const
 
 /** Window content types that can be routed to */

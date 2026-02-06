@@ -1,5 +1,6 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node"
-import { Redis } from "@upstash/redis"
+
+import { cachedRead, getRedis, writeThrough } from "./lib/redisGateway"
 
 interface TokenResponse {
     access_token: string
@@ -32,13 +33,6 @@ interface CachedTokens {
 const REDIS_KEY = "strava_tokens"
 const STATS_CACHE_KEY = "strava_stats"
 const STATS_TTL_SECONDS = 6 * 60 * 60
-
-function getRedis(): Redis | null {
-    const url = process.env.UPSTASH_REDIS_REST_URL
-    const token = process.env.UPSTASH_REDIS_REST_TOKEN
-    if (!url || !token) return null
-    return new Redis({ url, token })
-}
 
 async function getAccessToken(): Promise<string> {
     const now = Math.floor(Date.now() / 1000)
@@ -75,13 +69,13 @@ async function getAccessToken(): Promise<string> {
 
     const data = (await response.json()) as TokenResponse
 
-    if (redis) {
-        await redis.set<CachedTokens>(REDIS_KEY, {
+    await writeThrough(async (client) => {
+        await client.set<CachedTokens>(REDIS_KEY, {
             accessToken: data.access_token,
             refreshToken: data.refresh_token,
             expiresAt: data.expires_at,
         })
-    }
+    })
 
     return data.access_token
 }
@@ -196,7 +190,9 @@ function findBestRide(activities: StravaActivity[]): ActivitySummary | null {
     )
     if (rides.length === 0) return null
 
-    const ridesWithPower = rides.filter((r) => r.device_watts && r.weighted_average_watts)
+    const ridesWithPower = rides.filter(
+        (r) => r.device_watts && r.weighted_average_watts
+    )
 
     if (ridesWithPower.length > 0) {
         let best: StravaActivity | null = null
@@ -286,15 +282,26 @@ export default async function handler(
         return
     }
 
-    const redis = getRedis()
-
     try {
         const forceRefresh = req.query.refresh === "true"
 
-        if (!forceRefresh && redis) {
-            const cached = await redis.get<StravaStats>(STATS_CACHE_KEY)
-            if (cached) {
-                res.status(200).json({ ok: true, data: cached, cached: true })
+        if (!forceRefresh) {
+            const result = await cachedRead<StravaStats>(
+                STATS_CACHE_KEY,
+                STATS_TTL_SECONDS,
+                async () => {
+                    const token = await getAccessToken()
+                    const activities = await fetchActivities(token)
+                    return computeStats(activities)
+                }
+            )
+
+            if (result.data) {
+                res.status(200).json({
+                    ok: true,
+                    data: result.data,
+                    cached: result.fromCache,
+                })
                 return
             }
         }
@@ -303,9 +310,9 @@ export default async function handler(
         const activities = await fetchActivities(token)
         const stats = computeStats(activities)
 
-        if (redis) {
-            await redis.set(STATS_CACHE_KEY, stats, { ex: STATS_TTL_SECONDS })
-        }
+        await writeThrough(async (client) => {
+            await client.set(STATS_CACHE_KEY, stats, { ex: STATS_TTL_SECONDS })
+        })
 
         res.status(200).json({ ok: true, data: stats, cached: false })
     } catch (error) {
