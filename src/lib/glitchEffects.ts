@@ -1,5 +1,3 @@
-import { SafeMode } from "./safeMode"
-
 type GlitchType =
     | "shift"
     | "colorSplit"
@@ -25,22 +23,11 @@ const GLITCH_CONFIG = {
 }
 
 export class GlitchManager {
-    private active = true
-    private glitchTimeout: number | null = null
     private overlay: HTMLDivElement | null = null
 
     constructor() {
         this.createOverlay()
         this.scheduleNextGlitch()
-
-        SafeMode.getInstance().onChange((enabled) => {
-            this.active = !enabled
-            if (enabled) {
-                this.clearEffects()
-            } else {
-                this.scheduleNextGlitch()
-            }
-        })
     }
 
     private createOverlay(): void {
@@ -51,31 +38,25 @@ export class GlitchManager {
     }
 
     private scheduleNextGlitch(): void {
-        if (!this.active) return
-
         const delay =
             GLITCH_CONFIG.minInterval +
             Math.random() *
                 (GLITCH_CONFIG.maxInterval - GLITCH_CONFIG.minInterval)
 
-        this.glitchTimeout = window.setTimeout(() => {
+        window.setTimeout(() => {
             this.triggerGlitch()
             this.scheduleNextGlitch()
         }, delay)
     }
 
     private triggerGlitch(): void {
-        if (!this.active) return
-
         const glitch = this.generateGlitchEvent()
         this.applyGlitch(glitch)
 
         if (Math.random() < GLITCH_CONFIG.multiGlitchChance) {
             setTimeout(
                 () => {
-                    if (this.active) {
-                        this.applyGlitch(this.generateGlitchEvent())
-                    }
+                    this.applyGlitch(this.generateGlitchEvent())
                 },
                 50 + Math.random() * 100
             )
@@ -227,25 +208,5 @@ export class GlitchManager {
         setTimeout(() => {
             el.style.filter = ""
         }, glitch.duration * 0.5)
-    }
-
-    private clearEffects(): void {
-        if (this.glitchTimeout) {
-            clearTimeout(this.glitchTimeout)
-            this.glitchTimeout = null
-        }
-
-        document.body.style.transform = ""
-        document.body.style.filter = ""
-        document.body.style.textShadow = ""
-        document.body.classList.remove("glitch-freeze")
-
-        if (this.overlay) {
-            this.overlay.style.opacity = "0"
-            this.overlay.classList.remove("noise-active")
-            this.overlay
-                .querySelectorAll(".glitch-tear")
-                .forEach((t) => t.remove())
-        }
     }
 }

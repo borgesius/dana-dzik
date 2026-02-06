@@ -128,18 +128,22 @@ test.describe("Desktop Navigation", () => {
         })
     })
 
-    test("popups appear after mouse interaction", async ({ page }) => {
+    test("popups appear after engaging with money game", async ({ page }) => {
         await page.goto("/")
         await page.waitForSelector(".loading-screen.hidden", {
             state: "attached",
             timeout: 10000,
         })
 
-        await page.mouse.move(100, 100)
+        const ventureBtn = page.locator(
+            '.venture-btn:has-text("MAKE $$$ FAST")'
+        )
+        await expect(ventureBtn).toBeVisible({ timeout: 5000 })
+        await ventureBtn.click()
 
-        await page.waitForTimeout(12000)
-
-        await expect(page.locator(".popup-window")).toBeVisible()
+        await expect(page.locator(".popup-window")).toBeVisible({
+            timeout: 5000,
+        })
     })
 
     test("toolbars are visible with game elements", async ({ page }) => {
@@ -163,15 +167,5 @@ test.describe("Desktop Navigation", () => {
 
         await expect(page.locator(".widgets-container")).toBeVisible()
         await expect(page.locator("#audio-widget")).toBeVisible()
-    })
-
-    test("safe mode button is present", async ({ page }) => {
-        await page.goto("/")
-        await page.waitForSelector(".loading-screen.hidden", {
-            state: "attached",
-            timeout: 10000,
-        })
-
-        await expect(page.locator(".safe-mode-btn")).toBeVisible()
     })
 })

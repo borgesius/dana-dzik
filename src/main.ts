@@ -23,7 +23,6 @@ import {
 import { createAudioManager } from "./lib/audio"
 import { GlitchManager } from "./lib/glitchEffects"
 import { Router } from "./lib/router"
-import { SafeMode } from "./lib/safeMode"
 
 setupErrorHandlers()
 trackPageview()
@@ -34,7 +33,6 @@ initPerfTracking()
 
 const app = document.getElementById("app")
 if (app) {
-    const safeMode = new SafeMode()
     const desktop = new Desktop(app)
     const windowManager = desktop.getWindowManager()
 
@@ -52,40 +50,13 @@ if (app) {
     router.init()
 
     const popupManager = new PopupManager(app)
-    const cursorTrail = new CursorTrail()
-    const audioManager = createAudioManager()
+    new CursorTrail()
+    createAudioManager()
     new GlitchManager()
     new Widgets(app)
 
-    let userHasInteracted = false
-    let safeModeEnabled = safeMode.isEnabled()
-
-    const maybeStartPopups = (): void => {
-        if (userHasInteracted && !safeModeEnabled) {
-            popupManager.start()
-        }
-    }
-
-    document.addEventListener(
-        "mousemove",
-        () => {
-            userHasInteracted = true
-            maybeStartPopups()
-        },
-        { once: true }
-    )
-
-    safeMode.onChange((enabled) => {
-        safeModeEnabled = enabled
-        if (enabled) {
-            popupManager.stop()
-            cursorTrail.disable()
-            audioManager.setEnabled(false)
-        } else {
-            maybeStartPopups()
-            cursorTrail.enable()
-            audioManager.setEnabled(true)
-        }
+    windowManager.onNewWindowOpen(() => {
+        popupManager.onWindowOpen()
     })
 
     document.addEventListener("click", (e) => {
