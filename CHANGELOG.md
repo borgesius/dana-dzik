@@ -1,3 +1,10 @@
+# [1.30.0](https://github.com/borgesius/dana-dzik/compare/v1.29.1...v1.30.0) (2026-02-06)
+
+
+### Features
+
+* **css:** styles overhaul ([#25](https://github.com/borgesius/dana-dzik/issues/25)) ([5688d9e](https://github.com/borgesius/dana-dzik/commit/5688d9edaa14355835c1224495a70dd5d62c8217))
+
 ## [1.29.1](https://github.com/borgesius/dana-dzik/compare/v1.29.0...v1.29.1) (2026-02-06)
 
 
