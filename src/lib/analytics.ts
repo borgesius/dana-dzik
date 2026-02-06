@@ -48,6 +48,7 @@ const VISITOR_KEY = "visitor_id"
 const PERF_COUNT_KEY = "perf_event_count"
 const WINDOW_TRACKED_PREFIX = "window_tracked_"
 const PAGEVIEW_TRACKED_KEY = "pageview_tracked"
+const SESSION_BUDGET_KEY = "analytics_session_budget"
 
 export const PHOTO_VARIANTS = [
     { id: "A", photo: "/assets/dana/IMG_5099.jpg" },
@@ -70,6 +71,39 @@ interface AnalyticsEvent {
     }
 }
 
+// ─── Sampling ───────────────────────────────────────────────────────────────
+//     Deterministic hash so both client and server agree on who is sampled.
+//     Must match the implementation in api/lib/redisGateway.ts.
+
+export function hashString(value: string): number {
+    let hash = 0
+    for (let i = 0; i < value.length; i++) {
+        hash = ((hash << 5) - hash + value.charCodeAt(i)) | 0
+    }
+    return Math.abs(hash)
+}
+
+export function isClientSampled(visitorId: string): boolean {
+    const { sampleRate } = ANALYTICS_CONFIG
+    return hashString(visitorId) % 10_000 < sampleRate * 10_000
+}
+
+function isCriticalEvent(eventType: string): boolean {
+    return eventType === "pageview"
+}
+
+function consumeSessionBudget(): boolean {
+    const count = parseInt(
+        sessionStorage.getItem(SESSION_BUDGET_KEY) || "0",
+        10
+    )
+    if (count >= ANALYTICS_CONFIG.sessionEventBudget) return false
+    sessionStorage.setItem(SESSION_BUDGET_KEY, (count + 1).toString())
+    return true
+}
+
+// ─── Visitor ID ─────────────────────────────────────────────────────────────
+
 function getVisitorId(): string {
     let id = localStorage.getItem(VISITOR_KEY)
     if (!id) {
@@ -79,10 +113,30 @@ function getVisitorId(): string {
     return id
 }
 
+// ─── Event Sending ──────────────────────────────────────────────────────────
+//
+//     Client-side gating mirrors the server-side redisGateway:
+//
+//     1. Critical events (pageview) → always sent
+//     2. Non-sampled visitors (99.9%) → non-critical events dropped here,
+//        never hitting the server or Redis at all
+//     3. Sampled visitors (0.1%) → non-critical events sent up to the
+//        per-session budget, then stopped
+//
+//     The server enforces the same rules as defense-in-depth, but the
+//     client-side gating avoids unnecessary network requests entirely.
+
 const ANALYTICS_TOKEN = "dk-analytics-2026"
 
 async function sendEvent(event: AnalyticsEvent): Promise<void> {
     if (isBot()) return
+
+    const visitorId = getVisitorId()
+
+    if (!isCriticalEvent(event.type)) {
+        if (!isClientSampled(visitorId)) return
+        if (!consumeSessionBudget()) return
+    }
 
     try {
         await fetch("/api/analytics", {
@@ -90,6 +144,7 @@ async function sendEvent(event: AnalyticsEvent): Promise<void> {
             headers: {
                 "Content-Type": "application/json",
                 "X-Analytics-Token": ANALYTICS_TOKEN,
+                "X-Visitor-Id": visitorId,
             },
             body: JSON.stringify(event),
         })
