@@ -370,7 +370,7 @@ const WELT_CHILDREN: Record<string, FSNode> = {
     "README.txt": {
         name: "README.txt",
         type: "file",
-        content: `WELT - An esoteric programming language
+        content: `WELT - A Schopenhauerian programming language designed\nfor the Compy97 architecture
 =======================================
 
 Quick start:
