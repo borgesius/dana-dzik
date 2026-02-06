@@ -338,7 +338,7 @@ export class Widgets {
 
             const contentType = response.headers.get("content-type")
             if (!contentType?.includes("application/json")) {
-                content.innerHTML = `<div class="strava-empty">API not available (deploy to Vercel)</div>`
+                content.innerHTML = `<div class="strava-empty">Strava unavailable</div>`
                 return
             }
 
