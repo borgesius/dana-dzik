@@ -9,6 +9,7 @@ on:
 permissions:
     contents: read
     pull-requests: write
+    statuses: write
 
 jobs:
     lighthouse:
@@ -70,6 +71,23 @@ jobs:
                   else
                       echo "has_scores=false" >> $GITHUB_OUTPUT
                   fi
+
+            - name: Post Lighthouse Status
+              if: always() && steps.lh_parse.outputs.has_scores == 'true'
+              uses: actions/github-script@v7
+              with:
+                  script: |
+                      const scores = JSON.parse('${{ steps.lh_parse.outputs.scores }}');
+                      const desc = `Perf: ${scores.perf} | A11y: ${scores.a11y} | BP: ${scores.bp} | SEO: ${scores.seo}`;
+                      await github.rest.repos.createCommitStatus({
+                          owner: context.repo.owner,
+                          repo: context.repo.repo,
+                          sha: context.sha,
+                          state: 'success',
+                          context: 'lighthouse',
+                          description: desc,
+                          target_url: `https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`,
+                      });
 
             - name: Lighthouse Job Summary
               if: always() && steps.lh_parse.outputs.has_scores == 'true'
