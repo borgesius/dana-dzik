@@ -45,5 +45,4 @@ describe("Config", () => {
             expect(SLIDESHOW_CONFIG.fadeDuration).toBeGreaterThan(0)
         })
     })
-
 })
