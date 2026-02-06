@@ -435,15 +435,49 @@ export class Toolbars {
         `
     }
 
-    private buildCoverageTooltip(_workflowUrl: string): string {
+    private buildCoverageTooltip(
+        coverage: NonNullable<ReportsResponse["data"]>["coverage"]
+    ): string {
+        const m = coverage.metrics
+        const rows: string[] = []
+
+        if (m.statements !== null) {
+            rows.push(
+                `<div class="qa-tooltip-row"><span class="qa-tooltip-label">${this.scoreEmoji(m.statements)} Statements</span><span class="qa-tooltip-value">${m.statements}%</span></div>`
+            )
+        }
+        if (m.branches !== null) {
+            rows.push(
+                `<div class="qa-tooltip-row"><span class="qa-tooltip-label">${this.scoreEmoji(m.branches)} Branches</span><span class="qa-tooltip-value">${m.branches}%</span></div>`
+            )
+        }
+        if (m.functions !== null) {
+            rows.push(
+                `<div class="qa-tooltip-row"><span class="qa-tooltip-label">${this.scoreEmoji(m.functions)} Functions</span><span class="qa-tooltip-value">${m.functions}%</span></div>`
+            )
+        }
+        if (m.lines !== null) {
+            rows.push(
+                `<div class="qa-tooltip-row"><span class="qa-tooltip-label">${this.scoreEmoji(m.lines)} Lines</span><span class="qa-tooltip-value">${m.lines}%</span></div>`
+            )
+        }
+
+        if (rows.length === 0) {
+            rows.push(
+                '<div class="qa-tooltip-row"><span class="qa-tooltip-label">No metrics available</span></div>'
+            )
+        }
+
+        const dateStr = coverage.updatedAt
+            ? new Date(coverage.updatedAt).toLocaleDateString()
+            : ""
+
         return `
             <div class="qa-tooltip">
                 <div class="qa-tooltip-title">Test Coverage</div>
-                <div class="qa-tooltip-row">
-                    <span class="qa-tooltip-label">HTML + LCOV reports</span>
-                </div>
-                <div class="qa-tooltip-status">Available as CI artifact</div>
-                <div class="qa-tooltip-click">Click to view CI run</div>
+                ${rows.join("")}
+                <div class="qa-tooltip-status">v8 provider${dateStr ? ` · ${dateStr}` : ""}</div>
+                <div class="qa-tooltip-click">Click for CI run details</div>
             </div>
         `
     }
@@ -492,10 +526,12 @@ export class Toolbars {
                 this.wrapBadge(pwBadge, pwTooltip)
 
             if (coverage?.available) {
-                const covBadge = `<a href="${coverage.workflowUrl}" target="_blank" class="qa-badge qa-success">📊 COV</a>`
-                const covTooltip = this.buildCoverageTooltip(
-                    coverage.workflowUrl
-                )
+                const covLabel =
+                    coverage.metrics.lines !== null
+                        ? `📊 ${coverage.metrics.lines}%`
+                        : "📊 COV"
+                const covBadge = `<a href="${coverage.workflowUrl}" target="_blank" class="qa-badge qa-success">${covLabel}</a>`
+                const covTooltip = this.buildCoverageTooltip(coverage)
                 badges += this.wrapBadge(covBadge, covTooltip)
             }
 
