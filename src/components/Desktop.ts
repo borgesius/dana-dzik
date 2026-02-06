@@ -90,7 +90,7 @@ function getDesktopIcons(): IconConfig[] {
             label: pick(ICON_LABEL_VARIANTS["welt"]),
             icon: "📁",
             action: "window",
-            windowId: "terminal",
+            windowId: "explorer",
         },
     ]
 }

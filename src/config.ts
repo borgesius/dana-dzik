@@ -61,6 +61,7 @@ export const ROUTABLE_WINDOWS = [
     "felixgpt",
     "stats",
     "terminal",
+    "explorer",
 ] as const
 
 export type RoutableWindow = (typeof ROUTABLE_WINDOWS)[number]

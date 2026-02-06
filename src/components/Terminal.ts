@@ -6,7 +6,29 @@ import {
     getSLFrames,
 } from "../lib/terminal/commands"
 import { Editor } from "../lib/terminal/editor"
-import { createFileSystem, type FileSystem } from "../lib/terminal/filesystem"
+import {
+    changeDirectory,
+    createFileSystem,
+    type FileSystem,
+} from "../lib/terminal/filesystem"
+
+let pendingInit: { cwd?: string; command?: string } | null = null
+
+export function setTerminalInit(init: {
+    cwd?: string
+    command?: string
+}): void {
+    pendingInit = init
+}
+
+function consumeTerminalInit(): {
+    cwd?: string
+    command?: string
+} | null {
+    const init = pendingInit
+    pendingInit = null
+    return init
+}
 
 export interface TerminalCallbacks {
     openWindow: (windowId: string) => void
@@ -59,6 +81,17 @@ export class Terminal {
 
         this.setupEventListeners()
         this.printWelcome()
+
+        const init = consumeTerminalInit()
+        if (init) {
+            if (init.cwd) {
+                changeDirectory(this.fs, init.cwd)
+                this.updatePrompt()
+            }
+            if (init.command) {
+                setTimeout(() => void this.processCommand(init.command!), 150)
+            }
+        }
 
         setTimeout(() => this.inputEl.focus(), 100)
     }
