@@ -108,7 +108,7 @@ See C:\\Users\\Dana\\Desktop\\WELT\\examples\\ for more.
 
 KNOWN ISSUES
 ------------
-- Programs exceeding 10000 loop iterations will
+- Programs exceeding 1818 loop iterations will
   trigger the thermal protection circuit.
 - Numeric values exceeding 255 will overflow
   silently due to the quaternary register width.
@@ -317,6 +317,235 @@ ENDE
 VORSTELLUNG "Open your eyes."
 VERNEINUNG`
 
+export const SYS_KERNEL = `; ==========================================
+; COMPU97 KERNEL v4.51
+; (C) 1997 Fatitech Industries
+; ==========================================
+; DO NOT MODIFY THIS FILE.
+; System stability depends on the integrity
+; of this module. Unauthorized changes will
+; cause a FATAL EXCEPTION.
+;
+; Interrupt vector table initialization and
+; process scheduler for quaternary core.
+
+ERWACHE
+DING 0 = 0
+DING 1 = 255
+DING 2 = 4
+
+; Initialize IVT slots
+SOLANGE DING 0 < DING 1
+  DING 3 = DING 0 MOD DING 2
+  WENN DING 3 = 0 DANN
+    DING 4 = "IRQ_HANDLED"
+  ENDE
+  DING 0 = DING 0 + 1
+ENDE
+
+; Scheduler heartbeat
+DING 5 = 18
+DING 6 = 0
+SOLANGE DING 6 < DING 5
+  DING 7 = "tick"
+  DING 6 = DING 6 + 1
+ENDE
+
+VORSTELLUNG "KERNEL OK"
+VERNEINUNG`
+
+export const SYS_DISPLAY = `; ==========================================
+; COMPU97 DISPLAY DRIVER v2.1
+; (C) 1997 Fatitech Industries
+; ==========================================
+; DO NOT MODIFY THIS FILE.
+; Controls CRT framebuffer and refresh
+; timing. Changes will cause DISPLAY
+; CORRUPTION.
+;
+; Manages all VORSTELLUNG operations for
+; the system's 640x480 display output.
+
+ERWACHE
+DING 0 = 640
+DING 1 = 480
+DING 2 = 16
+
+; Initialize color palette
+DING 3 = 0
+SOLANGE DING 3 < DING 2
+  DING 4 = DING 3 * 16
+  DING 3 = DING 3 + 1
+ENDE
+
+; Sync framebuffer
+DING 5 = 60
+DING 6 = 0
+SOLANGE DING 6 < DING 5
+  DING 7 = "vsync"
+  DING 6 = DING 6 + 1
+ENDE
+
+VORSTELLUNG "DISPLAY OK"
+VERNEINUNG`
+
+export const SYS_CLOCK = `; ==========================================
+; COMPU97 SYSTEM CLOCK v1.3
+; (C) 1997 Fatitech Industries
+; ==========================================
+; DO NOT MODIFY THIS FILE.
+; Manages system timer interrupt (IRQ 0)
+; and real-time clock sync. Changes will
+; DESYNCHRONIZE the system clock.
+
+ERWACHE
+DING 0 = 0
+DING 1 = 65536
+DING 2 = 18
+
+; Calibrate PIT channel 0
+DING 3 = 0
+DING 4 = 0
+SOLANGE DING 4 < DING 2
+  DING 5 = DING 4 * DING 3
+  DING 4 = DING 4 + 1
+ENDE
+
+; RTC sync
+DING 6 = 32
+DING 7 = DING 6 / 2
+
+VORSTELLUNG "CLOCK OK"
+VERNEINUNG`
+
+export const SYS_MEMORY = `; ==========================================
+; COMPU97 MEMORY MANAGER v3.0
+; (C) 1997 Fatitech Industries
+; ==========================================
+; DO NOT MODIFY THIS FILE.
+; Handles memory allocation and garbage
+; collection for quaternary address space.
+; Changes will cause MEMORY FAULTS.
+
+ERWACHE
+DING 0 = 0
+DING 1 = 8
+DING 2 = 0
+
+; Scan memory banks
+SOLANGE DING 0 < DING 1
+  DING 3 = DING 0 * 32
+  DING 4 = DING 3 + 255
+  DING 2 = DING 2 + DING 4
+  DING 0 = DING 0 + 1
+ENDE
+
+; Initialize page table
+DING 5 = DING 2 / 4
+DING 6 = 0
+DING 7 = "HEAP_READY"
+
+VORSTELLUNG "MEMORY OK"
+VERNEINUNG`
+
+export const SYS_BOOT = `; ==========================================
+; COMPU97 BOOT SEQUENCE v4.51
+; (C) 1997 Fatitech Industries
+; ==========================================
+; DO NOT MODIFY THIS FILE.
+; POST and system initialization routine.
+; Changes will trigger a SYSTEM REBOOT.
+
+ERWACHE
+DING 0 = 0
+DING 1 = 4
+
+; POST checks
+SOLANGE DING 0 < DING 1
+  WENN DING 0 = 0 DANN
+    VORSTELLUNG "POST: CPU... OK"
+  ENDE
+  WENN DING 0 = 1 DANN
+    VORSTELLUNG "POST: RAM... OK"
+  ENDE
+  WENN DING 0 = 2 DANN
+    VORSTELLUNG "POST: HDD... OK"
+  ENDE
+  WENN DING 0 = 3 DANN
+    VORSTELLUNG "POST: VGA... OK"
+  ENDE
+  DING 0 = DING 0 + 1
+ENDE
+
+DING 7 = "BOOT OK"
+VORSTELLUNG DING 7
+VERNEINUNG`
+
+const SYS_CONFIG = `; ==========================================
+; COMPU97 SYSTEM CONFIGURATION
+; (C) 1997 Fatitech Industries
+; ==========================================
+; Master configuration. Loaded at boot
+; before all other system modules.
+;
+; Module load order:
+;   1. kernel.welt   - Process scheduler
+;   2. memory.welt   - Allocation manager
+;   3. display.welt  - CRT driver
+;   4. clock.welt    - Timer interrupt
+;   5. boot.welt     - POST sequence
+
+ERWACHE
+DING 0 = 5
+DING 1 = 0
+
+SOLANGE DING 1 < DING 0
+  WENN DING 1 = 0 DANN
+    VORSTELLUNG "LOAD: kernel.welt"
+  ENDE
+  WENN DING 1 = 1 DANN
+    VORSTELLUNG "LOAD: memory.welt"
+  ENDE
+  WENN DING 1 = 2 DANN
+    VORSTELLUNG "LOAD: display.welt"
+  ENDE
+  WENN DING 1 = 3 DANN
+    VORSTELLUNG "LOAD: clock.welt"
+  ENDE
+  WENN DING 1 = 4 DANN
+    VORSTELLUNG "LOAD: boot.welt"
+  ENDE
+  DING 1 = DING 1 + 1
+ENDE
+
+VORSTELLUNG "CONFIG OK"
+VERNEINUNG`
+
+const SYS_LOG = `COMPU97 SYSTEM LOG
+==================
+
+[1997-03-14 08:00:01] BOOT: POST sequence initiated
+[1997-03-14 08:00:02] KERNEL: Interrupt vector table loaded
+[1997-03-14 08:00:03] MEMORY: 8 banks scanned, 2296 qbytes free
+[1997-03-14 08:00:03] DISPLAY: CRT initialized at 640x480x16
+[1997-03-14 08:00:04] CLOCK: PIT calibrated, 18 ticks/sec
+[1997-03-14 08:00:04] BOOT: All modules loaded
+[1997-03-14 08:00:04] KERNEL: System ready
+[1997-03-14 09:14:22] CLOCK: Minor drift detected (+3 ticks)
+[1997-03-14 11:30:00] MEMORY: GC freed 128 qbytes
+[1997-03-14 14:07:11] DISPLAY: Vsync missed (frame 84201)
+[1997-03-14 14:07:11] DISPLAY: Recovered
+[1997-03-14 17:45:33] KERNEL: Process WELT.EXE started (PID 7)
+[1997-03-14 17:45:58] KERNEL: Process WELT.EXE halted (PID 7)
+[1997-03-14 19:00:00] CLOCK: Drift corrected
+[1997-03-14 23:59:59] KERNEL: Day boundary, resetting counters
+[1997-03-15 00:00:01] MEMORY: Overnight defrag complete
+...
+[2026-??-?? ??:??:??] CLOCK: Cannot determine current time
+[2026-??-?? ??:??:??] KERNEL: System age exceeds expected
+                       operational lifetime by 10,522 days
+[2026-??-?? ??:??:??] KERNEL: Continuing anyway`
+
 const DESKTOP_FILE_CONTENT: Partial<Record<string, string>> = {
     "Internet Explorer.lnk":
         "[InternetShortcut]\nURL=file:///C:/Program Files/Internet Explorer/iexplore.exe",
@@ -512,25 +741,40 @@ Commands:
                     name: "system32",
                     type: "directory",
                     children: {
-                        "secrets.txt": {
-                            name: "secrets.txt",
+                        "kernel.welt": {
+                            name: "kernel.welt",
                             type: "file",
-                            content: `You found the secret file!
-
-The cake is a lie.
-The princess is in another castle.
-All your base are belong to us.
-
-Congratulations, elite hacker!`,
+                            content: SYS_KERNEL,
                         },
-                        "config.sys": {
-                            name: "config.sys",
+                        "display.welt": {
+                            name: "display.welt",
                             type: "file",
-                            content: `DEVICE=C:\\WINDOWS\\HIMEM.SYS
-DOS=HIGH,UMB
-FILES=40
-BUFFERS=20
-STACKS=9,256`,
+                            content: SYS_DISPLAY,
+                        },
+                        "clock.welt": {
+                            name: "clock.welt",
+                            type: "file",
+                            content: SYS_CLOCK,
+                        },
+                        "memory.welt": {
+                            name: "memory.welt",
+                            type: "file",
+                            content: SYS_MEMORY,
+                        },
+                        "boot.welt": {
+                            name: "boot.welt",
+                            type: "file",
+                            content: SYS_BOOT,
+                        },
+                        "config.welt": {
+                            name: "config.welt",
+                            type: "file",
+                            content: SYS_CONFIG,
+                        },
+                        "syslog.txt": {
+                            name: "syslog.txt",
+                            type: "file",
+                            content: SYS_LOG,
                         },
                     },
                 },

@@ -64,8 +64,8 @@ describe("Terminal Commands", () => {
         it("lists directory contents", async () => {
             fs.cwd = ["C:", "WINDOWS", "system32"]
             const result = await executeCommand("ls", ctx)
-            expect(result.output).toContain("secrets.txt")
-            expect(result.output).toContain("config.sys")
+            expect(result.output).toContain("syslog.txt")
+            expect(result.output).toContain("config.welt")
         })
 
         it("shows directory header", async () => {
@@ -112,10 +112,10 @@ describe("Terminal Commands", () => {
     describe("cat command", () => {
         it("shows file contents", async () => {
             const result = await executeCommand(
-                "cat C:\\WINDOWS\\system32\\secrets.txt",
+                "cat C:\\WINDOWS\\system32\\syslog.txt",
                 ctx
             )
-            expect(result.output).toContain("secret file")
+            expect(result.output).toContain("SYSTEM LOG")
         })
 
         it("shows desktop file contents", async () => {
@@ -151,10 +151,10 @@ describe("Terminal Commands", () => {
     describe("type command", () => {
         it("is alias for cat", async () => {
             const result = await executeCommand(
-                "type C:\\WINDOWS\\system32\\secrets.txt",
+                "type C:\\WINDOWS\\system32\\syslog.txt",
                 ctx
             )
-            expect(result.output).toContain("secret file")
+            expect(result.output).toContain("SYSTEM LOG")
         })
     })
 
@@ -179,7 +179,7 @@ describe("Terminal Commands", () => {
 
         it("returns error for file without windowId", async () => {
             const result = await executeCommand(
-                "open C:\\WINDOWS\\system32\\config.sys",
+                "open C:\\WINDOWS\\system32\\config.welt",
                 ctx
             )
             expect(result.output).toContain("Cannot open")
@@ -314,7 +314,7 @@ describe("Terminal Commands", () => {
 
         it("reports welt errors", async () => {
             fs.cwd = ["C:", "WINDOWS", "system32"]
-            const result = await executeCommand("welt secrets.txt", ctx)
+            const result = await executeCommand("welt syslog.txt", ctx)
             expect(result.output).toContain("WELT ERROR")
             expect(result.className).toBe("error")
         })

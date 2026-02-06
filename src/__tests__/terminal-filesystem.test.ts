@@ -189,7 +189,7 @@ describe("Terminal Filesystem", () => {
         it("fails for file path", () => {
             const result = changeDirectory(
                 fs,
-                "C:\\WINDOWS\\system32\\secrets.txt"
+                "C:\\WINDOWS\\system32\\syslog.txt"
             )
             expect(result.success).toBe(false)
             expect(result.error).toContain("Not a directory")
@@ -202,7 +202,7 @@ describe("Terminal Filesystem", () => {
             const result = listDirectory(fs)
             expect(result.error).toBeUndefined()
             expect(result.entries.length).toBeGreaterThan(0)
-            expect(result.entries.some((e) => e.name === "secrets.txt")).toBe(
+            expect(result.entries.some((e) => e.name === "syslog.txt")).toBe(
                 true
             )
         })
@@ -237,10 +237,10 @@ describe("Terminal Filesystem", () => {
         it("gets content of text file", () => {
             const result = getFileContent(
                 fs,
-                "C:\\WINDOWS\\system32\\secrets.txt"
+                "C:\\WINDOWS\\system32\\syslog.txt"
             )
             expect(result.error).toBeUndefined()
-            expect(result.content).toContain("secret file")
+            expect(result.content).toContain("SYSTEM LOG")
         })
 
         it("gets content of desktop file", () => {
@@ -295,7 +295,7 @@ describe("Terminal Filesystem", () => {
         it("returns null for file without windowId", () => {
             const windowId = getExecutableWindowId(
                 fs,
-                "C:\\WINDOWS\\system32\\config.sys"
+                "C:\\WINDOWS\\system32\\config.welt"
             )
             expect(windowId).toBeNull()
         })
@@ -328,13 +328,13 @@ describe("Terminal Filesystem", () => {
         it("writes content to existing file", () => {
             const result = writeFile(
                 fs,
-                "C:\\WINDOWS\\system32\\secrets.txt",
+                "C:\\WINDOWS\\system32\\syslog.txt",
                 "new content"
             )
             expect(result.success).toBe(true)
             const content = getFileContent(
                 fs,
-                "C:\\WINDOWS\\system32\\secrets.txt"
+                "C:\\WINDOWS\\system32\\syslog.txt"
             )
             expect(content.content).toBe("new content")
         })
@@ -370,7 +370,7 @@ describe("Terminal Filesystem", () => {
             const result = createFile(
                 fs,
                 "C:\\WINDOWS\\system32",
-                "secrets.txt",
+                "syslog.txt",
                 "content"
             )
             expect(result.success).toBe(false)
@@ -391,7 +391,7 @@ describe("Terminal Filesystem", () => {
         it("returns error for non-directory path", () => {
             const result = createFile(
                 fs,
-                "C:\\WINDOWS\\system32\\secrets.txt",
+                "C:\\WINDOWS\\system32\\syslog.txt",
                 "test.txt",
                 "content"
             )

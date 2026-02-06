@@ -1,4 +1,9 @@
 import {
+    type Severity,
+    validateSystemFile,
+    type ValidationResult,
+} from "../systemFileValidator"
+import {
     createFile,
     type FileSystem,
     formatPath,
@@ -6,6 +11,34 @@ import {
     resolvePath,
     writeFile,
 } from "./filesystem"
+
+const BROKEN_WARNINGS: Record<string, string> = {
+    "kernel-modified": "KERNEL INTEGRITY CHECK FAILED",
+    "boot-modified": "BOOT SEQUENCE MODIFIED -- REBOOT REQUIRED",
+    "resolution-width": "RESOLUTION WIDTH MISMATCH",
+    "resolution-height": "RESOLUTION HEIGHT MISMATCH",
+    "color-depth": "COLOR PALETTE DEPTH CHANGED",
+    "refresh-rate": "CRT REFRESH RATE ALTERED",
+    "palette-loop": "COLOR PALETTE INIT DESTROYED",
+    "vsync-loop": "VSYNC LOOP DESTROYED",
+    "pit-divisor": "PIT DIVISOR MISCALIBRATED",
+    "tick-rate": "TICK RATE DESYNCHRONIZED",
+    "calibration-loop": "CALIBRATION LOOP MISSING",
+    "rtc-sync": "RTC SYNC MODULE MISSING",
+    "bank-count": "MEMORY BANK COUNT ALTERED",
+    "scan-loop": "HEAP SCAN LOOP DESTROYED",
+    "page-table": "PAGE TABLE INIT MISSING",
+    "heap-ready": "HEAP_READY FLAG NOT SET",
+    "runtime-error": "EXECUTION FAILED -- FATAL",
+    "wrong-output": "SELF-CHECK FAILED",
+}
+
+const SEVERITY_HEADERS: Record<Severity, string[]> = {
+    none: [],
+    minor: ["SYSTEM FILE CHECK: PASSED"],
+    moderate: ["WARNING: SYSTEM FILE COMPROMISED"],
+    critical: ["CRITICAL: SYSTEM FILE CORRUPTED", "FATAL EXCEPTION IMMINENT"],
+}
 
 export interface EditorCallbacks {
     print: (text: string, className?: string) => void
@@ -266,6 +299,66 @@ export class Editor {
             `Saved ${this.filename} (${this.lines.length} lines)`,
             "success"
         )
+
+        void this.checkSystemFile(content)
+    }
+
+    private async checkSystemFile(content: string): Promise<void> {
+        if (
+            this.filePath.length < 4 ||
+            this.filePath[0] !== "C:" ||
+            this.filePath[1].toLowerCase() !== "windows" ||
+            this.filePath[2].toLowerCase() !== "system32"
+        ) {
+            return
+        }
+
+        const filename = this.filePath[3].toLowerCase()
+        const result = await validateSystemFile(filename, content)
+        if (!result || result.severity === "none") return
+
+        this.printValidationWarnings(result)
+
+        const warningCount =
+            SEVERITY_HEADERS[result.severity].length + result.broken.length
+        const totalDelay = 300 + warningCount * 300 + 500
+
+        setTimeout(() => {
+            document.dispatchEvent(
+                new CustomEvent("system-file-modified", {
+                    detail: {
+                        filename,
+                        severity: result.severity,
+                        broken: result.broken,
+                        values: result.values,
+                    },
+                })
+            )
+        }, totalDelay)
+    }
+
+    private printValidationWarnings(result: ValidationResult): void {
+        const headers = SEVERITY_HEADERS[result.severity]
+        const className = result.severity === "minor" ? "dim" : "error"
+
+        let delay = 300
+        for (const header of headers) {
+            setTimeout(() => {
+                this.callbacks.print("")
+                this.callbacks.print(`*** ${header} ***`, className)
+            }, delay)
+            delay += 300
+        }
+
+        if (result.severity === "minor") return
+
+        for (const item of result.broken) {
+            const msg = BROKEN_WARNINGS[item] ?? item.toUpperCase()
+            setTimeout(() => {
+                this.callbacks.print(`  ${msg}`, "error")
+            }, delay)
+            delay += 300
+        }
     }
 
     private exit(): void {
