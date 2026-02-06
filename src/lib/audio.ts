@@ -1,10 +1,12 @@
 const SOUND_URLS: Record<string, string> = {
-    startup: "/assets/sounds/startup.mp3",
-    click: "/assets/sounds/click.mp3",
-    error: "/assets/sounds/error.mp3",
-    popup: "/assets/sounds/popup.mp3",
-    close: "/assets/sounds/close.mp3",
-    notify: "/assets/sounds/notify.mp3",
+    startup: "/assets/sounds/retro_misc_05.ogg",
+    click: "/assets/sounds/shot_01.ogg",
+    error: "/assets/sounds/retro_die_01.ogg",
+    popup_1: "/assets/sounds/synth_beep_01.ogg",
+    popup_2: "/assets/sounds/synth_beep_02.ogg",
+    popup_3: "/assets/sounds/synth_beep_03.ogg",
+    close: "/assets/sounds/shot_02.ogg",
+    notify: "/assets/sounds/retro_coin_01.ogg",
 }
 
 export interface Track {
@@ -157,6 +159,13 @@ export class AudioManager {
             sound.currentTime = 0
             sound.play().catch(() => {})
         }
+    }
+
+    public playRandomPopup(): void {
+        const popupSounds = ["popup_1", "popup_2", "popup_3"]
+        const randomSound =
+            popupSounds[Math.floor(Math.random() * popupSounds.length)]
+        this.playSound(randomSound)
     }
 
     public play(): void {

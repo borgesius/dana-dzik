@@ -139,11 +139,18 @@ export class PopupManager {
     private playSound(type: string): void {
         const audioManager = (
             window as unknown as {
-                audioManager?: { playSound: (t: string) => void }
+                audioManager?: {
+                    playSound: (t: string) => void
+                    playRandomPopup: () => void
+                }
             }
         ).audioManager
         if (audioManager) {
-            audioManager.playSound(type)
+            if (type === "popup") {
+                audioManager.playRandomPopup()
+            } else {
+                audioManager.playSound(type)
+            }
         }
     }
 }
