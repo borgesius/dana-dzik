@@ -9,6 +9,7 @@ interface GitHubIssue {
     }
     created_at: string
     html_url: string
+    pull_request?: unknown
 }
 
 const REPO = "borgesius/dana-dzik"
@@ -31,7 +32,8 @@ async function fetchAndDisplayEntries(): Promise<void> {
             return
         }
 
-        const issues = (await response.json()) as GitHubIssue[]
+        const allIssues = (await response.json()) as GitHubIssue[]
+        const issues = allIssues.filter((issue) => !issue.pull_request)
 
         if (issues.length === 0) {
             container.innerHTML = `<p class="empty">No entries yet. Be the first to sign!</p>`

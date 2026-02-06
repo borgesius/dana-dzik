@@ -91,6 +91,15 @@ const WINDOW_CONFIGS: Record<RoutableWindow, WindowConfig> = {
         style: "win95",
         contentType: "pinball",
     },
+    terminal: {
+        id: "terminal",
+        title: "C:\\HACKTERM.EXE",
+        icon: "💻",
+        width: 600,
+        height: 400,
+        style: "win95",
+        contentType: "terminal",
+    },
 }
 
 /**

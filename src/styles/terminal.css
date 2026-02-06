@@ -1,0 +1,179 @@
+.terminal-container {
+    background: #0a0a0a;
+    color: #00ff41;
+    font-family: "Courier New", "Lucida Console", monospace;
+    font-size: 14px;
+    line-height: 1.4;
+    padding: 0;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
+}
+
+.terminal-container::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+        0deg,
+        rgb(0 0 0 / 15%) 0,
+        rgb(0 0 0 / 15%) 1px,
+        transparent 1px,
+        transparent 2px
+    );
+    pointer-events: none;
+    z-index: 10;
+}
+
+.terminal-output {
+    flex: 1;
+    overflow: hidden auto;
+    padding: 12px;
+    white-space: pre-wrap;
+    overflow-wrap: break-word;
+}
+
+.terminal-output::-webkit-scrollbar {
+    width: 12px;
+}
+
+.terminal-output::-webkit-scrollbar-track {
+    background: #1a1a1a;
+}
+
+.terminal-output::-webkit-scrollbar-thumb {
+    background: #00ff41;
+    border: 2px solid #1a1a1a;
+}
+
+.terminal-output::-webkit-scrollbar-thumb:hover {
+    background: #00cc33;
+}
+
+.terminal-line {
+    margin: 0;
+    padding: 0;
+    text-shadow: 0 0 5px #00ff41;
+}
+
+.terminal-line.error {
+    color: #ff4141;
+    text-shadow: 0 0 5px #ff4141;
+}
+
+.terminal-line.success {
+    color: #41ff41;
+}
+
+.terminal-line.info {
+    color: #41ffff;
+    text-shadow: 0 0 5px #41ffff;
+}
+
+.terminal-line.dim {
+    color: #00aa2a;
+    text-shadow: none;
+}
+
+.terminal-input-line {
+    display: flex;
+    align-items: center;
+    padding: 8px 12px;
+    background: #0f0f0f;
+    border-top: 1px solid #1a3a1a;
+    flex-shrink: 0;
+}
+
+.terminal-prompt {
+    color: #00ff41;
+    text-shadow: 0 0 5px #00ff41;
+    margin-right: 0;
+    white-space: nowrap;
+}
+
+.terminal-input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: #00ff41;
+    font-family: inherit;
+    font-size: inherit;
+    text-shadow: 0 0 5px #00ff41;
+    caret-color: #00ff41;
+}
+
+.terminal-input::placeholder {
+    color: #00662a;
+}
+
+.terminal-cursor {
+    display: inline-block;
+    width: 8px;
+    height: 14px;
+    background: #00ff41;
+    animation: cursor-blink 1s step-end infinite;
+    vertical-align: middle;
+    margin-left: 2px;
+}
+
+@keyframes cursor-blink {
+    0%,
+    50% {
+        opacity: 1;
+    }
+
+    51%,
+    100% {
+        opacity: 0;
+    }
+}
+
+.terminal-header {
+    color: #00ff41;
+    text-shadow: 0 0 8px #00ff41;
+    margin-bottom: 8px;
+}
+
+.terminal-dir-entry {
+    color: #ffff41;
+    text-shadow: 0 0 3px #ffff41;
+}
+
+.terminal-file-entry {
+    color: #00ff41;
+}
+
+.terminal-exe-entry {
+    color: #41ff41;
+    text-shadow: 0 0 5px #41ff41;
+}
+
+.sl-animation {
+    position: relative;
+    overflow: hidden;
+    height: 80px;
+    margin: 8px 0;
+}
+
+.sl-train {
+    position: absolute;
+    white-space: pre;
+    font-size: 10px;
+    line-height: 1;
+    color: #00ff41;
+    text-shadow: 0 0 3px #00ff41;
+    animation: sl-move 4s linear forwards;
+}
+
+@keyframes sl-move {
+    0% {
+        right: -400px;
+    }
+
+    100% {
+        right: 100%;
+    }
+}

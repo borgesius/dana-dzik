@@ -3,71 +3,97 @@ import { Taskbar } from "./Taskbar"
 import { Toolbars } from "./Toolbars"
 import { WindowManager } from "./WindowManager"
 
-const DESKTOP_ICONS: IconConfig[] = [
-    {
-        id: "internet-explorer",
-        label: "Internet Explorer",
-        icon: "🌐",
-        action: "window",
-        windowId: "welcome",
-    },
-    {
-        id: "about-me",
-        label: "about_me.doc",
-        icon: "📄",
-        action: "window",
-        windowId: "about",
-    },
-    {
-        id: "projects",
-        label: "cool_projects.zip",
-        icon: "📦",
-        action: "window",
-        windowId: "projects",
-    },
-    {
-        id: "resume",
-        label: "resume.pdf",
-        icon: "📕",
-        action: "window",
-        windowId: "resume",
-    },
-    {
-        id: "links",
-        label: "bookmarks.url",
-        icon: "🔗",
-        action: "window",
-        windowId: "links",
-    },
-    {
-        id: "guestbook",
-        label: "guestbook.exe",
-        icon: "📖",
-        action: "window",
-        windowId: "guestbook",
-    },
-    {
-        id: "felixgpt",
-        label: "FelixGPT.exe",
-        icon: "🐱",
-        action: "window",
-        windowId: "felixgpt",
-    },
-    {
-        id: "stats",
-        label: "Site Stats.exe",
-        icon: "📊",
-        action: "window",
-        windowId: "stats",
-    },
-    {
-        id: "pinball",
-        label: "Pinball.exe",
-        icon: "🎮",
-        action: "window",
-        windowId: "pinball",
-    },
-]
+function pick<T>(arr: T[]): T {
+    return arr[Math.floor(Math.random() * arr.length)]
+}
+
+const ICON_LABEL_VARIANTS: Record<string, string[]> = {
+    "internet-explorer": ["Internet Explorer"],
+    "about-me": ["about_me.doc"],
+    projects: ["cool_projects.zip"],
+    resume: ["resume.pdf"],
+    links: ["bookmarks.url"],
+    guestbook: ["guestbook.exe"],
+    felixgpt: ["FelixGPT.exe"],
+    stats: ["Site Stats.exe"],
+    pinball: ["Pinball.exe"],
+    terminal: ["terminal.exe"],
+}
+
+function getDesktopIcons(): IconConfig[] {
+    return [
+        {
+            id: "internet-explorer",
+            label: pick(ICON_LABEL_VARIANTS["internet-explorer"]),
+            icon: "🌐",
+            action: "window",
+            windowId: "welcome",
+        },
+        {
+            id: "about-me",
+            label: pick(ICON_LABEL_VARIANTS["about-me"]),
+            icon: "📄",
+            action: "window",
+            windowId: "about",
+        },
+        {
+            id: "projects",
+            label: pick(ICON_LABEL_VARIANTS["projects"]),
+            icon: "📦",
+            action: "window",
+            windowId: "projects",
+        },
+        {
+            id: "resume",
+            label: pick(ICON_LABEL_VARIANTS["resume"]),
+            icon: "📕",
+            action: "window",
+            windowId: "resume",
+        },
+        {
+            id: "links",
+            label: pick(ICON_LABEL_VARIANTS["links"]),
+            icon: "🔗",
+            action: "window",
+            windowId: "links",
+        },
+        {
+            id: "guestbook",
+            label: pick(ICON_LABEL_VARIANTS["guestbook"]),
+            icon: "📖",
+            action: "window",
+            windowId: "guestbook",
+        },
+        {
+            id: "felixgpt",
+            label: pick(ICON_LABEL_VARIANTS["felixgpt"]),
+            icon: "🐱",
+            action: "window",
+            windowId: "felixgpt",
+        },
+        {
+            id: "stats",
+            label: pick(ICON_LABEL_VARIANTS["stats"]),
+            icon: "📊",
+            action: "window",
+            windowId: "stats",
+        },
+        {
+            id: "pinball",
+            label: pick(ICON_LABEL_VARIANTS["pinball"]),
+            icon: "🎮",
+            action: "window",
+            windowId: "pinball",
+        },
+        {
+            id: "terminal",
+            label: pick(ICON_LABEL_VARIANTS["terminal"]),
+            icon: "💻",
+            action: "window",
+            windowId: "terminal",
+        },
+    ]
+}
 
 export class Desktop {
     private container: HTMLElement
@@ -99,7 +125,7 @@ export class Desktop {
         iconsContainer.className = "desktop-icons"
         this.desktopArea.appendChild(iconsContainer)
 
-        DESKTOP_ICONS.forEach((config) => {
+        getDesktopIcons().forEach((config) => {
             const icon = new DesktopIcon(config, (windowId) => {
                 this.windowManager.openWindow(windowId)
             })

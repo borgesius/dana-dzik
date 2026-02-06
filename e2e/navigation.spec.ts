@@ -13,9 +13,10 @@ test.describe("Desktop Navigation", () => {
     test("desktop icons are visible", async ({ page }) => {
         await page.goto("/")
 
-        await expect(page.locator(".desktop-icon")).toHaveCount(8)
+        await expect(page.locator(".desktop-icon")).toHaveCount(9)
         await expect(page.locator('.desktop-icon:has-text("Internet Explorer")')).toBeVisible()
         await expect(page.locator('.desktop-icon:has-text("about_me.doc")')).toBeVisible()
+        await expect(page.locator('.desktop-icon:has-text("terminal.exe")')).toBeVisible()
     })
 
     test("welcome window opens by default", async ({ page }) => {

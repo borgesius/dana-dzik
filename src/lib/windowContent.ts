@@ -18,9 +18,15 @@ export function getWindowContent(contentType: string): string {
             return getSiteStatsContent()
         case "pinball":
             return getPinballContent()
+        case "terminal":
+            return getTerminalContent()
         default:
             return "<p>Content not found</p>"
     }
+}
+
+function getTerminalContent(): string {
+    return `<div id="terminal-content" class="terminal-container"></div>`
 }
 
 function getWelcomeContent(): string {
@@ -28,7 +34,6 @@ function getWelcomeContent(): string {
         localStorage.getItem("dana-site-visits") || "1",
         10
     )
-    const paddedCount = visitorCount.toString().padStart(6, "0")
 
     return `
         <div class="welcome-content">
@@ -36,8 +41,7 @@ function getWelcomeContent(): string {
 
             <div class="marquee-container">
                 <span class="marquee">
-                    ★★★ You are visitor #${paddedCount}! ★★★
-                    This site is best viewed with Netscape Navigator 4.0 ★★★
+                    ★★★ You are visitor #${visitorCount}! ★★★
                     Don't forget to sign the guestbook! ★★★
                 </span>
             </div>
@@ -246,7 +250,7 @@ function getSiteStatsContent(): string {
         <div class="stats-content">
             <div class="stats-header">
                 <h2>📊 Site Statistics</h2>
-                <p class="stats-subtitle">Real-time analytics powered by Upstash</p>
+                <p class="stats-subtitle">Real-time analytics</p>
             </div>
 
             <div class="stats-loading" id="stats-loading">Loading analytics...</div>

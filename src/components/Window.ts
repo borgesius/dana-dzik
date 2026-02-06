@@ -6,6 +6,7 @@ import { initPhotoSlideshows } from "../lib/photoSlideshow"
 import { initPinball, type PinballGame } from "../lib/pinball"
 import { initSiteStats } from "../lib/siteStats"
 import { getWindowContent } from "../lib/windowContent"
+import { Terminal } from "./Terminal"
 
 export interface WindowConfig {
     id: string
@@ -96,6 +97,28 @@ export class Window {
             if (container) {
                 this.pinballGame = initPinball(container)
             }
+        } else if (this.config.contentType === "terminal") {
+            this.initTerminal()
+        }
+    }
+
+    private initTerminal(): void {
+        const container = this.element.querySelector(
+            "#terminal-content"
+        ) as HTMLElement
+        if (container) {
+            new Terminal(container, {
+                openWindow: (windowId): void => {
+                    document.dispatchEvent(
+                        new CustomEvent("terminal:open-window", {
+                            detail: { windowId },
+                        })
+                    )
+                },
+                closeTerminal: (): void => {
+                    this.callbacks.onClose()
+                },
+            })
         }
     }
 

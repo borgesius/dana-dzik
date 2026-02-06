@@ -3,6 +3,7 @@ import "./styles/desktop.css"
 import "./styles/effects.css"
 import "./styles/pinball.css"
 import "./styles/taskbar.css"
+import "./styles/terminal.css"
 import "./styles/widgets.css"
 import "./styles/windows.css"
 
@@ -96,6 +97,15 @@ if (app) {
             }
         }
     })
+
+    document.addEventListener("terminal:open-window", ((
+        e: CustomEvent<{ windowId: string }>
+    ) => {
+        const windowId = e.detail.windowId
+        if (windowId) {
+            windowManager.openWindow(windowId)
+        }
+    }) as EventListener)
 
     addFloatingGifs(desktop)
 }
