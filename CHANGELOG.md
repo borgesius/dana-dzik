@@ -1,3 +1,10 @@
+# [1.28.0](https://github.com/borgesius/dana-dzik/compare/v1.27.0...v1.28.0) (2026-02-06)
+
+
+### Features
+
+* **ui:** adjust welt copy ([#21](https://github.com/borgesius/dana-dzik/issues/21)) ([c2cf76f](https://github.com/borgesius/dana-dzik/commit/c2cf76fb451c9fd100be9d9d3fba19642cc716ba))
+
 # [1.27.0](https://github.com/borgesius/dana-dzik/compare/v1.26.0...v1.27.0) (2026-02-06)
 
 
