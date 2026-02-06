@@ -1,3 +1,10 @@
+# [1.27.0](https://github.com/borgesius/dana-dzik/compare/v1.26.0...v1.27.0) (2026-02-06)
+
+
+### Features
+
+* mobile ([#17](https://github.com/borgesius/dana-dzik/issues/17)) ([ea1fc5a](https://github.com/borgesius/dana-dzik/commit/ea1fc5a1c2eb093c8e550e593681131d7e1dc7dd))
+
 # [1.26.0](https://github.com/borgesius/dana-dzik/compare/v1.25.0...v1.26.0) (2026-02-06)
 
 
