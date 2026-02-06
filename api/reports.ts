@@ -5,6 +5,7 @@ const GITHUB_REPO = "dana-dzik"
 
 interface WorkflowRun {
     id: number
+    head_sha: string
     status: string
     conclusion: string | null
     html_url: string
@@ -26,8 +27,12 @@ interface ArtifactsResponse {
     artifacts: Artifact[]
 }
 
-interface CheckAnnotation {
-    message: string
+interface CommitStatus {
+    context: string
+    description: string | null
+    state: string
+    target_url: string | null
+    updated_at: string
 }
 
 interface LighthouseScores {
@@ -85,9 +90,24 @@ async function fetchGitHub<T>(endpoint: string): Promise<T | null> {
     }
 }
 
-function parseScoreFromAnnotations(
-    annotations: CheckAnnotation[]
-): LighthouseScores {
+async function getStatusesForWorkflow(
+    workflowFile: string
+): Promise<{ run: WorkflowRun; statuses: CommitStatus[] } | null> {
+    const runs = await fetchGitHub<WorkflowRunsResponse>(
+        `/actions/workflows/${workflowFile}/runs?per_page=1&branch=main&status=completed`
+    )
+
+    if (!runs?.workflow_runs?.[0]) return null
+
+    const run = runs.workflow_runs[0]
+    const statuses = await fetchGitHub<CommitStatus[]>(
+        `/commits/${run.head_sha}/statuses`
+    )
+
+    return { run, statuses: statuses || [] }
+}
+
+function parseLighthouseDescription(description: string): LighthouseScores {
     const scores: LighthouseScores = {
         performance: null,
         accessibility: null,
@@ -95,20 +115,38 @@ function parseScoreFromAnnotations(
         seo: null,
     }
 
-    for (const annotation of annotations) {
-        const msg = annotation.message || ""
-        const perfMatch = msg.match(/performance:\s*(\d+)/i)
-        const a11yMatch = msg.match(/accessibility:\s*(\d+)/i)
-        const bpMatch = msg.match(/best.?practices:\s*(\d+)/i)
-        const seoMatch = msg.match(/seo:\s*(\d+)/i)
+    const perfMatch = description.match(/Perf:\s*(\d+)/)
+    const a11yMatch = description.match(/A11y:\s*(\d+)/)
+    const bpMatch = description.match(/BP:\s*(\d+)/)
+    const seoMatch = description.match(/SEO:\s*(\d+)/)
 
-        if (perfMatch) scores.performance = parseInt(perfMatch[1], 10)
-        if (a11yMatch) scores.accessibility = parseInt(a11yMatch[1], 10)
-        if (bpMatch) scores.bestPractices = parseInt(bpMatch[1], 10)
-        if (seoMatch) scores.seo = parseInt(seoMatch[1], 10)
-    }
+    if (perfMatch) scores.performance = parseInt(perfMatch[1], 10)
+    if (a11yMatch) scores.accessibility = parseInt(a11yMatch[1], 10)
+    if (bpMatch) scores.bestPractices = parseInt(bpMatch[1], 10)
+    if (seoMatch) scores.seo = parseInt(seoMatch[1], 10)
 
     return scores
+}
+
+function parseCoverageDescription(description: string): CoverageMetrics {
+    const metrics: CoverageMetrics = {
+        statements: null,
+        branches: null,
+        functions: null,
+        lines: null,
+    }
+
+    const stmtMatch = description.match(/Stmts:\s*([\d.]+)%/)
+    const branchMatch = description.match(/Branch:\s*([\d.]+)%/)
+    const funcMatch = description.match(/Func:\s*([\d.]+)%/)
+    const lineMatch = description.match(/Lines:\s*([\d.]+)%/)
+
+    if (stmtMatch) metrics.statements = parseFloat(stmtMatch[1])
+    if (branchMatch) metrics.branches = parseFloat(branchMatch[1])
+    if (funcMatch) metrics.functions = parseFloat(funcMatch[1])
+    if (lineMatch) metrics.lines = parseFloat(lineMatch[1])
+
+    return metrics
 }
 
 async function getLatestLighthouseReport(): Promise<ReportsData["lighthouse"]> {
@@ -126,41 +164,26 @@ async function getLatestLighthouseReport(): Promise<ReportsData["lighthouse"]> {
         updatedAt: null,
     }
 
-    const runs = await fetchGitHub<WorkflowRunsResponse>(
-        "/actions/workflows/lighthouse.yml/runs?per_page=1&branch=main&status=completed"
-    )
+    const result = await getStatusesForWorkflow("lighthouse.yml")
+    if (!result) return defaultResult
 
-    if (!runs?.workflow_runs?.[0]) return defaultResult
-
-    const run = runs.workflow_runs[0]
+    const { run, statuses } = result
     defaultResult.status = run.conclusion || "unknown"
     defaultResult.updatedAt = run.created_at
     defaultResult.workflowUrl = run.html_url
+    defaultResult.url = run.html_url
 
-    const annotations = await fetchGitHub<CheckAnnotation[]>(
-        `/check-runs/${run.id}/annotations`
-    )
-
-    if (annotations) {
-        defaultResult.scores = parseScoreFromAnnotations(annotations)
+    const lhStatus = statuses.find((s) => s.context === "lighthouse")
+    if (lhStatus?.description) {
+        defaultResult.scores = parseLighthouseDescription(lhStatus.description)
 
         if (defaultResult.scores.performance !== null) {
             defaultResult.score = defaultResult.scores.performance
         }
 
-        for (const annotation of annotations) {
-            const urlMatch = annotation.message?.match(
-                /https:\/\/storage\.googleapis\.com\/lighthouse-infrastructure\.appspot\.com\/reports\/[^\s]+\.html/
-            )
-            if (urlMatch) {
-                defaultResult.url = urlMatch[0]
-                break
-            }
+        if (lhStatus.target_url) {
+            defaultResult.url = lhStatus.target_url
         }
-    }
-
-    if (!defaultResult.url) {
-        defaultResult.url = run.html_url
     }
 
     return defaultResult
@@ -201,35 +224,6 @@ async function getLatestPlaywrightReport(): Promise<ReportsData["playwright"]> {
     return defaultResult
 }
 
-interface CommitStatus {
-    context: string
-    description: string | null
-    state: string
-    target_url: string | null
-    updated_at: string
-}
-
-function parseCoverageDescription(description: string): CoverageMetrics {
-    const metrics: CoverageMetrics = {
-        statements: null,
-        branches: null,
-        functions: null,
-        lines: null,
-    }
-
-    const stmtMatch = description.match(/Stmts:\s*([\d.]+)%/)
-    const branchMatch = description.match(/Branch:\s*([\d.]+)%/)
-    const funcMatch = description.match(/Func:\s*([\d.]+)%/)
-    const lineMatch = description.match(/Lines:\s*([\d.]+)%/)
-
-    if (stmtMatch) metrics.statements = parseFloat(stmtMatch[1])
-    if (branchMatch) metrics.branches = parseFloat(branchMatch[1])
-    if (funcMatch) metrics.functions = parseFloat(funcMatch[1])
-    if (lineMatch) metrics.lines = parseFloat(lineMatch[1])
-
-    return metrics
-}
-
 async function getCoverageInfo(): Promise<ReportsData["coverage"]> {
     const defaultResult: ReportsData["coverage"] = {
         available: false,
@@ -243,21 +237,20 @@ async function getCoverageInfo(): Promise<ReportsData["coverage"]> {
         updatedAt: null,
     }
 
-    const statuses = await fetchGitHub<CommitStatus[]>(
-        "/commits/main/statuses"
-    )
+    const result = await getStatusesForWorkflow("ci.yml")
+    if (!result) return defaultResult
 
-    if (statuses) {
-        const coverageStatus = statuses.find((s) => s.context === "coverage")
-        if (coverageStatus?.description) {
-            defaultResult.available = true
-            defaultResult.metrics = parseCoverageDescription(
-                coverageStatus.description
-            )
-            defaultResult.updatedAt = coverageStatus.updated_at
-            if (coverageStatus.target_url) {
-                defaultResult.workflowUrl = coverageStatus.target_url
-            }
+    const { statuses } = result
+    const coverageStatus = statuses.find((s) => s.context === "coverage")
+
+    if (coverageStatus?.description) {
+        defaultResult.available = true
+        defaultResult.metrics = parseCoverageDescription(
+            coverageStatus.description
+        )
+        defaultResult.updatedAt = coverageStatus.updated_at
+        if (coverageStatus.target_url) {
+            defaultResult.workflowUrl = coverageStatus.target_url
         }
     }
 
