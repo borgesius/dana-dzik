@@ -1,3 +1,10 @@
+# [1.23.0](https://github.com/borgesius/dana-dzik/compare/v1.22.0...v1.23.0) (2026-02-06)
+
+
+### Features
+
+* redis gateway ([#13](https://github.com/borgesius/dana-dzik/issues/13)) ([81d79b1](https://github.com/borgesius/dana-dzik/commit/81d79b1b4439385929f757ee0b27f0078f8b596c))
+
 # [1.22.0](https://github.com/borgesius/dana-dzik/compare/v1.21.0...v1.22.0) (2026-02-06)
 
 
