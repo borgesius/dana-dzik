@@ -135,11 +135,15 @@ test.describe("Desktop Navigation", () => {
             timeout: 10000,
         })
 
-        const ventureBtn = page.locator('.venture-btn:has-text("MAKE $$$ FAST")')
+        const ventureBtn = page.locator(
+            '.venture-btn:has-text("MAKE $$$ FAST")'
+        )
         await expect(ventureBtn).toBeVisible({ timeout: 5000 })
         await ventureBtn.click()
 
-        await expect(page.locator(".popup-window")).toBeVisible({ timeout: 5000 })
+        await expect(page.locator(".popup-window")).toBeVisible({
+            timeout: 5000,
+        })
     })
 
     test("toolbars are visible with game elements", async ({ page }) => {
@@ -164,5 +168,4 @@ test.describe("Desktop Navigation", () => {
         await expect(page.locator(".widgets-container")).toBeVisible()
         await expect(page.locator("#audio-widget")).toBeVisible()
     })
-
 })
