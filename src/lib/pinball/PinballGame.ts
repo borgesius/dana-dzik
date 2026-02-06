@@ -141,9 +141,10 @@ export class PinballGame {
 
         this.walls.push(new Wall(330, 445, 260, 55, 0.95))
 
-        this.walls.push(new Wall(200, 445, 330, 445, 0.7))
+        this.walls.push(new Wall(260, 440, 330, 445, 0.7))
 
         this.walls.push(new Wall(15, 415, 82, 452))
+        this.walls.push(new Wall(245, 400, 215, 454))
 
         this.walls.push(new Wall(18, 320, 42, 380, 0.8))
         this.walls.push(new Wall(232, 380, 248, 320, 0.8))
@@ -314,22 +315,23 @@ export class PinballGame {
         if (
             this.ball.active &&
             this.ball.position.x > 260 &&
-            this.ball.position.y > 200
+            this.ball.position.y > 200 &&
+            this.ball.velocity.y > 0
         ) {
             this.ball.velocity = new Vector2D(
-                Math.min(this.ball.velocity.x, -1),
+                Math.min(this.ball.velocity.x, -1.5),
                 this.ball.velocity.y
             )
         }
 
         if (
             this.ball.active &&
-            this.ball.position.y > 435 &&
+            this.ball.position.y > 430 &&
             this.ball.position.x > 260 &&
-            this.ball.velocity.magnitude() < 0.5
+            this.ball.velocity.magnitude() < 1.0
         ) {
             this.launcherSettleFrames++
-            if (this.launcherSettleFrames > 45) {
+            if (this.launcherSettleFrames > 30) {
                 this.ball.reset(BALL_START_X, BALL_START_Y)
                 this.launcherSettleFrames = 0
             }

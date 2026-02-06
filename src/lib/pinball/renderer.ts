@@ -236,7 +236,7 @@ export class PinballRenderer {
         this.ctx.rotate(flipper.angle)
 
         this.ctx.beginPath()
-        this.ctx.ellipse(0, 0, 9, 9, 0, 0, Math.PI * 2)
+        this.ctx.ellipse(0, 0, 5, 5, 0, 0, Math.PI * 2)
         this.ctx.moveTo(0, -flipperWidth / 2)
         this.ctx.lineTo(flipper.length - 10, -4)
         this.ctx.arc(flipper.length - 10, 0, 4, -Math.PI / 2, Math.PI / 2)
@@ -261,7 +261,7 @@ export class PinballRenderer {
         this.ctx.stroke()
 
         this.ctx.beginPath()
-        this.ctx.arc(0, 0, 5, 0, Math.PI * 2)
+        this.ctx.arc(0, 0, 3, 0, Math.PI * 2)
         this.ctx.fillStyle = "#2A1A0E"
         this.ctx.fill()
 
