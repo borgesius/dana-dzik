@@ -1,3 +1,10 @@
+# [1.25.0](https://github.com/borgesius/dana-dzik/compare/v1.24.1...v1.25.0) (2026-02-06)
+
+
+### Features
+
+* **welcome:** real visitor counter ([#18](https://github.com/borgesius/dana-dzik/issues/18)) ([5957504](https://github.com/borgesius/dana-dzik/commit/5957504fb75e95eb0f1c41231df701a93056fe4b))
+
 ## [1.24.1](https://github.com/borgesius/dana-dzik/compare/v1.24.0...v1.24.1) (2026-02-06)
 
 
