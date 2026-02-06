@@ -44,6 +44,7 @@ export class DesktopIcon {
 
     private handleClick(): void {
         this.clickCount++
+        this.playSound("click")
 
         if (this.clickTimer) {
             window.clearTimeout(this.clickTimer)
@@ -55,6 +56,17 @@ export class DesktopIcon {
             }
             this.clickCount = 0
         }, 250)
+    }
+
+    private playSound(name: string): void {
+        const audioManager = (
+            window as unknown as {
+                audioManager?: { playSound: (n: string) => void }
+            }
+        ).audioManager
+        if (audioManager) {
+            audioManager.playSound(name)
+        }
     }
 
     private handleDoubleClick(e: Event): void {

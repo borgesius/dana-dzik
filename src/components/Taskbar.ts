@@ -170,8 +170,20 @@ export class Taskbar {
     }
 
     private toggleStartMenu(): void {
+        this.playSound("click")
         this.startMenuOpen = !this.startMenuOpen
         this.startMenu.classList.toggle("open", this.startMenuOpen)
+    }
+
+    private playSound(name: string): void {
+        const audioManager = (
+            window as unknown as {
+                audioManager?: { playSound: (n: string) => void }
+            }
+        ).audioManager
+        if (audioManager) {
+            audioManager.playSound(name)
+        }
     }
 
     private closeStartMenu(): void {
