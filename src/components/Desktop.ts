@@ -8,18 +8,15 @@ function pick<T>(arr: T[]): T {
 }
 
 const ICON_LABEL_VARIANTS: Record<string, string[]> = {
-    "internet-explorer": [
-        "Internet Explorer",
-        "Internet Explorer",
-        "Internet Exploder",
-    ],
-    "about-me": ["about_me.doc", "about_me.doc", "ABOUT~1.DOC"],
-    projects: ["cool_projects.zip", "cool_projects.zip", "projects.zip"],
-    resume: ["resume.pdf", "resume.pdf", "resume_FINAL.pdf"],
-    links: ["bookmarks.url", "bookmarks.url", "favorites.url"],
-    guestbook: ["guestbook.exe", "guestbook.exe", "sign_here.exe"],
-    felixgpt: ["FelixGPT.exe", "FelixGPT.exe", "cat.exe"],
-    stats: ["Site Stats.exe", "Site Stats.exe", "analytics.exe"],
+    "internet-explorer": ["Internet Explorer"],
+    "about-me": ["about_me.doc"],
+    projects: ["cool_projects.zip"],
+    resume: ["resume.pdf"],
+    links: ["bookmarks.url"],
+    guestbook: ["guestbook.exe"],
+    felixgpt: ["FelixGPT.exe"],
+    stats: ["Site Stats.exe"],
+    terminal: ["terminal.exe"],
 }
 
 function getDesktopIcons(): IconConfig[] {
@@ -79,6 +76,13 @@ function getDesktopIcons(): IconConfig[] {
             icon: "📊",
             action: "window",
             windowId: "stats",
+        },
+        {
+            id: "terminal",
+            label: pick(ICON_LABEL_VARIANTS["terminal"]),
+            icon: "💻",
+            action: "window",
+            windowId: "terminal",
         },
     ]
 }
