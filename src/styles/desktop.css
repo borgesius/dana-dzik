@@ -226,7 +226,7 @@ body {
 .qa-tooltip {
     display: none;
     position: absolute;
-    bottom: calc(100% + 4px);
+    top: calc(100% + 4px);
     left: 50%;
     transform: translateX(-50%);
     background: var(--win95-gray);
