@@ -1,3 +1,11 @@
+# [1.18.0](https://github.com/borgesius/dana-dzik/compare/v1.17.0...v1.18.0) (2026-02-06)
+
+
+### Features
+
+* music ([af8b0e5](https://github.com/borgesius/dana-dzik/commit/af8b0e534a160ec8b2ba8ef2657e34b573166878))
+* **strava:** show activity names ([27ff3d8](https://github.com/borgesius/dana-dzik/commit/27ff3d83a48530c0b44b9e1067094bbde7bc04da))
+
 # [1.17.0](https://github.com/borgesius/dana-dzik/compare/v1.16.0...v1.17.0) (2026-02-06)
 
 
