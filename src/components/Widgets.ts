@@ -43,29 +43,62 @@ export class Widgets {
     }
 
     private createAudioWidget(): void {
-        const widget = this.createWidgetFrame("🎵 Audio Player", "audio-widget")
+        const widget = this.createWidgetFrame("WINAMP", "audio-widget")
+        widget.classList.add("winamp-widget")
 
         const content = document.createElement("div")
-        content.className = "widget-content audio-player"
+        content.className = "widget-content audio-player winamp"
         content.innerHTML = `
-            <div class="audio-visualizer">
-                <div class="bar"></div>
-                <div class="bar"></div>
-                <div class="bar"></div>
-                <div class="bar"></div>
-                <div class="bar"></div>
-                <div class="bar"></div>
-                <div class="bar"></div>
-                <div class="bar"></div>
+            <div class="winamp-main">
+                <div class="winamp-album-art">
+                    <img src="/assets/music/cover.png" alt="Album Art" />
+                </div>
+                <div class="winamp-right">
+                    <div class="winamp-display">
+                        <div class="winamp-visualizer">
+                            <div class="bar"></div>
+                            <div class="bar"></div>
+                            <div class="bar"></div>
+                            <div class="bar"></div>
+                            <div class="bar"></div>
+                            <div class="bar"></div>
+                            <div class="bar"></div>
+                            <div class="bar"></div>
+                            <div class="bar"></div>
+                            <div class="bar"></div>
+                            <div class="bar"></div>
+                            <div class="bar"></div>
+                            <div class="bar"></div>
+                            <div class="bar"></div>
+                            <div class="bar"></div>
+                            <div class="bar"></div>
+                        </div>
+                    </div>
+                    <div class="winamp-info">
+                        <div class="winamp-status">STOPPED</div>
+                        <div class="winamp-track-num">--/--</div>
+                    </div>
+                </div>
             </div>
-            <div class="audio-title">background.mid</div>
-            <div class="audio-controls">
-                <button class="audio-btn" id="audio-prev" title="Previous">⏮</button>
-                <button class="audio-btn play-btn" id="audio-play" title="Play/Pause">▶</button>
-                <button class="audio-btn" id="audio-next" title="Next">⏭</button>
-                <button class="audio-btn" id="audio-stop" title="Stop">⏹</button>
+            <div class="winamp-ticker">
+                <span class="ticker-text">Click to start playback...</span>
             </div>
-            <div class="audio-status">Stopped</div>
+            <div class="winamp-controls">
+                <button class="winamp-btn" id="audio-prev" title="Previous">⏮</button>
+                <button class="winamp-btn play-btn" id="audio-play" title="Play">▶</button>
+                <button class="winamp-btn" id="audio-pause" title="Pause">⏸</button>
+                <button class="winamp-btn" id="audio-stop" title="Stop">⏹</button>
+                <button class="winamp-btn" id="audio-next" title="Next">⏭</button>
+            </div>
+            <div class="winamp-playlist">
+                <div class="playlist-item" data-index="0">01. Liftoff</div>
+                <div class="playlist-item" data-index="1">02. Pirates</div>
+                <div class="playlist-item" data-index="2">03. Happy Sphere</div>
+                <div class="playlist-item" data-index="3">04. Boom</div>
+                <div class="playlist-item" data-index="4">05. Light</div>
+                <div class="playlist-item" data-index="5">06. Crono</div>
+                <div class="playlist-item" data-index="6">07. Universal</div>
+            </div>
         `
 
         widget.appendChild(content)
@@ -78,55 +111,142 @@ export class Widgets {
         const playBtn = content.querySelector(
             "#audio-play"
         ) as HTMLButtonElement
+        const pauseBtn = content.querySelector(
+            "#audio-pause"
+        ) as HTMLButtonElement
         const stopBtn = content.querySelector(
             "#audio-stop"
         ) as HTMLButtonElement
-        const statusEl = content.querySelector(".audio-status") as HTMLElement
+        const prevBtn = content.querySelector(
+            "#audio-prev"
+        ) as HTMLButtonElement
+        const nextBtn = content.querySelector(
+            "#audio-next"
+        ) as HTMLButtonElement
+        const statusEl = content.querySelector(".winamp-status") as HTMLElement
+        const trackNumEl = content.querySelector(
+            ".winamp-track-num"
+        ) as HTMLElement
+        const tickerText = content.querySelector(".ticker-text") as HTMLElement
         const visualizer = content.querySelector(
-            ".audio-visualizer"
+            ".winamp-visualizer"
         ) as HTMLElement
 
-        let isPlaying = false
+        const playlistItems = content.querySelectorAll(".playlist-item")
 
-        const updateUI = (): void => {
-            if (isPlaying) {
-                playBtn.textContent = "⏸"
-                statusEl.textContent = "Playing..."
-                visualizer.classList.add("playing")
-            } else {
-                playBtn.textContent = "▶"
-                statusEl.textContent = "Stopped"
-                visualizer.classList.remove("playing")
-            }
+        type AudioManagerType = {
+            togglePlay: () => void
+            play: () => void
+            pause: () => void
+            stop: () => void
+            nextTrack: () => void
+            previousTrack: () => void
+            playTrack: (index: number) => void
+            getCurrentTrack: () => { name: string; artist: string } | null
+            getCurrentTrackIndex: () => number
+            getPlaylistLength: () => number
+            getIsPlaying: () => boolean
+            onTrackChange: (cb: () => void) => void
+            onPlayStateChange: (cb: () => void) => void
         }
 
-        playBtn.addEventListener("click", () => {
-            const audioManager = (
-                window as unknown as {
-                    audioManager?: {
-                        toggleMidi: () => void
-                        midiEnabled: boolean
-                    }
+        const getAudioManager = (): AudioManagerType | undefined => {
+            return (window as unknown as { audioManager?: AudioManagerType })
+                .audioManager
+        }
+
+        const updateUI = (): void => {
+            const audioManager = getAudioManager()
+            if (!audioManager) return
+
+            const isPlaying = audioManager.getIsPlaying()
+            const track = audioManager.getCurrentTrack()
+            const trackIndex = audioManager.getCurrentTrackIndex()
+            const playlistLength = audioManager.getPlaylistLength()
+
+            if (isPlaying) {
+                statusEl.textContent = "PLAYING"
+                statusEl.classList.add("playing")
+                visualizer.classList.add("playing")
+            } else {
+                statusEl.textContent = "PAUSED"
+                statusEl.classList.remove("playing")
+                visualizer.classList.remove("playing")
+            }
+
+            trackNumEl.textContent = `${String(trackIndex + 1).padStart(2, "0")}/${String(playlistLength).padStart(2, "0")}`
+
+            if (track) {
+                tickerText.textContent = `${track.artist} - ${track.name}    ★    ${track.artist} - ${track.name}    ★    `
+            }
+
+            playlistItems.forEach((item, index) => {
+                if (index === trackIndex) {
+                    item.classList.add("active")
+                } else {
+                    item.classList.remove("active")
                 }
-            ).audioManager
+            })
+        }
+
+        setTimeout(() => {
+            const audioManager = getAudioManager()
             if (audioManager) {
-                audioManager.toggleMidi()
-                isPlaying = !isPlaying
+                audioManager.onTrackChange(updateUI)
+                audioManager.onPlayStateChange(updateUI)
                 updateUI()
+            }
+        }, 100)
+
+        playBtn.addEventListener("click", () => {
+            const audioManager = getAudioManager()
+            if (audioManager) {
+                audioManager.play()
+            }
+        })
+
+        pauseBtn.addEventListener("click", () => {
+            const audioManager = getAudioManager()
+            if (audioManager) {
+                audioManager.pause()
             }
         })
 
         stopBtn.addEventListener("click", () => {
-            const audioManager = (
-                window as unknown as {
-                    audioManager?: { stopMidi: () => void }
-                }
-            ).audioManager
+            const audioManager = getAudioManager()
             if (audioManager) {
-                audioManager.stopMidi()
-                isPlaying = false
-                updateUI()
+                audioManager.stop()
+                statusEl.textContent = "STOPPED"
+                statusEl.classList.remove("playing")
+                visualizer.classList.remove("playing")
             }
+        })
+
+        prevBtn.addEventListener("click", () => {
+            const audioManager = getAudioManager()
+            if (audioManager) {
+                audioManager.previousTrack()
+            }
+        })
+
+        nextBtn.addEventListener("click", () => {
+            const audioManager = getAudioManager()
+            if (audioManager) {
+                audioManager.nextTrack()
+            }
+        })
+
+        playlistItems.forEach((item) => {
+            item.addEventListener("click", () => {
+                const audioManager = getAudioManager()
+                const index = parseInt(
+                    (item as HTMLElement).dataset.index ?? "0",
+                    10
+                )
+                if (audioManager) {
+                    audioManager.playTrack(index)
+                }
+            })
         })
     }
 
