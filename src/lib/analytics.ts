@@ -53,6 +53,7 @@ export const PHOTO_VARIANTS = [
     { id: "A", photo: "/assets/dana/IMG_5099.jpg" },
     { id: "B", photo: "/assets/dana/IMG_5531.jpg" },
     { id: "C", photo: "/assets/dana/IMG_5576.jpg" },
+    { id: "D", photo: "/assets/dana/IMG_7045.jpg" },
 ] as const
 
 export type PhotoVariant = (typeof PHOTO_VARIANTS)[number]["id"]
