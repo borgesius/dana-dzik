@@ -1,4 +1,8 @@
-import { APP_ITEMS, MOBILE_DOCK_IDS, MOBILE_EXCLUDED_IDS } from "../../config"
+import {
+    DESKTOP_ITEMS,
+    MOBILE_DOCK_IDS,
+    MOBILE_EXCLUDED_IDS,
+} from "../../config"
 
 export class MobileHomeScreen {
     private element: HTMLElement
@@ -13,12 +17,12 @@ export class MobileHomeScreen {
         const screen = document.createElement("div")
         screen.className = "ios-home-screen"
 
-        const gridItems = APP_ITEMS.filter(
+        const gridItems = DESKTOP_ITEMS.filter(
             (item) =>
                 !MOBILE_EXCLUDED_IDS.includes(item.id) &&
                 !MOBILE_DOCK_IDS.includes(item.id)
         )
-        const dockItems = APP_ITEMS.filter((item) =>
+        const dockItems = DESKTOP_ITEMS.filter((item) =>
             MOBILE_DOCK_IDS.includes(item.id)
         )
 
@@ -27,7 +31,11 @@ export class MobileHomeScreen {
 
         for (const item of gridItems) {
             grid.appendChild(
-                this.createAppIcon(item.icon, item.label, item.windowId)
+                this.createAppIcon(
+                    item.icon,
+                    item.label ?? item.filename,
+                    item.windowId
+                )
             )
         }
 
@@ -45,7 +53,11 @@ export class MobileHomeScreen {
 
         for (const item of dockItems) {
             dock.appendChild(
-                this.createAppIcon(item.icon, item.label, item.windowId)
+                this.createAppIcon(
+                    item.icon,
+                    item.label ?? item.filename,
+                    item.windowId
+                )
             )
         }
 

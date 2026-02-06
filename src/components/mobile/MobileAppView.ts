@@ -1,4 +1,4 @@
-import { APP_ITEMS } from "../../config"
+import { DESKTOP_ITEMS } from "../../config"
 import { trackFunnelStep, trackWindowOpen } from "../../lib/analytics"
 import { initFelixGPT } from "../../lib/felixgpt"
 import { initGuestbook } from "../../lib/guestbook"
@@ -103,7 +103,7 @@ export class MobileAppView {
 
         const title =
             APP_TITLES[windowId] ??
-            APP_ITEMS.find((item) => item.windowId === windowId)?.label ??
+            DESKTOP_ITEMS.find((item) => item.windowId === windowId)?.label ??
             windowId
         this.navTitle.textContent = title
 
