@@ -128,10 +128,4 @@ test.describe("Desktop Navigation", () => {
         await expect(page.locator("#audio-widget")).toBeVisible()
     })
 
-    test("safe mode button is present", async ({ page }) => {
-        await page.goto("/")
-        await page.waitForSelector(".loading-screen.hidden", { state: "attached", timeout: 10000 })
-
-        await expect(page.locator(".safe-mode-btn")).toBeVisible()
-    })
 })

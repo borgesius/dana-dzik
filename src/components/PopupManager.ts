@@ -36,7 +36,6 @@ export class PopupManager {
     private sessionTimeout: number | null = null
     private sessionEndTime = 0
     private sessionActive = false
-    private disabled = false
     private zIndex = 9000
     private popupLevel = 0
     private gameActivated = false
@@ -65,15 +64,6 @@ export class PopupManager {
         })
     }
 
-    public setEnabled(enabled: boolean): void {
-        this.disabled = !enabled
-        if (this.disabled) {
-            this.endSession()
-            this.activePopups.forEach((p) => p.remove())
-            this.activePopups = []
-        }
-    }
-
     public onGameEngaged(): void {
         this.startSession(POPUP_CONFIG.gameSessionDurationMs)
     }
@@ -85,8 +75,6 @@ export class PopupManager {
     }
 
     private startSession(durationMs: number): void {
-        if (this.disabled) return
-
         const newEndTime = Date.now() + durationMs
         if (newEndTime <= this.sessionEndTime) return
 

@@ -539,19 +539,3 @@
     color: #667788;
 }
 
-/* === Safe Mode === */
-.safe-mode .winamp-visualizer.playing .bar {
-    animation: none;
-}
-
-.safe-mode .ticker-text {
-    animation: none;
-}
-
-.safe-mode .winamp-status.playing {
-    animation: none;
-}
-
-.safe-mode .np-status.playing {
-    animation: none;
-}

@@ -319,42 +319,6 @@
     z-index: 99998;
 }
 
-/* Safe Mode - disable visual chaos */
-.safe-mode .floating-gifs {
-    display: none !important;
-}
-
-.safe-mode .blink {
-    animation: none !important;
-}
-
-.safe-mode .marquee {
-    animation: none !important;
-    transform: none !important;
-}
-
-.safe-mode .rainbow-text {
-    animation: none !important;
-    background: none !important;
-    color: inherit !important;
-}
-
-.safe-mode .glitter-text {
-    animation: none !important;
-}
-
-.safe-mode .toolbar-button.green {
-    animation: none !important;
-}
-
-.safe-mode .popup-content h2 {
-    animation: none !important;
-}
-
-.safe-mode .clippy-body {
-    animation: none !important;
-}
-
 /* === Glitch Effects === */
 .glitch {
     animation: glitch-shake 0.3s infinite;
@@ -518,26 +482,6 @@
     z-index: 99989;
 }
 
-/* Safe mode disables glitch effects */
-.safe-mode .glitch,
-.safe-mode .glitch-img,
-.safe-mode .corrupt,
-.safe-mode .vhs-tracking,
-.safe-mode .flicker {
-    animation: none !important;
-    filter: none !important;
-    transform: none !important;
-}
-
-.safe-mode .chromatic-aberration {
-    text-shadow: none !important;
-}
-
-.safe-mode .noise::after,
-.safe-mode .scanlines::before {
-    display: none !important;
-}
-
 /* === Random Glitch System === */
 .glitch-overlay {
     position: fixed;
@@ -688,15 +632,3 @@
     }
 }
 
-/* Safe mode disables random glitch system */
-.safe-mode .glitch-overlay {
-    display: none !important;
-}
-
-.safe-mode .glitch-freeze,
-.safe-mode .static-burst,
-.safe-mode .rgb-split,
-.safe-mode .h-tear,
-.safe-mode .interlace {
-    animation: none !important;
-}

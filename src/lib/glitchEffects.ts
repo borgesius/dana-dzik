@@ -1,5 +1,3 @@
-import { SafeMode } from "./safeMode"
-
 type GlitchType =
     | "shift"
     | "colorSplit"
@@ -32,15 +30,6 @@ export class GlitchManager {
     constructor() {
         this.createOverlay()
         this.scheduleNextGlitch()
-
-        SafeMode.getInstance().onChange((enabled) => {
-            this.active = !enabled
-            if (enabled) {
-                this.clearEffects()
-            } else {
-                this.scheduleNextGlitch()
-            }
-        })
     }
 
     private createOverlay(): void {
@@ -229,23 +218,4 @@ export class GlitchManager {
         }, glitch.duration * 0.5)
     }
 
-    private clearEffects(): void {
-        if (this.glitchTimeout) {
-            clearTimeout(this.glitchTimeout)
-            this.glitchTimeout = null
-        }
-
-        document.body.style.transform = ""
-        document.body.style.filter = ""
-        document.body.style.textShadow = ""
-        document.body.classList.remove("glitch-freeze")
-
-        if (this.overlay) {
-            this.overlay.style.opacity = "0"
-            this.overlay.classList.remove("noise-active")
-            this.overlay
-                .querySelectorAll(".glitch-tear")
-                .forEach((t) => t.remove())
-        }
-    }
 }
