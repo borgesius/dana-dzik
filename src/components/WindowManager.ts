@@ -111,6 +111,7 @@ export class WindowManager {
     private activeWindowId: string | null = null
     private zIndexCounter = 100
     private changeCallbacks: Array<() => void> = []
+    private newWindowCallbacks: Array<(windowId: string) => void> = []
 
     constructor(container: HTMLElement) {
         this.container = container
@@ -153,6 +154,7 @@ export class WindowManager {
         this.container.appendChild(win.getElement())
         this.focusWindow(windowId)
         this.notifyChange()
+        this.newWindowCallbacks.forEach((cb) => cb(windowId))
     }
 
     /**
@@ -243,6 +245,15 @@ export class WindowManager {
      */
     public onWindowsChange(callback: () => void): void {
         this.changeCallbacks.push(callback)
+    }
+
+    /**
+     * Registers a callback to be called when a new window is opened.
+     * Does not fire when an existing window is focused.
+     * @param callback - Function to call with the new window's ID
+     */
+    public onNewWindowOpen(callback: (windowId: string) => void): void {
+        this.newWindowCallbacks.push(callback)
     }
 
     /**

@@ -23,17 +23,21 @@ describe("Config", () => {
     })
 
     describe("POPUP_CONFIG", () => {
-        it("has reasonable timing values", () => {
-            expect(POPUP_CONFIG.initialDelay).toBeGreaterThan(0)
-            expect(POPUP_CONFIG.minInterval).toBeGreaterThan(0)
-            expect(POPUP_CONFIG.randomInterval).toBeGreaterThan(0)
+        it("has reasonable session durations", () => {
+            expect(POPUP_CONFIG.gameSessionDurationMs).toBeGreaterThan(0)
+            expect(POPUP_CONFIG.windowSessionDurationMs).toBeGreaterThan(0)
             expect(POPUP_CONFIG.maxConcurrent).toBeGreaterThan(0)
         })
 
-        it("min interval is less than combined max", () => {
-            expect(POPUP_CONFIG.minInterval).toBeLessThan(
-                POPUP_CONFIG.minInterval + POPUP_CONFIG.randomInterval
+        it("game session is longer than window session", () => {
+            expect(POPUP_CONFIG.gameSessionDurationMs).toBeGreaterThan(
+                POPUP_CONFIG.windowSessionDurationMs
             )
+        })
+
+        it("window trigger chance is between 0 and 1", () => {
+            expect(POPUP_CONFIG.windowTriggerChance).toBeGreaterThan(0)
+            expect(POPUP_CONFIG.windowTriggerChance).toBeLessThanOrEqual(1)
         })
     })
 

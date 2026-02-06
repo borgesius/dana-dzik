@@ -21,12 +21,12 @@ export const SOCIAL = {
 
 /** Popup behavior settings */
 export const POPUP_CONFIG = {
-    /** Initial delay before first popup (ms) */
-    initialDelay: 10000,
-    /** Minimum interval between popups (ms) */
-    minInterval: 30000,
-    /** Random additional interval (ms) */
-    randomInterval: 30000,
+    /** How long popups keep spawning after engaging with the money game (ms) */
+    gameSessionDurationMs: 180_000,
+    /** How long popups keep spawning after a window-open trigger (ms) */
+    windowSessionDurationMs: 15_000,
+    /** Chance of popups triggering when a new window opens (0-1) */
+    windowTriggerChance: 0.2,
     /** Maximum concurrent popups */
     maxConcurrent: 2,
 } as const
