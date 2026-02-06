@@ -154,6 +154,13 @@ export const DESKTOP_ITEMS: DesktopItemConfig[] = [
         fileType: "executable",
     },
     {
+        id: "pinball",
+        filename: "Pinball.exe",
+        icon: "🪩",
+        windowId: "pinball",
+        fileType: "executable",
+    },
+    {
         id: "terminal",
         filename: "terminal.exe",
         icon: "💻",
@@ -178,4 +185,4 @@ export const MOBILE_DOCK_IDS = [
 ]
 
 /** Items excluded from mobile entirely */
-export const MOBILE_EXCLUDED_IDS = ["terminal", "welt"]
+export const MOBILE_EXCLUDED_IDS = ["terminal", "welt", "pinball"]

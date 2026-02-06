@@ -365,6 +365,10 @@ html.is-mobile body {
     background: linear-gradient(180deg, #81ecec, #00cec9);
 }
 
+.ios-app-icon.icon-pinball {
+    background: linear-gradient(180deg, #fd79a8, #e84393);
+}
+
 /* --- Dock --------------------------------------------------- */
 .ios-dock {
     display: flex;
