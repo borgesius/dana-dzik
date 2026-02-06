@@ -1,3 +1,5 @@
+import { getThemeManager } from "../lib/themeManager"
+
 export interface IconConfig {
     id: string
     label: string
@@ -13,11 +15,21 @@ export class DesktopIcon {
     private onOpen: (windowId: string) => void
     private clickCount = 0
     private clickTimer: number | null = null
+    private labelEl: HTMLElement | null = null
 
     constructor(config: IconConfig, onOpen: (windowId: string) => void) {
         this.config = config
         this.onOpen = onOpen
         this.element = this.createElement()
+
+        getThemeManager().on("themeChanged", () => this.applyThemeLabel())
+    }
+
+    private applyThemeLabel(): void {
+        if (!this.labelEl) return
+        const labels = getThemeManager().getLabels()
+        this.labelEl.textContent =
+            labels.desktopIconLabels[this.config.id] ?? this.config.label
     }
 
     private createElement(): HTMLElement {
@@ -30,8 +42,11 @@ export class DesktopIcon {
         iconEl.style.display = "block"
         iconEl.textContent = this.config.icon
 
+        const labels = getThemeManager().getLabels()
         const span = document.createElement("span")
-        span.textContent = this.config.label
+        span.textContent =
+            labels.desktopIconLabels[this.config.id] ?? this.config.label
+        this.labelEl = span
 
         div.appendChild(iconEl)
         div.appendChild(span)
