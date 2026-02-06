@@ -456,4 +456,253 @@ describe("WELT Interpreter", () => {
             expect(output).toEqual(["hello; world"])
         })
     })
+
+    describe("quaternary word size", () => {
+        it("wraps arithmetic results at 256", async () => {
+            const output = await runProgram(`
+                ERWACHE
+                DING 0 = 200 + 100
+                VORSTELLUNG DING 0
+                VERNEINUNG
+            `)
+            expect(output).toEqual(["44"])
+        })
+
+        it("wraps negative results to unsigned range", async () => {
+            const output = await runProgram(`
+                ERWACHE
+                DING 0 = 5 - 10
+                VORSTELLUNG DING 0
+                VERNEINUNG
+            `)
+            expect(output).toEqual(["251"])
+        })
+
+        it("wraps values stored to DING slots", async () => {
+            const output = await runProgram(`
+                ERWACHE
+                DING 0 = 300
+                VORSTELLUNG DING 0
+                VERNEINUNG
+            `)
+            expect(output).toEqual(["44"])
+        })
+
+        it("wraps multiplication overflow", async () => {
+            const output = await runProgram(`
+                ERWACHE
+                DING 0 = 20 * 20
+                VORSTELLUNG DING 0
+                VERNEINUNG
+            `)
+            expect(output).toEqual(["144"])
+        })
+
+        it("does not wrap strings", async () => {
+            const output = await runProgram(`
+                ERWACHE
+                DING 0 = "hello"
+                VORSTELLUNG DING 0
+                VERNEINUNG
+            `)
+            expect(output).toEqual(["hello"])
+        })
+    })
+
+    describe("carry flag leakage", () => {
+        it("carry from overflow biases next arithmetic op", async () => {
+            const output = await runProgram(`
+                ERWACHE
+                DING 0 = 200 + 100
+                DING 1 = 3 + 4
+                VORSTELLUNG DING 1
+                VERNEINUNG
+            `)
+            expect(output).toEqual(["8"])
+        })
+
+        it("carry clears after non-overflowing op", async () => {
+            const output = await runProgram(`
+                ERWACHE
+                DING 0 = 200 + 100
+                DING 1 = 3 + 4
+                DING 2 = 1 + 1
+                VORSTELLUNG DING 2
+                VERNEINUNG
+            `)
+            expect(output).toEqual(["2"])
+        })
+
+        it("carry persists if second op also overflows", async () => {
+            const output = await runProgram(`
+                ERWACHE
+                DING 0 = 200 + 100
+                DING 1 = 200 + 55
+                DING 2 = 1 + 1
+                VORSTELLUNG DING 2
+                VERNEINUNG
+            `)
+            expect(output).toEqual(["3"])
+        })
+
+        it("carry does not affect comparisons", async () => {
+            const output = await runProgram(`
+                ERWACHE
+                DING 0 = 200 + 100
+                DING 1 = 5 = 5
+                VORSTELLUNG DING 1
+                VERNEINUNG
+            `)
+            expect(output).toEqual(["1"])
+        })
+
+        it("carry does not affect string concatenation", async () => {
+            const output = await runProgram(`
+                ERWACHE
+                DING 0 = 200 + 100
+                DING 1 = "a" + "b"
+                VORSTELLUNG DING 1
+                VERNEINUNG
+            `)
+            expect(output).toEqual(["ab"])
+        })
+    })
+
+    describe("boot POST residue", () => {
+        it("DING 3 starts at 4", async () => {
+            const output = await runProgram(`
+                ERWACHE
+                VORSTELLUNG DING 3
+                VERNEINUNG
+            `)
+            expect(output).toEqual(["4"])
+        })
+
+        it("DING 7 starts at 97", async () => {
+            const output = await runProgram(`
+                ERWACHE
+                VORSTELLUNG DING 7
+                VERNEINUNG
+            `)
+            expect(output).toEqual(["97"])
+        })
+
+        it("DING 0 starts at 0", async () => {
+            const output = await runProgram(`
+                ERWACHE
+                VORSTELLUNG DING 0
+                VERNEINUNG
+            `)
+            expect(output).toEqual(["0"])
+        })
+    })
+
+    describe("no-VERNEINUNG warning", () => {
+        it("outputs warning when program ends without VERNEINUNG", async () => {
+            const output = await runProgram(`
+                ERWACHE
+                VORSTELLUNG "hello"
+            `)
+            expect(output).toEqual([
+                "hello",
+                "Programm endete ohne Verneinung.",
+            ])
+        })
+
+        it("does not warn when VERNEINUNG is present", async () => {
+            const output = await runProgram(`
+                ERWACHE
+                VORSTELLUNG "hello"
+                VERNEINUNG
+            `)
+            expect(output).toEqual(["hello"])
+        })
+    })
+
+    describe("system interjections", () => {
+        it("outputs ... at 1024 total loop iterations", async () => {
+            const output = await runProgram(`
+                ERWACHE
+                DING 0 = 0
+                DING 1 = 0
+                SOLANGE DING 0 < 5
+                    DING 1 = 0
+                    SOLANGE DING 1 < 205
+                        DING 1 = DING 1 + 1
+                    ENDE
+                    DING 0 = DING 0 + 1
+                ENDE
+                VERNEINUNG
+            `)
+            expect(output).toContain("...")
+        })
+
+        it("does not interject before 1024 iterations", async () => {
+            const output = await runProgram(`
+                ERWACHE
+                DING 0 = 0
+                SOLANGE DING 0 < 100
+                    DING 0 = DING 0 + 1
+                ENDE
+                VERNEINUNG
+            `)
+            expect(output).not.toContain("...")
+        })
+    })
+
+    describe("phosphor persistence", () => {
+        it("garbles second identical consecutive output", async () => {
+            const output = await runProgram(`
+                ERWACHE
+                VORSTELLUNG "Hello, World!"
+                VORSTELLUNG "Hello, World!"
+                VERNEINUNG
+            `)
+            expect(output[0]).toBe("Hello, World!")
+            expect(output[1]).toBe("Helo, World!")
+        })
+
+        it("does not garble different consecutive outputs", async () => {
+            const output = await runProgram(`
+                ERWACHE
+                VORSTELLUNG "aaa"
+                VORSTELLUNG "bbb"
+                VERNEINUNG
+            `)
+            expect(output).toEqual(["aaa", "bbb"])
+        })
+
+        it("resets after garbling", async () => {
+            const output = await runProgram(`
+                ERWACHE
+                VORSTELLUNG "test"
+                VORSTELLUNG "test"
+                VORSTELLUNG "test"
+                VERNEINUNG
+            `)
+            expect(output[0]).toBe("test")
+            expect(output[1]).toBe("tes")
+            expect(output[2]).toBe("test")
+        })
+
+        it("does not garble single-character strings", async () => {
+            const output = await runProgram(`
+                ERWACHE
+                VORSTELLUNG "x"
+                VORSTELLUNG "x"
+                VERNEINUNG
+            `)
+            expect(output).toEqual(["x", "x"])
+        })
+
+        it("does not garble empty strings", async () => {
+            const output = await runProgram(`
+                ERWACHE
+                VORSTELLUNG ""
+                VORSTELLUNG ""
+                VERNEINUNG
+            `)
+            expect(output).toEqual(["", ""])
+        })
+    })
 })

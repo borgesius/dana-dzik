@@ -16,8 +16,8 @@ export interface FileSystem {
 const WELT_MANUAL = `================================================
   WELT Programming Language - Reference Manual
   Version 0.3.1
-  (c) 1994 Danasoft Industries
-  Author: Dr. K. Brauer
+  (c) 1994 Fatitech Industries
+  Author: Dr. T. Pferd
 ================================================
 
 "The world is my representation." -- Schopenhauer
@@ -26,7 +26,7 @@ OVERVIEW
 --------
 WELT is the native programming language of the
 Compy97 system. It was designed in 1994 to make
-full use of the Compy97's 8-register architecture.
+full use of the Compy97's quaternary architecture.
 
 The name derives from Schopenhauer's magnum opus,
 "Die Welt als Wille und Vorstellung" (The World
@@ -67,18 +67,21 @@ LANGUAGE REFERENCE
 MEMORY (DING)
 -------------
 The Compy97 provides 8 general-purpose registers,
-designated DING 0 through DING 7. Each DING may
-hold either a numeric value or a text string.
+designated DING 0 through DING 7. Each DING holds
+4 quaternary digits (numeric range 0-255) or a
+text string. The quaternary design reflects
+Schopenhauer's fourfold root of sufficient reason.
 
 As Schopenhauer tells us, we never apprehend the
 thing-in-itself (Ding an sich) directly -- only
 its representation. Similarly, a DING's contents
 are only revealed through VORSTELLUNG.
 
-  HARDWARE NOTICE: DING 6 may exhibit intermittent
-  read errors on S/N 4400-4800 units. Danasoft
-  recommends avoiding DING 6 for critical values.
-  A firmware patch is forthcoming.
+  HARDWARE NOTICE: The ALU carry flag is not
+  automatically cleared between operations.
+  Sequential arithmetic may produce unexpected
+  results if prior operations overflow. This is
+  by design.
 
 INPUT & OUTPUT
 --------------
@@ -87,8 +90,7 @@ As the will is blind and striving, WILLE accepts
 whatever the user provides without judgment.
 
 VORSTELLUNG (representation) renders a value to
-the display buffer. The display is limited to 80
-columns due to CRT constraints.
+the display buffer.
 
   NOTE: Rapid consecutive VORSTELLUNG calls may
   cause display flicker on different CRT models.
@@ -106,12 +108,14 @@ KNOWN ISSUES
 ------------
 - Programs exceeding 10000 loop iterations will
   trigger the thermal protection circuit.
+- Numeric values exceeding 255 will overflow
+  silently due to the quaternary register width.
 
 SUPPORT
 -------
 For technical support, mail a self-addressed
 stamped envelope to:
-  Compusoft Industries
+  Fatitech Industries
   Attn: Dr. T. Pferd
   P.O. Box 1888
   Turin, Italy
@@ -294,6 +298,23 @@ ENDE
 
 VERNEINUNG`
 
+const WELT_BREATHE = `; breathe.welt
+; CRT persistence creates the visual rhythm.
+; Do not adjust your monitor.
+
+ERWACHE
+DING 0 = 0
+VORSTELLUNG "Close your eyes."
+VORSTELLUNG ""
+SOLANGE DING 0 < 4
+  VORSTELLUNG "    . . . breathe . . .    "
+  VORSTELLUNG "    . . . breathe . . .    "
+  VORSTELLUNG ""
+  DING 0 = DING 0 + 1
+ENDE
+VORSTELLUNG "Open your eyes."
+VERNEINUNG`
+
 const FILESYSTEM_STRUCTURE: FSNode = {
     name: "C:",
     type: "directory",
@@ -431,7 +452,7 @@ Full docs: cat MANUAL.txt`,
                                             name: "welt.exe",
                                             type: "executable",
                                             content:
-                                                "WELT Interpreter v0.3.1 (c) 1994 Danasoft Industries\nUsage: welt <filename.welt>",
+                                                "WELT Interpreter v0.3.1 (c) 1994 Fatitech Industries\nUsage: welt <filename.welt>",
                                         },
                                         "MANUAL.txt": {
                                             name: "MANUAL.txt",
@@ -456,6 +477,11 @@ Full docs: cat MANUAL.txt`,
                                                     name: "quest.welt",
                                                     type: "file",
                                                     content: WELT_QUEST,
+                                                },
+                                                "breathe.welt": {
+                                                    name: "breathe.welt",
+                                                    type: "file",
+                                                    content: WELT_BREATHE,
                                                 },
                                             },
                                         },
