@@ -1,3 +1,10 @@
+# [1.33.0](https://github.com/borgesius/dana-dzik/compare/v1.32.0...v1.33.0) (2026-02-06)
+
+
+### Features
+
+* good editor ([#27](https://github.com/borgesius/dana-dzik/issues/27)) ([2b4cf7f](https://github.com/borgesius/dana-dzik/commit/2b4cf7f78856cf149f01b349b181a993cbce211f))
+
 # [1.32.0](https://github.com/borgesius/dana-dzik/compare/v1.31.0...v1.32.0) (2026-02-06)
 
 
