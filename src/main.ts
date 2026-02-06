@@ -7,9 +7,12 @@ import "./styles/explorer.css"
 import "./styles/terminal.css"
 import "./styles/widgets.css"
 import "./styles/windows.css"
+import "./styles/mobile.css"
 
 import { CursorTrail } from "./components/CursorTrail"
 import { Desktop } from "./components/Desktop"
+import { MobilePhone } from "./components/mobile/MobilePhone"
+import { MobilePopupManager } from "./components/mobile/MobilePopupManager"
 import { PopupManager } from "./components/PopupManager"
 import { setTerminalInit } from "./components/Terminal"
 import { Widgets } from "./components/Widgets"
@@ -22,6 +25,7 @@ import {
 } from "./lib/analytics"
 import { createAudioManager } from "./lib/audio"
 import { GlitchManager } from "./lib/glitchEffects"
+import { isMobile } from "./lib/isMobile"
 import { Router } from "./lib/router"
 
 setupErrorHandlers()
@@ -33,6 +37,49 @@ initPerfTracking()
 
 const app = document.getElementById("app")
 if (app) {
+    if (isMobile()) {
+        initMobile(app)
+    } else {
+        initDesktop(app)
+    }
+}
+
+function initMobile(app: HTMLElement): void {
+    const phone = new MobilePhone(app)
+
+    const router = new Router((windowId) => {
+        phone.openApp(windowId)
+    })
+
+    phone.onAppOpen((windowId) => {
+        router.updateUrl(windowId)
+    })
+
+    router.init()
+
+    const popupManager = new MobilePopupManager(phone.getPopupContainer())
+
+    phone.onAppOpen(() => {
+        popupManager.onWindowOpen()
+    })
+
+    createAudioManager()
+    new GlitchManager()
+
+    document.addEventListener("click", (e) => {
+        const target = e.target as HTMLElement
+        const link = target.closest("[data-open-window]")
+        if (link) {
+            e.preventDefault()
+            const windowId = link.getAttribute("data-open-window")
+            if (windowId) {
+                phone.openApp(windowId)
+            }
+        }
+    })
+}
+
+function initDesktop(app: HTMLElement): void {
     const desktop = new Desktop(app)
     const windowManager = desktop.getWindowManager()
 

@@ -1,3 +1,5 @@
+import { isMobile } from "./isMobile"
+
 export function getWindowContent(contentType: string): string {
     switch (contentType) {
         case "welcome":
@@ -58,7 +60,7 @@ function getWelcomeContent(): string {
             />
 
             <p class="tagline">
-                Welcome to my website! Feel free to explore by double-clicking the icons on the desktop.
+                Welcome to my website! Feel free to explore by ${isMobile() ? "tapping the icons" : "double-clicking the icons on the desktop"}.
             </p>
 
             <p class="guestbook-cta">

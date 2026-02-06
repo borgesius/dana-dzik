@@ -2,7 +2,10 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"
+        />
         <meta
             name="google-site-verification"
             content="wHWCKsAEuqIxdJqL1rEs2WT_qDmPy1hzkpC6hBSxTr0"
@@ -193,6 +196,11 @@
             <div class="loading-text" id="loading-text">Please wait...</div>
         </div>
 
+        <!-- Mobile boot (logo fade) -->
+        <div class="mobile-boot-screen" id="mobile-boot-screen" style="display: none;">
+            <div class="mobile-boot-logo" id="mobile-boot-logo"></div>
+        </div>
+
         <div id="app"></div>
 
         <script>
@@ -216,12 +224,26 @@
                 return found ? found.photo : PHOTO_VARIANTS[0].photo
             }
 
-            const logoContainer = document.getElementById("loading-logo")
+            var isMobileBoot = window.innerWidth <= 768
+
+            var logoContainer = document.getElementById("loading-logo")
             if (logoContainer) {
-                const img = document.createElement("img")
+                var img = document.createElement("img")
                 img.src = getVariantPhoto()
                 img.alt = "Loading"
                 logoContainer.appendChild(img)
+            }
+
+            if (isMobileBoot) {
+                var mobileLogoContainer = document.getElementById("mobile-boot-logo")
+                if (mobileLogoContainer) {
+                    var mobileImg = document.createElement("img")
+                    mobileImg.src = getVariantPhoto()
+                    mobileImg.alt = ""
+                    mobileLogoContainer.appendChild(mobileImg)
+                }
+                document.getElementById("boot-screen").classList.add("hidden")
+                document.getElementById("mobile-boot-screen").style.display = ""
             }
 
             function pick(arr) {
@@ -391,11 +413,25 @@
                 await sleep(300)
             }
 
+            async function runMobileBootSequence() {
+                await sleep(2500)
+                var mobileBootScreen = document.getElementById("mobile-boot-screen")
+                if (mobileBootScreen) {
+                    mobileBootScreen.classList.add("hidden")
+                    await sleep(800)
+                    mobileBootScreen.style.display = "none"
+                }
+            }
+
             window.addEventListener("load", async function () {
-                await runBootSequence()
-                document
-                    .getElementById("loading-screen")
-                    .classList.add("hidden")
+                if (isMobileBoot) {
+                    await runMobileBootSequence()
+                } else {
+                    await runBootSequence()
+                    document
+                        .getElementById("loading-screen")
+                        .classList.add("hidden")
+                }
             })
         </script>
         <script type="module" src="/src/main.ts"></script>

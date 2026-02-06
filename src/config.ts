@@ -83,3 +83,49 @@ export const ROUTE_MAP: Record<string, RoutableWindow> = {
     "/stats": "stats",
     "/terminal": "terminal",
 }
+
+export interface AppItemConfig {
+    id: string
+    label: string
+    icon: string
+    windowId: RoutableWindow
+}
+
+export const APP_ITEMS: AppItemConfig[] = [
+    {
+        id: "internet-explorer",
+        label: "Internet Explorer",
+        icon: "🌐",
+        windowId: "welcome",
+    },
+    { id: "about-me", label: "about_me.doc", icon: "📄", windowId: "about" },
+    {
+        id: "projects",
+        label: "cool_projects.zip",
+        icon: "📦",
+        windowId: "projects",
+    },
+    { id: "resume", label: "resume.pdf", icon: "📕", windowId: "resume" },
+    { id: "links", label: "bookmarks.url", icon: "🔗", windowId: "links" },
+    {
+        id: "guestbook",
+        label: "guestbook.exe",
+        icon: "📖",
+        windowId: "guestbook",
+    },
+    { id: "felixgpt", label: "FelixGPT.exe", icon: "🐱", windowId: "felixgpt" },
+    { id: "stats", label: "Site Stats.exe", icon: "📊", windowId: "stats" },
+    { id: "terminal", label: "terminal.exe", icon: "💻", windowId: "terminal" },
+    { id: "welt", label: "WELT", icon: "📁", windowId: "explorer" },
+]
+
+/** Items pinned to the mobile dock */
+export const MOBILE_DOCK_IDS = [
+    "internet-explorer",
+    "about-me",
+    "projects",
+    "links",
+]
+
+/** Items excluded from mobile entirely */
+export const MOBILE_EXCLUDED_IDS = ["terminal", "welt"]
