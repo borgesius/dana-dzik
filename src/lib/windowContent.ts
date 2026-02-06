@@ -24,6 +24,8 @@ export function getWindowContent(contentType: string): string {
             return getTerminalContent()
         case "explorer":
             return getExplorerContent()
+        case "finder":
+            return getFinderContent()
         default:
             return "<p>Content not found</p>"
     }
@@ -35,6 +37,10 @@ function getTerminalContent(): string {
 
 function getExplorerContent(): string {
     return `<div id="explorer-content"></div>`
+}
+
+function getFinderContent(): string {
+    return `<div id="finder-content"></div>`
 }
 
 function getWelcomeContent(): string {

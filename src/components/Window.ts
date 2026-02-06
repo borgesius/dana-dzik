@@ -108,6 +108,8 @@ export class Window {
             this.initTerminal()
         } else if (this.config.contentType === "explorer") {
             this.initExplorer()
+        } else if (this.config.contentType === "finder") {
+            this.initFinder()
         }
     }
 
@@ -117,6 +119,15 @@ export class Window {
         ) as HTMLElement
         if (container) {
             new FileExplorer(container, "C:\\Users\\Dana\\Desktop\\WELT")
+        }
+    }
+
+    private initFinder(): void {
+        const container = this.element.querySelector(
+            "#finder-content"
+        ) as HTMLElement
+        if (container) {
+            new FileExplorer(container, "C:\\")
         }
     }
 
