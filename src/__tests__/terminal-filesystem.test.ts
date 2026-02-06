@@ -3,6 +3,7 @@ import { beforeEach, describe, expect, it } from "vitest"
 import {
     buildTree,
     changeDirectory,
+    createFile,
     createFileSystem,
     type FileSystem,
     formatPath,
@@ -12,6 +13,7 @@ import {
     getNodeAtPath,
     listDirectory,
     resolvePath,
+    writeFile,
 } from "../lib/terminal/filesystem"
 
 describe("Terminal Filesystem", () => {
@@ -319,6 +321,120 @@ describe("Terminal Filesystem", () => {
             const tree = buildTree(fs)
             expect(tree).toMatch(/[├└]/)
             expect(tree).toMatch(/──/)
+        })
+    })
+
+    describe("writeFile", () => {
+        it("writes content to existing file", () => {
+            const result = writeFile(
+                fs,
+                "C:\\WINDOWS\\system32\\secrets.txt",
+                "new content"
+            )
+            expect(result.success).toBe(true)
+            const content = getFileContent(
+                fs,
+                "C:\\WINDOWS\\system32\\secrets.txt"
+            )
+            expect(content.content).toBe("new content")
+        })
+
+        it("returns error for non-existent file", () => {
+            const result = writeFile(fs, "C:\\nonexistent.txt", "content")
+            expect(result.success).toBe(false)
+            expect(result.error).toContain("File not found")
+        })
+
+        it("returns error for directory", () => {
+            const result = writeFile(fs, "C:\\WINDOWS", "content")
+            expect(result.success).toBe(false)
+            expect(result.error).toContain("is a directory")
+        })
+    })
+
+    describe("createFile", () => {
+        it("creates a new file in a directory", () => {
+            fs.cwd = ["C:", "Users", "Dana", "Desktop"]
+            const result = createFile(
+                fs,
+                "C:\\Users\\Dana\\Desktop",
+                "test.txt",
+                "test content"
+            )
+            expect(result.success).toBe(true)
+            const content = getFileContent(fs, "test.txt")
+            expect(content.content).toBe("test content")
+        })
+
+        it("returns error if file already exists", () => {
+            const result = createFile(
+                fs,
+                "C:\\WINDOWS\\system32",
+                "secrets.txt",
+                "content"
+            )
+            expect(result.success).toBe(false)
+            expect(result.error).toContain("already exists")
+        })
+
+        it("returns error for non-existent directory", () => {
+            const result = createFile(
+                fs,
+                "C:\\NonExistent",
+                "test.txt",
+                "content"
+            )
+            expect(result.success).toBe(false)
+            expect(result.error).toContain("not found")
+        })
+
+        it("returns error for non-directory path", () => {
+            const result = createFile(
+                fs,
+                "C:\\WINDOWS\\system32\\secrets.txt",
+                "test.txt",
+                "content"
+            )
+            expect(result.success).toBe(false)
+            expect(result.error).toContain("Not a directory")
+        })
+    })
+
+    describe("WELT filesystem", () => {
+        it("has WELT directory on Desktop", () => {
+            const node = getNodeAtPath(fs, "C:\\Users\\Dana\\Desktop\\WELT")
+            expect(node).toBeDefined()
+            expect(node?.type).toBe("directory")
+        })
+
+        it("has welt.exe", () => {
+            const node = getNodeAtPath(
+                fs,
+                "C:\\Users\\Dana\\Desktop\\WELT\\welt.exe"
+            )
+            expect(node).toBeDefined()
+            expect(node?.type).toBe("executable")
+        })
+
+        it("has MANUAL.txt", () => {
+            const node = getNodeAtPath(
+                fs,
+                "C:\\Users\\Dana\\Desktop\\WELT\\MANUAL.txt"
+            )
+            expect(node).toBeDefined()
+            expect(node?.content).toContain("Schopenhauer")
+        })
+
+        it("has examples directory with programs", () => {
+            const examples = getNodeAtPath(
+                fs,
+                "C:\\Users\\Dana\\Desktop\\WELT\\examples"
+            )
+            expect(examples).toBeDefined()
+            expect(examples?.type).toBe("directory")
+            expect(examples?.children?.["hello.welt"]).toBeDefined()
+            expect(examples?.children?.["fizzbuzz.welt"]).toBeDefined()
+            expect(examples?.children?.["quest.welt"]).toBeDefined()
         })
     })
 })

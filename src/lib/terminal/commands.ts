@@ -1,9 +1,11 @@
+import { runWeltProgram, WeltError } from "../welt"
 import {
     buildTree,
     changeDirectory,
     type FileSystem,
     type FileType,
     formatPath,
+    getCurrentNode,
     getExecutableWindowId,
     getFileContent,
     listDirectory,
@@ -16,6 +18,8 @@ export interface CommandContext {
     clearOutput: () => void
     print: (text: string, className?: string) => void
     printHtml: (html: string) => void
+    startEditor: (filename: string) => void
+    requestInput: () => Promise<string>
 }
 
 export interface CommandResult {
@@ -68,6 +72,10 @@ const COMMANDS: Record<string, CommandHandler> = {
     cat <file>    Display file contents
     type <file>   Display file contents
     open <file>   Open file/program
+    edit <file>   Edit file (line editor)
+
+  Programs:
+    welt <file>   Run a .welt program
 
   Utilities:
     help          Show this message
@@ -168,6 +176,35 @@ const COMMANDS: Record<string, CommandHandler> = {
         }
     },
 
+    edit: (args, ctx): CommandResult => {
+        if (args.length === 0) {
+            return { output: "Usage: edit <filename>", className: "error" }
+        }
+
+        const filename = args.join(" ")
+        ctx.startEditor(filename)
+        return { output: "" }
+    },
+
+    welt: (args, ctx): CommandResult | Promise<CommandResult> => {
+        if (args.length === 0) {
+            return { output: "Usage: welt <filename>", className: "error" }
+        }
+
+        const filename = args.join(" ")
+        const result = getFileContent(ctx.fs, filename)
+
+        if (result.error) {
+            return { output: result.error, className: "error" }
+        }
+
+        if (!result.content) {
+            return { output: `Empty file: ${filename}`, className: "error" }
+        }
+
+        return runWeltCommand(result.content, ctx)
+    },
+
     clear: (): CommandResult => ({ action: "clear" }),
 
     cls: (): CommandResult => ({ action: "clear" }),
@@ -183,6 +220,31 @@ Terminal: HACKTERM v1.0`,
     exit: (): CommandResult => ({ action: "exit" }),
 
     sl: (): CommandResult => ({ action: "sl" }),
+}
+
+async function runWeltCommand(
+    source: string,
+    ctx: CommandContext
+): Promise<CommandResult> {
+    try {
+        await runWeltProgram(source, {
+            onOutput: (text) => ctx.print(text),
+            onInput: () => ctx.requestInput(),
+        })
+        return { output: "" }
+    } catch (err) {
+        if (err instanceof WeltError) {
+            const lineInfo = err.line > 0 ? ` (line ${err.line})` : ""
+            return {
+                output: `WELT ERROR${lineInfo}: ${err.message}`,
+                className: "error",
+            }
+        }
+        return {
+            output: `SYSTEM FAULT: ${err instanceof Error ? err.message : "Unknown error"}`,
+            className: "error",
+        }
+    }
 }
 
 function getTypeLabel(type: FileType): string {
@@ -254,4 +316,32 @@ export function getSLFrames(): string[] {
 
 export function getPrompt(fs: FileSystem): string {
     return `${formatPath(fs.cwd)}> `
+}
+
+export function getCompletions(partial: string, fs: FileSystem): string[] {
+    const parts = partial.split(/\s+/)
+
+    if (parts.length <= 1) {
+        const prefix = parts[0].toLowerCase()
+        const cmdMatches = Object.keys(COMMANDS).filter((c) =>
+            c.startsWith(prefix)
+        )
+        const fileMatches = getFileCompletions(prefix, fs)
+        return [...cmdMatches, ...fileMatches]
+    }
+
+    const argPrefix = parts[parts.length - 1]
+    return getFileCompletions(argPrefix, fs)
+}
+
+function getFileCompletions(prefix: string, fs: FileSystem): string[] {
+    const current = getCurrentNode(fs)
+    if (!current || !current.children) return []
+
+    const lower = prefix.toLowerCase()
+    return Object.values(current.children)
+        .filter((child) => child.name.toLowerCase().startsWith(lower))
+        .map((child) =>
+            child.type === "directory" ? child.name + "\\" : child.name
+        )
 }
