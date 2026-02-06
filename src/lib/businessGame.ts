@@ -375,8 +375,12 @@ export class BusinessGame {
         )
     }
 
+    public getMaxUnlockedTier(): number {
+        return Math.max(...this.state.unlockedTiers)
+    }
+
     public getNextUnlockThreshold(): number | null {
-        const maxUnlockedTier = Math.max(...this.state.unlockedTiers)
+        const maxUnlockedTier = this.getMaxUnlockedTier()
         const nextTier = maxUnlockedTier + 1
         return TIER_THRESHOLDS[nextTier] ?? null
     }

@@ -14,6 +14,15 @@ const POPUP_LEVEL_INTERVALS: Record<number, number> = {
 
 const BONUS_POPUP_CHANCE = 0.25
 
+const TIER_BONUS_MULTIPLIERS: Record<number, number> = {
+    1: 1,
+    2: 1,
+    3: 2,
+    4: 5,
+    5: 10,
+    6: 25,
+}
+
 /**
  * Manages popup windows that appear periodically to simulate spam/malware popups.
  */
@@ -114,10 +123,11 @@ export class PopupManager {
         let content: PopupContent
 
         if (this.gameActivated && Math.random() < BONUS_POPUP_CHANCE) {
-            content =
+            const baseContent =
                 BONUS_POPUP_CONTENTS[
                     Math.floor(Math.random() * BONUS_POPUP_CONTENTS.length)
                 ]
+            content = this.scaleBonusPopup(baseContent)
         } else {
             content =
                 POPUP_CONTENTS[
@@ -130,6 +140,19 @@ export class PopupManager {
         this.activePopups.push(popup)
 
         this.playSound("popup")
+    }
+
+    private scaleBonusPopup(baseContent: PopupContent): PopupContent {
+        const game = getBusinessGame()
+        const tier = game.getMaxUnlockedTier()
+        const multiplier = TIER_BONUS_MULTIPLIERS[tier] ?? 1
+        const scaledAmount = (baseContent.bonusAmount ?? 0) * multiplier
+
+        return {
+            ...baseContent,
+            bonusAmount: scaledAmount,
+            body: `${baseContent.body} Worth $${scaledAmount.toFixed(2)}!`,
+        }
     }
 
     private createPopup(content: PopupContent): HTMLElement {
