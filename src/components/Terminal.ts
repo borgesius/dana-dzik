@@ -100,7 +100,11 @@ export class Terminal {
         this.inputEl.addEventListener("keydown", (e) => this.handleKeyDown(e))
 
         this.container.addEventListener("click", () => {
-            this.inputEl.focus()
+            if (this.mode === "editor" && this.editor) {
+                this.editor.focusTextarea()
+            } else {
+                this.inputEl.focus()
+            }
         })
     }
 
@@ -130,10 +134,8 @@ export class Terminal {
                 this.inputResolver("")
                 this.inputResolver = null
                 this.setMode("normal")
-            } else if (this.mode === "editor") {
-                this.printLine("^C", "dim")
-                this.editor = null
-                this.setMode("normal")
+            } else if (this.mode === "editor" && this.editor) {
+                this.editor.destroy()
             } else {
                 this.printLine("^C", "dim")
                 this.inputEl.value = ""
@@ -152,11 +154,6 @@ export class Terminal {
                 void this.processCommand(input)
                 break
             case "editor":
-                this.echoInput(input, "EDIT> ")
-                if (this.editor) {
-                    this.editor.handleInput(input)
-                }
-                this.scrollToBottom()
                 break
             case "program-input":
                 this.echoInput(input, "? ")
@@ -284,16 +281,28 @@ export class Terminal {
 
     private startEditor(filename: string): void {
         this.setMode("editor")
+        this.outputEl.style.display = "none"
+        const inputLine = this.container.querySelector<HTMLElement>(
+            ".terminal-input-line"
+        )
+        if (inputLine) {
+            inputLine.style.display = "none"
+        }
+
         this.editor = new Editor(this.fs, filename, {
+            container: this.container,
             print: (text: string, className?: string): void => {
                 this.printLine(text, className)
             },
-            updatePrompt: (prompt: string): void => {
-                this.setPromptText(prompt)
-            },
             onExit: (): void => {
                 this.editor = null
+                this.outputEl.style.display = ""
+                if (inputLine) {
+                    inputLine.style.display = ""
+                }
                 this.setMode("normal")
+                this.scrollToBottom()
+                setTimeout(() => this.inputEl.focus(), 0)
             },
         })
     }
@@ -385,7 +394,11 @@ Type 'help' for available commands.
     }
 
     public focus(): void {
-        this.inputEl.focus()
+        if (this.mode === "editor" && this.editor) {
+            this.editor.focusTextarea()
+        } else {
+            this.inputEl.focus()
+        }
     }
 }
 

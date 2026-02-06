@@ -148,6 +148,30 @@ describe("Terminal Commands", () => {
         })
     })
 
+    describe("cat -n flag", () => {
+        it("shows line numbers with -n flag", async () => {
+            const result = await executeCommand(
+                "cat -n C:\\WINDOWS\\system32\\secrets.txt",
+                ctx
+            )
+            expect(result.output).toMatch(/^\s*1\|/)
+        })
+
+        it("returns error when -n used without filename", async () => {
+            const result = await executeCommand("cat -n", ctx)
+            expect(result.output).toContain("Usage:")
+            expect(result.className).toBe("error")
+        })
+
+        it("shows content without line numbers by default", async () => {
+            const result = await executeCommand(
+                "cat C:\\WINDOWS\\system32\\secrets.txt",
+                ctx
+            )
+            expect(result.output).not.toMatch(/^\s*1\|/)
+        })
+    })
+
     describe("type command", () => {
         it("is alias for cat", async () => {
             const result = await executeCommand(
