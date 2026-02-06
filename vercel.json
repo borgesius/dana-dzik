@@ -1,5 +1,6 @@
 {
     "$schema": "https://openapi.vercel.sh/vercel.json",
+    "ignoreCommand": "git log -1 --pretty=%s | grep -q '^chore(release):'",
     "buildCommand": "npm run build",
     "outputDirectory": "dist",
     "framework": "vite",
