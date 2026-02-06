@@ -791,8 +791,8 @@ export function createFileSystem(): FileSystem {
     const root = structuredClone(FILESYSTEM_STRUCTURE)
 
     const weltDir =
-        root.children?.Users?.children?.Dana?.children?.Desktop?.children
-            ?.WELT?.children
+        root.children?.Users?.children?.Dana?.children?.Desktop?.children?.WELT
+            ?.children
     if (weltDir?.["MANUAL.txt"]) {
         weltDir["MANUAL.txt"].content = getWeltManual()
     }
