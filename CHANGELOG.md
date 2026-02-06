@@ -1,3 +1,10 @@
+# [1.24.0](https://github.com/borgesius/dana-dzik/compare/v1.23.0...v1.24.0) (2026-02-06)
+
+
+### Features
+
+* **lastfm:** recently played list ([#14](https://github.com/borgesius/dana-dzik/issues/14)) ([fdda37f](https://github.com/borgesius/dana-dzik/commit/fdda37fa49d04c38febbd3a62dfb9055b078e4d6))
+
 # [1.23.0](https://github.com/borgesius/dana-dzik/compare/v1.22.0...v1.23.0) (2026-02-06)
 
 
