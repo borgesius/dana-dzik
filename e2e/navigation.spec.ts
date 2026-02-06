@@ -111,12 +111,13 @@ test.describe("Desktop Navigation", () => {
         await expect(page.locator(".popup-window")).toBeVisible()
     })
 
-    test("toolbars are visible with fake elements", async ({ page }) => {
+    test("toolbars are visible with game elements", async ({ page }) => {
         await page.goto("/")
         await page.waitForSelector(".loading-screen.hidden", { state: "attached", timeout: 10000 })
 
         await expect(page.locator(".toolbar")).toHaveCount(2)
-        await expect(page.locator('.toolbar-button:has-text("FREE SMILEYS")')).toBeVisible()
+        await expect(page.locator(".venture-btn").first()).toBeVisible()
+        await expect(page.locator(".money-counter")).toBeVisible()
     })
 
     test("widgets are visible", async ({ page }) => {

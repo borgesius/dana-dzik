@@ -1,5 +1,27 @@
 import { POPUP_CONFIG } from "../config"
-import { POPUP_CONTENTS, type PopupContent } from "../lib/popupContent"
+import { getBusinessGame } from "../lib/businessGame"
+import {
+    BONUS_POPUP_CONTENTS,
+    POPUP_CONTENTS,
+    type PopupContent,
+} from "../lib/popupContent"
+
+const POPUP_LEVEL_INTERVALS: Record<number, number> = {
+    1: 15000,
+    2: 10000,
+    3: 6000,
+}
+
+const BONUS_POPUP_CHANCE = 0.25
+
+const TIER_BONUS_MULTIPLIERS: Record<number, number> = {
+    1: 1,
+    2: 1,
+    3: 2,
+    4: 5,
+    5: 10,
+    6: 25,
+}
 
 /**
  * Manages popup windows that appear periodically to simulate spam/malware popups.
@@ -9,9 +31,64 @@ export class PopupManager {
     private activePopups: HTMLElement[] = []
     private spawnInterval: number | null = null
     private zIndex = 9000
+    private popupLevel = 0
+    private gameActivated = false
 
     constructor(container: HTMLElement) {
         this.container = container
+        this.setupGameListener()
+    }
+
+    private setupGameListener(): void {
+        const game = getBusinessGame()
+        game.on("popupsActivate", (level) => {
+            this.setPopupLevel(level as number)
+        })
+    }
+
+    public setPopupLevel(level: number): void {
+        if (level <= this.popupLevel) return
+
+        this.popupLevel = level
+
+        if (!this.gameActivated) {
+            this.gameActivated = true
+            this.startGamePopups()
+        } else {
+            this.restartWithNewInterval()
+        }
+    }
+
+    private startGamePopups(): void {
+        const interval = POPUP_LEVEL_INTERVALS[this.popupLevel] ?? 15000
+
+        this.spawnInterval = window.setInterval(
+            () => {
+                if (this.activePopups.length < POPUP_CONFIG.maxConcurrent) {
+                    this.spawnPopup()
+                }
+            },
+            interval + Math.random() * 5000
+        )
+
+        setTimeout(() => this.spawnPopup(), 2000)
+    }
+
+    private restartWithNewInterval(): void {
+        if (this.spawnInterval) {
+            window.clearInterval(this.spawnInterval)
+        }
+
+        const interval = POPUP_LEVEL_INTERVALS[this.popupLevel] ?? 15000
+
+        this.spawnInterval = window.setInterval(
+            () => {
+                if (this.activePopups.length < POPUP_CONFIG.maxConcurrent) {
+                    this.spawnPopup()
+                }
+            },
+            interval + Math.random() * 5000
+        )
     }
 
     /** Starts the popup spawning timer. */
@@ -37,12 +114,27 @@ export class PopupManager {
         }
         this.activePopups.forEach((popup) => popup.remove())
         this.activePopups = []
+        this.gameActivated = false
+        this.popupLevel = 0
     }
 
     /** Spawns a random popup window. */
     public spawnPopup(): void {
-        const content =
-            POPUP_CONTENTS[Math.floor(Math.random() * POPUP_CONTENTS.length)]
+        let content: PopupContent
+
+        if (this.gameActivated && Math.random() < BONUS_POPUP_CHANCE) {
+            const baseContent =
+                BONUS_POPUP_CONTENTS[
+                    Math.floor(Math.random() * BONUS_POPUP_CONTENTS.length)
+                ]
+            content = this.scaleBonusPopup(baseContent)
+        } else {
+            content =
+                POPUP_CONTENTS[
+                    Math.floor(Math.random() * POPUP_CONTENTS.length)
+                ]
+        }
+
         const popup = this.createPopup(content)
         this.container.appendChild(popup)
         this.activePopups.push(popup)
@@ -50,9 +142,22 @@ export class PopupManager {
         this.playSound("popup")
     }
 
+    private scaleBonusPopup(baseContent: PopupContent): PopupContent {
+        const game = getBusinessGame()
+        const tier = game.getMaxUnlockedTier()
+        const multiplier = TIER_BONUS_MULTIPLIERS[tier] ?? 1
+        const scaledAmount = (baseContent.bonusAmount ?? 0) * multiplier
+
+        return {
+            ...baseContent,
+            bonusAmount: scaledAmount,
+            body: `${baseContent.body} Worth $${scaledAmount.toFixed(2)}!`,
+        }
+    }
+
     private createPopup(content: PopupContent): HTMLElement {
         const popup = document.createElement("div")
-        popup.className = `popup-window ${content.type === "winner" ? "winner" : ""}`
+        popup.className = `popup-window ${content.type === "winner" ? "winner" : ""} ${content.type === "bonus" ? "bonus" : ""}`
         popup.style.zIndex = (this.zIndex++).toString()
 
         const maxX = window.innerWidth - 350
@@ -76,24 +181,31 @@ export class PopupManager {
 
         const contentDiv = document.createElement("div")
         contentDiv.className = "popup-content"
+
+        const buttonsHtml = content.buttons
+            .map(
+                (btn, index) => `
+                <button class="popup-btn ${btn.className ?? ""}" data-action="${btn.action ?? "close"}" data-index="${index}">${btn.text}</button>
+            `
+            )
+            .join("")
+
         contentDiv.innerHTML = `
             <h2>${content.headline}</h2>
             ${content.image ? `<img src="${content.image}" alt="" style="max-width: 100px;"/>` : ""}
             <p>${content.body}</p>
             <div class="popup-buttons">
-                ${content.buttons
-                    .map(
-                        (btn) => `
-                    <button class="popup-btn ${btn.className ?? ""}">${btn.text}</button>
-                `
-                    )
-                    .join("")}
+                ${buttonsHtml}
             </div>
         `
 
         const buttons = contentDiv.querySelectorAll(".popup-btn")
         buttons.forEach((btn) => {
             btn.addEventListener("click", () => {
+                const action = (btn as HTMLElement).dataset.action
+                if (action === "bonus" && content.bonusAmount) {
+                    this.claimBonus(content.bonusAmount)
+                }
                 this.closePopup(popup)
             })
         })
@@ -102,6 +214,12 @@ export class PopupManager {
         popup.appendChild(contentDiv)
 
         return popup
+    }
+
+    private claimBonus(amount: number): void {
+        const game = getBusinessGame()
+        game.addBonus(amount)
+        this.playSound("notify")
     }
 
     private closePopup(popup: HTMLElement): void {
