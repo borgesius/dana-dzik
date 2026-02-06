@@ -30,18 +30,39 @@ interface CheckAnnotation {
     message: string
 }
 
+interface LighthouseScores {
+    performance: number | null
+    accessibility: number | null
+    bestPractices: number | null
+    seo: number | null
+}
+
+interface CoverageMetrics {
+    statements: number | null
+    branches: number | null
+    functions: number | null
+    lines: number | null
+}
+
 interface ReportsData {
     lighthouse: {
         url: string | null
         workflowUrl: string
         status: string
         score: number | null
+        scores: LighthouseScores
         updatedAt: string | null
     }
     playwright: {
         artifactUrl: string | null
         workflowUrl: string
         status: string
+        updatedAt: string | null
+    }
+    coverage: {
+        available: boolean
+        metrics: CoverageMetrics
+        workflowUrl: string
         updatedAt: string | null
     }
 }
@@ -64,12 +85,44 @@ async function fetchGitHub<T>(endpoint: string): Promise<T | null> {
     }
 }
 
+function parseScoreFromAnnotations(
+    annotations: CheckAnnotation[]
+): LighthouseScores {
+    const scores: LighthouseScores = {
+        performance: null,
+        accessibility: null,
+        bestPractices: null,
+        seo: null,
+    }
+
+    for (const annotation of annotations) {
+        const msg = annotation.message || ""
+        const perfMatch = msg.match(/performance:\s*(\d+)/i)
+        const a11yMatch = msg.match(/accessibility:\s*(\d+)/i)
+        const bpMatch = msg.match(/best.?practices:\s*(\d+)/i)
+        const seoMatch = msg.match(/seo:\s*(\d+)/i)
+
+        if (perfMatch) scores.performance = parseInt(perfMatch[1], 10)
+        if (a11yMatch) scores.accessibility = parseInt(a11yMatch[1], 10)
+        if (bpMatch) scores.bestPractices = parseInt(bpMatch[1], 10)
+        if (seoMatch) scores.seo = parseInt(seoMatch[1], 10)
+    }
+
+    return scores
+}
+
 async function getLatestLighthouseReport(): Promise<ReportsData["lighthouse"]> {
     const defaultResult: ReportsData["lighthouse"] = {
         url: null,
         workflowUrl: `https://github.com/${GITHUB_OWNER}/${GITHUB_REPO}/actions/workflows/lighthouse.yml`,
         status: "unknown",
         score: null,
+        scores: {
+            performance: null,
+            accessibility: null,
+            bestPractices: null,
+            seo: null,
+        },
         updatedAt: null,
     }
 
@@ -89,6 +142,12 @@ async function getLatestLighthouseReport(): Promise<ReportsData["lighthouse"]> {
     )
 
     if (annotations) {
+        defaultResult.scores = parseScoreFromAnnotations(annotations)
+
+        if (defaultResult.scores.performance !== null) {
+            defaultResult.score = defaultResult.scores.performance
+        }
+
         for (const annotation of annotations) {
             const urlMatch = annotation.message?.match(
                 /https:\/\/storage\.googleapis\.com\/lighthouse-infrastructure\.appspot\.com\/reports\/[^\s]+\.html/
@@ -142,6 +201,69 @@ async function getLatestPlaywrightReport(): Promise<ReportsData["playwright"]> {
     return defaultResult
 }
 
+interface CommitStatus {
+    context: string
+    description: string | null
+    state: string
+    target_url: string | null
+    updated_at: string
+}
+
+function parseCoverageDescription(description: string): CoverageMetrics {
+    const metrics: CoverageMetrics = {
+        statements: null,
+        branches: null,
+        functions: null,
+        lines: null,
+    }
+
+    const stmtMatch = description.match(/Stmts:\s*([\d.]+)%/)
+    const branchMatch = description.match(/Branch:\s*([\d.]+)%/)
+    const funcMatch = description.match(/Func:\s*([\d.]+)%/)
+    const lineMatch = description.match(/Lines:\s*([\d.]+)%/)
+
+    if (stmtMatch) metrics.statements = parseFloat(stmtMatch[1])
+    if (branchMatch) metrics.branches = parseFloat(branchMatch[1])
+    if (funcMatch) metrics.functions = parseFloat(funcMatch[1])
+    if (lineMatch) metrics.lines = parseFloat(lineMatch[1])
+
+    return metrics
+}
+
+async function getCoverageInfo(): Promise<ReportsData["coverage"]> {
+    const defaultResult: ReportsData["coverage"] = {
+        available: false,
+        metrics: {
+            statements: null,
+            branches: null,
+            functions: null,
+            lines: null,
+        },
+        workflowUrl: `https://github.com/${GITHUB_OWNER}/${GITHUB_REPO}/actions/workflows/ci.yml`,
+        updatedAt: null,
+    }
+
+    const statuses = await fetchGitHub<CommitStatus[]>(
+        "/commits/main/statuses"
+    )
+
+    if (statuses) {
+        const coverageStatus = statuses.find((s) => s.context === "coverage")
+        if (coverageStatus?.description) {
+            defaultResult.available = true
+            defaultResult.metrics = parseCoverageDescription(
+                coverageStatus.description
+            )
+            defaultResult.updatedAt = coverageStatus.updated_at
+            if (coverageStatus.target_url) {
+                defaultResult.workflowUrl = coverageStatus.target_url
+            }
+        }
+    }
+
+    return defaultResult
+}
+
 export default async function handler(
     req: VercelRequest,
     res: VercelResponse
@@ -162,14 +284,15 @@ export default async function handler(
     }
 
     try {
-        const [lighthouse, playwright] = await Promise.all([
+        const [lighthouse, playwright, coverage] = await Promise.all([
             getLatestLighthouseReport(),
             getLatestPlaywrightReport(),
+            getCoverageInfo(),
         ])
 
         res.status(200).json({
             ok: true,
-            data: { lighthouse, playwright },
+            data: { lighthouse, playwright, coverage },
         })
     } catch (error) {
         console.error("Reports API error:", error)
