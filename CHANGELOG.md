@@ -1,3 +1,10 @@
+# [1.17.0](https://github.com/borgesius/dana-dzik/compare/v1.16.0...v1.17.0) (2026-02-06)
+
+
+### Features
+
+* **ui:** update image list for a/b testing ([4858587](https://github.com/borgesius/dana-dzik/commit/485858708b5ae24defdcfef7193393a107d06fa5))
+
 # [1.16.0](https://github.com/borgesius/dana-dzik/compare/v1.15.0...v1.16.0) (2026-02-06)
 
 
