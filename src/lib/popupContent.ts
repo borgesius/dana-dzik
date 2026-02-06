@@ -36,7 +36,7 @@ const WINNER_POPUPS: PopupContent[] = [
         body: "You have been selected!",
         buttons: [
             { text: "Claim Prize", className: "green" },
-            { text: "Later (never)", className: "" },
+            { text: "Later", className: "" },
         ],
     },
 ]
@@ -79,20 +79,10 @@ const AD_POPUPS: PopupContent[] = [
         type: "ad",
         title: "Speed Up PC",
         headline: "🚀 YOUR PC IS RUNNING 340% TOO SLOW 🚀",
-        body: "Download PCSpeedUp.exe.scr to fix!",
+        body: "Download PCSpeedUp.scr to fix!",
         buttons: [
             { text: "Speed Up", className: "" },
             { text: "Stay Slow", className: "gray" },
-        ],
-    },
-    {
-        type: "ad",
-        title: "Free Screensavers",
-        headline: "✨ 10,000 FREE SCREENSAVERS ✨",
-        body: "Flying toasters, pipes, and more! (Requires 4GB RAM)",
-        buttons: [
-            { text: "Download All", className: "" },
-            { text: "No", className: "gray" },
         ],
     },
 ]

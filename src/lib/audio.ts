@@ -7,6 +7,13 @@ const SOUND_URLS: Record<string, string> = {
     popup_3: "/assets/sounds/synth_beep_03.ogg",
     close: "/assets/sounds/shot_02.ogg",
     notify: "/assets/sounds/retro_coin_01.ogg",
+    pinball_flipper: "/assets/sounds/shot_01.ogg",
+    pinball_bumper: "/assets/sounds/retro_coin_01.ogg",
+    pinball_launch: "/assets/sounds/synth_beep_01.ogg",
+    pinball_wall: "/assets/sounds/shot_02.ogg",
+    pinball_target: "/assets/sounds/synth_beep_02.ogg",
+    pinball_drain: "/assets/sounds/retro_die_01.ogg",
+    pinball_gameover: "/assets/sounds/retro_die_01.ogg",
 }
 
 export interface Track {

@@ -1,0 +1,27 @@
+.pinball-content {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    background: #008080;
+    padding: 0;
+    margin: 0;
+    overflow: hidden;
+}
+
+.pinball-content canvas {
+    width: 100%;
+    height: 100%;
+    display: block;
+    image-rendering: pixelated;
+}
+
+.window.win95 .pinball-content,
+.window.winxp .pinball-content {
+    padding: 0;
+}
+
+.window .window-content:has(.pinball-content) {
+    padding: 0;
+    overflow: hidden;
+}
