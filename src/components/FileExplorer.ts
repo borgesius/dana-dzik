@@ -180,6 +180,11 @@ export class FileExplorer {
             })
             menu.appendChild(openItem)
         } else if (node.content) {
+            const editItem = this.createMenuItem("Edit", () => {
+                this.openTerminalWith(`edit ${node.name}`)
+            })
+            menu.appendChild(editItem)
+
             const viewItem = this.createMenuItem("View", () => {
                 this.openTerminalWith(`cat ${node.name}`)
             })

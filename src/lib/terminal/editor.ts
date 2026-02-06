@@ -41,19 +41,30 @@ const SEVERITY_HEADERS: Record<Severity, string[]> = {
 }
 
 export interface EditorCallbacks {
-    print: (text: string, className?: string) => void
-    updatePrompt: (prompt: string) => void
+    container: HTMLElement
     onExit: () => void
+    print: (text: string, className?: string) => void
 }
 
+const STATUS_MESSAGE_DURATION_MS = 2000
+
 export class Editor {
-    private lines: string[] = []
     private filename: string
     private filePath: string[]
     private fs: FileSystem
     private callbacks: EditorCallbacks
-    private dirty = false
     private isNewFile = false
+    private originalContent = ""
+    private confirmingQuit = false
+
+    private containerEl!: HTMLElement
+    private headerEl!: HTMLElement
+    private gutterEl!: HTMLElement
+    private textareaEl!: HTMLTextAreaElement
+    private statusLeftEl!: HTMLElement
+    private statusMsgEl!: HTMLElement
+    private statusTimerId: ReturnType<typeof setTimeout> | null = null
+    private keydownHandler: ((e: KeyboardEvent) => void) | null = null
 
     constructor(fs: FileSystem, filename: string, callbacks: EditorCallbacks) {
         this.fs = fs
@@ -69,211 +80,214 @@ export class Editor {
 
         const node = resolved ? getNode(fs, resolved) : null
 
-        if (node && node.type !== "directory") {
-            this.lines = (node.content ?? "").split("\n")
-            this.isNewFile = false
-        } else if (node && node.type === "directory") {
+        if (node && node.type === "directory") {
             callbacks.print(`Cannot edit a directory: ${filename}`, "error")
             callbacks.onExit()
             return
+        }
+
+        if (node && node.type !== "directory") {
+            this.originalContent = node.content ?? ""
+            this.isNewFile = false
         } else {
-            this.lines = [""]
+            this.originalContent = ""
             this.isNewFile = true
         }
 
-        this.printHeader()
-        this.printLines()
-        callbacks.updatePrompt("EDIT> ")
+        this.createUI()
+        this.textareaEl.value = this.originalContent
+        this.updateGutter()
+        this.updateStatus()
+        this.updateHeader()
+
+        setTimeout(() => this.textareaEl.focus(), 0)
     }
 
-    public handleInput(input: string): void {
-        const trimmed = input.trim()
+    private createUI(): void {
+        this.containerEl = document.createElement("div")
+        this.containerEl.className = "editor-container"
 
-        if (trimmed === ":q") {
-            if (this.dirty) {
-                this.callbacks.print(
-                    "Unsaved changes. Use :wq to save and quit, or :q! to discard.",
-                    "error"
-                )
-                return
-            }
-            this.exit()
-            return
-        }
+        this.headerEl = document.createElement("div")
+        this.headerEl.className = "editor-header"
+        this.containerEl.appendChild(this.headerEl)
 
-        if (trimmed === ":q!") {
-            this.exit()
-            return
-        }
+        const bodyEl = document.createElement("div")
+        bodyEl.className = "editor-body"
 
-        if (trimmed === ":w") {
-            this.save()
-            return
-        }
+        this.gutterEl = document.createElement("div")
+        this.gutterEl.className = "editor-gutter"
+        bodyEl.appendChild(this.gutterEl)
 
-        if (trimmed === ":wq") {
-            this.save()
-            this.exit()
-            return
-        }
+        this.textareaEl = document.createElement("textarea")
+        this.textareaEl.className = "editor-textarea"
+        this.textareaEl.spellcheck = false
+        this.textareaEl.autocomplete = "off"
+        this.textareaEl.setAttribute("autocorrect", "off")
+        this.textareaEl.setAttribute("autocapitalize", "off")
+        this.textareaEl.wrap = "off"
+        bodyEl.appendChild(this.textareaEl)
 
-        if (trimmed === ":p") {
-            this.printLines()
-            return
-        }
+        this.containerEl.appendChild(bodyEl)
 
-        if (trimmed.startsWith(":d ")) {
-            const lineNum = parseInt(trimmed.slice(3), 10)
-            this.deleteLine(lineNum)
-            return
-        }
+        const statusEl = document.createElement("div")
+        statusEl.className = "editor-status"
 
-        if (trimmed.startsWith(":i ")) {
-            const rest = trimmed.slice(3)
-            const spaceIdx = rest.indexOf(" ")
-            if (spaceIdx === -1) {
-                this.callbacks.print("Usage: :i N text", "error")
-                return
-            }
-            const lineNum = parseInt(rest.slice(0, spaceIdx), 10)
-            const text = rest.slice(spaceIdx + 1)
-            this.insertLine(lineNum, text)
-            return
-        }
+        this.statusLeftEl = document.createElement("span")
+        this.statusLeftEl.className = "editor-status-left"
+        statusEl.appendChild(this.statusLeftEl)
 
-        if (trimmed.startsWith(":r ")) {
-            const rest = trimmed.slice(3)
-            const spaceIdx = rest.indexOf(" ")
-            if (spaceIdx === -1) {
-                this.callbacks.print("Usage: :r N text", "error")
-                return
-            }
-            const lineNum = parseInt(rest.slice(0, spaceIdx), 10)
-            const text = rest.slice(spaceIdx + 1)
-            this.replaceLine(lineNum, text)
-            return
-        }
+        this.statusMsgEl = document.createElement("span")
+        this.statusMsgEl.className = "editor-status-msg"
+        statusEl.appendChild(this.statusMsgEl)
 
-        if (trimmed === ":a") {
-            this.callbacks.print("Usage: :a text", "error")
-            return
-        }
+        const statusRight = document.createElement("span")
+        statusRight.className = "editor-status-right"
+        statusRight.textContent = "^S Save  ^Q Quit"
+        statusEl.appendChild(statusRight)
 
-        if (trimmed.startsWith(":a ")) {
-            const text = trimmed.slice(3)
-            this.appendLine(text)
-            return
-        }
+        this.containerEl.appendChild(statusEl)
 
-        if (trimmed === ":h" || trimmed === ":help") {
-            this.printHelp()
-            return
-        }
+        this.callbacks.container.appendChild(this.containerEl)
 
-        if (trimmed.startsWith(":")) {
-            this.callbacks.print(`Unknown command: ${trimmed}`, "error")
-            return
-        }
-
-        this.appendLine(input)
+        this.setupEventListeners()
     }
 
-    private printHeader(): void {
-        const status = this.isNewFile
-            ? "(new file)"
-            : `(${this.lines.length} lines)`
-        this.callbacks.print(`EDIT v1.0 - ${this.filename} ${status}`, "info")
-        this.callbacks.print("Type :h for help", "dim")
-        this.callbacks.print("")
+    private setupEventListeners(): void {
+        this.textareaEl.addEventListener("input", () => {
+            this.confirmingQuit = false
+            this.updateGutter()
+            this.updateStatus()
+            this.updateHeader()
+        })
+
+        this.textareaEl.addEventListener("scroll", () => {
+            this.gutterEl.scrollTop = this.textareaEl.scrollTop
+        })
+
+        this.textareaEl.addEventListener("mouseup", () => {
+            this.updateStatus()
+        })
+
+        this.textareaEl.addEventListener("keyup", (e: KeyboardEvent) => {
+            if (
+                e.key === "ArrowUp" ||
+                e.key === "ArrowDown" ||
+                e.key === "ArrowLeft" ||
+                e.key === "ArrowRight" ||
+                e.key === "Home" ||
+                e.key === "End" ||
+                e.key === "PageUp" ||
+                e.key === "PageDown"
+            ) {
+                this.updateStatus()
+            }
+        })
+
+        this.keydownHandler = (e: KeyboardEvent): void => {
+            if (e.ctrlKey && e.key === "s") {
+                e.preventDefault()
+                this.save()
+            } else if (e.ctrlKey && e.key === "q") {
+                e.preventDefault()
+                this.handleQuit()
+            } else if (e.key === "Escape") {
+                e.preventDefault()
+                this.handleQuit()
+            } else if (e.key === "Tab") {
+                e.preventDefault()
+                this.insertTab()
+            }
+        }
+
+        this.textareaEl.addEventListener("keydown", this.keydownHandler)
     }
 
-    private printHelp(): void {
-        this.callbacks.print(
-            `Commands:
-  :p          Print all lines
-  :a text     Append line at end
-  :i N text   Insert text before line N
-  :r N text   Replace line N with text
-  :d N        Delete line N
-  :w          Save
-  :q          Quit (warns if unsaved)
-  :q!         Quit without saving
-  :wq         Save and quit
-  :h          Show this help
+    private insertTab(): void {
+        const start = this.textareaEl.selectionStart
+        const end = this.textareaEl.selectionEnd
+        const value = this.textareaEl.value
 
-  Typing text without a : prefix appends it as a new line.`
+        this.textareaEl.value =
+            value.substring(0, start) + "    " + value.substring(end)
+
+        this.textareaEl.selectionStart = start + 4
+        this.textareaEl.selectionEnd = start + 4
+
+        this.updateGutter()
+        this.updateStatus()
+        this.updateHeader()
+    }
+
+    private handleQuit(): void {
+        if (!this.isDirty()) {
+            this.destroy()
+            return
+        }
+
+        if (this.confirmingQuit) {
+            this.destroy()
+            return
+        }
+
+        this.confirmingQuit = true
+        this.showStatusMessage(
+            "Unsaved changes! ^Q again to discard, ^S to save",
+            "warning"
         )
     }
 
-    private printLines(): void {
-        if (
-            this.lines.length === 0 ||
-            (this.lines.length === 1 && this.lines[0] === "")
-        ) {
-            this.callbacks.print("  (empty file)", "dim")
-            return
-        }
-        for (let i = 0; i < this.lines.length; i++) {
-            const num = String(i + 1).padStart(3, " ")
-            this.callbacks.print(`${num}| ${this.lines[i]}`)
-        }
+    private isDirty(): boolean {
+        return this.textareaEl.value !== this.originalContent
     }
 
-    private appendLine(text: string): void {
-        if (this.lines.length === 1 && this.lines[0] === "" && !this.dirty) {
-            this.lines[0] = text
-        } else {
-            this.lines.push(text)
-        }
-        this.dirty = true
-        const num = String(this.lines.length).padStart(3, " ")
-        this.callbacks.print(`${num}| ${text}`, "dim")
+    private updateHeader(): void {
+        const dirtyMarker = this.isDirty() ? " [modified]" : ""
+        this.headerEl.textContent = `EDIT - ${this.filename}${dirtyMarker}`
     }
 
-    private insertLine(lineNum: number, text: string): void {
-        if (lineNum < 1 || lineNum > this.lines.length + 1) {
-            this.callbacks.print(
-                `Line ${lineNum} out of range (1-${this.lines.length + 1})`,
-                "error"
-            )
-            return
+    private updateGutter(): void {
+        const lineCount = this.textareaEl.value.split("\n").length
+        const lines: string[] = []
+        for (let i = 1; i <= lineCount; i++) {
+            lines.push(String(i))
         }
-        this.lines.splice(lineNum - 1, 0, text)
-        this.dirty = true
-        this.callbacks.print(`Inserted at line ${lineNum}`, "dim")
+        this.gutterEl.textContent = lines.join("\n")
     }
 
-    private replaceLine(lineNum: number, text: string): void {
-        if (lineNum < 1 || lineNum > this.lines.length) {
-            this.callbacks.print(
-                `Line ${lineNum} out of range (1-${this.lines.length})`,
-                "error"
-            )
-            return
-        }
-        this.lines[lineNum - 1] = text
-        this.dirty = true
-        this.callbacks.print(`Replaced line ${lineNum}`, "dim")
+    private updateStatus(): void {
+        const value = this.textareaEl.value
+        const pos = this.textareaEl.selectionStart
+        const textBefore = value.substring(0, pos)
+        const linesBefore = textBefore.split("\n")
+        const line = linesBefore.length
+        const col = linesBefore[linesBefore.length - 1].length + 1
+
+        this.statusLeftEl.textContent = `Ln ${line}, Col ${col}`
     }
 
-    private deleteLine(lineNum: number): void {
-        if (lineNum < 1 || lineNum > this.lines.length) {
-            this.callbacks.print(
-                `Line ${lineNum} out of range (1-${this.lines.length})`,
-                "error"
-            )
-            return
+    private showStatusMessage(
+        message: string,
+        type: "info" | "warning" = "info"
+    ): void {
+        if (this.statusTimerId !== null) {
+            clearTimeout(this.statusTimerId)
         }
-        this.lines.splice(lineNum - 1, 1)
-        if (this.lines.length === 0) {
-            this.lines = [""]
-        }
-        this.dirty = true
-        this.callbacks.print(`Deleted line ${lineNum}`, "dim")
+
+        this.statusMsgEl.textContent = message
+        this.statusMsgEl.className =
+            type === "warning"
+                ? "editor-status-msg warning"
+                : "editor-status-msg info"
+
+        this.statusTimerId = setTimeout(() => {
+            this.statusMsgEl.textContent = ""
+            this.statusMsgEl.className = "editor-status-msg"
+            this.statusTimerId = null
+        }, STATUS_MESSAGE_DURATION_MS)
     }
 
     private save(): void {
-        const content = this.lines.join("\n")
+        const content = this.textareaEl.value
         const dirPath = this.filePath.slice(0, -1)
         const dirPathStr = formatPath(dirPath)
         const fileName = this.filePath[this.filePath.length - 1]
@@ -281,7 +295,10 @@ export class Editor {
         if (this.isNewFile) {
             const result = createFile(this.fs, dirPathStr, fileName, content)
             if (!result.success) {
-                this.callbacks.print(`Save failed: ${result.error}`, "error")
+                this.showStatusMessage(
+                    `Save failed: ${result.error}`,
+                    "warning"
+                )
                 return
             }
             this.isNewFile = false
@@ -289,16 +306,19 @@ export class Editor {
             const pathStr = formatPath(this.filePath)
             const result = writeFile(this.fs, pathStr, content)
             if (!result.success) {
-                this.callbacks.print(`Save failed: ${result.error}`, "error")
+                this.showStatusMessage(
+                    `Save failed: ${result.error}`,
+                    "warning"
+                )
                 return
             }
         }
 
-        this.dirty = false
-        this.callbacks.print(
-            `Saved ${this.filename} (${this.lines.length} lines)`,
-            "success"
-        )
+        this.originalContent = content
+        this.confirmingQuit = false
+        const lineCount = content.split("\n").length
+        this.showStatusMessage(`Saved ${this.filename} (${lineCount} lines)`)
+        this.updateHeader()
 
         void this.checkSystemFile(content)
     }
@@ -361,8 +381,16 @@ export class Editor {
         }
     }
 
-    private exit(): void {
-        this.callbacks.print("")
+    public destroy(): void {
+        if (this.statusTimerId !== null) {
+            clearTimeout(this.statusTimerId)
+        }
+
+        this.containerEl.remove()
         this.callbacks.onExit()
+    }
+
+    public focusTextarea(): void {
+        this.textareaEl.focus()
     }
 }

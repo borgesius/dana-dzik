@@ -148,6 +148,26 @@ describe("Terminal Commands", () => {
         })
     })
 
+    describe("cat -n flag", () => {
+        it("shows line numbers with -n flag", async () => {
+            fs.cwd = ["C:", "Program Files", "HACKTERM"]
+            const result = await executeCommand("cat -n readme.txt", ctx)
+            expect(result.output).toMatch(/^\s*1\|/)
+        })
+
+        it("returns error when -n used without filename", async () => {
+            const result = await executeCommand("cat -n", ctx)
+            expect(result.output).toContain("Usage:")
+            expect(result.className).toBe("error")
+        })
+
+        it("shows content without line numbers by default", async () => {
+            fs.cwd = ["C:", "Program Files", "HACKTERM"]
+            const result = await executeCommand("cat readme.txt", ctx)
+            expect(result.output).not.toMatch(/^\s*1\|/)
+        })
+    })
+
     describe("type command", () => {
         it("is alias for cat", async () => {
             const result = await executeCommand(

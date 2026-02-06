@@ -128,10 +128,23 @@ const COMMANDS: Record<string, CommandHandler> = {
 
     cat: (args, ctx): CommandResult => {
         if (args.length === 0) {
-            return { output: "Usage: cat <filename>", className: "error" }
+            return {
+                output: "Usage: cat [-n] <filename>",
+                className: "error",
+            }
         }
 
-        const filename = args.join(" ")
+        const showLineNumbers = args[0] === "-n"
+        const fileArgs = showLineNumbers ? args.slice(1) : args
+
+        if (fileArgs.length === 0) {
+            return {
+                output: "Usage: cat [-n] <filename>",
+                className: "error",
+            }
+        }
+
+        const filename = fileArgs.join(" ")
         const result = getFileContent(ctx.fs, filename)
 
         if (result.error) {
@@ -139,6 +152,16 @@ const COMMANDS: Record<string, CommandHandler> = {
         }
 
         if (result.content) {
+            if (showLineNumbers) {
+                const lines = result.content.split("\n")
+                const numbered = lines
+                    .map((line, i) => {
+                        const num = String(i + 1).padStart(3, " ")
+                        return `${num}| ${line}`
+                    })
+                    .join("\n")
+                return { output: numbered }
+            }
             return { output: result.content }
         }
 
