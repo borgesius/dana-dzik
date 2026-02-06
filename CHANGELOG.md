@@ -1,3 +1,38 @@
+## [1.24.1](https://github.com/borgesius/dana-dzik/compare/v1.24.0...v1.24.1) (2026-02-06)
+
+
+### Bug Fixes
+
+* **api:** add tsconfig for serverless functions to resolve ESM import failures ([#16](https://github.com/borgesius/dana-dzik/issues/16)) ([be5836e](https://github.com/borgesius/dana-dzik/commit/be5836e15ad14e9212ccc6afa3cc91720f52e232))
+
+# [1.24.0](https://github.com/borgesius/dana-dzik/compare/v1.23.0...v1.24.0) (2026-02-06)
+
+
+### Features
+
+* **lastfm:** recently played list ([#14](https://github.com/borgesius/dana-dzik/issues/14)) ([fdda37f](https://github.com/borgesius/dana-dzik/commit/fdda37fa49d04c38febbd3a62dfb9055b078e4d6))
+
+# [1.23.0](https://github.com/borgesius/dana-dzik/compare/v1.22.0...v1.23.0) (2026-02-06)
+
+
+### Features
+
+* redis gateway ([#13](https://github.com/borgesius/dana-dzik/issues/13)) ([81d79b1](https://github.com/borgesius/dana-dzik/commit/81d79b1b4439385929f757ee0b27f0078f8b596c))
+
+# [1.22.0](https://github.com/borgesius/dana-dzik/compare/v1.21.0...v1.22.0) (2026-02-06)
+
+
+### Features
+
+* **don't get blocked by google:** limit spam ([#12](https://github.com/borgesius/dana-dzik/issues/12)) ([d077d4a](https://github.com/borgesius/dana-dzik/commit/d077d4a3f6d6d31c9da9da599263eeec95ab6822))
+
+# [1.21.0](https://github.com/borgesius/dana-dzik/compare/v1.20.0...v1.21.0) (2026-02-06)
+
+
+### Features
+
+* welt ([#11](https://github.com/borgesius/dana-dzik/issues/11)) ([dbdd99b](https://github.com/borgesius/dana-dzik/commit/dbdd99bd873b7404a381804e79883a85ca1a09f3))
+
 # [1.20.0](https://github.com/borgesius/dana-dzik/compare/v1.19.0...v1.20.0) (2026-02-06)
 
 

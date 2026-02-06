@@ -20,6 +20,8 @@ export function getWindowContent(contentType: string): string {
             return getPinballContent()
         case "terminal":
             return getTerminalContent()
+        case "explorer":
+            return getExplorerContent()
         default:
             return "<p>Content not found</p>"
     }
@@ -27,6 +29,10 @@ export function getWindowContent(contentType: string): string {
 
 function getTerminalContent(): string {
     return `<div id="terminal-content" class="terminal-container"></div>`
+}
+
+function getExplorerContent(): string {
+    return `<div id="explorer-content"></div>`
 }
 
 function getWelcomeContent(): string {
@@ -105,11 +111,9 @@ function getAboutContent(): string {
                     <h3>Cat:</h3>
                     <p>🐱 <strong>Felix Ramon Vanderbilt</strong></p>
 
-                    <h3>Currently Listening:</h3>
+                    <h3>Recently Played (3mo):</h3>
                     <div class="now-playing">
                         🎵 <span id="now-playing-text">Loading...</span>
-                        <br />
-                        <a href="https://open.spotify.com" target="_blank">Open Spotify →</a>
                     </div>
 
                     <p class="email-link">

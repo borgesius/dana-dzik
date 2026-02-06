@@ -1,98 +1,17 @@
+import { DESKTOP_ITEMS } from "../config"
 import { DesktopIcon, type IconConfig } from "./DesktopIcon"
 import { Taskbar } from "./Taskbar"
 import { Toolbars } from "./Toolbars"
 import { WindowManager } from "./WindowManager"
 
-function pick<T>(arr: T[]): T {
-    return arr[Math.floor(Math.random() * arr.length)]
-}
-
-const ICON_LABEL_VARIANTS: Record<string, string[]> = {
-    "internet-explorer": ["Internet Explorer"],
-    "about-me": ["about_me.doc"],
-    projects: ["cool_projects.zip"],
-    resume: ["resume.pdf"],
-    links: ["bookmarks.url"],
-    guestbook: ["guestbook.exe"],
-    felixgpt: ["FelixGPT.exe"],
-    stats: ["Site Stats.exe"],
-    pinball: ["Pinball.exe"],
-    terminal: ["terminal.exe"],
-}
-
 function getDesktopIcons(): IconConfig[] {
-    return [
-        {
-            id: "internet-explorer",
-            label: pick(ICON_LABEL_VARIANTS["internet-explorer"]),
-            icon: "🌐",
-            action: "window",
-            windowId: "welcome",
-        },
-        {
-            id: "about-me",
-            label: pick(ICON_LABEL_VARIANTS["about-me"]),
-            icon: "📄",
-            action: "window",
-            windowId: "about",
-        },
-        {
-            id: "projects",
-            label: pick(ICON_LABEL_VARIANTS["projects"]),
-            icon: "📦",
-            action: "window",
-            windowId: "projects",
-        },
-        {
-            id: "resume",
-            label: pick(ICON_LABEL_VARIANTS["resume"]),
-            icon: "📕",
-            action: "window",
-            windowId: "resume",
-        },
-        {
-            id: "links",
-            label: pick(ICON_LABEL_VARIANTS["links"]),
-            icon: "🔗",
-            action: "window",
-            windowId: "links",
-        },
-        {
-            id: "guestbook",
-            label: pick(ICON_LABEL_VARIANTS["guestbook"]),
-            icon: "📖",
-            action: "window",
-            windowId: "guestbook",
-        },
-        {
-            id: "felixgpt",
-            label: pick(ICON_LABEL_VARIANTS["felixgpt"]),
-            icon: "🐱",
-            action: "window",
-            windowId: "felixgpt",
-        },
-        {
-            id: "stats",
-            label: pick(ICON_LABEL_VARIANTS["stats"]),
-            icon: "📊",
-            action: "window",
-            windowId: "stats",
-        },
-        {
-            id: "pinball",
-            label: pick(ICON_LABEL_VARIANTS["pinball"]),
-            icon: "🎮",
-            action: "window",
-            windowId: "pinball",
-        },
-        {
-            id: "terminal",
-            label: pick(ICON_LABEL_VARIANTS["terminal"]),
-            icon: "💻",
-            action: "window",
-            windowId: "terminal",
-        },
-    ]
+    return DESKTOP_ITEMS.map((item) => ({
+        id: item.id,
+        label: item.label ?? item.filename,
+        icon: item.icon,
+        action: "window" as const,
+        windowId: item.windowId,
+    }))
 }
 
 export class Desktop {

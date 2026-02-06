@@ -4,6 +4,7 @@ import "./styles/desktop.css"
 import "./styles/effects.css"
 import "./styles/pinball.css"
 import "./styles/taskbar.css"
+import "./styles/explorer.css"
 import "./styles/terminal.css"
 import "./styles/widgets.css"
 import "./styles/windows.css"
@@ -11,6 +12,7 @@ import "./styles/windows.css"
 import { CursorTrail } from "./components/CursorTrail"
 import { Desktop } from "./components/Desktop"
 import { PopupManager } from "./components/PopupManager"
+import { setTerminalInit } from "./components/Terminal"
 import { Widgets } from "./components/Widgets"
 import { setupErrorHandlers } from "./core/ErrorHandler"
 import {
@@ -22,7 +24,6 @@ import {
 import { createAudioManager } from "./lib/audio"
 import { GlitchManager } from "./lib/glitchEffects"
 import { Router } from "./lib/router"
-import { SafeMode } from "./lib/safeMode"
 
 setupErrorHandlers()
 trackPageview()
@@ -33,7 +34,6 @@ initPerfTracking()
 
 const app = document.getElementById("app")
 if (app) {
-    const safeMode = new SafeMode()
     const desktop = new Desktop(app)
     const windowManager = desktop.getWindowManager()
 
@@ -51,40 +51,13 @@ if (app) {
     router.init()
 
     const popupManager = new PopupManager(app)
-    const cursorTrail = new CursorTrail()
-    const audioManager = createAudioManager()
+    new CursorTrail()
+    createAudioManager()
     new GlitchManager()
     new Widgets(app)
 
-    let userHasInteracted = false
-    let safeModeEnabled = safeMode.isEnabled()
-
-    const maybeStartPopups = (): void => {
-        if (userHasInteracted && !safeModeEnabled) {
-            popupManager.start()
-        }
-    }
-
-    document.addEventListener(
-        "mousemove",
-        () => {
-            userHasInteracted = true
-            maybeStartPopups()
-        },
-        { once: true }
-    )
-
-    safeMode.onChange((enabled) => {
-        safeModeEnabled = enabled
-        if (enabled) {
-            popupManager.stop()
-            cursorTrail.disable()
-            audioManager.setEnabled(false)
-        } else {
-            maybeStartPopups()
-            cursorTrail.enable()
-            audioManager.setEnabled(true)
-        }
+    windowManager.onNewWindowOpen(() => {
+        popupManager.onWindowOpen()
     })
 
     document.addEventListener("click", (e) => {
@@ -106,6 +79,15 @@ if (app) {
         if (windowId) {
             windowManager.openWindow(windowId)
         }
+    }) as EventListener)
+
+    document.addEventListener("explorer:open-terminal", ((
+        e: CustomEvent<{ cwd: string; command: string }>
+    ) => {
+        const { cwd, command } = e.detail
+        setTerminalInit({ cwd, command })
+        windowManager.closeWindow("terminal")
+        windowManager.openWindow("terminal")
     }) as EventListener)
 
     addFloatingGifs(desktop)

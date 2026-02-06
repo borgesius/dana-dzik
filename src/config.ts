@@ -21,12 +21,12 @@ export const SOCIAL = {
 
 /** Popup behavior settings */
 export const POPUP_CONFIG = {
-    /** Initial delay before first popup (ms) */
-    initialDelay: 10000,
-    /** Minimum interval between popups (ms) */
-    minInterval: 30000,
-    /** Random additional interval (ms) */
-    randomInterval: 30000,
+    /** How long popups keep spawning after engaging with the money game (ms) */
+    gameSessionDurationMs: 180_000,
+    /** How long popups keep spawning after a window-open trigger (ms) */
+    windowSessionDurationMs: 15_000,
+    /** Chance of popups triggering when a new window opens (0-1) */
+    windowTriggerChance: 0.2,
     /** Maximum concurrent popups */
     maxConcurrent: 2,
 } as const
@@ -39,15 +39,20 @@ export const SLIDESHOW_CONFIG = {
     fadeDuration: 300,
 } as const
 
-/** Last.fm polling interval (ms) */
-export const LASTFM_POLL_INTERVAL = 30000
-
 /** Analytics settings */
 export const ANALYTICS_CONFIG = {
     /** Maximum number of performance events to send per page load */
     maxPerfEvents: 10,
     /** Minimum resource duration (ms) to track */
     minPerfDuration: 50,
+    /**
+     * Fraction of visitors in the "sampled" cohort (0.001 = 0.1%).
+     * Only sampled visitors send non-critical events (window opens, funnel,
+     * A/B, perf). Must match the server-side SAMPLE_RATE in redisGateway.
+     */
+    sampleRate: 0.001,
+    /** Max non-critical events a sampled client sends per session */
+    sessionEventBudget: 15,
 } as const
 
 /** Window content types that can be routed to */
@@ -62,6 +67,7 @@ export const ROUTABLE_WINDOWS = [
     "stats",
     "pinball",
     "terminal",
+    "explorer",
 ] as const
 
 export type RoutableWindow = (typeof ROUTABLE_WINDOWS)[number]
@@ -79,3 +85,86 @@ export const ROUTE_MAP: Record<string, RoutableWindow> = {
     "/pinball": "pinball",
     "/terminal": "terminal",
 }
+
+export interface DesktopItemConfig {
+    id: string
+    filename: string
+    label?: string
+    icon: string
+    windowId: RoutableWindow
+    fileType: "file" | "executable" | "shortcut" | "directory"
+}
+
+export const DESKTOP_ITEMS: DesktopItemConfig[] = [
+    {
+        id: "internet-explorer",
+        filename: "Internet Explorer.lnk",
+        label: "Internet Explorer",
+        icon: "🌐",
+        windowId: "welcome",
+        fileType: "shortcut",
+    },
+    {
+        id: "about-me",
+        filename: "about_me.doc",
+        icon: "📄",
+        windowId: "about",
+        fileType: "file",
+    },
+    {
+        id: "projects",
+        filename: "cool_projects.zip",
+        icon: "📦",
+        windowId: "projects",
+        fileType: "file",
+    },
+    {
+        id: "resume",
+        filename: "resume.pdf",
+        icon: "📕",
+        windowId: "resume",
+        fileType: "file",
+    },
+    {
+        id: "links",
+        filename: "bookmarks.url",
+        icon: "🔗",
+        windowId: "links",
+        fileType: "shortcut",
+    },
+    {
+        id: "guestbook",
+        filename: "guestbook.exe",
+        icon: "📖",
+        windowId: "guestbook",
+        fileType: "executable",
+    },
+    {
+        id: "felixgpt",
+        filename: "FelixGPT.exe",
+        icon: "🐱",
+        windowId: "felixgpt",
+        fileType: "executable",
+    },
+    {
+        id: "stats",
+        filename: "Site Stats.exe",
+        icon: "📊",
+        windowId: "stats",
+        fileType: "executable",
+    },
+    {
+        id: "terminal",
+        filename: "terminal.exe",
+        icon: "💻",
+        windowId: "terminal",
+        fileType: "executable",
+    },
+    {
+        id: "welt",
+        filename: "WELT",
+        icon: "📁",
+        windowId: "explorer",
+        fileType: "directory",
+    },
+]

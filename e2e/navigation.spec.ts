@@ -13,23 +13,37 @@ test.describe("Desktop Navigation", () => {
     test("desktop icons are visible", async ({ page }) => {
         await page.goto("/")
 
-        await expect(page.locator(".desktop-icon")).toHaveCount(9)
-        await expect(page.locator('.desktop-icon:has-text("Internet Explorer")')).toBeVisible()
-        await expect(page.locator('.desktop-icon:has-text("about_me.doc")')).toBeVisible()
-        await expect(page.locator('.desktop-icon:has-text("terminal.exe")')).toBeVisible()
+        await expect(page.locator(".desktop-icon")).toHaveCount(10)
+        await expect(
+            page.locator('.desktop-icon:has-text("Internet Explorer")')
+        ).toBeVisible()
+        await expect(
+            page.locator('.desktop-icon:has-text("about_me.doc")')
+        ).toBeVisible()
+        await expect(
+            page.locator('.desktop-icon:has-text("terminal.exe")')
+        ).toBeVisible()
     })
 
     test("welcome window opens by default", async ({ page }) => {
         await page.goto("/")
-        await page.waitForSelector(".loading-screen.hidden", { state: "attached", timeout: 10000 })
+        await page.waitForSelector(".loading-screen.hidden", {
+            state: "attached",
+            timeout: 10000,
+        })
 
         await expect(page.locator(".window")).toBeVisible()
-        await expect(page.locator('.window-titlebar:has-text("Welcome")')).toBeVisible()
+        await expect(
+            page.locator('.window-titlebar:has-text("Welcome")')
+        ).toBeVisible()
     })
 
     test("double-click opens windows", async ({ page }) => {
         await page.goto("/")
-        await page.waitForSelector(".loading-screen.hidden", { state: "attached", timeout: 10000 })
+        await page.waitForSelector(".loading-screen.hidden", {
+            state: "attached",
+            timeout: 10000,
+        })
 
         // Close the Welcome window first to avoid it blocking clicks
         await page.locator(".window-btn.close").first().click()
@@ -37,7 +51,7 @@ test.describe("Desktop Navigation", () => {
 
         const icon = page.locator('.desktop-icon:has-text("about_me.doc")')
         await expect(icon).toBeVisible({ timeout: 5000 })
-        
+
         await icon.dblclick()
 
         await expect(page.locator(".window")).toHaveCount(1, { timeout: 5000 })
@@ -45,7 +59,10 @@ test.describe("Desktop Navigation", () => {
 
     test("windows can be dragged", async ({ page }) => {
         await page.goto("/")
-        await page.waitForSelector(".loading-screen.hidden", { state: "attached", timeout: 10000 })
+        await page.waitForSelector(".loading-screen.hidden", {
+            state: "attached",
+            timeout: 10000,
+        })
 
         const window = page.locator(".window").first()
         const titlebar = window.locator(".window-titlebar")
@@ -63,7 +80,10 @@ test.describe("Desktop Navigation", () => {
 
     test("windows can be closed", async ({ page }) => {
         await page.goto("/")
-        await page.waitForSelector(".loading-screen.hidden", { state: "attached", timeout: 10000 })
+        await page.waitForSelector(".loading-screen.hidden", {
+            state: "attached",
+            timeout: 10000,
+        })
 
         const windowCount = await page.locator(".window").count()
 
@@ -75,7 +95,10 @@ test.describe("Desktop Navigation", () => {
 
     test("start menu opens on click", async ({ page }) => {
         await page.goto("/")
-        await page.waitForSelector(".loading-screen.hidden", { state: "attached", timeout: 10000 })
+        await page.waitForSelector(".loading-screen.hidden", {
+            state: "attached",
+            timeout: 10000,
+        })
 
         await expect(page.locator(".start-menu")).not.toBeVisible()
 
@@ -86,7 +109,10 @@ test.describe("Desktop Navigation", () => {
 
     test("taskbar shows open windows", async ({ page }) => {
         await page.goto("/")
-        await page.waitForSelector(".loading-screen.hidden", { state: "attached", timeout: 10000 })
+        await page.waitForSelector(".loading-screen.hidden", {
+            state: "attached",
+            timeout: 10000,
+        })
 
         // Close the Welcome window first to avoid it blocking clicks
         await page.locator(".window-btn.close").first().click()
@@ -97,23 +123,35 @@ test.describe("Desktop Navigation", () => {
         await icon.dblclick()
 
         // After opening a new window, taskbar should show 1 button
-        await expect(page.locator(".taskbar-window-button")).toHaveCount(1, { timeout: 5000 })
+        await expect(page.locator(".taskbar-window-button")).toHaveCount(1, {
+            timeout: 5000,
+        })
     })
 
-    test("popups appear after mouse interaction", async ({ page }) => {
+    test("popups appear after engaging with money game", async ({ page }) => {
         await page.goto("/")
-        await page.waitForSelector(".loading-screen.hidden", { state: "attached", timeout: 10000 })
+        await page.waitForSelector(".loading-screen.hidden", {
+            state: "attached",
+            timeout: 10000,
+        })
 
-        await page.mouse.move(100, 100)
+        const ventureBtn = page.locator(
+            '.venture-btn:has-text("MAKE $$$ FAST")'
+        )
+        await expect(ventureBtn).toBeVisible({ timeout: 5000 })
+        await ventureBtn.click()
 
-        await page.waitForTimeout(12000)
-
-        await expect(page.locator(".popup-window")).toBeVisible()
+        await expect(page.locator(".popup-window")).toBeVisible({
+            timeout: 5000,
+        })
     })
 
     test("toolbars are visible with game elements", async ({ page }) => {
         await page.goto("/")
-        await page.waitForSelector(".loading-screen.hidden", { state: "attached", timeout: 10000 })
+        await page.waitForSelector(".loading-screen.hidden", {
+            state: "attached",
+            timeout: 10000,
+        })
 
         await expect(page.locator(".toolbar")).toHaveCount(2)
         await expect(page.locator(".venture-btn").first()).toBeVisible()
@@ -122,16 +160,12 @@ test.describe("Desktop Navigation", () => {
 
     test("widgets are visible", async ({ page }) => {
         await page.goto("/")
-        await page.waitForSelector(".loading-screen.hidden", { state: "attached", timeout: 10000 })
+        await page.waitForSelector(".loading-screen.hidden", {
+            state: "attached",
+            timeout: 10000,
+        })
 
         await expect(page.locator(".widgets-container")).toBeVisible()
         await expect(page.locator("#audio-widget")).toBeVisible()
-    })
-
-    test("safe mode button is present", async ({ page }) => {
-        await page.goto("/")
-        await page.waitForSelector(".loading-screen.hidden", { state: "attached", timeout: 10000 })
-
-        await expect(page.locator(".safe-mode-btn")).toBeVisible()
     })
 })

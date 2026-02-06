@@ -12,6 +12,8 @@ const POPUP_LEVEL_INTERVALS: Record<number, number> = {
     3: 6000,
 }
 
+const DEFAULT_SPAWN_INTERVAL = 12000
+const SPAWN_JITTER = 5000
 const BONUS_POPUP_CHANCE = 0.25
 
 const TIER_BONUS_MULTIPLIERS: Record<number, number> = {
@@ -24,12 +26,16 @@ const TIER_BONUS_MULTIPLIERS: Record<number, number> = {
 }
 
 /**
- * Manages popup windows that appear periodically to simulate spam/malware popups.
+ * Manages popup windows that appear in timed sessions triggered by
+ * game engagement or (randomly) when a window is opened.
  */
 export class PopupManager {
     private container: HTMLElement
     private activePopups: HTMLElement[] = []
     private spawnInterval: number | null = null
+    private sessionTimeout: number | null = null
+    private sessionEndTime = 0
+    private sessionActive = false
     private zIndex = 9000
     private popupLevel = 0
     private gameActivated = false
@@ -41,77 +47,95 @@ export class PopupManager {
 
     private setupGameListener(): void {
         const game = getBusinessGame()
+
+        game.on("ventureResult", () => {
+            this.onGameEngaged()
+        })
+
         game.on("popupsActivate", (level) => {
-            this.setPopupLevel(level as number)
+            const lvl = level as number
+            if (lvl > this.popupLevel) {
+                this.popupLevel = lvl
+                this.gameActivated = true
+                if (this.sessionActive) {
+                    this.restartSpawning()
+                }
+            }
         })
     }
 
-    public setPopupLevel(level: number): void {
-        if (level <= this.popupLevel) return
+    public onGameEngaged(): void {
+        this.startSession(POPUP_CONFIG.gameSessionDurationMs)
+    }
 
-        this.popupLevel = level
-
-        if (!this.gameActivated) {
-            this.gameActivated = true
-            this.startGamePopups()
-        } else {
-            this.restartWithNewInterval()
+    public onWindowOpen(): void {
+        if (Math.random() < POPUP_CONFIG.windowTriggerChance) {
+            this.startSession(POPUP_CONFIG.windowSessionDurationMs)
         }
     }
 
-    private startGamePopups(): void {
-        const interval = POPUP_LEVEL_INTERVALS[this.popupLevel] ?? 15000
+    private startSession(durationMs: number): void {
+        const newEndTime = Date.now() + durationMs
+        if (newEndTime <= this.sessionEndTime) return
 
-        this.spawnInterval = window.setInterval(
-            () => {
-                if (this.activePopups.length < POPUP_CONFIG.maxConcurrent) {
-                    this.spawnPopup()
-                }
-            },
-            interval + Math.random() * 5000
-        )
+        this.sessionEndTime = newEndTime
 
-        setTimeout(() => this.spawnPopup(), 2000)
+        if (this.sessionTimeout) {
+            window.clearTimeout(this.sessionTimeout)
+        }
+
+        if (!this.sessionActive) {
+            this.sessionActive = true
+            this.startSpawning()
+            setTimeout(() => this.spawnPopup(), 1500)
+        }
+
+        this.sessionTimeout = window.setTimeout(() => {
+            this.endSession()
+        }, durationMs)
     }
 
-    private restartWithNewInterval(): void {
+    private startSpawning(): void {
+        const interval = this.getSpawnInterval()
+
+        this.spawnInterval = window.setInterval(() => {
+            if (this.activePopups.length < POPUP_CONFIG.maxConcurrent) {
+                this.spawnPopup()
+            }
+        }, interval)
+    }
+
+    private getSpawnInterval(): number {
+        const levelInterval =
+            POPUP_LEVEL_INTERVALS[this.popupLevel] ?? DEFAULT_SPAWN_INTERVAL
+        const base =
+            this.popupLevel > 0 ? levelInterval : DEFAULT_SPAWN_INTERVAL
+        return base + Math.random() * SPAWN_JITTER
+    }
+
+    private restartSpawning(): void {
         if (this.spawnInterval) {
             window.clearInterval(this.spawnInterval)
         }
-
-        const interval = POPUP_LEVEL_INTERVALS[this.popupLevel] ?? 15000
-
-        this.spawnInterval = window.setInterval(
-            () => {
-                if (this.activePopups.length < POPUP_CONFIG.maxConcurrent) {
-                    this.spawnPopup()
-                }
-            },
-            interval + Math.random() * 5000
-        )
+        this.startSpawning()
     }
 
-    /** Starts the popup spawning timer. */
-    public start(): void {
-        setTimeout(() => this.spawnPopup(), POPUP_CONFIG.initialDelay)
-
-        this.spawnInterval = window.setInterval(
-            () => {
-                if (this.activePopups.length < POPUP_CONFIG.maxConcurrent) {
-                    this.spawnPopup()
-                }
-            },
-            POPUP_CONFIG.minInterval +
-                Math.random() * POPUP_CONFIG.randomInterval
-        )
-    }
-
-    /** Stops spawning popups and removes all active popups. */
-    public stop(): void {
+    private endSession(): void {
+        this.sessionActive = false
+        this.sessionEndTime = 0
         if (this.spawnInterval) {
             window.clearInterval(this.spawnInterval)
             this.spawnInterval = null
         }
+        if (this.sessionTimeout) {
+            window.clearTimeout(this.sessionTimeout)
+            this.sessionTimeout = null
+        }
+    }
+
+    /** Stops spawning popups and removes all active popups. */
+    public stop(): void {
+        this.endSession()
         this.activePopups.forEach((popup) => popup.remove())
         this.activePopups = []
         this.gameActivated = false

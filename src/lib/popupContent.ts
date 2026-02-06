@@ -52,6 +52,16 @@ const ERROR_POPUPS: PopupContent[] = [
             { text: "Cancel", className: "" },
         ],
     },
+    {
+        type: "error",
+        title: "IRQ Conflict",
+        headline: "⚠️ IRQ 7 IS OCCUPIED BY IRQ 7 ⚠️",
+        body: "The interrupt request is interrupt",
+        buttons: [
+            { text: "Ignore", className: "primary" },
+            { text: "Ignore Harder", className: "" },
+        ],
+    },
 ]
 
 const AD_POPUPS: PopupContent[] = [
@@ -59,7 +69,7 @@ const AD_POPUPS: PopupContent[] = [
         type: "ad",
         title: "Local Singles",
         headline: "😍 HOT SINGLES IN YOUR AREA 😍",
-        body: "Just 3 miles away! (Distance not verified)",
+        body: "Just 3 miles away!",
         buttons: [
             { text: "Meet Them", className: "" },
             { text: "No Thanks", className: "gray" },

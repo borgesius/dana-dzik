@@ -144,7 +144,6 @@ export class PinballGame {
         this.walls.push(new Wall(200, 445, 330, 445, 0.7))
 
         this.walls.push(new Wall(15, 415, 82, 452))
-        this.walls.push(new Wall(230, 460, 250, 415))
 
         this.walls.push(new Wall(18, 320, 42, 380, 0.8))
         this.walls.push(new Wall(232, 380, 248, 320, 0.8))

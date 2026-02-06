@@ -1,17 +1,34 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node"
 
-interface LastFmTrack {
+interface LastFmTopTrack {
     name: string
-    artist: { "#text": string }
-    album: { "#text": string }
+    playcount: string
+    artist: { name: string }
     image: Array<{ "#text": string; size: string }>
-    "@attr"?: { nowplaying: string }
 }
 
-interface LastFmResponse {
-    recenttracks: {
-        track: LastFmTrack[]
+interface LastFmTopTracksResponse {
+    toptracks: {
+        track: LastFmTopTrack[]
     }
+}
+
+function uniqueByArtist(
+    tracks: LastFmTopTrack[],
+    limit: number
+): LastFmTopTrack[] {
+    const seen = new Set<string>()
+    const result: LastFmTopTrack[] = []
+
+    for (const track of tracks) {
+        if (result.length >= limit) break
+        const artist = track.artist.name.toLowerCase()
+        if (seen.has(artist)) continue
+        seen.add(artist)
+        result.push(track)
+    }
+
+    return result
 }
 
 export default async function handler(
@@ -20,7 +37,10 @@ export default async function handler(
 ): Promise<void> {
     res.setHeader("Access-Control-Allow-Origin", "*")
     res.setHeader("Access-Control-Allow-Methods", "GET")
-    res.setHeader("Cache-Control", "s-maxage=30, stale-while-revalidate=60")
+    res.setHeader(
+        "Cache-Control",
+        "s-maxage=3600, stale-while-revalidate=7200"
+    )
 
     if (req.method === "OPTIONS") {
         res.status(200).end()
@@ -36,33 +56,38 @@ export default async function handler(
     }
 
     try {
-        const url = `https://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=${username}&api_key=${apiKey}&format=json&limit=1`
+        const url = `https://ws.audioscrobbler.com/2.0/?method=user.gettoptracks&user=${username}&api_key=${apiKey}&format=json&period=3month&limit=30`
         const response = await fetch(url)
 
         if (!response.ok) {
             throw new Error(`Last.fm API error: ${response.status}`)
         }
 
-        const data = (await response.json()) as LastFmResponse
-        const track = data.recenttracks.track[0]
+        const data = (await response.json()) as LastFmTopTracksResponse
+        const rawTracks = data.toptracks.track
 
-        if (!track) {
-            res.status(200).json({ ok: true, data: null })
+        if (!rawTracks?.length) {
+            res.status(200).json({ ok: true, data: { tracks: [] } })
             return
         }
 
-        const isPlaying = track["@attr"]?.nowplaying === "true"
-        const image = track.image.find((i) => i.size === "medium")
+        const top5 = uniqueByArtist(rawTracks, 5)
+
+        const tracks = top5.map((t) => {
+            const image =
+                t.image.find((i) => i.size === "large") ||
+                t.image.find((i) => i.size === "medium")
+            return {
+                name: t.name,
+                artist: t.artist.name,
+                image: image?.["#text"] || null,
+                playcount: parseInt(t.playcount, 10),
+            }
+        })
 
         res.status(200).json({
             ok: true,
-            data: {
-                name: track.name,
-                artist: track.artist["#text"],
-                album: track.album["#text"],
-                image: image?.["#text"] || null,
-                isPlaying,
-            },
+            data: { tracks },
         })
     } catch (error) {
         console.error("Last.fm API error:", error)
