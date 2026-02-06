@@ -22,8 +22,8 @@ describe("Analytics", () => {
     })
 
     describe("PHOTO_VARIANTS", () => {
-        it("has 3 photo variants", () => {
-            expect(PHOTO_VARIANTS).toHaveLength(3)
+        it("has 4 photo variants", () => {
+            expect(PHOTO_VARIANTS).toHaveLength(4)
         })
 
         it("each variant has an id and photo path", () => {
@@ -33,11 +33,12 @@ describe("Analytics", () => {
             })
         })
 
-        it("variant ids are A, B, C", () => {
+        it("variant ids are A, B, C, D", () => {
             const ids = PHOTO_VARIANTS.map((v) => v.id)
             expect(ids).toContain("A")
             expect(ids).toContain("B")
             expect(ids).toContain("C")
+            expect(ids).toContain("D")
         })
     })
 
@@ -64,7 +65,7 @@ describe("Analytics", () => {
     describe("getAbVariant", () => {
         it("returns a valid variant", () => {
             const variant = getAbVariant()
-            expect(["A", "B", "C"]).toContain(variant)
+            expect(["A", "B", "C", "D"]).toContain(variant)
         })
 
         it("returns same variant on subsequent calls", () => {
@@ -107,6 +108,12 @@ describe("Analytics", () => {
             localStorage.setItem("ab_variant", "C")
             const photo = getVariantPhoto()
             expect(photo).toBe("/assets/dana/IMG_5576.jpg")
+        })
+
+        it("returns correct photo for variant D", () => {
+            localStorage.setItem("ab_variant", "D")
+            const photo = getVariantPhoto()
+            expect(photo).toBe("/assets/dana/IMG_7045.jpg")
         })
     })
 

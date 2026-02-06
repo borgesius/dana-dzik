@@ -1,11 +1,9 @@
 import { SLIDESHOW_CONFIG } from "../config"
 
 const DANA_PHOTOS = [
-    "/assets/dana/IMG_4369.jpg",
     "/assets/dana/IMG_5099.jpg",
     "/assets/dana/IMG_5531.jpg",
     "/assets/dana/IMG_5576.jpg",
-    "/assets/dana/IMG_6639.jpg",
     "/assets/dana/IMG_7045.jpg",
 ]
 
