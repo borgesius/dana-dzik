@@ -17,6 +17,7 @@ const ICON_LABEL_VARIANTS: Record<string, string[]> = {
     felixgpt: ["FelixGPT.exe"],
     stats: ["Site Stats.exe"],
     terminal: ["terminal.exe"],
+    welt: ["WELT"],
 }
 
 function getDesktopIcons(): IconConfig[] {
@@ -81,6 +82,13 @@ function getDesktopIcons(): IconConfig[] {
             id: "terminal",
             label: pick(ICON_LABEL_VARIANTS["terminal"]),
             icon: "💻",
+            action: "window",
+            windowId: "terminal",
+        },
+        {
+            id: "welt",
+            label: pick(ICON_LABEL_VARIANTS["welt"]),
+            icon: "📁",
             action: "window",
             windowId: "terminal",
         },

@@ -1,6 +1,7 @@
 import {
     type CommandContext,
     executeCommand,
+    getCompletions,
     getPrompt,
     getSLFrames,
 } from "../lib/terminal/commands"
@@ -86,6 +87,9 @@ export class Terminal {
             }
         } else if (e.key === "Tab") {
             e.preventDefault()
+            if (this.mode === "normal") {
+                this.handleTabComplete()
+            }
         } else if (e.key === "c" && e.ctrlKey) {
             e.preventDefault()
             if (this.mode === "program-input" && this.inputResolver) {
@@ -135,6 +139,48 @@ export class Terminal {
     private echoInput(input: string, promptOverride?: string): void {
         const prompt = promptOverride ?? getPrompt(this.fs)
         this.printLine(`${prompt}${input}`)
+    }
+
+    private handleTabComplete(): void {
+        const input = this.inputEl.value
+        if (!input) return
+
+        const matches = getCompletions(input, this.fs)
+        if (matches.length === 0) return
+
+        if (matches.length === 1) {
+            const parts = input.split(/\s+/)
+            parts[parts.length - 1] = matches[0]
+            this.inputEl.value = parts.join(" ")
+        } else {
+            const parts = input.split(/\s+/)
+            const prefix = this.commonPrefix(matches)
+            if (prefix.length > parts[parts.length - 1].length) {
+                parts[parts.length - 1] = prefix
+                this.inputEl.value = parts.join(" ")
+            } else {
+                this.printLine(getPrompt(this.fs) + input)
+                this.printLine(matches.join("  "), "dim")
+            }
+        }
+
+        setTimeout(() => {
+            this.inputEl.setSelectionRange(
+                this.inputEl.value.length,
+                this.inputEl.value.length
+            )
+        }, 0)
+    }
+
+    private commonPrefix(strings: string[]): string {
+        if (strings.length === 0) return ""
+        let prefix = strings[0]
+        for (let i = 1; i < strings.length; i++) {
+            while (!strings[i].toLowerCase().startsWith(prefix.toLowerCase())) {
+                prefix = prefix.slice(0, -1)
+            }
+        }
+        return prefix
     }
 
     private navigateHistory(direction: number): void {

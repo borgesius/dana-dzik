@@ -5,6 +5,7 @@ import {
     type FileSystem,
     type FileType,
     formatPath,
+    getCurrentNode,
     getExecutableWindowId,
     getFileContent,
     listDirectory,
@@ -315,4 +316,32 @@ export function getSLFrames(): string[] {
 
 export function getPrompt(fs: FileSystem): string {
     return `${formatPath(fs.cwd)}> `
+}
+
+export function getCompletions(partial: string, fs: FileSystem): string[] {
+    const parts = partial.split(/\s+/)
+
+    if (parts.length <= 1) {
+        const prefix = parts[0].toLowerCase()
+        const cmdMatches = Object.keys(COMMANDS).filter((c) =>
+            c.startsWith(prefix)
+        )
+        const fileMatches = getFileCompletions(prefix, fs)
+        return [...cmdMatches, ...fileMatches]
+    }
+
+    const argPrefix = parts[parts.length - 1]
+    return getFileCompletions(argPrefix, fs)
+}
+
+function getFileCompletions(prefix: string, fs: FileSystem): string[] {
+    const current = getCurrentNode(fs)
+    if (!current || !current.children) return []
+
+    const lower = prefix.toLowerCase()
+    return Object.values(current.children)
+        .filter((child) => child.name.toLowerCase().startsWith(lower))
+        .map((child) =>
+            child.type === "directory" ? child.name + "\\" : child.name
+        )
 }
