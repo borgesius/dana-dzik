@@ -1,4 +1,4 @@
-import { type RoutableWindow } from "../config"
+import { DESKTOP_ITEMS, type RoutableWindow } from "../config"
 import { Window, type WindowConfig } from "./Window"
 
 /** Information about an open window for the taskbar */
@@ -9,11 +9,19 @@ export interface OpenWindowInfo {
     isActive: boolean
 }
 
+const DESKTOP_ICON_BY_WINDOW_ID = new Map(
+    DESKTOP_ITEMS.map((item) => [item.windowId, item.icon])
+)
+
+function icon(windowId: RoutableWindow): string {
+    return DESKTOP_ICON_BY_WINDOW_ID.get(windowId) ?? "📄"
+}
+
 const WINDOW_CONFIGS: Record<RoutableWindow, WindowConfig> = {
     welcome: {
         id: "welcome",
         title: "Welcome to Dana's Desktop",
-        icon: "🌐",
+        icon: icon("welcome"),
         width: 600,
         height: 450,
         style: "winxp",
@@ -22,7 +30,7 @@ const WINDOW_CONFIGS: Record<RoutableWindow, WindowConfig> = {
     about: {
         id: "about",
         title: "about_me.doc",
-        icon: "📄",
+        icon: icon("about"),
         width: 550,
         height: 500,
         style: "win95",
@@ -31,7 +39,7 @@ const WINDOW_CONFIGS: Record<RoutableWindow, WindowConfig> = {
     projects: {
         id: "projects",
         title: "cool_projects.zip",
-        icon: "📦",
+        icon: icon("projects"),
         width: 500,
         height: 400,
         style: "win95",
@@ -40,7 +48,7 @@ const WINDOW_CONFIGS: Record<RoutableWindow, WindowConfig> = {
     resume: {
         id: "resume",
         title: "resume.pdf",
-        icon: "📕",
+        icon: icon("resume"),
         width: 550,
         height: 500,
         style: "winxp",
@@ -49,7 +57,7 @@ const WINDOW_CONFIGS: Record<RoutableWindow, WindowConfig> = {
     links: {
         id: "links",
         title: "Bookmarks",
-        icon: "🔗",
+        icon: icon("links"),
         width: 450,
         height: 400,
         style: "win95",
@@ -58,7 +66,7 @@ const WINDOW_CONFIGS: Record<RoutableWindow, WindowConfig> = {
     guestbook: {
         id: "guestbook",
         title: "guestbook.exe",
-        icon: "📖",
+        icon: icon("guestbook"),
         width: 500,
         height: 450,
         style: "win95",
@@ -67,7 +75,7 @@ const WINDOW_CONFIGS: Record<RoutableWindow, WindowConfig> = {
     felixgpt: {
         id: "felixgpt",
         title: "FelixGPT",
-        icon: "🐱",
+        icon: icon("felixgpt"),
         width: 400,
         height: 450,
         style: "winxp",
@@ -76,7 +84,7 @@ const WINDOW_CONFIGS: Record<RoutableWindow, WindowConfig> = {
     stats: {
         id: "stats",
         title: "Site Statistics",
-        icon: "📊",
+        icon: icon("stats"),
         width: 450,
         height: 500,
         style: "winxp",
@@ -85,7 +93,7 @@ const WINDOW_CONFIGS: Record<RoutableWindow, WindowConfig> = {
     terminal: {
         id: "terminal",
         title: "C:\\HACKTERM.EXE",
-        icon: "💻",
+        icon: icon("terminal"),
         width: 600,
         height: 400,
         style: "win95",
@@ -94,7 +102,7 @@ const WINDOW_CONFIGS: Record<RoutableWindow, WindowConfig> = {
     explorer: {
         id: "explorer",
         title: "File Explorer",
-        icon: "📁",
+        icon: icon("explorer"),
         width: 500,
         height: 400,
         style: "win95",
