@@ -187,6 +187,10 @@ body {
     border: 1px solid #808080;
 }
 
+.qa-badge-wrap {
+    position: relative;
+}
+
 .qa-badge {
     display: inline-flex;
     align-items: center;
@@ -197,6 +201,7 @@ body {
     border: 1px solid #808080;
     background: #c0c0c0;
     min-height: 24px;
+    cursor: pointer;
 }
 
 .qa-badge:hover {
@@ -216,4 +221,64 @@ body {
 .qa-badge.qa-unknown {
     background: #fffacd;
     border-color: #b8860b;
+}
+
+.qa-tooltip {
+    display: none;
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--win95-gray);
+    border: 2px outset var(--win95-light);
+    padding: 6px 8px;
+    font-size: 11px;
+    color: #000000;
+    white-space: nowrap;
+    z-index: 8000;
+    box-shadow: 2px 2px 0 #000000;
+    min-width: 140px;
+    text-align: left;
+    line-height: 1.5;
+    pointer-events: none;
+}
+
+.qa-badge-wrap:hover .qa-tooltip {
+    display: block;
+}
+
+.qa-tooltip-title {
+    font-weight: bold;
+    border-bottom: 1px solid var(--win95-dark);
+    padding-bottom: 3px;
+    margin-bottom: 3px;
+}
+
+.qa-tooltip-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.qa-tooltip-label {
+    color: #404040;
+}
+
+.qa-tooltip-value {
+    font-weight: bold;
+}
+
+.qa-tooltip-status {
+    margin-top: 3px;
+    padding-top: 3px;
+    border-top: 1px solid var(--win95-dark);
+    font-size: 9px;
+    color: #606060;
+}
+
+.qa-tooltip-click {
+    margin-top: 3px;
+    font-size: 9px;
+    color: #000080;
+    text-decoration: underline;
 }

@@ -14,6 +14,13 @@ const QA_FALLBACKS = ["🔬 QA: ¯\\_(ツ)_/¯", "🔬 Tests: ?", "🔬 QA: N/A"
 
 const YEAR_VARIATIONS = ["1997", "1997", "199?", "in the 90s"]
 
+interface LighthouseScores {
+    performance: number | null
+    accessibility: number | null
+    bestPractices: number | null
+    seo: number | null
+}
+
 interface ReportsResponse {
     ok: boolean
     data?: {
@@ -22,12 +29,24 @@ interface ReportsResponse {
             workflowUrl: string
             status: string
             score: number | null
+            scores: LighthouseScores
             updatedAt: string | null
         }
         playwright: {
             artifactUrl: string | null
             workflowUrl: string
             status: string
+            updatedAt: string | null
+        }
+        coverage: {
+            available: boolean
+            metrics: {
+                statements: number | null
+                branches: number | null
+                functions: number | null
+                lines: number | null
+            }
+            workflowUrl: string
             updatedAt: string | null
         }
     }
@@ -326,6 +345,147 @@ export class Toolbars {
         void initStrava()
     }
 
+    private scoreEmoji(score: number): string {
+        if (score >= 90) return "🟢"
+        if (score >= 50) return "🟠"
+        return "🔴"
+    }
+
+    private formatLighthouseLabel(lighthouse: {
+        status: string
+        scores: LighthouseScores
+    }): string {
+        const perf = lighthouse.scores.performance
+        if (perf !== null) return `LH ${perf}`
+        return "LH"
+    }
+
+    private buildLighthouseTooltip(lighthouse: {
+        status: string
+        scores: LighthouseScores
+        updatedAt: string | null
+    }): string {
+        const s = lighthouse.scores
+        const rows: string[] = []
+
+        if (s.performance !== null) {
+            rows.push(
+                `<div class="qa-tooltip-row"><span class="qa-tooltip-label">${this.scoreEmoji(s.performance)} Performance</span><span class="qa-tooltip-value">${s.performance}</span></div>`
+            )
+        }
+        if (s.accessibility !== null) {
+            rows.push(
+                `<div class="qa-tooltip-row"><span class="qa-tooltip-label">${this.scoreEmoji(s.accessibility)} Accessibility</span><span class="qa-tooltip-value">${s.accessibility}</span></div>`
+            )
+        }
+        if (s.bestPractices !== null) {
+            rows.push(
+                `<div class="qa-tooltip-row"><span class="qa-tooltip-label">${this.scoreEmoji(s.bestPractices)} Best Practices</span><span class="qa-tooltip-value">${s.bestPractices}</span></div>`
+            )
+        }
+        if (s.seo !== null) {
+            rows.push(
+                `<div class="qa-tooltip-row"><span class="qa-tooltip-label">${this.scoreEmoji(s.seo)} SEO</span><span class="qa-tooltip-value">${s.seo}</span></div>`
+            )
+        }
+
+        if (rows.length === 0) {
+            rows.push(
+                '<div class="qa-tooltip-row"><span class="qa-tooltip-label">No scores available</span></div>'
+            )
+        }
+
+        const statusText =
+            lighthouse.status === "success" ? "Passing" : "Failing"
+        const dateStr = lighthouse.updatedAt
+            ? new Date(lighthouse.updatedAt).toLocaleDateString()
+            : ""
+
+        return `
+            <div class="qa-tooltip">
+                <div class="qa-tooltip-title">Lighthouse Report</div>
+                ${rows.join("")}
+                <div class="qa-tooltip-status">${statusText}${dateStr ? ` · ${dateStr}` : ""}</div>
+                <div class="qa-tooltip-click">Click for full report</div>
+            </div>
+        `
+    }
+
+    private buildPlaywrightTooltip(playwright: {
+        status: string
+        updatedAt: string | null
+    }): string {
+        const passed = playwright.status === "success"
+        const statusText = passed ? "All tests passing" : "Tests failing"
+        const statusEmoji = passed ? "✅" : "❌"
+        const dateStr = playwright.updatedAt
+            ? new Date(playwright.updatedAt).toLocaleDateString()
+            : ""
+
+        return `
+            <div class="qa-tooltip">
+                <div class="qa-tooltip-title">E2E Tests (Playwright)</div>
+                <div class="qa-tooltip-row">
+                    <span class="qa-tooltip-label">Status</span>
+                    <span class="qa-tooltip-value">${statusEmoji} ${statusText}</span>
+                </div>
+                <div class="qa-tooltip-status">Chromium · Latest on main${dateStr ? ` · ${dateStr}` : ""}</div>
+                <div class="qa-tooltip-click">Click for full report</div>
+            </div>
+        `
+    }
+
+    private buildCoverageTooltip(
+        coverage: NonNullable<ReportsResponse["data"]>["coverage"]
+    ): string {
+        const m = coverage.metrics
+        const rows: string[] = []
+
+        if (m.statements !== null) {
+            rows.push(
+                `<div class="qa-tooltip-row"><span class="qa-tooltip-label">${this.scoreEmoji(m.statements)} Statements</span><span class="qa-tooltip-value">${m.statements}%</span></div>`
+            )
+        }
+        if (m.branches !== null) {
+            rows.push(
+                `<div class="qa-tooltip-row"><span class="qa-tooltip-label">${this.scoreEmoji(m.branches)} Branches</span><span class="qa-tooltip-value">${m.branches}%</span></div>`
+            )
+        }
+        if (m.functions !== null) {
+            rows.push(
+                `<div class="qa-tooltip-row"><span class="qa-tooltip-label">${this.scoreEmoji(m.functions)} Functions</span><span class="qa-tooltip-value">${m.functions}%</span></div>`
+            )
+        }
+        if (m.lines !== null) {
+            rows.push(
+                `<div class="qa-tooltip-row"><span class="qa-tooltip-label">${this.scoreEmoji(m.lines)} Lines</span><span class="qa-tooltip-value">${m.lines}%</span></div>`
+            )
+        }
+
+        if (rows.length === 0) {
+            rows.push(
+                '<div class="qa-tooltip-row"><span class="qa-tooltip-label">No metrics available</span></div>'
+            )
+        }
+
+        const dateStr = coverage.updatedAt
+            ? new Date(coverage.updatedAt).toLocaleDateString()
+            : ""
+
+        return `
+            <div class="qa-tooltip">
+                <div class="qa-tooltip-title">Test Coverage</div>
+                ${rows.join("")}
+                <div class="qa-tooltip-status">v8 provider${dateStr ? ` · ${dateStr}` : ""}</div>
+                <div class="qa-tooltip-click">Click for CI run details</div>
+            </div>
+        `
+    }
+
+    private wrapBadge(badgeHtml: string, tooltipHtml: string): string {
+        return `<span class="qa-badge-wrap">${badgeHtml}${tooltipHtml}</span>`
+    }
+
     private async fetchQAReports(): Promise<void> {
         if (!this.qaEl) return
 
@@ -345,7 +505,7 @@ export class Toolbars {
                 return
             }
 
-            const { lighthouse, playwright } = result.data
+            const { lighthouse, playwright, coverage } = result.data
 
             const lhStatus = lighthouse.status === "success" ? "✅" : "❌"
             const pwStatus = playwright.status === "success" ? "✅" : "❌"
@@ -353,14 +513,29 @@ export class Toolbars {
             const lhLink = lighthouse.url || lighthouse.workflowUrl
             const pwLink = playwright.artifactUrl || playwright.workflowUrl
 
-            this.qaEl.innerHTML = `
-                <a href="${lhLink}" target="_blank" class="qa-badge qa-${lighthouse.status}" title="Lighthouse Report">
-                    ${lhStatus} LH
-                </a>
-                <a href="${pwLink}" target="_blank" class="qa-badge qa-${playwright.status}" title="Playwright Report">
-                    ${pwStatus} E2E
-                </a>
-            `
+            const lhLabel = this.formatLighthouseLabel(lighthouse)
+
+            const lhBadge = `<a href="${lhLink}" target="_blank" class="qa-badge qa-${lighthouse.status}">${lhStatus} ${lhLabel}</a>`
+            const lhTooltip = this.buildLighthouseTooltip(lighthouse)
+
+            const pwBadge = `<a href="${pwLink}" target="_blank" class="qa-badge qa-${playwright.status}">${pwStatus} E2E</a>`
+            const pwTooltip = this.buildPlaywrightTooltip(playwright)
+
+            let badges =
+                this.wrapBadge(lhBadge, lhTooltip) +
+                this.wrapBadge(pwBadge, pwTooltip)
+
+            if (coverage?.available) {
+                const covLabel =
+                    coverage.metrics.lines !== null
+                        ? `📊 ${coverage.metrics.lines}%`
+                        : "📊 COV"
+                const covBadge = `<a href="${coverage.workflowUrl}" target="_blank" class="qa-badge qa-success">${covLabel}</a>`
+                const covTooltip = this.buildCoverageTooltip(coverage)
+                badges += this.wrapBadge(covBadge, covTooltip)
+            }
+
+            this.qaEl.innerHTML = badges
         } catch {
             this.qaEl.innerHTML = pick(QA_FALLBACKS)
         }
