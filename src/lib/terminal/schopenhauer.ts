@@ -1,9 +1,7 @@
 const QUOTES: string[] = [
-    "The world is my representation.",
-    "Placeholder quote 2.",
-    "Placeholder quote 3.",
-    "Placeholder quote 4.",
-    "Placeholder quote 5.",
+    "Life is a business that does not cover the costs.",
+    "Life swings like a pendulum backward and forward between pain and boredom.",
+    "The subject of willing is thus constantly stretched on the revolving wheel of Ixion, pours water into the sieve of the Danaids, is the ever-longing Tantalus.",
 ]
 
 export function randomSchopenhauer(): string {
