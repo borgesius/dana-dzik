@@ -4,12 +4,15 @@ import {
     getPrompt,
     getSLFrames,
 } from "../lib/terminal/commands"
+import { Editor } from "../lib/terminal/editor"
 import { createFileSystem, type FileSystem } from "../lib/terminal/filesystem"
 
 export interface TerminalCallbacks {
     openWindow: (windowId: string) => void
     closeTerminal: () => void
 }
+
+type TerminalMode = "normal" | "editor" | "program-input"
 
 export class Terminal {
     private container: HTMLElement
@@ -20,6 +23,9 @@ export class Terminal {
     private commandHistory: string[] = []
     private historyIndex = -1
     private tempInput = ""
+    private mode: TerminalMode = "normal"
+    private editor: Editor | null = null
+    private inputResolver: ((value: string) => void) | null = null
 
     constructor(container: HTMLElement, callbacks: TerminalCallbacks) {
         this.container = container
@@ -67,21 +73,68 @@ export class Terminal {
     private handleKeyDown(e: KeyboardEvent): void {
         if (e.key === "Enter") {
             e.preventDefault()
-            void this.processCommand()
+            this.handleEnter()
         } else if (e.key === "ArrowUp") {
             e.preventDefault()
-            this.navigateHistory(-1)
+            if (this.mode === "normal") {
+                this.navigateHistory(-1)
+            }
         } else if (e.key === "ArrowDown") {
             e.preventDefault()
-            this.navigateHistory(1)
+            if (this.mode === "normal") {
+                this.navigateHistory(1)
+            }
         } else if (e.key === "Tab") {
             e.preventDefault()
         } else if (e.key === "c" && e.ctrlKey) {
             e.preventDefault()
-            this.printLine(`^C`, "dim")
-            this.inputEl.value = ""
-            this.updatePrompt()
+            if (this.mode === "program-input" && this.inputResolver) {
+                this.printLine("^C", "dim")
+                this.inputResolver("")
+                this.inputResolver = null
+                this.setMode("normal")
+            } else if (this.mode === "editor") {
+                this.printLine("^C", "dim")
+                this.editor = null
+                this.setMode("normal")
+            } else {
+                this.printLine("^C", "dim")
+                this.inputEl.value = ""
+                this.updatePrompt()
+            }
         }
+    }
+
+    private handleEnter(): void {
+        const input = this.inputEl.value
+        this.inputEl.value = ""
+
+        switch (this.mode) {
+            case "normal":
+                this.echoInput(input)
+                void this.processCommand(input)
+                break
+            case "editor":
+                this.echoInput(input, "EDIT> ")
+                if (this.editor) {
+                    this.editor.handleInput(input)
+                }
+                this.scrollToBottom()
+                break
+            case "program-input":
+                this.echoInput(input, "? ")
+                if (this.inputResolver) {
+                    const resolver = this.inputResolver
+                    this.inputResolver = null
+                    resolver(input)
+                }
+                break
+        }
+    }
+
+    private echoInput(input: string, promptOverride?: string): void {
+        const prompt = promptOverride ?? getPrompt(this.fs)
+        this.printLine(`${prompt}${input}`)
     }
 
     private navigateHistory(direction: number): void {
@@ -112,18 +165,12 @@ export class Terminal {
         }, 0)
     }
 
-    private async processCommand(): Promise<void> {
-        const input = this.inputEl.value
-        const prompt = getPrompt(this.fs)
-
-        this.printLine(`${prompt}${input}`)
-
+    private async processCommand(input: string): Promise<void> {
         if (input.trim()) {
             this.commandHistory.push(input)
         }
         this.historyIndex = -1
         this.tempInput = ""
-        this.inputEl.value = ""
 
         const ctx: CommandContext = {
             fs: this.fs,
@@ -132,6 +179,8 @@ export class Terminal {
             clearOutput: () => this.clearOutput(),
             print: (text, className) => this.printLine(text, className),
             printHtml: (html) => this.printHtml(html),
+            startEditor: (filename) => this.startEditor(filename),
+            requestInput: () => this.requestInput(),
         }
 
         const result = await executeCommand(input, ctx)
@@ -148,8 +197,41 @@ export class Terminal {
             this.printLine(result.output, result.className)
         }
 
-        this.updatePrompt()
+        if (this.mode === "normal") {
+            this.updatePrompt()
+        }
         this.scrollToBottom()
+    }
+
+    private startEditor(filename: string): void {
+        this.setMode("editor")
+        this.editor = new Editor(this.fs, filename, {
+            print: (text: string, className?: string): void => {
+                this.printLine(text, className)
+            },
+            updatePrompt: (prompt: string): void => {
+                this.setPromptText(prompt)
+            },
+            onExit: (): void => {
+                this.editor = null
+                this.setMode("normal")
+            },
+        })
+    }
+
+    private requestInput(): Promise<string> {
+        this.setMode("program-input")
+        this.setPromptText("? ")
+        return new Promise<string>((resolve) => {
+            this.inputResolver = resolve
+        })
+    }
+
+    private setMode(mode: TerminalMode): void {
+        this.mode = mode
+        if (mode === "normal") {
+            this.updatePrompt()
+        }
     }
 
     private printWelcome(): void {
@@ -157,6 +239,9 @@ export class Terminal {
 HACKTERM v1.0 - UNAUTHORIZED ACCESS DETECTED
 =============================================
 Type 'help' for available commands.
+
+Tip: Check out the WELT folder on the Desktop.
+     cd WELT && cat README.txt
 `
         this.printLine(welcome, "terminal-header")
     }
@@ -181,11 +266,15 @@ Type 'help' for available commands.
         this.outputEl.innerHTML = ""
     }
 
-    private updatePrompt(): void {
+    private setPromptText(text: string): void {
         const promptSpan = this.container.querySelector(".terminal-prompt")
         if (promptSpan) {
-            promptSpan.textContent = getPrompt(this.fs)
+            promptSpan.textContent = text
         }
+    }
+
+    private updatePrompt(): void {
+        this.setPromptText(getPrompt(this.fs))
     }
 
     private scrollToBottom(): void {
