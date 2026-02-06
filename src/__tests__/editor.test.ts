@@ -35,8 +35,8 @@ describe("Editor", () => {
         })
 
         it("creates editor UI for existing file", () => {
-            fs.cwd = ["C:", "WINDOWS", "system32"]
-            const editor = new Editor(fs, "secrets.txt", callbacks)
+            fs.cwd = ["C:", "Program Files", "HACKTERM"]
+            const editor = new Editor(fs, "readme.txt", callbacks)
 
             expect(container.querySelector(".editor-container")).toBeTruthy()
             expect(callbacks.onExit).not.toHaveBeenCalled()
@@ -53,14 +53,14 @@ describe("Editor", () => {
         })
 
         it("loads existing file content into textarea", () => {
-            fs.cwd = ["C:", "WINDOWS", "system32"]
-            new Editor(fs, "secrets.txt", callbacks)
+            fs.cwd = ["C:", "Program Files", "HACKTERM"]
+            new Editor(fs, "readme.txt", callbacks)
 
             const textarea = container.querySelector(
                 ".editor-textarea"
             ) as HTMLTextAreaElement
             expect(textarea).toBeTruthy()
-            expect(textarea.value).toContain("secret file")
+            expect(textarea.value).toContain("HACKTERM")
         })
 
         it("starts with empty textarea for new file", () => {
@@ -77,8 +77,8 @@ describe("Editor", () => {
 
     describe("UI structure", () => {
         it("creates header, body with gutter and textarea, and status bar", () => {
-            fs.cwd = ["C:", "WINDOWS", "system32"]
-            new Editor(fs, "secrets.txt", callbacks)
+            fs.cwd = ["C:", "Program Files", "HACKTERM"]
+            new Editor(fs, "readme.txt", callbacks)
 
             expect(container.querySelector(".editor-header")).toBeTruthy()
             expect(container.querySelector(".editor-body")).toBeTruthy()
@@ -88,16 +88,16 @@ describe("Editor", () => {
         })
 
         it("shows filename in header", () => {
-            fs.cwd = ["C:", "WINDOWS", "system32"]
-            new Editor(fs, "secrets.txt", callbacks)
+            fs.cwd = ["C:", "Program Files", "HACKTERM"]
+            new Editor(fs, "readme.txt", callbacks)
 
             const header = container.querySelector(".editor-header")
-            expect(header?.textContent).toContain("secrets.txt")
+            expect(header?.textContent).toContain("readme.txt")
         })
 
         it("shows line numbers in gutter", () => {
-            fs.cwd = ["C:", "WINDOWS", "system32"]
-            new Editor(fs, "secrets.txt", callbacks)
+            fs.cwd = ["C:", "Program Files", "HACKTERM"]
+            new Editor(fs, "readme.txt", callbacks)
 
             const gutter = container.querySelector(".editor-gutter")
             expect(gutter?.textContent).toContain("1")
