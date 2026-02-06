@@ -13,7 +13,7 @@ test.describe("Desktop Navigation", () => {
     test("desktop icons are visible", async ({ page }) => {
         await page.goto("/")
 
-        await expect(page.locator(".desktop-icon")).toHaveCount(10)
+        await expect(page.locator(".desktop-icon")).toHaveCount(11)
         await expect(
             page.locator('.desktop-icon:has-text("Internet Explorer")')
         ).toBeVisible()
