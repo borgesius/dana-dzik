@@ -1,6 +1,10 @@
 import { getBuildInfo } from "../lib/buildInfo"
 import type { WindowManager } from "./WindowManager"
 
+function pick<T>(arr: T[]): T {
+    return arr[Math.floor(Math.random() * arr.length)]
+}
+
 const TRAY_ICONS = [
     "🔊",
     "🛡️",
@@ -17,6 +21,50 @@ const TRAY_ICONS = [
     "🎵",
     "📺",
     "⚙️",
+]
+
+const TRAY_TOOLTIPS = [
+    "Unknown program (known)",
+    "Something.exe (not responding) (responding)",
+    "Volume: muted (playing)",
+    "Network: connected to nothing",
+    "Antivirus: probably fine",
+    "Driver for unknown device",
+    "Background process #▒▒",
+    "System idle (busy)",
+    "Memory manager (leaking)",
+    "Disk manager (fragmenting)",
+    "Update unavailable (downloading)",
+    "Security alert (ignore)",
+    "Power: plugged in (on battery)",
+    "Bluetooth chip not found",
+    "Process 0x????: running",
+    "Unknown program",
+    "Another unknown program",
+    "Not malware",
+    "System32.exe",
+    "Helper.dll (helping)",
+]
+
+const VERSION_STRINGS = [
+    "v-0.7.3a",
+    "v∞.0.1",
+    "build: later",
+    "revision ????",
+    "v4.51.NaN",
+    "v1.0 (beta) (alpha) (final)",
+    "version: yes",
+]
+
+const GLITCH_TIMES = [
+    "??:?? AM",
+    "25:61 PM",
+    "3:7? AM",
+    "12:00 (yesterday)",
+    "-4:30 PM",
+    "88:88",
+    "NaN:NaN AM",
+    "∞:00 PM",
 ]
 
 export class Taskbar {
@@ -107,11 +155,46 @@ export class Taskbar {
         const left = document.createElement("div")
         left.className = "start-menu-left"
         const leftItems = [
-            { icon: "🌐", text: "Internet Explorer" },
-            { icon: "📧", text: "Outlook Express" },
-            { icon: "🎵", text: "Windows Media Player" },
-            { icon: "💬", text: "MSN Messenger" },
-            { icon: "🎮", text: "Pinball" },
+            {
+                icon: "🌐",
+                text: pick([
+                    "Internet Exploder",
+                    "Netscape Navigator 7.0 (IE Mode)",
+                    "The Web.exe",
+                ]),
+            },
+            {
+                icon: "📧",
+                text: pick([
+                    "Outlook Distress",
+                    "Microsoft Outcast Express",
+                    "Mail (broken)",
+                ]),
+            },
+            {
+                icon: "🎵",
+                text: pick([
+                    "Windows Media Destroyer",
+                    "RealPlayer (fake)",
+                    "Winamp 2.91 (v5.8)",
+                ]),
+            },
+            {
+                icon: "💬",
+                text: pick([
+                    "MSN Messenger (AIM)",
+                    "ICQ/AIM/MSN/Yahoo (none)",
+                    "Chat.dll",
+                ]),
+            },
+            {
+                icon: "🎮",
+                text: pick([
+                    "3D Pinball (2D)",
+                    "Space Cadet Pinball (broken)",
+                    "Minesweeper (pinball mode)",
+                ]),
+            },
         ]
         leftItems.forEach(({ icon, text }) => {
             const item = document.createElement("div")
@@ -124,11 +207,36 @@ export class Taskbar {
         const right = document.createElement("div")
         right.className = "start-menu-right"
         const rightItems = [
-            "My Documents",
-            "My Pictures",
-            "My Music",
-            "My Computer",
-            "Control Panel",
+            pick([
+                "My Documents",
+                "Your Documents",
+                "Someone's Documents",
+                "C:\\DOCS~1",
+            ]),
+            pick([
+                "My Pictures",
+                "My Pictures (empty)",
+                "Pictures (missing)",
+                "*.jpg",
+            ]),
+            pick([
+                "My Music",
+                "My Music (silent)",
+                "Audio Files (corrupt)",
+                "Sounds.wav",
+            ]),
+            pick([
+                "My Computer",
+                "This Computer",
+                "A Computer",
+                "Computer (probably)",
+            ]),
+            pick([
+                "Control Panel",
+                "Control Pannel",
+                "Settings.cpl",
+                "System32 (friendly mode)",
+            ]),
         ]
         rightItems.forEach((text) => {
             const item = document.createElement("div")
@@ -151,7 +259,8 @@ export class Taskbar {
             buildInfo.gitCommit !== "local"
                 ? `<a href="https://github.com/borgesius/dana-dzik/commit/${buildInfo.gitCommit}" target="_blank">${commitShort}</a>`
                 : commitShort
-        versionInfo.innerHTML = `v${buildInfo.version} · ${commitLink} · <a href="https://github.com/borgesius/dana-dzik/blob/main/CHANGELOG.md" target="_blank">changelog</a>`
+        const versionStr = pick(VERSION_STRINGS)
+        versionInfo.innerHTML = `${versionStr} · ${commitLink} · <a href="https://github.com/borgesius/dana-dzik/blob/main/CHANGELOG.md" target="_blank">changelog</a>`
         footer.appendChild(versionInfo)
 
         const buttons = document.createElement("div")
@@ -216,7 +325,7 @@ export class Taskbar {
             const span = document.createElement("span")
             span.className = "tray-icon"
             span.textContent = icon
-            span.title = "Unknown program"
+            span.title = pick(TRAY_TOOLTIPS)
             container.appendChild(span)
         })
 
@@ -225,9 +334,9 @@ export class Taskbar {
 
     private updateClock(): void {
         const now = new Date()
-        const glitchTime = Math.random() > 0.9
+        const glitchTime = Math.random() > 0.85
         if (glitchTime) {
-            this.clockElement.textContent = "??:?? AM"
+            this.clockElement.textContent = pick(GLITCH_TIMES)
         } else {
             this.clockElement.textContent = now.toLocaleTimeString("en-US", {
                 hour: "numeric",
