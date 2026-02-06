@@ -1,5 +1,7 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node"
-import { Redis } from "@upstash/redis"
+import type { Redis } from "@upstash/redis"
+
+import { cachedRead, isConfigured, throttledWrite } from "./lib/redisGateway"
 
 const BOT_PATTERNS = [
     "bot",
@@ -34,13 +36,6 @@ function isBot(userAgent: string | undefined): boolean {
     if (!userAgent) return true
     const ua = userAgent.toLowerCase()
     return BOT_PATTERNS.some((pattern) => ua.includes(pattern))
-}
-
-function getRedis(): Redis | null {
-    const url = process.env.UPSTASH_REDIS_REST_URL
-    const token = process.env.UPSTASH_REDIS_REST_TOKEN
-    if (!url || !token) return null
-    return new Redis({ url, token })
 }
 
 interface AnalyticsEvent {
@@ -79,15 +74,17 @@ export default async function handler(
 ): Promise<void> {
     res.setHeader("Access-Control-Allow-Origin", "*")
     res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
-    res.setHeader("Access-Control-Allow-Headers", "Content-Type")
+    res.setHeader(
+        "Access-Control-Allow-Headers",
+        "Content-Type, X-Analytics-Token, X-Visitor-Id"
+    )
 
     if (req.method === "OPTIONS") {
         res.status(200).end()
         return
     }
 
-    const redis = getRedis()
-    if (!redis) {
+    if (!isConfigured()) {
         res.status(200).json({ ok: false, error: "Analytics not configured" })
         return
     }
@@ -106,21 +103,44 @@ export default async function handler(
             }
 
             const event = req.body as AnalyticsEvent
-            await recordEvent(redis, event)
-            res.status(200).json({ ok: true })
+            const visitorId =
+                (req.headers["x-visitor-id"] as string) || "unknown"
+
+            const result = await throttledWrite(
+                visitorId,
+                event.type,
+                (client) => recordEvent(client, event)
+            )
+
+            res.status(200).json({
+                ok: true,
+                recorded: result.recorded,
+                reason: result.reason,
+            })
             return
         }
 
         if (req.method === "GET") {
-            const cached = await redis.get<Stats>(STATS_CACHE_KEY)
-            if (cached) {
-                res.status(200).json({ ok: true, data: cached, cached: true })
+            const result = await cachedRead<Stats>(
+                STATS_CACHE_KEY,
+                STATS_CACHE_TTL,
+                getStats
+            )
+
+            if (!result.data) {
+                res.status(200).json({
+                    ok: true,
+                    data: null,
+                    error: "Stats temporarily unavailable",
+                })
                 return
             }
 
-            const stats = await getStats(redis)
-            await redis.set(STATS_CACHE_KEY, stats, { ex: STATS_CACHE_TTL })
-            res.status(200).json({ ok: true, data: stats, cached: false })
+            res.status(200).json({
+                ok: true,
+                data: result.data,
+                cached: result.fromCache,
+            })
             return
         }
 
@@ -134,43 +154,46 @@ export default async function handler(
     }
 }
 
-async function recordEvent(redis: Redis, event: AnalyticsEvent): Promise<void> {
+async function recordEvent(
+    client: Redis,
+    event: AnalyticsEvent
+): Promise<void> {
     const today = new Date().toISOString().split("T")[0]
 
     switch (event.type) {
         case "pageview":
-            await redis.incr("stats:views:total")
-            await redis.incr(`stats:views:daily:${today}`)
+            await client.incr("stats:views:total")
+            await client.incr(`stats:views:daily:${today}`)
             break
 
         case "window":
             if (event.windowId) {
-                await redis.hincrby("stats:windows", event.windowId, 1)
+                await client.hincrby("stats:windows", event.windowId, 1)
             }
             break
 
         case "funnel":
             if (event.funnelStep) {
-                await redis.hincrby("stats:funnel", event.funnelStep, 1)
+                await client.hincrby("stats:funnel", event.funnelStep, 1)
             }
             break
 
         case "ab_assign":
             if (event.variant) {
-                await redis.hincrby("stats:ab:assigned", event.variant, 1)
+                await client.hincrby("stats:ab:assigned", event.variant, 1)
             }
             break
 
         case "ab_convert":
             if (event.variant) {
-                await redis.hincrby("stats:ab:converted", event.variant, 1)
+                await client.hincrby("stats:ab:converted", event.variant, 1)
             }
             break
 
         case "perf":
             if (event.perf) {
-                await redis.hincrby("stats:perf:counts", event.perf.type, 1)
-                await redis.hincrby(
+                await client.hincrby("stats:perf:counts", event.perf.type, 1)
+                await client.hincrby(
                     "stats:perf:totals",
                     event.perf.type,
                     event.perf.duration
@@ -180,7 +203,7 @@ async function recordEvent(redis: Redis, event: AnalyticsEvent): Promise<void> {
     }
 }
 
-async function getStats(redis: Redis): Promise<Stats> {
+async function getStats(client: Redis): Promise<Stats> {
     const [
         totalViews,
         windowViews,
@@ -190,13 +213,13 @@ async function getStats(redis: Redis): Promise<Stats> {
         perfCounts,
         perfTotals,
     ] = await Promise.all([
-        redis.get<number>("stats:views:total"),
-        redis.hgetall<Record<string, number>>("stats:windows"),
-        redis.hgetall<Record<string, number>>("stats:funnel"),
-        redis.hgetall<Record<string, number>>("stats:ab:assigned"),
-        redis.hgetall<Record<string, number>>("stats:ab:converted"),
-        redis.hgetall<Record<string, number>>("stats:perf:counts"),
-        redis.hgetall<Record<string, number>>("stats:perf:totals"),
+        client.get<number>("stats:views:total"),
+        client.hgetall<Record<string, number>>("stats:windows"),
+        client.hgetall<Record<string, number>>("stats:funnel"),
+        client.hgetall<Record<string, number>>("stats:ab:assigned"),
+        client.hgetall<Record<string, number>>("stats:ab:converted"),
+        client.hgetall<Record<string, number>>("stats:perf:counts"),
+        client.hgetall<Record<string, number>>("stats:perf:totals"),
     ])
 
     const variants: Record<string, { assigned: number; converted: number }> = {}
@@ -251,7 +274,8 @@ function computePerfStats(
         totalDuration += total
     }
 
-    const avgLoadTime = totalCount > 0 ? Math.round(totalDuration / totalCount) : 0
+    const avgLoadTime =
+        totalCount > 0 ? Math.round(totalDuration / totalCount) : 0
 
     return {
         avgLoadTime,
