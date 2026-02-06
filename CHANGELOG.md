@@ -1,3 +1,10 @@
+# [1.16.0](https://github.com/borgesius/dana-dzik/compare/v1.15.0...v1.16.0) (2026-02-06)
+
+
+### Features
+
+* **analytics:** add analytics token ([3bc04eb](https://github.com/borgesius/dana-dzik/commit/3bc04ebae05966c52b25b702f0a55a5f7da33519))
+
 # [1.15.0](https://github.com/borgesius/dana-dzik/compare/v1.14.2...v1.15.0) (2026-02-05)
 
 
