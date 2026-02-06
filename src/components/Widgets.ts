@@ -1,13 +1,14 @@
-import { LASTFM_POLL_INTERVAL } from "../config"
+interface TopTrack {
+    name: string
+    artist: string
+    image: string | null
+    playcount: number
+}
 
 interface LastFmApiResponse {
     ok: boolean
     data: {
-        name: string
-        artist: string
-        album: string
-        image: string | null
-        isPlaying: boolean
+        tracks: TopTrack[]
     } | null
     error?: string
 }
@@ -252,72 +253,67 @@ export class Widgets {
 
     private createNowPlayingWidget(): void {
         const widget = this.createWidgetFrame(
-            "🎧 Last.fm",
+            "🎧 Recently Played (3mo)",
             "now-playing-widget"
         )
 
         const content = document.createElement("div")
-        content.className = "widget-content now-playing"
-        content.innerHTML = `
-            <div class="np-album-art">
-                <img src="/assets/icons/cd.png" alt="Album" onerror="this.src='/assets/cat-placeholder.svg'" />
-            </div>
-            <div class="np-info">
-                <div class="np-status">Loading...</div>
-                <div class="np-track">---</div>
-                <div class="np-artist">---</div>
-            </div>
-        `
+        content.className = "widget-content recently-played"
+        content.innerHTML = `<div class="rp-loading">Loading...</div>`
 
         widget.appendChild(content)
         this.container.appendChild(widget)
 
-        void this.fetchNowPlaying(content)
-        setInterval(
-            () => void this.fetchNowPlaying(content),
-            LASTFM_POLL_INTERVAL
-        )
+        void this.fetchTopTracks(content)
     }
 
-    private async fetchNowPlaying(content: HTMLElement): Promise<void> {
-        const statusEl = content.querySelector(".np-status") as HTMLElement
-        const trackEl = content.querySelector(".np-track") as HTMLElement
-        const artistEl = content.querySelector(".np-artist") as HTMLElement
-        const albumArt = content.querySelector(
-            ".np-album-art img"
-        ) as HTMLImageElement
-
+    private async fetchTopTracks(content: HTMLElement): Promise<void> {
         try {
             const response = await fetch("/api/lastfm")
 
             const contentType = response.headers.get("content-type")
             if (!contentType?.includes("application/json")) {
-                statusEl.textContent = "API not available"
+                content.innerHTML = `<div class="rp-loading">API not available</div>`
                 return
             }
 
             const result = (await response.json()) as LastFmApiResponse
 
-            if (!result.ok || !result.data) {
-                statusEl.textContent = "No data"
+            if (!result.ok || !result.data?.tracks.length) {
+                content.innerHTML = `<div class="rp-loading">No data</div>`
                 return
             }
 
-            const track = result.data
-            statusEl.textContent = track.isPlaying
-                ? "▶ Now Playing"
-                : "⏸ Last Played"
-            statusEl.className = `np-status ${track.isPlaying ? "playing" : ""}`
-            trackEl.textContent = track.name
-            artistEl.textContent = track.artist
+            const [top, ...rest] = result.data.tracks
 
-            if (track.image) {
-                albumArt.src = track.image
-            }
+            const restHtml = rest
+                .map(
+                    (t, i) => `
+                <div class="rp-item">
+                    <span class="rp-rank">${i + 2}</span>
+                    <div class="rp-item-info">
+                        <span class="rp-item-track">${t.name}</span>
+                        <span class="rp-item-artist">${t.artist}</span>
+                    </div>
+                </div>`
+                )
+                .join("")
+
+            content.innerHTML = `
+                <div class="rp-top">
+                    <img class="rp-cover" src="${top.image || "/assets/icons/cd.png"}" alt="Album" onerror="this.src='/assets/icons/cd.png'" />
+                    <div class="rp-top-info">
+                        <span class="rp-top-rank">1</span>
+                        <div class="rp-top-text">
+                            <div class="rp-top-track">${top.name}</div>
+                            <div class="rp-top-artist">${top.artist}</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="rp-list">${restHtml}</div>
+            `
         } catch {
-            statusEl.textContent = "Offline"
-            trackEl.textContent = "---"
-            artistEl.textContent = "---"
+            content.innerHTML = `<div class="rp-loading">Offline</div>`
         }
     }
 

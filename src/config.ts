@@ -39,9 +39,6 @@ export const SLIDESHOW_CONFIG = {
     fadeDuration: 300,
 } as const
 
-/** Last.fm polling interval (ms) */
-export const LASTFM_POLL_INTERVAL = 30000
-
 /** Analytics settings */
 export const ANALYTICS_CONFIG = {
     /** Maximum number of performance events to send per page load */
