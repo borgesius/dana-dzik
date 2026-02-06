@@ -60,6 +60,7 @@ export const ROUTABLE_WINDOWS = [
     "guestbook",
     "felixgpt",
     "stats",
+    "pinball",
 ] as const
 
 export type RoutableWindow = (typeof ROUTABLE_WINDOWS)[number]
@@ -74,4 +75,5 @@ export const ROUTE_MAP: Record<string, RoutableWindow> = {
     "/guestbook": "guestbook",
     "/felixgpt": "felixgpt",
     "/stats": "stats",
+    "/pinball": "pinball",
 }

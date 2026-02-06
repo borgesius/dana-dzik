@@ -3,6 +3,7 @@ import { initFelixGPT } from "../lib/felixgpt"
 import { initGuestbook } from "../lib/guestbook"
 import { initNowPlaying } from "../lib/nowPlaying"
 import { initPhotoSlideshows } from "../lib/photoSlideshow"
+import { initPinball, type PinballGame } from "../lib/pinball"
 import { initSiteStats } from "../lib/siteStats"
 import { getWindowContent } from "../lib/windowContent"
 
@@ -32,6 +33,7 @@ export class Window {
     private isResizing = false
     private dragOffset = { x: 0, y: 0 }
     private minimized = false
+    private pinballGame: PinballGame | null = null
 
     constructor(config: WindowConfig, callbacks: WindowCallbacks) {
         this.config = config
@@ -87,6 +89,13 @@ export class Window {
             initFelixGPT()
         } else if (this.config.contentType === "stats") {
             initSiteStats()
+        } else if (this.config.contentType === "pinball") {
+            const container = this.element.querySelector(
+                "#pinball-container"
+            ) as HTMLElement
+            if (container) {
+                this.pinballGame = initPinball(container)
+            }
         }
     }
 
@@ -204,6 +213,13 @@ export class Window {
 
     public setActive(active: boolean): void {
         this.element.classList.toggle("inactive", !active)
+        if (this.pinballGame) {
+            if (active) {
+                this.pinballGame.resume()
+            } else {
+                this.pinballGame.pause()
+            }
+        }
     }
 
     public minimize(): void {
@@ -226,5 +242,12 @@ export class Window {
 
     public getIcon(): string {
         return this.config.icon
+    }
+
+    public destroy(): void {
+        if (this.pinballGame) {
+            this.pinballGame.destroy()
+            this.pinballGame = null
+        }
     }
 }

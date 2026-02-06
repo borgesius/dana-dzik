@@ -16,6 +16,8 @@ export function getWindowContent(contentType: string): string {
             return getFelixGPTContent()
         case "stats":
             return getSiteStatsContent()
+        case "pinball":
+            return getPinballContent()
         default:
             return "<p>Content not found</p>"
     }
@@ -283,6 +285,14 @@ function getSiteStatsContent(): string {
                 <h3>⚡ Performance</h3>
                 <div id="perf-stats"></div>
             </div>
+        </div>
+    `
+}
+
+function getPinballContent(): string {
+    return `
+        <div class="pinball-content" id="pinball-container">
+            <canvas id="pinball-canvas"></canvas>
         </div>
     `
 }

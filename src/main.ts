@@ -1,6 +1,7 @@
 import "./styles/content.css"
 import "./styles/desktop.css"
 import "./styles/effects.css"
+import "./styles/pinball.css"
 import "./styles/taskbar.css"
 import "./styles/widgets.css"
 import "./styles/windows.css"

@@ -60,6 +60,13 @@ const DESKTOP_ICONS: IconConfig[] = [
         action: "window",
         windowId: "stats",
     },
+    {
+        id: "pinball",
+        label: "Pinball.exe",
+        icon: "🎮",
+        action: "window",
+        windowId: "pinball",
+    },
 ]
 
 export class Desktop {
