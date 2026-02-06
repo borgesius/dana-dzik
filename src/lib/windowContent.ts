@@ -18,6 +18,8 @@ export function getWindowContent(contentType: string): string {
             return getSiteStatsContent()
         case "terminal":
             return getTerminalContent()
+        case "explorer":
+            return getExplorerContent()
         default:
             return "<p>Content not found</p>"
     }
@@ -25,6 +27,10 @@ export function getWindowContent(contentType: string): string {
 
 function getTerminalContent(): string {
     return `<div id="terminal-content" class="terminal-container"></div>`
+}
+
+function getExplorerContent(): string {
+    return `<div id="explorer-content"></div>`
 }
 
 function getWelcomeContent(): string {

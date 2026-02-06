@@ -5,6 +5,7 @@ import { initNowPlaying } from "../lib/nowPlaying"
 import { initPhotoSlideshows } from "../lib/photoSlideshow"
 import { initSiteStats } from "../lib/siteStats"
 import { getWindowContent } from "../lib/windowContent"
+import { FileExplorer } from "./FileExplorer"
 import { Terminal } from "./Terminal"
 
 export interface WindowConfig {
@@ -90,6 +91,17 @@ export class Window {
             initSiteStats()
         } else if (this.config.contentType === "terminal") {
             this.initTerminal()
+        } else if (this.config.contentType === "explorer") {
+            this.initExplorer()
+        }
+    }
+
+    private initExplorer(): void {
+        const container = this.element.querySelector(
+            "#explorer-content"
+        ) as HTMLElement
+        if (container) {
+            new FileExplorer(container, "C:\\Users\\Dana\\Desktop\\WELT")
         }
     }
 

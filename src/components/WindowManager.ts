@@ -91,6 +91,15 @@ const WINDOW_CONFIGS: Record<RoutableWindow, WindowConfig> = {
         style: "win95",
         contentType: "terminal",
     },
+    explorer: {
+        id: "explorer",
+        title: "File Explorer",
+        icon: "📁",
+        width: 500,
+        height: 400,
+        style: "win95",
+        contentType: "explorer",
+    },
 }
 
 /**
