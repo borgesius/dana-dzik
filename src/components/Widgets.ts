@@ -260,6 +260,7 @@ export class Widgets {
         return `
             <div class="strava-stat">
                 <span class="stat-label">${label}</span>
+                <span class="stat-name">${stat.name}</span>
                 <span class="stat-value">${stat.value}</span>
                 <span class="stat-detail">${stat.detail || ""}</span>
             </div>
