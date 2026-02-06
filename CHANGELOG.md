@@ -1,3 +1,12 @@
+# [1.20.0](https://github.com/borgesius/dana-dzik/compare/v1.19.0...v1.20.0) (2026-02-06)
+
+
+### Features
+
+* dotcom scam game ([#8](https://github.com/borgesius/dana-dzik/issues/8)) ([edea7a8](https://github.com/borgesius/dana-dzik/commit/edea7a84ec719a18305f880e7d1c4c4f99712bca))
+* os upgrade ([#10](https://github.com/borgesius/dana-dzik/issues/10)) ([31c7412](https://github.com/borgesius/dana-dzik/commit/31c74125c0f5d04ac066c14e2c4c6c6955921eb5))
+* terminal and remove llp slop copy ([#9](https://github.com/borgesius/dana-dzik/issues/9)) ([b1568c4](https://github.com/borgesius/dana-dzik/commit/b1568c498833987ad5ea36155edb21f242b215bb))
+
 # [1.19.0](https://github.com/borgesius/dana-dzik/compare/v1.18.0...v1.19.0) (2026-02-06)
 
 

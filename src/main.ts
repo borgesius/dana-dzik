@@ -1,3 +1,4 @@
+import "./styles/business-game.css"
 import "./styles/content.css"
 import "./styles/desktop.css"
 import "./styles/effects.css"

@@ -1,15 +1,17 @@
 export interface PopupButton {
     text: string
     className?: string
+    action?: "bonus" | "close"
 }
 
 export interface PopupContent {
-    type: "error" | "warning" | "winner" | "ad"
+    type: "error" | "warning" | "winner" | "ad" | "bonus"
     title: string
     headline: string
     body: string
     image?: string
     buttons: PopupButton[]
+    bonusAmount?: number
 }
 
 function pick<T>(arr: T[]): T {
@@ -144,4 +146,40 @@ export const POPUP_CONTENTS: PopupContent[] = [
     pick(WINNER_POPUPS),
     pick(ERROR_POPUPS),
     pick(AD_POPUPS),
+]
+
+export const BONUS_POPUP_CONTENTS: PopupContent[] = [
+    {
+        type: "bonus",
+        title: "Special Offer!",
+        headline: "🎁 CLAIM YOUR BUSINESS BONUS! 🎁",
+        body: "You've been selected for a special promotional offer!",
+        bonusAmount: 0.5,
+        buttons: [
+            { text: "CLAIM NOW!", className: "green", action: "bonus" },
+            { text: "No Thanks", className: "", action: "close" },
+        ],
+    },
+    {
+        type: "bonus",
+        title: "Survey Complete!",
+        headline: "📋 THANK YOU FOR YOUR FEEDBACK! 📋",
+        body: "As a token of appreciation, here's a cash reward!",
+        bonusAmount: 1.0,
+        buttons: [
+            { text: "Collect Reward", className: "green", action: "bonus" },
+            { text: "Decline", className: "", action: "close" },
+        ],
+    },
+    {
+        type: "bonus",
+        title: "Lucky Winner!",
+        headline: "🍀 YOU'VE WON A PRIZE! 🍀",
+        body: "Click below to add funds to your account!",
+        bonusAmount: 2.0,
+        buttons: [
+            { text: "Add to Account", className: "green", action: "bonus" },
+            { text: "Maybe Later", className: "", action: "close" },
+        ],
+    },
 ]
