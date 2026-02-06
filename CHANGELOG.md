@@ -1,3 +1,10 @@
+# [1.31.0](https://github.com/borgesius/dana-dzik/compare/v1.30.0...v1.31.0) (2026-02-06)
+
+
+### Features
+
+* expose das os ([#26](https://github.com/borgesius/dana-dzik/issues/26)) ([d38b81d](https://github.com/borgesius/dana-dzik/commit/d38b81d22353a5363c95ff3b3d642037b340a916))
+
 # [1.30.0](https://github.com/borgesius/dana-dzik/compare/v1.29.1...v1.30.0) (2026-02-06)
 
 
