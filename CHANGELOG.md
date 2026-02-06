@@ -1,3 +1,10 @@
+## [1.24.1](https://github.com/borgesius/dana-dzik/compare/v1.24.0...v1.24.1) (2026-02-06)
+
+
+### Bug Fixes
+
+* **api:** add tsconfig for serverless functions to resolve ESM import failures ([#16](https://github.com/borgesius/dana-dzik/issues/16)) ([be5836e](https://github.com/borgesius/dana-dzik/commit/be5836e15ad14e9212ccc6afa3cc91720f52e232))
+
 # [1.24.0](https://github.com/borgesius/dana-dzik/compare/v1.23.0...v1.24.0) (2026-02-06)
 
 
