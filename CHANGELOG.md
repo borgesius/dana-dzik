@@ -1,3 +1,11 @@
+# [1.19.0](https://github.com/borgesius/dana-dzik/compare/v1.18.0...v1.19.0) (2026-02-06)
+
+
+### Features
+
+* **audio player:** randomize song at startup ([60165a5](https://github.com/borgesius/dana-dzik/commit/60165a58f0bacff340dba171ed034acfa3497932))
+* sfx ([680e2f8](https://github.com/borgesius/dana-dzik/commit/680e2f8524a8c795616328def36297968847916d))
+
 # [1.18.0](https://github.com/borgesius/dana-dzik/compare/v1.17.0...v1.18.0) (2026-02-06)
 
 
