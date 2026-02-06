@@ -109,11 +109,9 @@ function getAboutContent(): string {
                     <h3>Cat:</h3>
                     <p>🐱 <strong>Felix Ramon Vanderbilt</strong></p>
 
-                    <h3>Currently Listening:</h3>
+                    <h3>Recently Played (3mo):</h3>
                     <div class="now-playing">
                         🎵 <span id="now-playing-text">Loading...</span>
-                        <br />
-                        <a href="https://open.spotify.com" target="_blank">Open Spotify →</a>
                     </div>
 
                     <p class="email-link">

@@ -1,24 +1,25 @@
-import { LASTFM_POLL_INTERVAL } from "../config"
+interface TopTrack {
+    name: string
+    artist: string
+    image: string | null
+    playcount: number
+}
 
 interface LastFmApiResponse {
     ok: boolean
     data: {
-        name: string
-        artist: string
-        isPlaying: boolean
+        tracks: TopTrack[]
     } | null
 }
 
-/** Initializes the "Now Playing" display with Last.fm data. */
 export function initNowPlaying(): void {
     const container = document.getElementById("now-playing-text")
     if (!container) return
 
-    void fetchNowPlaying(container)
-    setInterval(() => void fetchNowPlaying(container), LASTFM_POLL_INTERVAL)
+    void fetchTopTracks(container)
 }
 
-async function fetchNowPlaying(container: HTMLElement): Promise<void> {
+async function fetchTopTracks(container: HTMLElement): Promise<void> {
     try {
         const response = await fetch("/api/lastfm")
 
@@ -30,14 +31,17 @@ async function fetchNowPlaying(container: HTMLElement): Promise<void> {
 
         const result = (await response.json()) as LastFmApiResponse
 
-        if (!result.ok || !result.data) {
+        if (!result.ok || !result.data?.tracks.length) {
             container.textContent = "No recent tracks"
             return
         }
 
-        const track = result.data
-        const prefix = track.isPlaying ? "🎵 Now playing: " : "🎵 Last played: "
-        container.textContent = `${prefix}${track.name} - ${track.artist}`
+        const lines = result.data.tracks
+            .map((t, i) => `${i + 1}. ${t.name} – ${t.artist}`)
+            .join("\n")
+
+        container.textContent = lines
+        container.style.whiteSpace = "pre-line"
     } catch {
         container.textContent = "Could not load Last.fm data"
     }

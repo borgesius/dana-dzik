@@ -1,11 +1,6 @@
 import { describe, expect, it } from "vitest"
 
-import {
-    LASTFM_POLL_INTERVAL,
-    POPUP_CONFIG,
-    SLIDESHOW_CONFIG,
-    SOCIAL,
-} from "../config"
+import { POPUP_CONFIG, SLIDESHOW_CONFIG, SOCIAL } from "../config"
 
 describe("Config", () => {
     describe("SOCIAL", () => {
@@ -48,16 +43,6 @@ describe("Config", () => {
 
         it("has positive fade duration", () => {
             expect(SLIDESHOW_CONFIG.fadeDuration).toBeGreaterThan(0)
-        })
-    })
-
-    describe("LASTFM_POLL_INTERVAL", () => {
-        it("is a positive number", () => {
-            expect(LASTFM_POLL_INTERVAL).toBeGreaterThan(0)
-        })
-
-        it("is at least 10 seconds to avoid rate limiting", () => {
-            expect(LASTFM_POLL_INTERVAL).toBeGreaterThanOrEqual(10000)
         })
     })
 })

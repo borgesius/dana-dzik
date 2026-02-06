@@ -397,71 +397,111 @@
     background: linear-gradient(180deg, #4a8a4a 0%, #3a7a3a 100%);
 }
 
-/* === Now Playing Widget === */
-.now-playing {
-    display: flex;
-    gap: 8px;
-    align-items: center;
+/* === Recently Played Widget === */
+.recently-played {
+    padding: 6px 8px;
 }
 
-.np-album-art {
-    width: 40px;
-    height: 40px;
-    background: #1e3a5f;
+.rp-loading {
+    text-align: center;
+    color: #88ccff;
+    font-size: 10px;
+    padding: 8px 0;
+}
+
+.rp-top {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-bottom: 6px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid rgb(255 255 255 / 15%);
+}
+
+.rp-cover {
+    width: 100%;
+    aspect-ratio: 1;
+    object-fit: cover;
     border: 1px inset #0a246a;
     border-radius: 2px;
-    overflow: hidden;
+    background: #1e3a5f;
+}
+
+.rp-top-info {
+    display: flex;
+    gap: 6px;
+    align-items: flex-start;
+}
+
+.rp-top-rank {
+    font-weight: bold;
+    font-size: 11px;
+    color: #ffcc44;
     flex-shrink: 0;
+    line-height: 1.3;
 }
 
-.np-album-art img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-.np-info {
-    flex: 1;
+.rp-top-text {
     min-width: 0;
     overflow: hidden;
 }
 
-.np-status {
-    font-size: 9px;
-    color: #88ccff;
-    margin-bottom: 2px;
-}
-
-.np-status.playing {
-    color: #44ff44;
-    animation: pulse-text 2s ease-in-out infinite;
-}
-
-@keyframes pulse-text {
-    0%,
-    100% {
-        opacity: 1;
-    }
-
-    50% {
-        opacity: 0.6;
-    }
-}
-
-.np-track {
+.rp-top-track {
     font-weight: bold;
+    font-size: 11px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    margin-bottom: 1px;
 }
 
-.np-artist {
+.rp-top-artist {
     font-size: 10px;
     color: #aaddff;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+}
+
+.rp-list {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.rp-item {
+    display: flex;
+    gap: 5px;
+    align-items: baseline;
+}
+
+.rp-rank {
+    font-size: 9px;
+    color: #88ccff;
+    flex-shrink: 0;
+    width: 8px;
+    text-align: right;
+}
+
+.rp-item-info {
+    min-width: 0;
+    overflow: hidden;
+}
+
+.rp-item-track {
+    font-size: 10px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: block;
+}
+
+.rp-item-artist {
+    font-size: 9px;
+    color: #aaddff;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: block;
 }
 
 /* === Strava Widget === */
