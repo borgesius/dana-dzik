@@ -7,7 +7,7 @@ import {
     type WeltValue,
 } from "./types"
 
-const MAX_ITERATIONS = 10000
+const MAX_ITERATIONS = 1818
 const WORD_SIZE = 256
 
 interface InterpreterState {

@@ -34,6 +34,7 @@ import { createAudioManager } from "./lib/audio"
 import { GlitchManager } from "./lib/glitchEffects"
 import { isMobile } from "./lib/isMobile"
 import { Router } from "./lib/router"
+import { SystemCrashHandler } from "./lib/systemCrash"
 import { getThemeManager } from "./lib/themeManager"
 
 setupErrorHandlers()
@@ -74,6 +75,7 @@ function initMobile(app: HTMLElement): void {
 
     createAudioManager()
     new GlitchManager()
+    new SystemCrashHandler()
 
     document.addEventListener("click", (e) => {
         const target = e.target as HTMLElement
@@ -109,6 +111,7 @@ function initDesktop(app: HTMLElement): void {
     new CursorTrail()
     createAudioManager()
     new GlitchManager()
+    new SystemCrashHandler()
     new Widgets(app)
 
     windowManager.onNewWindowOpen(() => {
