@@ -1,0 +1,227 @@
+[data-theme="mac-classic"] {
+    /* Desktop */
+    --theme-desktop-bg: #667799;
+    --theme-desktop-bg-pattern: url("data:image/svg+xml,%3Csvg width='4' height='4' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='4' height='4' fill='%23667799'/%3E%3Crect x='0' y='0' width='2' height='2' fill='%23556688'/%3E%3Crect x='2' y='2' width='2' height='2' fill='%23556688'/%3E%3C/svg%3E");
+    --theme-desktop-icon-hover: rgb(0 0 0 / 15%);
+    --theme-desktop-icon-selected: rgb(0 0 0 / 30%);
+    --theme-desktop-icon-text: #ffffff;
+
+    /* Typography - Chicago/Geneva style */
+    --theme-font-system: geneva, "Lucida Grande", helvetica, sans-serif;
+    --theme-font-mono: monaco, "Courier New", monospace;
+    --theme-font-size-base: 12px;
+
+    /* Window Chrome - Platinum appearance */
+    --theme-window-bg: #dddddd;
+    --theme-window-content-bg: #ffffff;
+    --theme-window-content-text: #000000;
+    --theme-window-border-light: #ffffff;
+    --theme-window-border-dark: #888888;
+    --theme-window-border-style: solid;
+    --theme-window-title-bg: linear-gradient(
+        to bottom,
+        #ffffff 0%,
+        #cccccc 45%,
+        #cccccc 55%,
+        #aaaaaa 100%
+    );
+    --theme-window-title-text: #000000;
+    --theme-window-title-inactive: linear-gradient(
+        to bottom,
+        #eeeeee 0%,
+        #cccccc 100%
+    );
+    --theme-window-btn-bg: #dddddd;
+    --theme-window-btn-border: 1px solid #000000;
+    --theme-window-shadow: 1px 1px 4px rgb(0 0 0 / 40%);
+    --theme-window-resize-bg: linear-gradient(
+        135deg,
+        transparent 50%,
+        #888888 50%,
+        #888888 60%,
+        transparent 60%,
+        transparent 70%,
+        #888888 70%,
+        #888888 80%,
+        transparent 80%
+    );
+
+    /* Taskbar becomes a Mac-style menu bar at top (visually) */
+    --theme-taskbar-bg: linear-gradient(to bottom, #ffffff 0%, #dddddd 100%);
+    --theme-taskbar-border-top: 1px solid #aaaaaa;
+    --theme-taskbar-height: 24px;
+    --theme-start-btn-bg: none;
+    --theme-start-btn-hover: none;
+    --theme-start-btn-active: none;
+    --theme-start-btn-text: #000000;
+    --theme-start-btn-radius: 0;
+    --theme-taskbar-btn-bg: transparent;
+    --theme-taskbar-btn-active: linear-gradient(
+        to bottom,
+        #4281d5 0%,
+        #3068b8 100%
+    );
+    --theme-taskbar-btn-text: #000000;
+    --theme-systray-bg: transparent;
+    --theme-clock-text: #000000;
+    --theme-start-menu-bg: #ffffff;
+    --theme-start-menu-border: 1px solid #000000;
+    --theme-start-menu-header-bg: linear-gradient(to bottom, #dddddd, #bbbbbb);
+    --theme-start-menu-body-bg: #ffffff;
+    --theme-start-menu-right-bg: #eeeeee;
+    --theme-start-menu-item-hover: #3875d7;
+    --theme-start-menu-footer-bg: #eeeeee;
+
+    /* Toolbar */
+    --theme-toolbar-bg: linear-gradient(to bottom, #eeeeee, #cccccc);
+    --theme-toolbar-border: #999999;
+    --theme-toolbar-btn-bg: #dddddd;
+    --theme-toolbar-btn-border: 1px solid #999999;
+    --theme-toolbar-area-bg: #dddddd;
+    --theme-toolbar-area-border: 1px solid #999999;
+
+    /* Terminal - Mac terminal style */
+    --theme-terminal-bg: #ffffff;
+    --theme-terminal-text: #000000;
+    --theme-terminal-glow: transparent;
+    --theme-terminal-input-bg: #ffffff;
+    --theme-terminal-input-border: #cccccc;
+    --theme-terminal-scrollbar-track: #f0f0f0;
+    --theme-terminal-scrollbar-thumb: #888888;
+    --theme-terminal-dim: #888888;
+    --theme-terminal-error: #cc0000;
+    --theme-terminal-info: #0000cc;
+    --theme-terminal-dir: #0000cc;
+    --theme-terminal-cursor: #000000;
+
+    /* Explorer */
+    --theme-explorer-bg: #dddddd;
+    --theme-explorer-list-bg: #ffffff;
+    --theme-explorer-hover-bg: #3875d7;
+    --theme-explorer-hover-text: #ffffff;
+    --theme-explorer-border: #999999;
+    --theme-explorer-text: #000000;
+
+    /* Common */
+    --theme-surface-primary: #dddddd;
+    --theme-surface-secondary: #eeeeee;
+    --theme-surface-elevated: #f5f5f5;
+    --theme-text-on-surface: #000000;
+    --theme-text-secondary: #666666;
+    --theme-link: #0000cc;
+    --theme-accent: #3875d7;
+    --theme-accent-text: #ffffff;
+    --theme-border-light: #ffffff;
+    --theme-border-dark: #999999;
+
+    /* Tooltip */
+    --theme-tooltip-bg: #ffffcc;
+    --theme-tooltip-border: 1px solid #000000;
+    --theme-tooltip-text: #000000;
+    --theme-tooltip-shadow: 1px 1px 3px rgb(0 0 0 / 25%);
+
+    /* Widgets */
+    --theme-widget-bg: linear-gradient(180deg, #dddddd 0%, #cccccc 100%);
+    --theme-widget-border: 1px solid #999999;
+    --theme-widget-title-bg: linear-gradient(180deg, #eeeeee 0%, #cccccc 100%);
+    --theme-widget-title-text: #000000;
+    --theme-widget-content-bg: #ffffff;
+    --theme-widget-content-text: #000000;
+
+    /* QA / Weather */
+    --theme-qa-bg: #eeeeee;
+    --theme-qa-badge-bg: #dddddd;
+    --theme-qa-badge-border: #999999;
+    --theme-weather-bg: #d4ecff;
+    --theme-weather-border: #8cb4d8;
+}
+
+/* Mac-style pinstripe title bar lines */
+[data-theme="mac-classic"] .window-titlebar {
+    position: relative;
+    min-height: 20px;
+}
+
+[data-theme="mac-classic"] .window-titlebar::before {
+    content: "";
+    position: absolute;
+    inset: 4px 60px;
+    background: repeating-linear-gradient(
+        to bottom,
+        transparent 0,
+        transparent 1px,
+        #aaaaaa 1px,
+        #aaaaaa 2px,
+        transparent 2px,
+        transparent 3px
+    );
+    z-index: 0;
+    pointer-events: none;
+}
+
+[data-theme="mac-classic"] .window-titlebar-text {
+    position: relative;
+    z-index: 1;
+    background: var(--theme-window-bg);
+    padding: 0 8px;
+    text-align: center;
+}
+
+[data-theme="mac-classic"] .window-titlebar-buttons {
+    position: relative;
+    z-index: 1;
+}
+
+/* Mac close box style */
+[data-theme="mac-classic"] .window-btn {
+    width: 12px;
+    height: 12px;
+    border-radius: 0;
+    font-size: 0;
+}
+
+[data-theme="mac-classic"] .window-btn.close {
+    border: 1px solid #000000;
+    background: #dddddd;
+}
+
+/* Remove bevel borders, use flat Mac style */
+[data-theme="mac-classic"] .window {
+    border: 1px solid #000000;
+    border-radius: 0;
+    box-shadow: 1px 1px 4px rgb(0 0 0 / 40%);
+}
+
+[data-theme="mac-classic"] .window-content {
+    border: 1px solid #999999;
+}
+
+/* Flat taskbar for Mac menu bar feel */
+[data-theme="mac-classic"] .taskbar {
+    border-top: none;
+    border-bottom: 1px solid #aaaaaa;
+    box-shadow: 0 1px 2px rgb(0 0 0 / 10%);
+}
+
+[data-theme="mac-classic"] .start-button {
+    font-style: normal;
+    font-size: 14px;
+    text-shadow: none;
+    box-shadow: none;
+    padding: 2px 12px;
+}
+
+[data-theme="mac-classic"] .taskbar-window-button {
+    border: none;
+    border-radius: 0;
+    font-size: 12px;
+}
+
+[data-theme="mac-classic"] .toolbar-button {
+    border-radius: 3px;
+}
+
+/* Remove scanlines from terminal */
+[data-theme="mac-classic"] .terminal-container::before {
+    display: none;
+}

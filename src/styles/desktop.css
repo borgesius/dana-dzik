@@ -6,7 +6,16 @@
     --win95-blue: #000080;
     --winxp-blue: #0a246a;
     --winxp-start: #2f8e29;
-    --winxp-taskbar: linear-gradient(to bottom, #1f5fa6 0%, #3a7fcb 3%, #3c81cc 6%, #2e6ab8 10%, #2663b0 12%, #2663b0 90%, #2663b0 100%);
+    --winxp-taskbar: linear-gradient(
+        to bottom,
+        #1f5fa6 0%,
+        #3a7fcb 3%,
+        #3c81cc 6%,
+        #2e6ab8 10%,
+        #2663b0 12%,
+        #2663b0 90%,
+        #2663b0 100%
+    );
 }
 
 * {
@@ -20,14 +29,14 @@ body {
     width: 100%;
     height: 100%;
     overflow: hidden;
-    font-family: Tahoma, "MS Sans Serif", sans-serif;
-    font-size: 11px;
+    font-family: var(--theme-font-system);
+    font-size: var(--theme-font-size-base);
 }
 
 .desktop {
     position: fixed;
     inset: 0;
-    background: var(--win95-bg);
+    background: var(--theme-desktop-bg);
     display: flex;
     flex-direction: column;
 }
@@ -59,11 +68,11 @@ body {
 }
 
 .desktop-icon:hover {
-    background: rgb(0 0 128 / 30%);
+    background: var(--theme-desktop-icon-hover);
 }
 
 .desktop-icon.selected {
-    background: rgb(0 0 128 / 50%);
+    background: var(--theme-desktop-icon-selected);
 }
 
 .desktop-icon > span:first-child {
@@ -74,7 +83,7 @@ body {
 
 .desktop-icon span {
     margin-top: 4px;
-    color: #ffffff;
+    color: var(--theme-desktop-icon-text);
     text-shadow:
         1px 1px 1px #000000,
         -1px -1px 1px #000000,
@@ -101,23 +110,23 @@ body {
 }
 
 .toolbars-area {
-    background: var(--win95-gray);
-    border-bottom: 2px solid var(--win95-dark);
+    background: var(--theme-toolbar-area-bg);
+    border-bottom: var(--theme-toolbar-area-border);
 }
 
 .toolbar {
     display: flex;
     align-items: center;
     padding: 2px 4px;
-    background: linear-gradient(to bottom, #f0f0f0, #d0d0d0);
-    border-bottom: 1px solid #808080;
+    background: var(--theme-toolbar-bg);
+    border-bottom: 1px solid var(--theme-toolbar-border);
     gap: 4px;
     flex-wrap: wrap;
 }
 
 .toolbar-button {
-    background: var(--win95-gray);
-    border: 2px outset var(--win95-light);
+    background: var(--theme-toolbar-btn-bg);
+    border: var(--theme-toolbar-btn-border);
     padding: 6px 12px;
     min-height: 24px;
     font-size: 10px;
@@ -158,23 +167,22 @@ body {
 .toolbar-search input {
     width: 120px;
     padding: 2px;
-    border: 2px inset var(--win95-dark);
+    border: 2px inset var(--theme-border-dark);
     font-size: 11px;
 }
 
 .toolbar-search button {
-    background: var(--win95-gray);
-    border: 2px outset var(--win95-light);
+    background: var(--theme-toolbar-btn-bg);
+    border: var(--theme-toolbar-btn-border);
     padding: 2px 6px;
     cursor: pointer;
 }
 
-
 .toolbar-weather {
-    background: #87ceeb;
+    background: var(--theme-weather-bg);
     padding: 2px 6px;
     font-size: 10px;
-    border: 1px solid #4682b4;
+    border: 1px solid var(--theme-weather-border);
 }
 
 .toolbar-qa {
@@ -183,8 +191,8 @@ body {
     gap: 4px;
     padding: 2px 6px;
     font-size: 10px;
-    background: #e0e0e0;
-    border: 1px solid #808080;
+    background: var(--theme-qa-bg);
+    border: 1px solid var(--theme-qa-badge-border);
 }
 
 .qa-badge-wrap {
@@ -197,9 +205,9 @@ body {
     padding: 2px 6px;
     font-size: 9px;
     text-decoration: none;
-    color: #000000;
-    border: 1px solid #808080;
-    background: #c0c0c0;
+    color: var(--theme-text-on-surface);
+    border: 1px solid var(--theme-qa-badge-border);
+    background: var(--theme-qa-badge-bg);
     min-height: 24px;
     cursor: pointer;
 }
@@ -229,14 +237,14 @@ body {
     top: calc(100% + 4px);
     left: 50%;
     transform: translateX(-50%);
-    background: var(--win95-gray);
-    border: 2px outset var(--win95-light);
+    background: var(--theme-tooltip-bg);
+    border: var(--theme-tooltip-border);
     padding: 6px 8px;
     font-size: 11px;
-    color: #000000;
+    color: var(--theme-tooltip-text);
     white-space: nowrap;
     z-index: 8000;
-    box-shadow: 2px 2px 0 #000000;
+    box-shadow: var(--theme-tooltip-shadow);
     min-width: 140px;
     text-align: left;
     line-height: 1.5;
@@ -249,7 +257,7 @@ body {
 
 .qa-tooltip-title {
     font-weight: bold;
-    border-bottom: 1px solid var(--win95-dark);
+    border-bottom: 1px solid var(--theme-border-dark);
     padding-bottom: 3px;
     margin-bottom: 3px;
 }
@@ -271,7 +279,7 @@ body {
 .qa-tooltip-status {
     margin-top: 3px;
     padding-top: 3px;
-    border-top: 1px solid var(--win95-dark);
+    border-top: 1px solid var(--theme-border-dark);
     font-size: 9px;
     color: #606060;
 }
@@ -279,6 +287,6 @@ body {
 .qa-tooltip-click {
     margin-top: 3px;
     font-size: 9px;
-    color: #000080;
+    color: var(--theme-accent);
     text-decoration: underline;
 }

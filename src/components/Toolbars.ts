@@ -4,6 +4,11 @@ import {
     type Venture,
 } from "../lib/businessGame"
 import { initStrava } from "../lib/strava"
+import {
+    type ColorScheme,
+    getThemeManager,
+    type ResolvedColorScheme,
+} from "../lib/themeManager"
 import { BusinessPanel } from "./BusinessPanel"
 
 function pick<T>(arr: T[]): T {
@@ -58,6 +63,7 @@ export class Toolbars {
     private qaEl: HTMLElement | null = null
     private moneyEl: HTMLElement | null = null
     private ventureButtonsEl: HTMLElement | null = null
+    private searchInputEl: HTMLInputElement | null = null
     private game: BusinessGame
     private businessPanel: BusinessPanel
 
@@ -67,6 +73,15 @@ export class Toolbars {
         this.element = this.createElement()
         this.initDynamicData()
         this.setupGameListeners()
+
+        getThemeManager().on("themeChanged", () => this.applyThemeLabels())
+    }
+
+    private applyThemeLabels(): void {
+        const labels = getThemeManager().getLabels()
+        if (this.searchInputEl) {
+            this.searchInputEl.placeholder = labels.searchPlaceholder
+        }
     }
 
     private createElement(): HTMLElement {
@@ -84,7 +99,8 @@ export class Toolbars {
         const toolbar = document.createElement("div")
         toolbar.className = "toolbar"
 
-        const askJeeves = this.createSearchBar("Ask Jeeves", "🔍")
+        const labels = getThemeManager().getLabels()
+        const askJeeves = this.createSearchBar(labels.searchPlaceholder, "🔍")
         toolbar.appendChild(askJeeves)
 
         const weather = document.createElement("div")
@@ -99,7 +115,53 @@ export class Toolbars {
         this.qaEl = qa
         toolbar.appendChild(qa)
 
+        const spacer = document.createElement("div")
+        spacer.style.flex = "1"
+        toolbar.appendChild(spacer)
+
+        toolbar.appendChild(this.createColorSchemeToggle())
+
         return toolbar
+    }
+
+    private createColorSchemeToggle(): HTMLElement {
+        const SCHEME_ICONS: Record<ColorScheme, string> = {
+            light: "\u2600\uFE0F",
+            dark: "\uD83C\uDF19",
+            system: "\uD83D\uDCBB",
+        }
+
+        const SCHEME_ORDER: ColorScheme[] = ["light", "dark", "system"]
+
+        const tm = getThemeManager()
+        const btn = document.createElement("button")
+        btn.className = "toolbar-button color-scheme-toggle"
+        btn.title = `Color: ${tm.getColorScheme()}`
+
+        const updateBtn = (): void => {
+            const scheme = tm.getColorScheme()
+            btn.textContent = SCHEME_ICONS[scheme]
+            btn.title = `Color: ${scheme}`
+        }
+
+        updateBtn()
+
+        btn.addEventListener("click", () => {
+            const current = tm.getColorScheme()
+            const idx = SCHEME_ORDER.indexOf(current)
+            const next = SCHEME_ORDER[(idx + 1) % SCHEME_ORDER.length]
+            tm.setColorScheme(next)
+            updateBtn()
+        })
+
+        tm.on(
+            "colorSchemeChanged",
+            (_data: { theme: string; colorScheme: ResolvedColorScheme }) => {
+                updateBtn()
+            }
+        )
+
+        return btn
     }
 
     private createToolbar2(): HTMLElement {
@@ -330,6 +392,7 @@ export class Toolbars {
         const input = document.createElement("input")
         input.type = "text"
         input.placeholder = placeholder
+        this.searchInputEl = input
         container.appendChild(input)
 
         const btn = document.createElement("button")

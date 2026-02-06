@@ -1,0 +1,226 @@
+[data-theme="apple2"] {
+    /* Desktop - pure black */
+    --theme-desktop-bg: #000000;
+    --theme-desktop-bg-pattern: none;
+    --theme-desktop-icon-hover: rgb(51 255 51 / 15%);
+    --theme-desktop-icon-selected: rgb(51 255 51 / 30%);
+    --theme-desktop-icon-text: #33ff33;
+
+    /* Typography - pure monospace */
+    --theme-font-system: "Courier New", "Lucida Console", monospace;
+    --theme-font-mono: "Courier New", "Lucida Console", monospace;
+    --theme-font-size-base: 14px;
+
+    /* Window Chrome - minimal phosphor-line borders */
+    --theme-window-bg: #000000;
+    --theme-window-content-bg: #000000;
+    --theme-window-content-text: #33ff33;
+    --theme-window-border-light: #33ff33;
+    --theme-window-border-dark: #1a8a1a;
+    --theme-window-border-style: solid;
+    --theme-window-title-bg: #1a8a1a;
+    --theme-window-title-text: #33ff33;
+    --theme-window-title-inactive: #0d440d;
+    --theme-window-btn-bg: #000000;
+    --theme-window-btn-border: 1px solid #33ff33;
+    --theme-window-shadow: 0 0 10px rgb(51 255 51 / 15%);
+    --theme-window-resize-bg: linear-gradient(
+        135deg,
+        transparent 50%,
+        #33ff33 50%,
+        #33ff33 60%,
+        transparent 60%,
+        transparent 70%,
+        #33ff33 70%,
+        #33ff33 80%,
+        transparent 80%
+    );
+
+    /* Taskbar - command line bar */
+    --theme-taskbar-bg: #0d440d;
+    --theme-taskbar-border-top: 1px solid #33ff33;
+    --theme-taskbar-height: 26px;
+    --theme-start-btn-bg: #000000;
+    --theme-start-btn-hover: #0d440d;
+    --theme-start-btn-active: #1a8a1a;
+    --theme-start-btn-text: #33ff33;
+    --theme-start-btn-radius: 0;
+    --theme-taskbar-btn-bg: #000000;
+    --theme-taskbar-btn-active: #1a8a1a;
+    --theme-taskbar-btn-text: #33ff33;
+    --theme-systray-bg: #000000;
+    --theme-clock-text: #33ff33;
+    --theme-start-menu-bg: #000000;
+    --theme-start-menu-border: 1px solid #33ff33;
+    --theme-start-menu-header-bg: #0d440d;
+    --theme-start-menu-body-bg: #000000;
+    --theme-start-menu-right-bg: #0a0a0a;
+    --theme-start-menu-item-hover: #1a8a1a;
+    --theme-start-menu-footer-bg: #0d440d;
+
+    /* Toolbar */
+    --theme-toolbar-bg: #0a0a0a;
+    --theme-toolbar-border: #1a8a1a;
+    --theme-toolbar-btn-bg: #000000;
+    --theme-toolbar-btn-border: 1px solid #33ff33;
+    --theme-toolbar-area-bg: #000000;
+    --theme-toolbar-area-border: 1px solid #1a8a1a;
+
+    /* Terminal - native phosphor look */
+    --theme-terminal-bg: #000000;
+    --theme-terminal-text: #33ff33;
+    --theme-terminal-glow: #33ff33;
+    --theme-terminal-input-bg: #000000;
+    --theme-terminal-input-border: #1a8a1a;
+    --theme-terminal-scrollbar-track: #0a0a0a;
+    --theme-terminal-scrollbar-thumb: #33ff33;
+    --theme-terminal-dim: #1a8a1a;
+    --theme-terminal-error: #ff3333;
+    --theme-terminal-info: #33ff33;
+    --theme-terminal-dir: #33ff33;
+    --theme-terminal-cursor: #33ff33;
+
+    /* Explorer */
+    --theme-explorer-bg: #000000;
+    --theme-explorer-list-bg: #000000;
+    --theme-explorer-hover-bg: #33ff33;
+    --theme-explorer-hover-text: #000000;
+    --theme-explorer-border: #1a8a1a;
+    --theme-explorer-text: #33ff33;
+
+    /* Common */
+    --theme-surface-primary: #000000;
+    --theme-surface-secondary: #0a0a0a;
+    --theme-surface-elevated: #0d440d;
+    --theme-text-on-surface: #33ff33;
+    --theme-text-secondary: #1a8a1a;
+    --theme-link: #33ff33;
+    --theme-accent: #33ff33;
+    --theme-accent-text: #000000;
+    --theme-border-light: #33ff33;
+    --theme-border-dark: #1a8a1a;
+
+    /* Tooltip */
+    --theme-tooltip-bg: #0d440d;
+    --theme-tooltip-border: 1px solid #33ff33;
+    --theme-tooltip-text: #33ff33;
+    --theme-tooltip-shadow: 0 0 6px rgb(51 255 51 / 20%);
+
+    /* Widgets */
+    --theme-widget-bg: #000000;
+    --theme-widget-border: 1px solid #1a8a1a;
+    --theme-widget-title-bg: #0d440d;
+    --theme-widget-title-text: #33ff33;
+    --theme-widget-content-bg: #000000;
+    --theme-widget-content-text: #33ff33;
+
+    /* QA / Weather */
+    --theme-qa-bg: #000000;
+    --theme-qa-badge-bg: #0a0a0a;
+    --theme-qa-badge-border: #1a8a1a;
+    --theme-weather-bg: #0d440d;
+    --theme-weather-border: #1a8a1a;
+
+    /* Phosphor glow on all text */
+    text-shadow: 0 0 4px rgb(51 255 51 / 60%);
+}
+
+/* CRT vignette effect */
+[data-theme="apple2"] .desktop {
+    box-shadow: inset 0 0 120px 40px rgb(0 0 0 / 70%);
+    border-radius: 16px;
+}
+
+/* More prominent scanlines */
+[data-theme="apple2"] .desktop-area::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+        0deg,
+        transparent 0,
+        transparent 1px,
+        rgb(0 0 0 / 20%) 1px,
+        rgb(0 0 0 / 20%) 2px
+    );
+    pointer-events: none;
+    z-index: 9990;
+}
+
+/* Simplified window borders */
+[data-theme="apple2"] .window {
+    border: 1px solid #33ff33;
+    border-radius: 0;
+}
+
+[data-theme="apple2"] .window-titlebar {
+    font-family: "Courier New", monospace;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-size: 12px;
+}
+
+[data-theme="apple2"] .window-content {
+    border: 1px solid #1a8a1a;
+    font-family: "Courier New", monospace;
+    color: #33ff33;
+}
+
+/* Flat buttons */
+[data-theme="apple2"] .window-btn {
+    width: 14px;
+    height: 14px;
+    border-radius: 0;
+    font-family: "Courier New", monospace;
+    font-size: 10px;
+}
+
+/* Start button as text prompt */
+[data-theme="apple2"] .start-button {
+    font-style: normal;
+    font-weight: normal;
+    font-size: 14px;
+    font-family: "Courier New", monospace;
+    text-shadow: 0 0 4px rgb(51 255 51 / 60%);
+    box-shadow: none;
+    padding: 2px 8px;
+}
+
+[data-theme="apple2"] .taskbar {
+    border-top: 1px solid #33ff33;
+    font-family: "Courier New", monospace;
+}
+
+[data-theme="apple2"] .taskbar-window-button {
+    border: 1px solid #1a8a1a;
+    border-radius: 0;
+    font-family: "Courier New", monospace;
+}
+
+[data-theme="apple2"] .start-menu {
+    border-radius: 0;
+    font-family: "Courier New", monospace;
+}
+
+[data-theme="apple2"] .start-menu-header span {
+    color: #33ff33;
+    text-shadow: 0 0 4px rgb(51 255 51 / 60%);
+}
+
+[data-theme="apple2"] .start-menu-item:hover {
+    color: #000000;
+}
+
+[data-theme="apple2"] .toolbar-button {
+    font-family: "Courier New", monospace;
+    border-radius: 0;
+    text-transform: uppercase;
+}
+
+[data-theme="apple2"] .desktop-icon span {
+    color: #33ff33;
+    text-shadow: 0 0 4px rgb(51 255 51 / 60%);
+    font-family: "Courier New", monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+}

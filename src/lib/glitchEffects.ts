@@ -1,3 +1,5 @@
+import { getThemeManager } from "./themeManager"
+
 type GlitchType =
     | "shift"
     | "colorSplit"
@@ -22,12 +24,21 @@ const GLITCH_CONFIG = {
     multiGlitchChance: 0.3,
 }
 
+const THEME_GLITCH_CONFIG = {
+    flashMinInterval: 30000,
+    flashMaxInterval: 90000,
+    fullSwitchChance: 0.2,
+    flashDuration: { min: 200, max: 500 },
+    transitionEffectDuration: 100,
+}
+
 export class GlitchManager {
     private overlay: HTMLDivElement | null = null
 
     constructor() {
         this.createOverlay()
         this.scheduleNextGlitch()
+        this.scheduleNextThemeGlitch()
     }
 
     private createOverlay(): void {
@@ -49,21 +60,102 @@ export class GlitchManager {
         }, delay)
     }
 
+    private scheduleNextThemeGlitch(): void {
+        const delay =
+            THEME_GLITCH_CONFIG.flashMinInterval +
+            Math.random() *
+                (THEME_GLITCH_CONFIG.flashMaxInterval -
+                    THEME_GLITCH_CONFIG.flashMinInterval)
+
+        window.setTimeout(() => {
+            this.triggerThemeGlitch()
+            this.scheduleNextThemeGlitch()
+        }, delay)
+    }
+
+    private triggerThemeGlitch(): void {
+        const tm = getThemeManager()
+        const isFullSwitch =
+            Math.random() < THEME_GLITCH_CONFIG.fullSwitchChance
+        const targetTheme = tm.getRandomOtherTheme()
+
+        if (isFullSwitch) {
+            this.performFullThemeSwitch(targetTheme)
+        } else {
+            this.performMomentaryFlash(targetTheme)
+        }
+    }
+
+    private performMomentaryFlash(targetTheme: string): void {
+        const tm = getThemeManager()
+        const flashDuration =
+            THEME_GLITCH_CONFIG.flashDuration.min +
+            Math.random() *
+                (THEME_GLITCH_CONFIG.flashDuration.max -
+                    THEME_GLITCH_CONFIG.flashDuration.min)
+
+        this.applyGlitch(
+            this.generateGlitchEvent(
+                "noise",
+                0.8,
+                THEME_GLITCH_CONFIG.transitionEffectDuration
+            )
+        )
+        this.applyGlitch(
+            this.generateGlitchEvent(
+                "tear",
+                0.6,
+                THEME_GLITCH_CONFIG.transitionEffectDuration
+            )
+        )
+
+        setTimeout(() => {
+            tm.setThemeTemporary(
+                targetTheme as "win95" | "mac-classic" | "apple2" | "c64"
+            )
+
+            setTimeout(() => {
+                this.applyGlitch(
+                    this.generateGlitchEvent(
+                        "colorSplit",
+                        0.5,
+                        THEME_GLITCH_CONFIG.transitionEffectDuration
+                    )
+                )
+                tm.restoreTheme()
+            }, flashDuration)
+        }, THEME_GLITCH_CONFIG.transitionEffectDuration)
+    }
+
+    private performFullThemeSwitch(targetTheme: string): void {
+        const tm = getThemeManager()
+
+        this.applyGlitch(this.generateGlitchEvent("corruption", 1.0, 300))
+        this.applyGlitch(this.generateGlitchEvent("tear", 0.9, 300))
+        this.applyGlitch(this.generateGlitchEvent("noise", 1.0, 300))
+
+        setTimeout(() => {
+            tm.setTheme(
+                targetTheme as "win95" | "mac-classic" | "apple2" | "c64"
+            )
+        }, 300)
+    }
+
     private triggerGlitch(): void {
-        const glitch = this.generateGlitchEvent()
+        const glitch = this.generateRandomGlitchEvent()
         this.applyGlitch(glitch)
 
         if (Math.random() < GLITCH_CONFIG.multiGlitchChance) {
             setTimeout(
                 () => {
-                    this.applyGlitch(this.generateGlitchEvent())
+                    this.applyGlitch(this.generateRandomGlitchEvent())
                 },
                 50 + Math.random() * 100
             )
         }
     }
 
-    private generateGlitchEvent(): GlitchEvent {
+    private generateRandomGlitchEvent(): GlitchEvent {
         const types: GlitchType[] = [
             "shift",
             "colorSplit",
@@ -83,6 +175,14 @@ export class GlitchManager {
                     (GLITCH_CONFIG.maxDuration - GLITCH_CONFIG.minDuration),
             intensity: 0.3 + Math.random() * 0.7,
         }
+    }
+
+    private generateGlitchEvent(
+        type: GlitchType,
+        intensity: number,
+        duration: number
+    ): GlitchEvent {
+        return { type, intensity, duration }
     }
 
     private applyGlitch(glitch: GlitchEvent): void {

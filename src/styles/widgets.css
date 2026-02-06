@@ -12,14 +12,14 @@
 
 /* === Widget Base === */
 .widget {
-    background: linear-gradient(180deg, #3a6ea5 0%, #1e4d7b 100%);
-    border: 2px solid #1e3a5f;
+    background: var(--theme-widget-bg);
+    border: var(--theme-widget-border);
     border-radius: 6px;
     box-shadow:
         2px 2px 8px rgb(0 0 0 / 40%),
         inset 0 1px 0 rgb(255 255 255 / 20%);
     overflow: hidden;
-    font-family: Tahoma, "Segoe UI", sans-serif;
+    font-family: var(--theme-font-system);
     font-size: 11px;
 }
 
@@ -32,8 +32,8 @@
     justify-content: space-between;
     align-items: center;
     padding: 3px 6px;
-    background: linear-gradient(180deg, #0a246a 0%, #0a246a 50%, #0c2d7a 100%);
-    color: #ffffff;
+    background: var(--theme-widget-title-bg);
+    color: var(--theme-widget-title-text);
     font-weight: bold;
     font-size: 10px;
     cursor: default;
@@ -69,9 +69,9 @@
 }
 
 .widget-content {
-    background: linear-gradient(180deg, #3169a5 0%, #225088 100%);
+    background: var(--theme-widget-content-bg);
     padding: 8px;
-    color: #ffffff;
+    color: var(--theme-widget-content-text);
 }
 
 /* === Winamp Audio Player Widget === */
@@ -168,19 +168,19 @@
     transition: height 0.08s ease;
 }
 
-.winamp-visualizer .bar:nth-child(-n+4) {
+.winamp-visualizer .bar:nth-child(-n + 4) {
     background: linear-gradient(180deg, #ff0000 0%, #ff4400 100%);
 }
 
-.winamp-visualizer .bar:nth-child(n+5):nth-child(-n+8) {
+.winamp-visualizer .bar:nth-child(n + 5):nth-child(-n + 8) {
     background: linear-gradient(180deg, #ffff00 0%, #ffaa00 100%);
 }
 
-.winamp-visualizer .bar:nth-child(n+9):nth-child(-n+12) {
+.winamp-visualizer .bar:nth-child(n + 9):nth-child(-n + 12) {
     background: linear-gradient(180deg, #00ff00 0%, #00aa00 100%);
 }
 
-.winamp-visualizer .bar:nth-child(n+13) {
+.winamp-visualizer .bar:nth-child(n + 13) {
     background: linear-gradient(180deg, #00ffff 0%, #0088ff 100%);
 }
 
@@ -188,22 +188,69 @@
     animation: winamp-eq 0.25s ease-in-out infinite alternate;
 }
 
-.winamp-visualizer.playing .bar:nth-child(1) { animation-delay: 0s; }
-.winamp-visualizer.playing .bar:nth-child(2) { animation-delay: 0.08s; }
-.winamp-visualizer.playing .bar:nth-child(3) { animation-delay: 0.04s; }
-.winamp-visualizer.playing .bar:nth-child(4) { animation-delay: 0.12s; }
-.winamp-visualizer.playing .bar:nth-child(5) { animation-delay: 0.02s; }
-.winamp-visualizer.playing .bar:nth-child(6) { animation-delay: 0.1s; }
-.winamp-visualizer.playing .bar:nth-child(7) { animation-delay: 0.06s; }
-.winamp-visualizer.playing .bar:nth-child(8) { animation-delay: 0.14s; }
-.winamp-visualizer.playing .bar:nth-child(9) { animation-delay: 0.03s; }
-.winamp-visualizer.playing .bar:nth-child(10) { animation-delay: 0.11s; }
-.winamp-visualizer.playing .bar:nth-child(11) { animation-delay: 0.07s; }
-.winamp-visualizer.playing .bar:nth-child(12) { animation-delay: 0.15s; }
-.winamp-visualizer.playing .bar:nth-child(13) { animation-delay: 0.01s; }
-.winamp-visualizer.playing .bar:nth-child(14) { animation-delay: 0.09s; }
-.winamp-visualizer.playing .bar:nth-child(15) { animation-delay: 0.05s; }
-.winamp-visualizer.playing .bar:nth-child(16) { animation-delay: 0.13s; }
+.winamp-visualizer.playing .bar:nth-child(1) {
+    animation-delay: 0s;
+}
+
+.winamp-visualizer.playing .bar:nth-child(2) {
+    animation-delay: 0.08s;
+}
+
+.winamp-visualizer.playing .bar:nth-child(3) {
+    animation-delay: 0.04s;
+}
+
+.winamp-visualizer.playing .bar:nth-child(4) {
+    animation-delay: 0.12s;
+}
+
+.winamp-visualizer.playing .bar:nth-child(5) {
+    animation-delay: 0.02s;
+}
+
+.winamp-visualizer.playing .bar:nth-child(6) {
+    animation-delay: 0.1s;
+}
+
+.winamp-visualizer.playing .bar:nth-child(7) {
+    animation-delay: 0.06s;
+}
+
+.winamp-visualizer.playing .bar:nth-child(8) {
+    animation-delay: 0.14s;
+}
+
+.winamp-visualizer.playing .bar:nth-child(9) {
+    animation-delay: 0.03s;
+}
+
+.winamp-visualizer.playing .bar:nth-child(10) {
+    animation-delay: 0.11s;
+}
+
+.winamp-visualizer.playing .bar:nth-child(11) {
+    animation-delay: 0.07s;
+}
+
+.winamp-visualizer.playing .bar:nth-child(12) {
+    animation-delay: 0.15s;
+}
+
+.winamp-visualizer.playing .bar:nth-child(13) {
+    animation-delay: 0.01s;
+}
+
+.winamp-visualizer.playing .bar:nth-child(14) {
+    animation-delay: 0.09s;
+}
+
+.winamp-visualizer.playing .bar:nth-child(15) {
+    animation-delay: 0.05s;
+}
+
+.winamp-visualizer.playing .bar:nth-child(16) {
+    animation-delay: 0.13s;
+}
 
 @keyframes winamp-eq {
     0% {
@@ -578,4 +625,3 @@
 .strava-stat.empty .stat-value {
     color: #667788;
 }
-

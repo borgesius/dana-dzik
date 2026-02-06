@@ -1,10 +1,10 @@
 .taskbar {
-    height: 30px;
-    background: var(--winxp-taskbar);
+    height: var(--theme-taskbar-height);
+    background: var(--theme-taskbar-bg);
     display: flex;
     align-items: stretch;
     padding: 2px;
-    border-top: 1px solid #6699cc;
+    border-top: var(--theme-taskbar-border-top);
     z-index: 9999;
 }
 
@@ -13,10 +13,10 @@
     align-items: center;
     gap: 4px;
     padding: 2px 8px;
-    background: linear-gradient(to bottom, #5ab446 0%, #3c9a37 50%, #2f8e29 51%, #3c9a37 100%);
+    background: var(--theme-start-btn-bg);
     border: none;
-    border-radius: 0 8px 8px 0;
-    color: #ffffff;
+    border-radius: var(--theme-start-btn-radius);
+    color: var(--theme-start-btn-text);
     font-weight: bold;
     font-size: 13px;
     font-style: italic;
@@ -28,11 +28,11 @@
 }
 
 .start-button:hover {
-    background: linear-gradient(to bottom, #6bc956 0%, #4caa47 50%, #3f9e39 51%, #4caa47 100%);
+    background: var(--theme-start-btn-hover);
 }
 
 .start-button:active {
-    background: linear-gradient(to bottom, #3c9a37 0%, #2f8e29 50%, #2f8e29 51%, #3c9a37 100%);
+    background: var(--theme-start-btn-active);
 }
 
 .start-button img {
@@ -76,10 +76,10 @@
     align-items: center;
     gap: 4px;
     padding: 2px 8px;
-    background: linear-gradient(to bottom, #3c81cc 0%, #2e6ab8 50%, #2663b0 100%);
+    background: var(--theme-taskbar-btn-bg);
     border: 1px solid rgb(0 0 0 / 30%);
     border-radius: 2px;
-    color: #ffffff;
+    color: var(--theme-taskbar-btn-text);
     font-size: 11px;
     cursor: pointer;
     max-width: 150px;
@@ -89,7 +89,7 @@
 }
 
 .taskbar-window-button.active {
-    background: linear-gradient(to bottom, #5c9fdc 0%, #4e8ed8 50%, #4683d0 100%);
+    background: var(--theme-taskbar-btn-active);
     box-shadow: inset 0 0 2px rgb(255 255 255 / 50%);
 }
 
@@ -103,7 +103,7 @@
     align-items: center;
     padding: 0 8px;
     gap: 2px;
-    background: linear-gradient(to bottom, #1e5ca6 0%, #2663b0 100%);
+    background: var(--theme-systray-bg);
     border-left: 1px solid rgb(255 255 255 / 20%);
 }
 
@@ -119,7 +119,7 @@
 }
 
 .tray-clock {
-    color: #ffffff;
+    color: var(--theme-clock-text);
     font-size: 11px;
     padding: 0 8px;
     text-shadow: 1px 1px 0 rgb(0 0 0 / 30%);
@@ -130,8 +130,8 @@
     bottom: 30px;
     left: 0;
     width: 350px;
-    background: linear-gradient(to bottom, #3169c6 0%, #245edb 3%, #245edb 97%, #1941a5 100%);
-    border: 2px solid #1941a5;
+    background: var(--theme-start-menu-bg);
+    border: var(--theme-start-menu-border);
     border-radius: 5px 5px 0 0;
     box-shadow: 3px 3px 10px rgb(0 0 0 / 40%);
     display: none;
@@ -147,7 +147,7 @@
     align-items: center;
     gap: 8px;
     padding: 8px;
-    background: linear-gradient(to right, #1941a5, #2d6ee4);
+    background: var(--theme-start-menu-header-bg);
     border-bottom: 1px solid #1941a5;
 }
 
@@ -167,19 +167,19 @@
 
 .start-menu-body {
     display: flex;
-    background: #ffffff;
+    background: var(--theme-start-menu-body-bg);
 }
 
 .start-menu-left {
     flex: 1;
     padding: 4px 0;
-    background: #ffffff;
+    background: var(--theme-start-menu-body-bg);
 }
 
 .start-menu-right {
     width: 120px;
     padding: 4px 0;
-    background: #d3e5fa;
+    background: var(--theme-start-menu-right-bg);
 }
 
 .start-menu-item {
@@ -191,7 +191,7 @@
 }
 
 .start-menu-item:hover {
-    background: #316ac5;
+    background: var(--theme-start-menu-item-hover);
     color: #ffffff;
 }
 
@@ -205,7 +205,7 @@
     flex-direction: column;
     gap: 4px;
     padding: 4px 8px;
-    background: linear-gradient(to top, #3169c6 0%, #4d84e4 100%);
+    background: var(--theme-start-menu-footer-bg);
     border-top: 1px solid #1941a5;
 }
 
