@@ -318,9 +318,6 @@ export class Terminal {
 HACKTERM v1.0 - UNAUTHORIZED ACCESS DETECTED
 =============================================
 Type 'help' for available commands.
-
-Tip: Check out the WELT folder on the Desktop.
-     cd WELT && cat README.txt
 `
         this.printLine(welcome, "terminal-header")
     }
