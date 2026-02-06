@@ -1,3 +1,10 @@
+## [1.29.1](https://github.com/borgesius/dana-dzik/compare/v1.29.0...v1.29.1) (2026-02-06)
+
+
+### Bug Fixes
+
+* **reports:** fix gh api calls inshallah ([#23](https://github.com/borgesius/dana-dzik/issues/23)) ([0a6cf22](https://github.com/borgesius/dana-dzik/commit/0a6cf22af59bd59a2dd4761df91c49ed6718dbf0))
+
 # [1.29.0](https://github.com/borgesius/dana-dzik/compare/v1.28.0...v1.29.0) (2026-02-06)
 
 
