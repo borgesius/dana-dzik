@@ -34,18 +34,13 @@ function getExplorerContent(): string {
 }
 
 function getWelcomeContent(): string {
-    const visitorCount = parseInt(
-        localStorage.getItem("dana-site-visits") || "1",
-        10
-    )
-
     return `
         <div class="welcome-content">
             <h1 class="rainbow-text">★☆★ WELCOME TO DANA'S HOMEPAGE ★☆★</h1>
 
             <div class="marquee-container">
                 <span class="marquee">
-                    ★★★ You are visitor #${visitorCount}! ★★★
+                    ★★★ You are visitor #<span id="visitor-count">...</span>! ★★★
                     Don't forget to sign the guestbook! ★★★
                 </span>
             </div>
