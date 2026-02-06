@@ -23,8 +23,6 @@ const GLITCH_CONFIG = {
 }
 
 export class GlitchManager {
-    private active = true
-    private glitchTimeout: number | null = null
     private overlay: HTMLDivElement | null = null
 
     constructor() {
@@ -40,31 +38,25 @@ export class GlitchManager {
     }
 
     private scheduleNextGlitch(): void {
-        if (!this.active) return
-
         const delay =
             GLITCH_CONFIG.minInterval +
             Math.random() *
                 (GLITCH_CONFIG.maxInterval - GLITCH_CONFIG.minInterval)
 
-        this.glitchTimeout = window.setTimeout(() => {
+        window.setTimeout(() => {
             this.triggerGlitch()
             this.scheduleNextGlitch()
         }, delay)
     }
 
     private triggerGlitch(): void {
-        if (!this.active) return
-
         const glitch = this.generateGlitchEvent()
         this.applyGlitch(glitch)
 
         if (Math.random() < GLITCH_CONFIG.multiGlitchChance) {
             setTimeout(
                 () => {
-                    if (this.active) {
-                        this.applyGlitch(this.generateGlitchEvent())
-                    }
+                    this.applyGlitch(this.generateGlitchEvent())
                 },
                 50 + Math.random() * 100
             )
@@ -217,5 +209,4 @@ export class GlitchManager {
             el.style.filter = ""
         }, glitch.duration * 0.5)
     }
-
 }
