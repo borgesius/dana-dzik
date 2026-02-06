@@ -1,3 +1,10 @@
+# [1.29.0](https://github.com/borgesius/dana-dzik/compare/v1.28.0...v1.29.0) (2026-02-06)
+
+
+### Features
+
+* extensive ci tooltip ([#22](https://github.com/borgesius/dana-dzik/issues/22)) ([d6b7d1b](https://github.com/borgesius/dana-dzik/commit/d6b7d1b28df65497fd5e77817ac6be9b1618fd3e))
+
 # [1.28.0](https://github.com/borgesius/dana-dzik/compare/v1.27.0...v1.28.0) (2026-02-06)
 
 
