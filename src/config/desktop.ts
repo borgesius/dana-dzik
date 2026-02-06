@@ -103,4 +103,11 @@ export const DESKTOP_ITEMS: DesktopItemConfig[] = [
         windowId: "resume",
         fileType: "executable",
     },
+    {
+        id: "finder",
+        filename: "My Computer",
+        icon: "🖥️",
+        windowId: "finder",
+        fileType: "executable",
+    },
 ]

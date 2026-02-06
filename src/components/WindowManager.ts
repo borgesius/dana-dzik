@@ -145,6 +145,15 @@ const WINDOW_CONFIGS: Record<RoutableWindow, WindowConfig> = {
         style: "winxp",
         contentType: "customize",
     },
+    finder: {
+        id: "finder",
+        title: "My Computer",
+        icon: icon("finder"),
+        width: 550,
+        height: 450,
+        style: "win95",
+        contentType: "finder",
+    },
 }
 
 /**
