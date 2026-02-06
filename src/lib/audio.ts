@@ -96,6 +96,8 @@ export class AudioManager {
         this.player = new Audio()
         this.player.volume = 0.25
 
+        this.currentTrackIndex = Math.floor(Math.random() * PLAYLIST.length)
+
         this.player.addEventListener("ended", () => {
             this.nextTrack()
         })
