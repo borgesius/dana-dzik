@@ -22,6 +22,8 @@ describe("Terminal Commands", () => {
             clearOutput: vi.fn(),
             print: vi.fn(),
             printHtml: vi.fn(),
+            startEditor: vi.fn(),
+            requestInput: vi.fn().mockResolvedValue(""),
         }
     })
 
@@ -262,6 +264,59 @@ describe("Terminal Commands", () => {
         it("CD works uppercase", async () => {
             await executeCommand("CD C:\\WINDOWS", ctx)
             expect(fs.cwd).toEqual(["C:", "WINDOWS"])
+        })
+    })
+
+    describe("help command includes new commands", () => {
+        it("mentions edit command", async () => {
+            const result = await executeCommand("help", ctx)
+            expect(result.output).toContain("edit")
+        })
+
+        it("mentions welt command", async () => {
+            const result = await executeCommand("help", ctx)
+            expect(result.output).toContain("welt")
+        })
+    })
+
+    describe("edit command", () => {
+        it("returns error for no filename", async () => {
+            const result = await executeCommand("edit", ctx)
+            expect(result.output).toContain("Usage:")
+            expect(result.className).toBe("error")
+        })
+
+        it("calls startEditor with filename", async () => {
+            await executeCommand("edit test.welt", ctx)
+            expect(ctx.startEditor).toHaveBeenCalledWith("test.welt")
+        })
+    })
+
+    describe("welt command", () => {
+        it("returns error for no filename", async () => {
+            const result = await executeCommand("welt", ctx)
+            expect(result.output).toContain("Usage:")
+            expect(result.className).toBe("error")
+        })
+
+        it("returns error for non-existent file", async () => {
+            const result = await executeCommand("welt nonexistent.welt", ctx)
+            expect(result.output).toContain("File not found")
+            expect(result.className).toBe("error")
+        })
+
+        it("runs a valid welt program", async () => {
+            fs.cwd = ["C:", "Users", "Dana", "Desktop", "WELT", "examples"]
+            const result = await executeCommand("welt hello.welt", ctx)
+            expect(ctx.print).toHaveBeenCalledWith("Hello, World!")
+            expect(result.output).toBe("")
+        })
+
+        it("reports welt errors", async () => {
+            fs.cwd = ["C:", "WINDOWS", "system32"]
+            const result = await executeCommand("welt secrets.txt", ctx)
+            expect(result.output).toContain("WELT ERROR")
+            expect(result.className).toBe("error")
         })
     })
 

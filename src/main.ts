@@ -3,6 +3,7 @@ import "./styles/content.css"
 import "./styles/desktop.css"
 import "./styles/effects.css"
 import "./styles/taskbar.css"
+import "./styles/explorer.css"
 import "./styles/terminal.css"
 import "./styles/widgets.css"
 import "./styles/windows.css"
@@ -10,6 +11,7 @@ import "./styles/windows.css"
 import { CursorTrail } from "./components/CursorTrail"
 import { Desktop } from "./components/Desktop"
 import { PopupManager } from "./components/PopupManager"
+import { setTerminalInit } from "./components/Terminal"
 import { Widgets } from "./components/Widgets"
 import { setupErrorHandlers } from "./core/ErrorHandler"
 import {
@@ -105,6 +107,15 @@ if (app) {
         if (windowId) {
             windowManager.openWindow(windowId)
         }
+    }) as EventListener)
+
+    document.addEventListener("explorer:open-terminal", ((
+        e: CustomEvent<{ cwd: string; command: string }>
+    ) => {
+        const { cwd, command } = e.detail
+        setTerminalInit({ cwd, command })
+        windowManager.closeWindow("terminal")
+        windowManager.openWindow("terminal")
     }) as EventListener)
 
     addFloatingGifs(desktop)
