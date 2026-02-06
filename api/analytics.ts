@@ -94,6 +94,12 @@ export default async function handler(
 
     try {
         if (req.method === "POST") {
+            const token = req.headers["x-analytics-token"]
+            if (token !== "dk-analytics-2026") {
+                res.status(200).json({ ok: true, skipped: "unauthorized" })
+                return
+            }
+
             if (isBot(req.headers["user-agent"])) {
                 res.status(200).json({ ok: true, skipped: "bot" })
                 return
