@@ -1,4 +1,5 @@
 import { DESKTOP_ITEMS } from "../../config"
+import { randomSchopenhauer } from "./schopenhauer"
 
 export type FileType = "file" | "directory" | "executable" | "shortcut"
 
@@ -15,14 +16,15 @@ export interface FileSystem {
     cwd: string[]
 }
 
-const WELT_MANUAL = `================================================
+function getWeltManual(): string {
+    return `================================================
   WELT Programming Language - Reference Manual
   Version 0.3.1
   (c) 1994 Fatitech Industries
   Author: Dr. T. Pferd
 ================================================
 
-"The world is my representation." -- Schopenhauer
+${randomSchopenhauer()}
 
 OVERVIEW
 --------
@@ -123,8 +125,9 @@ stamped envelope to:
   P.O. Box 1888
   Turin, Italy
 
-"Life is suffering." -- Schopenhauer
+${randomSchopenhauer()}
 ================================================`
+}
 
 const WELT_HELLO = `; Hello World - WELT example
 ; The simplest possible program
@@ -628,7 +631,7 @@ Full docs: cat MANUAL.txt`,
     "MANUAL.txt": {
         name: "MANUAL.txt",
         type: "file",
-        content: WELT_MANUAL,
+        content: "",
     },
     examples: {
         name: "examples",
@@ -785,8 +788,17 @@ Commands:
 }
 
 export function createFileSystem(): FileSystem {
+    const root = structuredClone(FILESYSTEM_STRUCTURE)
+
+    const weltDir =
+        root.children?.Users?.children?.Dana?.children?.Desktop?.children?.WELT
+            ?.children
+    if (weltDir?.["MANUAL.txt"]) {
+        weltDir["MANUAL.txt"].content = getWeltManual()
+    }
+
     return {
-        root: FILESYSTEM_STRUCTURE,
+        root,
         cwd: ["C:", "Users", "Dana", "Desktop"],
     }
 }
