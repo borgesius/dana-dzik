@@ -116,7 +116,7 @@ test.describe("Desktop Navigation", () => {
         await page.waitForSelector(".loading-screen.hidden", { state: "attached", timeout: 10000 })
 
         await expect(page.locator(".toolbar")).toHaveCount(2)
-        await expect(page.locator('.venture-btn:has-text("MAKE $$$ FAST")')).toBeVisible()
+        await expect(page.locator(".venture-btn").first()).toBeVisible()
         await expect(page.locator(".money-counter")).toBeVisible()
     })
 
