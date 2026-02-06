@@ -1,3 +1,10 @@
+# [1.22.0](https://github.com/borgesius/dana-dzik/compare/v1.21.0...v1.22.0) (2026-02-06)
+
+
+### Features
+
+* **don't get blocked by google:** limit spam ([#12](https://github.com/borgesius/dana-dzik/issues/12)) ([d077d4a](https://github.com/borgesius/dana-dzik/commit/d077d4a3f6d6d31c9da9da599263eeec95ab6822))
+
 # [1.21.0](https://github.com/borgesius/dana-dzik/compare/v1.20.0...v1.21.0) (2026-02-06)
 
 
