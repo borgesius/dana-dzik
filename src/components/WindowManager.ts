@@ -90,6 +90,15 @@ const WINDOW_CONFIGS: Record<RoutableWindow, WindowConfig> = {
         style: "winxp",
         contentType: "stats",
     },
+    pinball: {
+        id: "pinball",
+        title: "Pinball.exe",
+        icon: "🎮",
+        width: 400,
+        height: 580,
+        style: "win95",
+        contentType: "pinball",
+    },
     terminal: {
         id: "terminal",
         title: "C:\\HACKTERM.EXE",
@@ -172,6 +181,7 @@ export class WindowManager {
     public closeWindow(windowId: string): void {
         const win = this.windows.get(windowId)
         if (win) {
+            win.destroy()
             win.getElement().remove()
             this.windows.delete(windowId)
             if (this.activeWindowId === windowId) {
