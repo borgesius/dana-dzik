@@ -3,7 +3,10 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <meta name="google-site-verification" content="wHWCKsAEuqIxdJqL1rEs2WT_qDmPy1hzkpC6hBSxTr0" />
+        <meta
+            name="google-site-verification"
+            content="wHWCKsAEuqIxdJqL1rEs2WT_qDmPy1hzkpC6hBSxTr0"
+        />
         <meta name="description" content="Dana's Desktop" />
         <title>Dana's Desktop</title>
         <link rel="icon" type="image/x-icon" href="/assets/icons/ie.png" />
@@ -22,8 +25,10 @@
         <meta name="twitter:image" content="/assets/og-image.png" />
         <style>
             @font-face {
-                font-family: 'DOS';
-                src: local('Perfect DOS VGA 437'), local('Courier New'), local('monospace');
+                font-family: "DOS";
+                src:
+                    local("Perfect DOS VGA 437"), local("Courier New"),
+                    local("monospace");
             }
             body {
                 margin: 0;
@@ -42,7 +47,7 @@
                 inset: 0;
                 background: #000;
                 color: #aaa;
-                font-family: 'Courier New', monospace;
+                font-family: "Courier New", monospace;
                 font-size: 14px;
                 padding: 20px;
                 z-index: 100000;
@@ -50,15 +55,25 @@
                 white-space: pre;
                 line-height: 1.4;
             }
-            .boot-screen.hidden { display: none; }
+            .boot-screen.hidden {
+                display: none;
+            }
             .boot-screen .bios-header {
                 color: #fff;
                 margin-bottom: 10px;
             }
-            .boot-screen .success { color: #0f0; }
-            .boot-screen .error { color: #f00; }
-            .boot-screen .warning { color: #ff0; }
-            .boot-screen .info { color: #0ff; }
+            .boot-screen .success {
+                color: #0f0;
+            }
+            .boot-screen .error {
+                color: #f00;
+            }
+            .boot-screen .warning {
+                color: #ff0;
+            }
+            .boot-screen .info {
+                color: #0ff;
+            }
             .boot-cursor {
                 display: inline-block;
                 background: #aaa;
@@ -66,7 +81,11 @@
                 height: 14px;
                 animation: blink-cursor 0.5s step-end infinite;
             }
-            @keyframes blink-cursor { 50% { opacity: 0; } }
+            @keyframes blink-cursor {
+                50% {
+                    opacity: 0;
+                }
+            }
 
             /* Windows loading screen */
             .loading-screen {
@@ -78,11 +97,15 @@
                 align-items: center;
                 justify-content: center;
                 color: #fff;
-                font-family: 'Tahoma', sans-serif;
+                font-family: "Tahoma", sans-serif;
                 z-index: 99999;
             }
-            .loading-screen.active { display: flex; }
-            .loading-screen.hidden { display: none; }
+            .loading-screen.active {
+                display: flex;
+            }
+            .loading-screen.hidden {
+                display: none;
+            }
             .loading-logo {
                 width: 80px;
                 height: 80px;
@@ -100,11 +123,28 @@
                 image-rendering: pixelated;
             }
             @keyframes logo-glitch {
-                0%, 95%, 100% { filter: none; transform: none; }
-                96% { filter: hue-rotate(90deg); transform: translate(2px, -1px); }
-                97% { filter: saturate(2) brightness(1.3); transform: translate(-2px, 1px); }
-                98% { filter: invert(0.1); transform: translate(1px, 2px) scale(1.02); }
-                99% { filter: hue-rotate(180deg); transform: translate(-1px, -1px); }
+                0%,
+                95%,
+                100% {
+                    filter: none;
+                    transform: none;
+                }
+                96% {
+                    filter: hue-rotate(90deg);
+                    transform: translate(2px, -1px);
+                }
+                97% {
+                    filter: saturate(2) brightness(1.3);
+                    transform: translate(-2px, 1px);
+                }
+                98% {
+                    filter: invert(0.1);
+                    transform: translate(1px, 2px) scale(1.02);
+                }
+                99% {
+                    filter: hue-rotate(180deg);
+                    transform: translate(-1px, -1px);
+                }
             }
             .loading-bar {
                 width: 200px;
@@ -119,9 +159,15 @@
                 background: linear-gradient(90deg, #f90, #fc0, #f90);
                 transition: width 0.3s ease;
             }
-            .loading-text { margin-top: 15px; font-size: 12px; color: #888; }
+            .loading-text {
+                margin-top: 15px;
+                font-size: 12px;
+                color: #888;
+            }
             .chromatic-text {
-                text-shadow: 2px 0 0 rgba(255,0,0,0.7), -2px 0 0 rgba(0,255,255,0.7);
+                text-shadow:
+                    2px 0 0 rgba(255, 0, 0, 0.7),
+                    -2px 0 0 rgba(0, 255, 255, 0.7);
             }
         </style>
     </head>
@@ -135,7 +181,12 @@
         <!-- compu97 loading -->
         <div class="loading-screen" id="loading-screen">
             <div class="loading-logo" id="loading-logo"></div>
-            <div style="font-size: 24px; margin-bottom: 30px;" class="chromatic-text">compu97</div>
+            <div
+                style="font-size: 24px; margin-bottom: 30px"
+                class="chromatic-text"
+            >
+                compu97
+            </div>
             <div class="loading-bar">
                 <div class="loading-bar-fill" id="loading-bar-fill"></div>
             </div>
@@ -146,92 +197,206 @@
 
         <script>
             const PHOTO_VARIANTS = [
-                { id: 'A', photo: '/assets/dana/IMG_5099.jpg' },
-                { id: 'B', photo: '/assets/dana/IMG_5531.jpg' },
-                { id: 'C', photo: '/assets/dana/IMG_5576.jpg' },
-                { id: 'D', photo: '/assets/dana/IMG_7045.jpg' },
-            ];
+                { id: "A", photo: "/assets/dana/IMG_5099.jpg" },
+                { id: "B", photo: "/assets/dana/IMG_5531.jpg" },
+                { id: "C", photo: "/assets/dana/IMG_5576.jpg" },
+                { id: "D", photo: "/assets/dana/IMG_7045.jpg" },
+            ]
 
             function getVariantPhoto() {
-                let variant = localStorage.getItem('ab_variant');
-                if (!variant || !PHOTO_VARIANTS.find(v => v.id === variant)) {
-                    const idx = Math.floor(Math.random() * PHOTO_VARIANTS.length);
-                    variant = PHOTO_VARIANTS[idx].id;
-                    localStorage.setItem('ab_variant', variant);
+                let variant = localStorage.getItem("ab_variant")
+                if (!variant || !PHOTO_VARIANTS.find((v) => v.id === variant)) {
+                    const idx = Math.floor(
+                        Math.random() * PHOTO_VARIANTS.length
+                    )
+                    variant = PHOTO_VARIANTS[idx].id
+                    localStorage.setItem("ab_variant", variant)
                 }
-                const found = PHOTO_VARIANTS.find(v => v.id === variant);
-                return found ? found.photo : PHOTO_VARIANTS[0].photo;
+                const found = PHOTO_VARIANTS.find((v) => v.id === variant)
+                return found ? found.photo : PHOTO_VARIANTS[0].photo
             }
 
-            const logoContainer = document.getElementById('loading-logo');
+            const logoContainer = document.getElementById("loading-logo")
             if (logoContainer) {
-                const img = document.createElement('img');
-                img.src = getVariantPhoto();
-                img.alt = 'Loading';
-                logoContainer.appendChild(img);
+                const img = document.createElement("img")
+                img.src = getVariantPhoto()
+                img.alt = "Loading"
+                logoContainer.appendChild(img)
             }
 
-            const bootMessages = [
-                { text: 'BIOS v4.51 (C) 1997', cls: 'bios-header', delay: 80 },
-                { text: 'Memory: 16384K OK', delay: 60 },
-                { text: 'Booting from C:\\', delay: 150 },
-                { text: '', delay: 30 },
-                { text: 'compu97 loading...', cls: 'success', delay: 200 },
-            ];
+            function pick(arr) {
+                return arr[Math.floor(Math.random() * arr.length)]
+            }
 
+            const BIOS_VERSIONS = [
+                "BIOS v-3.7 (C) 1997-2003-1991",
+                "BIOS v4.51.∞ (C) 1997",
+                "BIOS v0.0.1 BETA (C) 2004-1993",
+                "BIOS vNaN (C) 19??",
+                "BIOS v4.51 (C) 1997 (UNLICENSED)",
+            ]
+            const CPUS = [
+                "AMD Celeron-K6/II Turbo @ -200MHz",
+                "Intel Pentium Pro-III @ 0.5MHz (estimated)",
+                "Cyrix 686MX/DX @ fast",
+                "VIA C3 Nehemiah",
+                "Generic x86 @ probably",
+            ]
+            const RAMS = [
+                "16384K most works",
+                "32MB (unverified)",
+                "-8192K detected",
+                "enough",
+                "640K extended, 15MB conventional",
+                "????K OK",
+            ]
+            const HDDS = [
+                '3.5" Floppy (40GB)',
+                "IDE Primary: C:\\ (geometry)",
+                "SCSI-0: 120MB (formatted as 2TB)",
+                "Hard Disk: present",
+                "ATA-33: Unknown Manufacturer (S/N: ????????)",
+            ]
+            const WARNINGS = [
+                {
+                    text: "IRQ CONFLICT: IRQ 5 is already",
+                    cls: "warning",
+                },
+                {
+                    text: "WARNING: CPU temperature is beneath operable range",
+                    cls: "warning",
+                },
+                { text: "KEYBOARD ERROR: keyboard not found", cls: "warning" },
+                {
+                    text: "WARNING: System clock is 3 days ahead of itself",
+                    cls: "warning",
+                },
+                { text: "NOTICE: COM1 occupied by COM1", cls: "warning" },
+                { text: "CMOS CHECKSUM: close enough", cls: "warning" },
+                { text: "PCI BUS ERROR: detour on broadway", cls: "warning" },
+            ]
+            const WARNING_RESPONSES = [
+                "PROCEEDING...",
+                "IGNORING...",
+                "IGNORING...",
+                "ACKNOWLEDGED...",
+                "OK...",
+            ]
+            const BOOT_PATHS = [
+                "Booting from C:\\SYSTEM/boot.sys\\...",
+                "Booting from A:\\ assuming its C:\\...",
+                "Booting from your mom's shell...",
+                "Booting from ????:\\...",
+                "Booting from wherever...",
+            ]
+            const LOADING_TEXTS = [
+                [
+                    "Defragmenting time...",
+                    "Reticulating splines...",
+                    "Ready (probably)",
+                ],
+                ["Loading...", "Still loading...", "Ready"],
+                ["Initializing...", "Warming up CPU (its cold)...", "Ready"],
+                [
+                    "Mounting drives...",
+                    "Unmounting drives...",
+                    "Remounting drives...",
+                ],
+                ["Loading...", "Starting...", "Finishing starting..."],
+            ]
+
+            function generateBootMessages() {
+                const messages = [
+                    {
+                        text: pick(BIOS_VERSIONS),
+                        cls: "bios-header",
+                        delay: 80,
+                    },
+                    { text: "", delay: 30 },
+                    { text: "Detecting hardware...", delay: 100 },
+                    { text: "  CPU: " + pick(CPUS), delay: 60 },
+                    { text: "  RAM: " + pick(RAMS), delay: 60 },
+                    { text: "  HDD: " + pick(HDDS), delay: 60 },
+                    { text: "", delay: 30 },
+                ]
+                if (Math.random() > 0.3) {
+                    const warning = pick(WARNINGS)
+                    messages.push({
+                        text: warning.text,
+                        cls: warning.cls,
+                        delay: 80,
+                    })
+                    messages.push({ text: pick(WARNING_RESPONSES), delay: 60 })
+                    messages.push({ text: "", delay: 30 })
+                }
+                messages.push({ text: pick(BOOT_PATHS), delay: 150 })
+                messages.push({ text: "", delay: 30 })
+                messages.push({
+                    text: "compu97 loading...",
+                    cls: "success",
+                    delay: 200,
+                })
+                return messages
+            }
+
+            const bootMessages = generateBootMessages()
+
+            const loadingTexts = pick(LOADING_TEXTS)
             const loadingSteps = [
-                { text: 'Loading...', progress: 30, delay: 200 },
-                { text: 'Starting...', progress: 70, delay: 200 },
-                { text: 'Ready', progress: 100, delay: 150 },
-            ];
+                { text: loadingTexts[0], progress: 30, delay: 200 },
+                { text: loadingTexts[1], progress: 70, delay: 200 },
+                { text: loadingTexts[2], progress: 100, delay: 150 },
+            ]
 
             async function sleep(ms) {
-                return new Promise(resolve => setTimeout(resolve, ms));
+                return new Promise((resolve) => setTimeout(resolve, ms))
             }
 
             async function runBootSequence() {
-                const output = document.getElementById('boot-output');
-                const bootScreen = document.getElementById('boot-screen');
-                const loadingScreen = document.getElementById('loading-screen');
+                const output = document.getElementById("boot-output")
+                const bootScreen = document.getElementById("boot-screen")
+                const loadingScreen = document.getElementById("loading-screen")
 
                 for (const msg of bootMessages) {
-                    await sleep(msg.delay);
+                    await sleep(msg.delay)
 
                     if (msg.inline) {
-                        const span = document.createElement('span');
-                        span.textContent = msg.text;
-                        if (msg.cls) span.className = msg.cls;
-                        output.appendChild(span);
+                        const span = document.createElement("span")
+                        span.textContent = msg.text
+                        if (msg.cls) span.className = msg.cls
+                        output.appendChild(span)
                     } else {
-                        const line = document.createElement('div');
-                        line.textContent = msg.text;
-                        if (msg.cls) line.className = msg.cls;
-                        output.appendChild(line);
+                        const line = document.createElement("div")
+                        line.textContent = msg.text
+                        if (msg.cls) line.className = msg.cls
+                        output.appendChild(line)
                     }
 
-                    output.scrollTop = output.scrollHeight;
+                    output.scrollTop = output.scrollHeight
                 }
 
-                await sleep(500);
-                bootScreen.classList.add('hidden');
-                loadingScreen.classList.add('active');
+                await sleep(500)
+                bootScreen.classList.add("hidden")
+                loadingScreen.classList.add("active")
 
-                const fill = document.getElementById('loading-bar-fill');
-                const text = document.getElementById('loading-text');
+                const fill = document.getElementById("loading-bar-fill")
+                const text = document.getElementById("loading-text")
 
                 for (const step of loadingSteps) {
-                    await sleep(step.delay);
-                    fill.style.width = step.progress + '%';
-                    text.textContent = step.text;
+                    await sleep(step.delay)
+                    fill.style.width = step.progress + "%"
+                    text.textContent = step.text
                 }
 
-                await sleep(300);
+                await sleep(300)
             }
 
-            window.addEventListener('load', async function() {
-                await runBootSequence();
-                document.getElementById('loading-screen').classList.add('hidden');
-            });
+            window.addEventListener("load", async function () {
+                await runBootSequence()
+                document
+                    .getElementById("loading-screen")
+                    .classList.add("hidden")
+            })
         </script>
         <script type="module" src="/src/main.ts"></script>
     </body>

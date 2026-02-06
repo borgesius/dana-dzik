@@ -6,6 +6,28 @@ import {
 import { initStrava } from "../lib/strava"
 import { BusinessPanel } from "./BusinessPanel"
 
+function pick<T>(arr: T[]): T {
+    return arr[Math.floor(Math.random() * arr.length)]
+}
+
+const QA_FALLBACKS = [
+    "🔬 QA: ¯\\_(ツ)_/¯",
+    "🔬 QA: inconclusive (passed)",
+    "🔬 Tests: yes",
+    "🔬 QA: N/A (or is it?)",
+    "🔬 QA: untested (works fine)",
+    "🔬 Tests: ran (somewhere)",
+]
+
+const YEAR_VARIATIONS = [
+    "1997",
+    "1997 (allegedly)",
+    "199?",
+    "1997-ish",
+    "2024 (displaying as 1997)",
+    "1997 (unverified)",
+]
+
 interface ReportsResponse {
     ok: boolean
     data?: {
@@ -333,7 +355,7 @@ export class Toolbars {
             const result = (await response.json()) as ReportsResponse
 
             if (!result.ok || !result.data) {
-                this.qaEl.innerHTML = "🔬 QA: N/A"
+                this.qaEl.innerHTML = pick(QA_FALLBACKS)
                 return
             }
 
@@ -354,9 +376,11 @@ export class Toolbars {
                 </a>
             `
         } catch {
-            this.qaEl.innerHTML = "🔬 QA: N/A"
+            this.qaEl.innerHTML = pick(QA_FALLBACKS)
         }
     }
+
+    private yearStr = pick(YEAR_VARIATIONS)
 
     private setHistoricalWeather(): void {
         if (!this.weatherEl) return
@@ -365,7 +389,7 @@ export class Toolbars {
         const month = today.toLocaleString("en-US", { month: "short" })
         const day = today.getDate()
 
-        this.weatherEl.innerHTML = `☀️ ${month} ${day}, 1997`
+        this.weatherEl.innerHTML = `☀️ ${month} ${day}, ${this.yearStr}`
 
         if (!navigator.geolocation) {
             this.setFallbackWeather()
@@ -416,10 +440,25 @@ export class Toolbars {
             else if (precip > 0) emoji = "🌤️"
             else if (maxTemp < 40) emoji = "❄️"
 
-            this.weatherEl.innerHTML = `${maxTemp}°F ${emoji} - ${month} ${day}, 1997`
+            const tempDisplay = this.formatTemperature(maxTemp)
+            this.weatherEl.innerHTML = `${tempDisplay} ${emoji} - ${month} ${day}, ${this.yearStr}`
         } catch {
             this.setFallbackWeather()
         }
+    }
+
+    private formatTemperature(temp: number): string {
+        const formats: Array<() => string> = [
+            (): string => `${temp}°F`,
+            (): string => `${temp}°F (±5)`,
+            (): string =>
+                `${Math.round(((temp - 32) * 5) / 9)}°C (displayed as °F)`,
+            (): string =>
+                `${temp}°F (feels like ${temp + Math.floor(Math.random() * 20) - 10}°F)`,
+            (): string => `${temp}°F (unverified)`,
+            (): string => `${temp}°`,
+        ]
+        return pick(formats)()
     }
 
     private setFallbackWeather(): void {
@@ -429,23 +468,40 @@ export class Toolbars {
         const month = today.toLocaleString("en-US", { month: "short" })
         const day = today.getDate()
 
-        const fallback: Record<string, string> = {
-            Jan: "52°F 🌧️",
-            Feb: "55°F 🌤️",
-            Mar: "58°F ☀️",
-            Apr: "62°F ☀️",
-            May: "65°F ☀️",
-            Jun: "68°F ☀️",
-            Jul: "68°F 🌫️",
-            Aug: "69°F 🌫️",
-            Sep: "72°F ☀️",
-            Oct: "68°F ☀️",
-            Nov: "58°F 🌧️",
-            Dec: "52°F 🌧️",
+        const fallbackTemps: Record<string, number> = {
+            Jan: 52,
+            Feb: 55,
+            Mar: 58,
+            Apr: 62,
+            May: 65,
+            Jun: 68,
+            Jul: 68,
+            Aug: 69,
+            Sep: 72,
+            Oct: 68,
+            Nov: 58,
+            Dec: 52,
         }
 
-        const temp = fallback[month] || "65°F ☀️"
-        this.weatherEl.innerHTML = `${temp} SF - ${month} ${day}, 1997`
+        const fallbackEmoji: Record<string, string> = {
+            Jan: "🌧️",
+            Feb: "🌤️",
+            Mar: "☀️",
+            Apr: "☀️",
+            May: "☀️",
+            Jun: "☀️",
+            Jul: "🌫️",
+            Aug: "🌫️",
+            Sep: "☀️",
+            Oct: "☀️",
+            Nov: "🌧️",
+            Dec: "🌧️",
+        }
+
+        const temp = fallbackTemps[month] || 65
+        const emoji = fallbackEmoji[month] || "☀️"
+        const tempDisplay = this.formatTemperature(temp)
+        this.weatherEl.innerHTML = `${tempDisplay} ${emoji} SF - ${month} ${day}, ${this.yearStr}`
     }
 
     public getElement(): HTMLElement {
