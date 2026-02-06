@@ -48,12 +48,16 @@ export class Vector2D {
     }
 }
 
-export const GRAVITY = 0.3
-export const FRICTION = 0.995
-export const FLIPPER_FORCE = 18
-export const BUMPER_FORCE = 12
-export const WALL_DAMPING = 0.7
-export const MAX_VELOCITY = 25
+export const LOGICAL_WIDTH = 350
+export const LOGICAL_HEIGHT = 500
+
+export const SUBSTEPS = 4
+export const GRAVITY = 0.15
+export const FRICTION = 0.998
+export const FLIPPER_FORCE = 14
+export const BUMPER_FORCE = 8
+export const WALL_DAMPING = 0.65
+export const MAX_VELOCITY = 15
 
 export function circleCircleCollision(
     pos1: Vector2D,
@@ -114,11 +118,11 @@ export function circleLineCollision(
         lineEnd
     )
 
-    if (distance < radius) {
+    if (distance < radius && distance > 0) {
         const normal = circlePos.subtract(closest).normalize()
         return {
             collided: true,
-            normal: normal.magnitude() === 0 ? new Vector2D(0, -1) : normal,
+            normal,
             overlap: radius - distance,
             point: closest,
         }

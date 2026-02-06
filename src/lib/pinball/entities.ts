@@ -16,7 +16,7 @@ export class Ball {
     public radius: number
     public active: boolean
 
-    constructor(x: number, y: number, radius: number = 10) {
+    constructor(x: number, y: number, radius: number = 8) {
         this.position = new Vector2D(x, y)
         this.velocity = new Vector2D(0, 0)
         this.radius = radius
@@ -26,7 +26,7 @@ export class Ball {
     public update(): void {
         if (!this.active) return
 
-        this.velocity.y += GRAVITY
+        this.velocity = new Vector2D(this.velocity.x, this.velocity.y + GRAVITY)
         this.velocity = this.velocity.multiply(FRICTION)
         this.velocity = clampVelocity(this.velocity)
         this.position = this.position.add(this.velocity)
@@ -40,7 +40,7 @@ export class Ball {
 
     public launch(power: number): void {
         this.active = true
-        this.velocity = new Vector2D((Math.random() - 0.5) * 2, -power)
+        this.velocity = new Vector2D((Math.random() - 0.5) * 0.5, -power)
     }
 }
 
@@ -53,7 +53,7 @@ export class Bumper {
     constructor(
         x: number,
         y: number,
-        radius: number = 20,
+        radius: number = 18,
         points: number = 100
     ) {
         this.position = new Vector2D(x, y)
@@ -72,7 +72,7 @@ export class Bumper {
 
         if (collision.collided) {
             ball.position = ball.position.add(
-                collision.normal.multiply(collision.overlap)
+                collision.normal.multiply(collision.overlap + 1)
             )
             ball.velocity = collision.normal.multiply(BUMPER_FORCE)
             this.hitAnimation = 1
@@ -84,7 +84,7 @@ export class Bumper {
 
     public update(): void {
         if (this.hitAnimation > 0) {
-            this.hitAnimation -= 0.1
+            this.hitAnimation = Math.max(0, this.hitAnimation - 0.08)
         }
     }
 }
@@ -99,7 +99,7 @@ export class Wall {
         y1: number,
         x2: number,
         y2: number,
-        damping: number = 0.7
+        damping: number = 0.65
     ) {
         this.start = new Vector2D(x1, y1)
         this.end = new Vector2D(x2, y2)
@@ -116,7 +116,7 @@ export class Wall {
 
         if (collision.collided) {
             ball.position = ball.position.add(
-                collision.normal.multiply(collision.overlap)
+                collision.normal.multiply(collision.overlap + 0.5)
             )
             ball.velocity = reflectVelocity(
                 ball.velocity,
@@ -135,7 +135,7 @@ export class Flipper {
     public length: number
     public angle: number
     public restAngle: number
-    public maxAngle: number
+    public activeAngle: number
     public side: "left" | "right"
     public isPressed: boolean
     public angularVelocity: number
@@ -148,11 +148,11 @@ export class Flipper {
         this.angularVelocity = 0
 
         if (side === "left") {
-            this.restAngle = Math.PI / 6
-            this.maxAngle = -Math.PI / 4
+            this.restAngle = 0.45
+            this.activeAngle = -0.55
         } else {
-            this.restAngle = Math.PI - Math.PI / 6
-            this.maxAngle = Math.PI + Math.PI / 4
+            this.restAngle = Math.PI - 0.45
+            this.activeAngle = Math.PI + 0.55
         }
 
         this.angle = this.restAngle
@@ -166,11 +166,12 @@ export class Flipper {
     }
 
     public update(): void {
-        const targetAngle = this.isPressed ? this.maxAngle : this.restAngle
+        const targetAngle = this.isPressed ? this.activeAngle : this.restAngle
         const diff = targetAngle - this.angle
+        const speed = 0.35
 
-        if (Math.abs(diff) > 0.01) {
-            this.angularVelocity = diff * 0.4
+        if (Math.abs(diff) > 0.02) {
+            this.angularVelocity = diff * speed
             this.angle += this.angularVelocity
         } else {
             this.angle = targetAngle
@@ -189,27 +190,30 @@ export class Flipper {
 
         if (collision.collided) {
             ball.position = ball.position.add(
-                collision.normal.multiply(collision.overlap + 1)
+                collision.normal.multiply(collision.overlap + 2)
             )
 
-            if (this.isPressed && Math.abs(this.angularVelocity) > 0.1) {
+            if (this.isPressed && Math.abs(this.angularVelocity) > 0.05) {
                 const hitPoint = collision.point
                 const distFromPivot = Vector2D.distance(hitPoint, this.pivot)
-                const leverMultiplier = distFromPivot / this.length
+                const leverMultiplier = Math.max(
+                    0.4,
+                    distFromPivot / this.length
+                )
 
                 const flipDirection =
                     this.side === "left"
-                        ? new Vector2D(0.5, -1).normalize()
-                        : new Vector2D(-0.5, -1).normalize()
+                        ? new Vector2D(0.4, -1).normalize()
+                        : new Vector2D(-0.4, -1).normalize()
 
                 ball.velocity = flipDirection.multiply(
-                    FLIPPER_FORCE * leverMultiplier * 1.2
+                    FLIPPER_FORCE * leverMultiplier
                 )
             } else {
                 ball.velocity = reflectVelocity(
                     ball.velocity,
                     collision.normal,
-                    0.6
+                    0.5
                 )
             }
 
@@ -273,7 +277,7 @@ export class Target {
 
     public update(): void {
         if (this.hitAnimation > 0) {
-            this.hitAnimation -= 0.05
+            this.hitAnimation = Math.max(0, this.hitAnimation - 0.04)
         }
     }
 
@@ -291,33 +295,28 @@ export class Launcher {
     public maxPower: number
     public isCharging: boolean
 
-    constructor(
-        x: number,
-        y: number,
-        width: number = 30,
-        height: number = 100
-    ) {
+    constructor(x: number, y: number, width: number = 24, height: number = 70) {
         this.position = new Vector2D(x, y)
         this.width = width
         this.height = height
         this.power = 0
-        this.maxPower = 20
+        this.maxPower = 14
         this.isCharging = false
     }
 
     public startCharge(): void {
         this.isCharging = true
-        this.power = 5
+        this.power = 4
     }
 
     public update(): void {
         if (this.isCharging && this.power < this.maxPower) {
-            this.power += 0.3
+            this.power += 0.2
         }
     }
 
     public release(): number {
-        const launchPower = this.power
+        const launchPower = Math.min(this.power, this.maxPower)
         this.isCharging = false
         this.power = 0
         return launchPower
