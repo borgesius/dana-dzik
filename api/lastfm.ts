@@ -13,6 +13,55 @@ interface LastFmTopTracksResponse {
     }
 }
 
+interface DeezerSearchResponse {
+    data?: Array<{
+        album: { cover_big?: string; cover_medium?: string }
+        artist: { picture_big?: string; picture_medium?: string }
+    }>
+}
+
+const LASTFM_DEFAULT_IMAGE_HASH = "2a96cbd8b46e442fc41c2b86b821562f"
+
+function isDefaultImage(url: string | null): boolean {
+    return !url || url.includes(LASTFM_DEFAULT_IMAGE_HASH)
+}
+
+function pickLastFmImage(
+    images: Array<{ "#text": string; size: string }>
+): string | null {
+    const img =
+        images.find((i) => i.size === "large") ||
+        images.find((i) => i.size === "medium")
+    const url = img?.["#text"] || null
+    return isDefaultImage(url) ? null : url
+}
+
+async function fetchDeezerArt(
+    track: string,
+    artist: string
+): Promise<string | null> {
+    try {
+        const query = encodeURIComponent(`artist:"${artist}" track:"${track}"`)
+        const url = `https://api.deezer.com/search?q=${query}&limit=1`
+        const response = await fetch(url)
+        if (!response.ok) return null
+
+        const data = (await response.json()) as DeezerSearchResponse
+        const hit = data.data?.[0]
+        if (!hit) return null
+
+        return (
+            hit.album?.cover_big ||
+            hit.album?.cover_medium ||
+            hit.artist?.picture_big ||
+            hit.artist?.picture_medium ||
+            null
+        )
+    } catch {
+        return null
+    }
+}
+
 function uniqueByArtist(
     tracks: LastFmTopTrack[],
     limit: number
@@ -73,17 +122,22 @@ export default async function handler(
 
         const top5 = uniqueByArtist(rawTracks, 5)
 
-        const tracks = top5.map((t) => {
-            const image =
-                t.image.find((i) => i.size === "large") ||
-                t.image.find((i) => i.size === "medium")
-            return {
-                name: t.name,
-                artist: t.artist.name,
-                image: image?.["#text"] || null,
-                playcount: parseInt(t.playcount, 10),
-            }
-        })
+        const tracks = await Promise.all(
+            top5.map(async (t) => {
+                let image = pickLastFmImage(t.image)
+
+                if (!image) {
+                    image = await fetchDeezerArt(t.name, t.artist.name)
+                }
+
+                return {
+                    name: t.name,
+                    artist: t.artist.name,
+                    image,
+                    playcount: parseInt(t.playcount, 10),
+                }
+            })
+        )
 
         res.status(200).json({
             ok: true,
