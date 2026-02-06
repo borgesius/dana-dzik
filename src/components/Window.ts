@@ -4,6 +4,7 @@ import { initGuestbook } from "../lib/guestbook"
 import { initNowPlaying } from "../lib/nowPlaying"
 import { initPhotoSlideshows } from "../lib/photoSlideshow"
 import { initSiteStats } from "../lib/siteStats"
+import { initVisitorCount } from "../lib/visitorCount"
 import { getWindowContent } from "../lib/windowContent"
 import { FileExplorer } from "./FileExplorer"
 import { Terminal } from "./Terminal"
@@ -76,6 +77,10 @@ export class Window {
 
     private initContentFeatures(): void {
         trackWindowOpen(this.config.contentType)
+
+        if (this.config.contentType === "welcome") {
+            initVisitorCount()
+        }
 
         if (this.config.contentType === "guestbook") {
             trackFunnelStep("guestbook")
