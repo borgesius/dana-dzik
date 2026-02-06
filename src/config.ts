@@ -68,6 +68,7 @@ export const ROUTABLE_WINDOWS = [
     "pinball",
     "terminal",
     "explorer",
+    "finder",
 ] as const
 
 export type RoutableWindow = (typeof ROUTABLE_WINDOWS)[number]
@@ -173,6 +174,13 @@ export const DESKTOP_ITEMS: DesktopItemConfig[] = [
         icon: "📁",
         windowId: "explorer",
         fileType: "directory",
+    },
+    {
+        id: "finder",
+        filename: "My Computer",
+        icon: "🖥️",
+        windowId: "finder",
+        fileType: "executable",
     },
 ]
 
