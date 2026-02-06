@@ -18,6 +18,8 @@ export function getWindowContent(contentType: string): string {
             return getFelixGPTContent()
         case "stats":
             return getSiteStatsContent()
+        case "pinball":
+            return getPinballContent()
         case "terminal":
             return getTerminalContent()
         case "explorer":
@@ -36,18 +38,13 @@ function getExplorerContent(): string {
 }
 
 function getWelcomeContent(): string {
-    const visitorCount = parseInt(
-        localStorage.getItem("dana-site-visits") || "1",
-        10
-    )
-
     return `
         <div class="welcome-content">
             <h1 class="rainbow-text">★☆★ WELCOME TO DANA'S HOMEPAGE ★☆★</h1>
 
             <div class="marquee-container">
                 <span class="marquee">
-                    ★★★ You are visitor #${visitorCount}! ★★★
+                    ★★★ You are visitor #<span id="visitor-count">...</span>! ★★★
                     Don't forget to sign the guestbook! ★★★
                 </span>
             </div>
@@ -293,6 +290,14 @@ function getSiteStatsContent(): string {
                 <h3>⚡ Performance</h3>
                 <div id="perf-stats"></div>
             </div>
+        </div>
+    `
+}
+
+function getPinballContent(): string {
+    return `
+        <div class="pinball-content" id="pinball-container">
+            <canvas id="pinball-canvas"></canvas>
         </div>
     `
 }

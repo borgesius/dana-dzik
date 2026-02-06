@@ -1,3 +1,22 @@
+# [1.26.0](https://github.com/borgesius/dana-dzik/compare/v1.25.0...v1.26.0) (2026-02-06)
+
+
+### Bug Fixes
+
+* **api:** fix serverless api ([#19](https://github.com/borgesius/dana-dzik/issues/19)) ([f92e760](https://github.com/borgesius/dana-dzik/commit/f92e76001cd6dc48938aac9ede95271d3a2bd18e)), closes [#15](https://github.com/borgesius/dana-dzik/issues/15) [#18](https://github.com/borgesius/dana-dzik/issues/18)
+
+
+### Features
+
+* pinball ([#7](https://github.com/borgesius/dana-dzik/issues/7)) ([88a2804](https://github.com/borgesius/dana-dzik/commit/88a280413d19c5b22380c62b9394d596ed4b712d))
+
+# [1.25.0](https://github.com/borgesius/dana-dzik/compare/v1.24.1...v1.25.0) (2026-02-06)
+
+
+### Features
+
+* **welcome:** real visitor counter ([#18](https://github.com/borgesius/dana-dzik/issues/18)) ([5957504](https://github.com/borgesius/dana-dzik/commit/5957504fb75e95eb0f1c41231df701a93056fe4b))
+
 ## [1.24.1](https://github.com/borgesius/dana-dzik/compare/v1.24.0...v1.24.1) (2026-02-06)
 
 

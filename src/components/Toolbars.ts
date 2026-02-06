@@ -10,23 +10,9 @@ function pick<T>(arr: T[]): T {
     return arr[Math.floor(Math.random() * arr.length)]
 }
 
-const QA_FALLBACKS = [
-    "🔬 QA: ¯\\_(ツ)_/¯",
-    "🔬 QA: inconclusive (passed)",
-    "🔬 Tests: yes",
-    "🔬 QA: N/A (or is it?)",
-    "🔬 QA: untested (works fine)",
-    "🔬 Tests: ran (somewhere)",
-]
+const QA_FALLBACKS = ["🔬 QA: ¯\\_(ツ)_/¯", "🔬 Tests: ?", "🔬 QA: N/A"]
 
-const YEAR_VARIATIONS = [
-    "1997",
-    "1997 (allegedly)",
-    "199?",
-    "1997-ish",
-    "2024 (displaying as 1997)",
-    "1997 (unverified)",
-]
+const YEAR_VARIATIONS = ["1997", "1997", "199?", "in the 90s"]
 
 interface ReportsResponse {
     ok: boolean
@@ -452,10 +438,8 @@ export class Toolbars {
             (): string => `${temp}°F`,
             (): string => `${temp}°F (±5)`,
             (): string =>
-                `${Math.round(((temp - 32) * 5) / 9)}°C (displayed as °F)`,
-            (): string =>
                 `${temp}°F (feels like ${temp + Math.floor(Math.random() * 20) - 10}°F)`,
-            (): string => `${temp}°F (unverified)`,
+            (): string => `${temp}°F`,
             (): string => `${temp}°`,
         ]
         return pick(formats)()

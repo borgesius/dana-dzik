@@ -32,7 +32,7 @@ describe("Guestbook utilities", () => {
 
         it("strips multiline HTML comments", () => {
             const body = `Hello
-<!-- 
+<!--
   multiline
   comment
 -->
