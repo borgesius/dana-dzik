@@ -52,7 +52,7 @@ const GENERAL_MEMORY_MESSAGES = [
 ]
 
 const BSOD_TEXT = `
-   compu97
+   DAS (Ding an Sich)
 
 
    A fatal exception 0E has occurred at 0028:C0034B03 in
@@ -488,7 +488,7 @@ export class SystemCrashHandler {
 
         const titlebar = document.createElement("div")
         titlebar.className = "system-error-titlebar"
-        titlebar.innerHTML = `<span>compu97</span><button class="system-error-close">\u00d7</button>`
+        titlebar.innerHTML = `<span>DAS</span><button class="system-error-close">\u00d7</button>`
 
         const body = document.createElement("div")
         body.className = "system-error-body"

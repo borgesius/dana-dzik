@@ -27,8 +27,9 @@ const WELT_MANUAL = `================================================
 OVERVIEW
 --------
 WELT is the native programming language of the
-Compy97 system. It was designed in 1994 to make
-full use of the Compy97's quaternary architecture.
+DAS (Ding an Sich) system. It was designed in
+1994 to make full use of the DAS-8's quaternary
+architecture.
 
 The name derives from Schopenhauer's magnum opus,
 "Die Welt als Wille und Vorstellung" (The World
@@ -68,7 +69,7 @@ LANGUAGE REFERENCE
 
 MEMORY (DING)
 -------------
-The Compy97 provides 8 general-purpose registers,
+The DAS-8 provides 8 general-purpose registers,
 designated DING 0 through DING 7. Each DING holds
 4 quaternary digits (numeric range 0-255) or a
 text string. The quaternary design reflects
@@ -318,7 +319,7 @@ VORSTELLUNG "Open your eyes."
 VERNEINUNG`
 
 export const SYS_KERNEL = `; ==========================================
-; COMPU97 KERNEL v4.51
+; DAS KERNEL v4.51
 ; (C) 1997 Fatitech Industries
 ; ==========================================
 ; DO NOT MODIFY THIS FILE.
@@ -355,7 +356,7 @@ VORSTELLUNG "KERNEL OK"
 VERNEINUNG`
 
 export const SYS_DISPLAY = `; ==========================================
-; COMPU97 DISPLAY DRIVER v2.1
+; DAS DISPLAY DRIVER v2.1
 ; (C) 1997 Fatitech Industries
 ; ==========================================
 ; DO NOT MODIFY THIS FILE.
@@ -390,7 +391,7 @@ VORSTELLUNG "DISPLAY OK"
 VERNEINUNG`
 
 export const SYS_CLOCK = `; ==========================================
-; COMPU97 SYSTEM CLOCK v1.3
+; DAS SYSTEM CLOCK v1.3
 ; (C) 1997 Fatitech Industries
 ; ==========================================
 ; DO NOT MODIFY THIS FILE.
@@ -419,7 +420,7 @@ VORSTELLUNG "CLOCK OK"
 VERNEINUNG`
 
 export const SYS_MEMORY = `; ==========================================
-; COMPU97 MEMORY MANAGER v3.0
+; DAS MEMORY MANAGER v3.0
 ; (C) 1997 Fatitech Industries
 ; ==========================================
 ; DO NOT MODIFY THIS FILE.
@@ -449,7 +450,7 @@ VORSTELLUNG "MEMORY OK"
 VERNEINUNG`
 
 export const SYS_BOOT = `; ==========================================
-; COMPU97 BOOT SEQUENCE v4.51
+; DAS BOOT SEQUENCE v4.51
 ; (C) 1997 Fatitech Industries
 ; ==========================================
 ; DO NOT MODIFY THIS FILE.
@@ -482,7 +483,7 @@ VORSTELLUNG DING 7
 VERNEINUNG`
 
 const SYS_CONFIG = `; ==========================================
-; COMPU97 SYSTEM CONFIGURATION
+; DAS SYSTEM CONFIGURATION
 ; (C) 1997 Fatitech Industries
 ; ==========================================
 ; Master configuration. Loaded at boot
@@ -521,7 +522,7 @@ ENDE
 VORSTELLUNG "CONFIG OK"
 VERNEINUNG`
 
-const SYS_LOG = `COMPU97 SYSTEM LOG
+const SYS_LOG = `DAS SYSTEM LOG
 ==================
 
 [1997-03-14 08:00:01] BOOT: POST sequence initiated
@@ -599,7 +600,7 @@ const WELT_CHILDREN: Record<string, FSNode> = {
     "README.txt": {
         name: "README.txt",
         type: "file",
-        content: `WELT - A Schopenhauerian programming language designed\nfor the Compy97 architecture
+        content: `WELT - A Schopenhauerian programming language designed\nfor the DAS (Ding an Sich) architecture
 =======================================
 
 Quick start:
