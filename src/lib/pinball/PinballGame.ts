@@ -347,6 +347,17 @@ export class PinballGame {
                 this._gameState = "gameOver"
                 this.saveHighScore()
                 this.playSound("pinball_gameover")
+
+                const allTargetsHit = this.targets.every((t) => t.isHit)
+                document.dispatchEvent(
+                    new CustomEvent("pinball:gameover", {
+                        detail: {
+                            score: this._score,
+                            highScore: this._highScore,
+                            allTargetsHit,
+                        },
+                    })
+                )
             } else {
                 this.resetBallPosition()
                 this.targets.forEach((t) => t.reset())

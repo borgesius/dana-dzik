@@ -116,6 +116,13 @@ async function executeStatement(
                     callbacks.onOutput("...")
                 } else if (state.totalIterations === 4096) {
                     callbacks.onOutput("Alles Leben ist Leiden.")
+                    if (typeof document !== "undefined") {
+                        document.dispatchEvent(
+                            new CustomEvent("welt:error", {
+                                detail: { type: "suffering" },
+                            })
+                        )
+                    }
                 }
 
                 if (iterations > MAX_ITERATIONS) {

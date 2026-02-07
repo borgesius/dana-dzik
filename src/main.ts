@@ -15,7 +15,9 @@ import "./styles/terminal.css"
 import "./styles/widgets.css"
 import "./styles/windows.css"
 import "./styles/mobile.css"
+import "./styles/achievements.css"
 
+import { AchievementToast } from "./components/AchievementToast"
 import { CursorTrail } from "./components/CursorTrail"
 import { Desktop } from "./components/Desktop"
 import { MobilePhone } from "./components/mobile/MobilePhone"
@@ -24,6 +26,8 @@ import { PopupManager } from "./components/PopupManager"
 import { setTerminalInit } from "./components/Terminal"
 import { Widgets } from "./components/Widgets"
 import { setupErrorHandlers } from "./core/ErrorHandler"
+import { getAchievementManager } from "./lib/achievements"
+import { wireAchievements } from "./lib/achievements/wiring"
 import {
     getAbVariant,
     initPerfTracking,
@@ -35,11 +39,36 @@ import { GlitchManager } from "./lib/glitchEffects"
 import { isMobile } from "./lib/isMobile"
 import { getLocaleManager } from "./lib/localeManager"
 import { Router } from "./lib/router"
+import { type SaveData, saveManager } from "./lib/saveManager"
 import { SystemCrashHandler } from "./lib/systemCrash"
+import {
+    diffFilesystem,
+    getSharedFilesystem,
+    patchFilesystem,
+} from "./lib/terminal/filesystem"
 import { getThemeManager } from "./lib/themeManager"
 
 setupErrorHandlers()
+
+const savedData = saveManager.load()
 getThemeManager()
+
+if (
+    savedData.filesystem &&
+    (Object.keys(savedData.filesystem.modified).length > 0 ||
+        Object.keys(savedData.filesystem.created).length > 0 ||
+        savedData.filesystem.deleted.length > 0)
+) {
+    patchFilesystem(getSharedFilesystem(), savedData.filesystem)
+}
+
+const achievements = getAchievementManager()
+achievements.deserialize(savedData.achievements)
+achievements.setDirtyCallback(() => saveManager.requestSave())
+
+window.addEventListener("beforeunload", () => {
+    saveManager.saveImmediate()
+})
 
 void (async (): Promise<void> => {
     await getLocaleManager().init()
@@ -62,6 +91,30 @@ void (async (): Promise<void> => {
 
 function initMobile(app: HTMLElement): void {
     const phone = new MobilePhone(app)
+
+    wireAchievements(achievements, (cb) => {
+        phone.onAppOpen(cb)
+    })
+    new AchievementToast(achievements)
+
+    saveManager.registerGatherFn((): SaveData => {
+        const pinballHighScore =
+            parseInt(localStorage.getItem("pinball-high-score") || "0", 10) || 0
+
+        return {
+            version: 1,
+            savedAt: Date.now(),
+            game: null,
+            pinball: { highScore: pinballHighScore },
+            preferences: {
+                theme: getThemeManager().getCurrentTheme(),
+                colorScheme: getThemeManager().getColorScheme(),
+                locale: getLocaleManager().getCurrentLocale(),
+            },
+            filesystem: diffFilesystem(getSharedFilesystem()),
+            achievements: achievements.serialize(),
+        }
+    })
 
     const router = new Router((windowId) => {
         phone.openApp(windowId)
@@ -100,6 +153,34 @@ function initDesktop(app: HTMLElement): void {
     const desktop = new Desktop(app)
     const windowManager = desktop.getWindowManager()
 
+    wireAchievements(achievements, (cb) => {
+        windowManager.onNewWindowOpen(cb)
+    })
+    new AchievementToast(achievements)
+
+    getThemeManager().on("themeChanged", () => saveManager.requestSave())
+    getThemeManager().on("colorSchemeChanged", () => saveManager.requestSave())
+    getLocaleManager().on("localeChanged", () => saveManager.requestSave())
+
+    saveManager.registerGatherFn((): SaveData => {
+        const pinballHighScore =
+            parseInt(localStorage.getItem("pinball-high-score") || "0", 10) || 0
+
+        return {
+            version: 1,
+            savedAt: Date.now(),
+            game: null,
+            pinball: { highScore: pinballHighScore },
+            preferences: {
+                theme: getThemeManager().getCurrentTheme(),
+                colorScheme: getThemeManager().getColorScheme(),
+                locale: getLocaleManager().getCurrentLocale(),
+            },
+            filesystem: diffFilesystem(getSharedFilesystem()),
+            achievements: achievements.serialize(),
+        }
+    })
+
     const router = new Router((windowId) => {
         windowManager.openWindow(windowId)
     })
@@ -134,6 +215,10 @@ function initDesktop(app: HTMLElement): void {
                 windowManager.openWindow(windowId)
             }
         }
+    })
+
+    document.addEventListener("terminal:file-saved", () => {
+        saveManager.requestSave()
     })
 
     document.addEventListener("terminal:open-window", ((

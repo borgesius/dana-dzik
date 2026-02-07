@@ -254,12 +254,31 @@ async function runWeltCommand(
             onOutput: (text) => ctx.print(text),
             onInput: () => ctx.requestInput(),
         })
+        if (typeof document !== "undefined") {
+            document.dispatchEvent(new CustomEvent("welt:completed"))
+        }
         return { output: "" }
     } catch (err) {
         if (err instanceof WeltError) {
             const lineInfo = err.line > 0 ? ` (line ${err.line})` : ""
+            const msg = err.message
+            if (typeof document !== "undefined") {
+                if (msg.includes("OVERHEAT")) {
+                    document.dispatchEvent(
+                        new CustomEvent("welt:error", {
+                            detail: { type: "thermal" },
+                        })
+                    )
+                } else if (msg.includes("DIVISION BY ZERO")) {
+                    document.dispatchEvent(
+                        new CustomEvent("welt:error", {
+                            detail: { type: "divide-by-zero" },
+                        })
+                    )
+                }
+            }
             return {
-                output: `WELT ERROR${lineInfo}: ${err.message}`,
+                output: `WELT ERROR${lineInfo}: ${msg}`,
                 className: "error",
             }
         }

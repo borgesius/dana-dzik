@@ -320,6 +320,16 @@ export class Editor {
         this.showStatusMessage(`Saved ${this.filename} (${lineCount} lines)`)
         this.updateHeader()
 
+        document.dispatchEvent(
+            new CustomEvent("terminal:file-saved", {
+                detail: {
+                    filename: this.filename,
+                    path: formatPath(this.filePath),
+                    isNew: false,
+                },
+            })
+        )
+
         void this.checkSystemFile(content)
     }
 

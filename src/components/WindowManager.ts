@@ -117,6 +117,15 @@ const WINDOW_CONFIGS: Record<RoutableWindow, WindowConfig> = {
         style: "win95",
         contentType: "explorer",
     },
+    achievements: {
+        id: "achievements",
+        title: "Achievements",
+        icon: icon("achievements"),
+        width: 550,
+        height: 500,
+        style: "winxp",
+        contentType: "achievements",
+    },
 }
 
 /**

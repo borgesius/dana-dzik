@@ -44,6 +44,8 @@ export function initFelixGPT(): void {
         addMessage(messages, text, false)
         input.value = ""
 
+        document.dispatchEvent(new CustomEvent("felix:message"))
+
         const thinkingTime = 500 + Math.random() * 1000
         setTimeout(() => {
             const response = generateResponse(text)

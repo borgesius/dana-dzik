@@ -68,6 +68,7 @@ export const ROUTABLE_WINDOWS = [
     "pinball",
     "terminal",
     "explorer",
+    "achievements",
 ] as const
 
 export type RoutableWindow = (typeof ROUTABLE_WINDOWS)[number]
@@ -84,6 +85,7 @@ export const ROUTE_MAP: Record<string, RoutableWindow> = {
     "/stats": "stats",
     "/pinball": "pinball",
     "/terminal": "terminal",
+    "/achievements": "achievements",
 }
 
 export interface DesktopItemConfig {
@@ -173,6 +175,13 @@ export const DESKTOP_ITEMS: DesktopItemConfig[] = [
         icon: "📁",
         windowId: "explorer",
         fileType: "directory",
+    },
+    {
+        id: "achievements",
+        filename: "Achievements.exe",
+        icon: "🏆",
+        windowId: "achievements",
+        fileType: "executable",
     },
 ]
 

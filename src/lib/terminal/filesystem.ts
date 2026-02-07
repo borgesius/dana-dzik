@@ -803,6 +803,19 @@ export function createFileSystem(): FileSystem {
     }
 }
 
+let persistentFs: FileSystem | null = null
+
+export function getSharedFilesystem(): FileSystem {
+    if (!persistentFs) {
+        persistentFs = createFileSystem()
+    }
+    return persistentFs
+}
+
+export function resetSharedFilesystem(): void {
+    persistentFs = null
+}
+
 export function resolvePath(fs: FileSystem, pathStr: string): string[] | null {
     let parts: string[]
 
@@ -963,6 +976,8 @@ export function getExecutableWindowId(
     return node.windowId ?? null
 }
 
+const MAX_FILE_BYTES = 4096
+
 export function writeFile(
     fs: FileSystem,
     pathStr: string,
@@ -980,6 +995,13 @@ export function writeFile(
 
     if (node.type === "directory") {
         return { success: false, error: `${pathStr} is a directory` }
+    }
+
+    if (new Blob([content]).size > MAX_FILE_BYTES) {
+        return {
+            success: false,
+            error: `File exceeds ${MAX_FILE_BYTES} byte limit`,
+        }
     }
 
     node.content = content
@@ -1017,11 +1039,110 @@ export function createFile(
         return { success: false, error: `File already exists: ${name}` }
     }
 
+    if (new Blob([content]).size > MAX_FILE_BYTES) {
+        return {
+            success: false,
+            error: `File exceeds ${MAX_FILE_BYTES} byte limit`,
+        }
+    }
+
     dirNode.children[name] = {
         name,
         type: "file",
         content,
     }
+
+    return { success: true }
+}
+
+export function deleteFile(
+    fs: FileSystem,
+    pathStr: string
+): { success: boolean; error?: string } {
+    const resolved = resolvePath(fs, pathStr)
+    if (!resolved || resolved.length < 2) {
+        return { success: false, error: `Invalid path: ${pathStr}` }
+    }
+
+    const node = getNode(fs, resolved)
+    if (!node) {
+        return { success: false, error: `Not found: ${pathStr}` }
+    }
+
+    if (
+        node.type === "directory" &&
+        node.children &&
+        Object.keys(node.children).length > 0
+    ) {
+        return {
+            success: false,
+            error: `Directory not empty: ${pathStr}`,
+        }
+    }
+
+    const parentPath = resolved.slice(0, -1)
+    const parentNode = getNode(fs, parentPath)
+    if (
+        !parentNode ||
+        parentNode.type !== "directory" ||
+        !parentNode.children
+    ) {
+        return { success: false, error: `Parent directory not found` }
+    }
+
+    const fileName = resolved[resolved.length - 1]
+    const key = Object.keys(parentNode.children).find(
+        (k) => k.toLowerCase() === fileName.toLowerCase()
+    )
+    if (key) {
+        delete parentNode.children[key]
+    }
+
+    return { success: true }
+}
+
+export function renameFile(
+    fs: FileSystem,
+    pathStr: string,
+    newName: string
+): { success: boolean; error?: string } {
+    const resolved = resolvePath(fs, pathStr)
+    if (!resolved || resolved.length < 2) {
+        return { success: false, error: `Invalid path: ${pathStr}` }
+    }
+
+    const node = getNode(fs, resolved)
+    if (!node) {
+        return { success: false, error: `Not found: ${pathStr}` }
+    }
+
+    const parentPath = resolved.slice(0, -1)
+    const parentNode = getNode(fs, parentPath)
+    if (
+        !parentNode ||
+        parentNode.type !== "directory" ||
+        !parentNode.children
+    ) {
+        return { success: false, error: `Parent directory not found` }
+    }
+
+    if (parentNode.children[newName]) {
+        return {
+            success: false,
+            error: `Already exists: ${newName}`,
+        }
+    }
+
+    const oldKey = Object.keys(parentNode.children).find(
+        (k) => k.toLowerCase() === resolved[resolved.length - 1].toLowerCase()
+    )
+    if (!oldKey) {
+        return { success: false, error: `Not found: ${pathStr}` }
+    }
+
+    node.name = newName
+    parentNode.children[newName] = node
+    delete parentNode.children[oldKey]
 
     return { success: true }
 }
@@ -1062,4 +1183,119 @@ export function buildTree(
     }
 
     return lines.join("\n")
+}
+
+// ─── Diff / Patch (for save/load) ───────────────────────────────────────────
+
+export interface FilesystemDiff {
+    modified: Record<string, string>
+    created: Record<string, string>
+    deleted: string[]
+}
+
+function collectFiles(
+    node: FSNode,
+    path: string[],
+    out: Map<string, string | undefined>
+): void {
+    const fullPath = path.join("\\")
+
+    if (node.type !== "directory") {
+        out.set(fullPath, node.content)
+        return
+    }
+
+    if (!node.children) return
+    for (const child of Object.values(node.children)) {
+        collectFiles(child, [...path, child.name], out)
+    }
+}
+
+export function diffFilesystem(current: FileSystem): FilesystemDiff {
+    const defaultFs = createFileSystem()
+
+    const defaultFiles = new Map<string, string | undefined>()
+    collectFiles(defaultFs.root, ["C:"], defaultFiles)
+
+    const currentFiles = new Map<string, string | undefined>()
+    collectFiles(current.root, ["C:"], currentFiles)
+
+    const modified: Record<string, string> = {}
+    const created: Record<string, string> = {}
+    const deleted: string[] = []
+
+    for (const [path, content] of currentFiles) {
+        if (defaultFiles.has(path)) {
+            if (content !== defaultFiles.get(path) && content !== undefined) {
+                modified[path] = content
+            }
+        } else if (content !== undefined) {
+            created[path] = content
+        }
+    }
+
+    for (const path of defaultFiles.keys()) {
+        if (!currentFiles.has(path)) {
+            deleted.push(path)
+        }
+    }
+
+    return { modified, created, deleted }
+}
+
+export function patchFilesystem(fs: FileSystem, diff: FilesystemDiff): void {
+    for (const path of diff.deleted) {
+        const parts = path.split("\\")
+        if (parts.length < 2) continue
+        const parentPath = parts.slice(0, -1)
+        const parentNode = getNode(fs, parentPath)
+        if (parentNode?.type === "directory" && parentNode.children) {
+            const name = parts[parts.length - 1]
+            delete parentNode.children[name]
+        }
+    }
+
+    for (const [path, content] of Object.entries(diff.modified)) {
+        const parts = path.split("\\")
+        const node = getNode(fs, parts)
+        if (node && node.type !== "directory") {
+            node.content = content
+        }
+    }
+
+    for (const [path, content] of Object.entries(diff.created)) {
+        const parts = path.split("\\")
+        if (parts.length < 2) continue
+        const parentParts = parts.slice(0, -1)
+        const name = parts[parts.length - 1]
+
+        let parentNode = getNode(fs, parentParts)
+
+        if (!parentNode) {
+            for (let i = 1; i < parentParts.length; i++) {
+                const existing = getNode(fs, parentParts.slice(0, i + 1))
+                if (!existing) {
+                    const parent = getNode(fs, parentParts.slice(0, i))
+                    if (parent?.type === "directory") {
+                        if (!parent.children) parent.children = {}
+                        parent.children[parentParts[i]] = {
+                            name: parentParts[i],
+                            type: "directory",
+                            children: {},
+                        }
+                    }
+                }
+            }
+            parentNode = getNode(fs, parentParts)
+        }
+
+        if (parentNode?.type === "directory") {
+            if (!parentNode.children) parentNode.children = {}
+            parentNode.children[name] = {
+                name,
+                type: "file",
+                content,
+            }
+        }
+    }
 }

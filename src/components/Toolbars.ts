@@ -4,6 +4,7 @@ import {
     type Venture,
 } from "../lib/businessGame"
 import { getLocaleManager, type LocaleId } from "../lib/localeManager"
+import { saveManager } from "../lib/saveManager"
 import { initStrava } from "../lib/strava"
 import {
     type ColorScheme,
@@ -135,10 +136,27 @@ export class Toolbars {
         spacer.style.flex = "1"
         toolbar.appendChild(spacer)
 
+        toolbar.appendChild(this.createResetButton())
         toolbar.appendChild(this.createLanguageToggle())
         toolbar.appendChild(this.createColorSchemeToggle())
 
         return toolbar
+    }
+
+    private createResetButton(): HTMLElement {
+        const btn = document.createElement("button")
+        btn.className = "toolbar-button reset-button"
+        btn.textContent = "🔄"
+        btn.title = "Reset all progress"
+        btn.addEventListener("click", () => {
+            const confirmed = window.confirm(
+                "Reset everything?\n\nThis will erase all progress, achievements, filesystem edits, and preferences."
+            )
+            if (confirmed) {
+                saveManager.reset()
+            }
+        })
+        return btn
     }
 
     private createLanguageToggle(): HTMLElement {

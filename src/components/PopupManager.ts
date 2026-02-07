@@ -244,6 +244,7 @@ export class PopupManager {
         const game = getBusinessGame()
         game.addBonus(amount)
         this.playSound("notify")
+        document.dispatchEvent(new CustomEvent("popup:bonus-claimed"))
     }
 
     private closePopup(popup: HTMLElement): void {

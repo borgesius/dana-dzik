@@ -8,7 +8,10 @@ import { initPinball, type PinballGame } from "../lib/pinball"
 import { initSiteStats } from "../lib/siteStats"
 import { getThemeManager } from "../lib/themeManager"
 import { initVisitorCount } from "../lib/visitorCount"
-import { getWindowContent } from "../lib/windowContent"
+import {
+    getWindowContent,
+    renderAchievementsWindow,
+} from "../lib/windowContent"
 import { FileExplorer } from "./FileExplorer"
 import { Terminal } from "./Terminal"
 
@@ -125,6 +128,8 @@ export class Window {
             this.initTerminal()
         } else if (this.config.contentType === "explorer") {
             this.initExplorer()
+        } else if (this.config.contentType === "achievements") {
+            renderAchievementsWindow()
         }
     }
 
