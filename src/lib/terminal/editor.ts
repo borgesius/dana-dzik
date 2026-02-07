@@ -321,9 +321,7 @@ export class Editor {
 
     private appendLine(line: string): void {
         const current = this.textareaEl.value
-        this.textareaEl.value = current
-            ? `${current}\n${line}`
-            : line
+        this.textareaEl.value = current ? `${current}\n${line}` : line
         this.updateGutter()
         this.updateHeader()
         this.textareaEl.scrollTop = this.textareaEl.scrollHeight
@@ -384,7 +382,11 @@ export class Editor {
     }
 
     private async typeExercise4(solution: string[]): Promise<void> {
-        for (let i = 0; i < EXERCISE_4_BREAK_AFTER && i < solution.length; i++) {
+        for (
+            let i = 0;
+            i < EXERCISE_4_BREAK_AFTER && i < solution.length;
+            i++
+        ) {
             if (this.destroyed) return
             this.appendLine(solution[i])
             await this.sleep(LINE_DELAY_MS)
@@ -407,9 +409,10 @@ export class Editor {
 
     private async typeExercise5(solution: string[]): Promise<void> {
         const essayStart = solution.indexOf(EXERCISE_5_SCHOPENHAUER_ESSAY[0])
-        const essayEnd = essayStart >= 0
-            ? essayStart + EXERCISE_5_SCHOPENHAUER_ESSAY.length
-            : -1
+        const essayEnd =
+            essayStart >= 0
+                ? essayStart + EXERCISE_5_SCHOPENHAUER_ESSAY.length
+                : -1
 
         for (let i = 0; i < solution.length; i++) {
             if (this.destroyed) return
@@ -424,14 +427,11 @@ export class Editor {
 
             if (i >= essayStart && i < essayEnd) {
                 const essayIdx = i - essayStart
-                const prevLine = essayIdx > 0
-                    ? EXERCISE_5_SCHOPENHAUER_ESSAY[essayIdx - 1]
-                    : ""
-                const displayLines = glitchLine(
-                    solution[i],
-                    essayIdx,
-                    prevLine
-                )
+                const prevLine =
+                    essayIdx > 0
+                        ? EXERCISE_5_SCHOPENHAUER_ESSAY[essayIdx - 1]
+                        : ""
+                const displayLines = glitchLine(solution[i], essayIdx, prevLine)
 
                 for (let d = 0; d < displayLines.length; d++) {
                     if (this.destroyed) return
