@@ -2,6 +2,41 @@
 
 Personal website. [danadzik.com](https://danadzik.com)
 
+## Development
+
+```bash
+npm install
+npm run dev
+```
+
+## Environment Variables
+
+Copy `.env.example` and fill in credentials. All API keys are server-side only (Vercel serverless functions).
+
+| Variable                   | Description                                           |
+| -------------------------- | ----------------------------------------------------- |
+| `LASTFM_API_KEY`           | [Last.fm API](https://www.last.fm/api/account/create) |
+| `LASTFM_USERNAME`          | Last.fm username                                      |
+| `STRAVA_CLIENT_ID`         | [Strava API](https://www.strava.com/settings/api)     |
+| `STRAVA_CLIENT_SECRET`     | Strava API secret                                     |
+| `STRAVA_REFRESH_TOKEN`     | Initial OAuth token (stored in Redis after first use) |
+| `UPSTASH_REDIS_REST_URL`   | [Upstash](https://console.upstash.com/) REST URL      |
+| `UPSTASH_REDIS_REST_TOKEN` | Upstash REST token                                    |
+
+## Scripts
+
+| Command             | Description        |
+| ------------------- | ------------------ |
+| `npm run dev`       | Start dev server   |
+| `npm run build`     | Production build   |
+| `npm run lint`      | ESLint + Stylelint |
+| `npm run typecheck` | TypeScript check   |
+| `npm run test:unit` | Run tests          |
+
+## Routes
+
+`/about`, `/projects`, `/resume`, `/links`, `/guestbook`, `/stats`, `/felixgpt`
+
 ## Architecture
 
 Vanilla TypeScript SPA styled as a retro desktop OS. DOM manipulation via class-based components. Vercel serverless functions for API integrations. Upstash Redis for persistence.
@@ -38,7 +73,7 @@ Custom esoteric programming language with Schopenhauerian influence. 8 memory sl
 - [`src/lib/welt/grundInterpreter.ts`](src/lib/welt/grundInterpreter.ts) — GRUND assembly interpreter
 - [`src/lib/welt/exercises.ts`](src/lib/welt/exercises.ts) — programming challenges with test runner
 
-### Margin Call Game
+### Margin Call
 
 Idle commodity trading simulator. Tick-based price simulation (trend/volatility/noise/mean reversion) with seeded RNG. 6 commodities, limit orders, corner market detection, random events, offline catchup. Phases unlock progressively: trading → factories → upgrades → market influence → org chart → structured products.
 
@@ -95,7 +130,7 @@ Editing system files in the virtual filesystem (`3:\DAS\*.welt`) triggers themed
 ### External Integrations
 
 - **Last.fm** — top 5 recent tracks with Deezer album art fallback ([`src/lib/nowPlaying.ts`](src/lib/nowPlaying.ts), [`api/lastfm.ts`](api/lastfm.ts))
-- **Strava** — best recent run with race equivalency via Riegel formula ([`src/lib/strava.ts`](src/lib/strava.ts), [`api/strava.ts`](api/strava.ts))
+- **Strava** — most performant recent run by race equivalency ([`src/lib/strava.ts`](src/lib/strava.ts), [`api/strava.ts`](api/strava.ts))
 - **Guestbook** — reads from GitHub Issues API ([`src/lib/guestbook.ts`](src/lib/guestbook.ts))
 - **Analytics** — Redis-backed event tracking, funnel analysis, A/B testing ([`src/lib/siteStats.ts`](src/lib/siteStats.ts), [`api/analytics.ts`](api/analytics.ts))
 - **Visitor count** — Redis counter with bot detection ([`src/lib/visitorCount.ts`](src/lib/visitorCount.ts), [`api/visitor-count.ts`](api/visitor-count.ts))
@@ -171,38 +206,3 @@ Vite with `@` path alias to `src/`. Injects `__BUILD_TIME__`, `__GIT_COMMIT__`, 
 
 - [`vite.config.ts`](vite.config.ts) — Vite config
 - [`vercel.json`](vercel.json) — Vercel config
-
-## Development
-
-```bash
-npm install
-npm run dev
-```
-
-## Environment Variables
-
-Copy `.env.example` and fill in credentials. All API keys are server-side only (Vercel serverless functions).
-
-| Variable                   | Description                                           |
-| -------------------------- | ----------------------------------------------------- |
-| `LASTFM_API_KEY`           | [Last.fm API](https://www.last.fm/api/account/create) |
-| `LASTFM_USERNAME`          | Last.fm username                                      |
-| `STRAVA_CLIENT_ID`         | [Strava API](https://www.strava.com/settings/api)     |
-| `STRAVA_CLIENT_SECRET`     | Strava API secret                                     |
-| `STRAVA_REFRESH_TOKEN`     | Initial OAuth token (stored in Redis after first use) |
-| `UPSTASH_REDIS_REST_URL`   | [Upstash](https://console.upstash.com/) REST URL      |
-| `UPSTASH_REDIS_REST_TOKEN` | Upstash REST token                                    |
-
-## Scripts
-
-| Command             | Description        |
-| ------------------- | ------------------ |
-| `npm run dev`       | Start dev server   |
-| `npm run build`     | Production build   |
-| `npm run lint`      | ESLint + Stylelint |
-| `npm run typecheck` | TypeScript check   |
-| `npm run test:unit` | Run tests          |
-
-## Routes
-
-`/about`, `/projects`, `/resume`, `/links`, `/guestbook`, `/stats`, `/felixgpt`
