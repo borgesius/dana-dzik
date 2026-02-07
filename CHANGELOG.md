@@ -1,3 +1,10 @@
+# [1.36.0](https://github.com/borgesius/dana-dzik/compare/v1.35.0...v1.36.0) (2026-02-07)
+
+
+### Features
+
+* welt learning ([#33](https://github.com/borgesius/dana-dzik/issues/33)) ([ba9d9ff](https://github.com/borgesius/dana-dzik/commit/ba9d9ff65f37eda212f5e1172725d2d73510e24a))
+
 # [1.35.0](https://github.com/borgesius/dana-dzik/compare/v1.34.0...v1.35.0) (2026-02-07)
 
 
