@@ -176,13 +176,6 @@ export const DESKTOP_ITEMS: DesktopItemConfig[] = [
         windowId: "explorer",
         fileType: "directory",
     },
-    {
-        id: "achievements",
-        filename: "Achievements.exe",
-        icon: "🏆",
-        windowId: "achievements",
-        fileType: "executable",
-    },
 ]
 
 /** Items pinned to the mobile dock */

@@ -5,7 +5,6 @@ import {
     getMarketGame,
     type MarketEngine,
 } from "../lib/marketGame"
-import { saveManager } from "../lib/saveManager"
 import { initStrava } from "../lib/strava"
 import {
     type ColorScheme,
@@ -137,25 +136,24 @@ export class Toolbars {
         spacer.style.flex = "1"
         toolbar.appendChild(spacer)
 
-        toolbar.appendChild(this.createResetButton())
+        toolbar.appendChild(this.createAchievementsButton())
         toolbar.appendChild(this.createLanguageToggle())
         toolbar.appendChild(this.createColorSchemeToggle())
 
         return toolbar
     }
 
-    private createResetButton(): HTMLElement {
+    private createAchievementsButton(): HTMLElement {
         const btn = document.createElement("button")
-        btn.className = "toolbar-button reset-button"
-        btn.textContent = "🔄"
-        btn.title = "Reset all progress"
+        btn.className = "toolbar-button achievements-button"
+        btn.textContent = "🏆"
+        btn.title = "Achievements"
         btn.addEventListener("click", () => {
-            const confirmed = window.confirm(
-                "Reset everything?\n\nThis will erase all progress, achievements, filesystem edits, and preferences."
+            document.dispatchEvent(
+                new CustomEvent("terminal:open-window", {
+                    detail: { windowId: "achievements" },
+                })
             )
-            if (confirmed) {
-                saveManager.reset()
-            }
         })
         return btn
     }
