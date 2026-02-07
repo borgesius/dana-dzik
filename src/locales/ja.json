@@ -117,14 +117,9 @@
     "qaFallback3": "🔬 QA: N/A",
     "colorScheme": "カラー: {{scheme}}",
     "language": "言語: {{language}}",
-    "hqOpen": "📊 HQ ▲",
-    "hqClosed": "📊 HQ ▼",
-    "github": "🐙 GitHub",
-    "unlockAt": "生涯収益 ${{threshold}} で解除",
-    "makeMoney": "今すぐ稼ぐ",
-    "tooltipWithOdds": "{{tagline}}\nコスト: ${{cost}} | 報酬: ${{payout}} | 成功率 {{successRate}}%",
-    "tooltipWithoutOdds": "{{tagline}}\nコスト: ${{cost}} | 報酬: ${{payout}}",
-    "locked": "🔒 ${{threshold}}"
+    "tradeOpen": "📈 TRADE ▲",
+    "tradeClosed": "📈 TRADE ▼",
+    "github": "🐙 GitHub"
   },
   "qa": {
     "performance": "パフォーマンス",
@@ -261,159 +256,59 @@
     "title": "EDIT - {{filename}}{{dirtyMarker}}",
     "position": "{{line}}行, {{col}}列"
   },
-  "businessPanel": {
-    "title": "ビジネス本部",
-    "close": "×",
-    "improvements": "改善",
-    "transactions": "取引履歴",
-    "balance": "💰 残高",
-    "revenue": "収益",
-    "success": "成功",
-    "streak": "連勝",
-    "bestWin": "最高勝利額",
-    "acquired": "取得済み",
-    "noTransactions": "取引履歴なし"
-  },
-  "businessGame": {
-    "ventures": {
-      "makeMoney": {
-        "name": "今すぐ稼ぐ",
-        "tagline": "クリックして稼ぎ始めよう！"
-      },
-      "emailForward": {
-        "name": "メール転送",
-        "tagline": "友達に転送して手数料を稼ごう！"
-      },
-      "punchMonkey": {
-        "name": "インタラクティブ広告",
-        "tagline": "サルをパンチして勝て！"
-      },
-      "ringtones": {
-        "name": "プレミアム着信音",
-        "tagline": "限定着信音をダウンロード！"
-      },
-      "workHome": {
-        "name": "在宅ビジネスキット",
-        "tagline": "自宅で封筒詰めの仕事！"
-      },
-      "screensaver": {
-        "name": "デスクトップスイート",
-        "tagline": "無料スクリーンセーバーとカーソル！"
-      },
-      "nigerianPrince": {
-        "name": "国際パートナーシップ",
-        "tagline": "資金移動を手伝って20%をキープ！"
-      },
-      "vacation": {
-        "name": "バケーション所有権",
-        "tagline": "限定タイムシェアの機会！"
-      },
-      "stockTips": {
-        "name": "インサイダー市場情報",
-        "tagline": "熱い株のヒントを毎日配信！"
-      },
-      "mlm": {
-        "name": "マルチレベルマーケティング",
-        "tagline": "今日からダウンラインを構築！"
-      },
-      "downloadRam": {
-        "name": "システム最適化",
-        "tagline": "RAMを今すぐダウンロード！"
-      },
-      "y2k": {
-        "name": "Y2K準備キット",
-        "tagline": "ミレニアムに備えよう！"
-      },
-      "winner": {
-        "name": "おめでとうございます！！！",
-        "tagline": "あなたは100万人目の訪問者です！"
-      },
-      "dotcomIpo": {
-        "name": "ドットコムIPO",
-        "tagline": "最初のフロアに参加しよう！"
-      }
+  "commodityExchange": {
+    "ui": {
+      "title": "商品取引ターミナル",
+      "close": "×",
+      "portfolio": "ポートフォリオ",
+      "production": "生産",
+      "improvements": "改善",
+      "marketOperations": "市場操作",
+      "buy": "購入",
+      "sell": "売却",
+      "sellAll": "全て売却",
+      "deploy": "配置",
+      "acquire": "取得",
+      "execute": "実行",
+      "installed": "導入済み",
+      "cooldown": "クールダウン",
+      "qty": "数量",
+      "avgCost": "平均コスト",
+      "pl": "損益",
+      "tick": "ティック",
+      "deployed": "配置済み",
+      "noHoldings": "保有なし。取引を開始するにはコモディティを購入してください。",
+      "unlockAt": "${{threshold}}の累計収益でアンロック"
+    },
+    "commodities": {
+      "EMAIL": { "name": "メールデータベース", "description": "検証済みオプトインアドレス。毎日更新。" },
+      "ADS": { "name": "バナーインプレッション", "description": "プレミアム468x60広告枠。" },
+      "DOM": { "name": ".comドメイン", "description": "事前登録済みプレミアムドメイン名。" },
+      "BW": { "name": "帯域幅", "description": "専用T1回線容量。1.544 Mbps。" },
+      "SOFT": { "name": "ソフトウェアライセンス", "description": "エンタープライズボリュームライセンス。出荷準備完了。" },
+      "VC": { "name": "ベンチャーキャピタル", "description": "IPO前投資証券。在庫限定。" }
+    },
+    "factories": {
+      "list-builder": { "name": "自動リストビルダー", "description": "検証済みメールアドレスを24時間365日収集。結果は異なる場合があります。" },
+      "banner-exchange": { "name": "バナー交換", "description": "ローテーション広告ネットワーク。インプレッション自動生成。" },
+      "colocation-rack": { "name": "コロケーションラック", "description": "専用サーバーホスティング。稼働時間保証なし。" },
+      "offshore-dev": { "name": "オフショア開発チーム", "description": "24時間開発サイクル。品質保証は保留中。" }
     },
     "upgrades": {
-      "ergonomicKeyboard": {
-        "name": "エルゴノミックキーボード",
-        "description": "基本クリックで$0.02獲得"
-      },
-      "salesTraining": {
-        "name": "営業トレーニング",
-        "description": "全ビジネスのリスク-5%"
-      },
-      "luckyTie": {
-        "name": "ラッキータイ",
-        "description": "連勝ボーナス+15%"
-      },
-      "marketResearch": {
-        "name": "市場調査",
-        "description": "ホバー時に正確な成功率を表示"
-      },
-      "fastInternet": {
-        "name": "56kモデム",
-        "description": "メール転送の報酬+$0.50"
-      },
-      "touchscreen": {
-        "name": "タッチスクリーンモニター",
-        "description": "インタラクティブ広告の報酬+$2.00"
-      },
-      "cellPhone": {
-        "name": "Nokia 3310",
-        "description": "プレミアム着信音のクールダウン-3秒"
-      },
-      "calculator": {
-        "name": "ビジネス電卓",
-        "description": "在宅ビジネスの報酬+50%"
-      },
-      "advancedTraining": {
-        "name": "上級トレーニング",
-        "description": "全ビジネスのリスク-10%"
-      },
-      "motivationalPoster": {
-        "name": "やる気を出すポスター",
-        "description": "連勝ボーナス+25%"
-      },
-      "networkingEvent": {
-        "name": "ネットワーキングイベント",
-        "description": "国際パートナーシップ+$150"
-      },
-      "executiveDesk": {
-        "name": "エグゼクティブデスク",
-        "description": "基本クリックで$0.05獲得"
-      },
-      "pentiumIII": {
-        "name": "Pentium III",
-        "description": "システム最適化の報酬+$100"
-      },
-      "leatherBriefcase": {
-        "name": "レザーブリーフケース",
-        "description": "全ビジネスのリスク-15%"
-      },
-      "goldenWatch": {
-        "name": "ゴールデンウォッチ",
-        "description": "連勝ボーナス+40%"
-      },
-      "franchiseRights": {
-        "name": "フランチャイズ権",
-        "description": "MLMの報酬+100%"
-      },
-      "cornerOffice": {
-        "name": "コーナーオフィス",
-        "description": "パッシブ +$0.25/秒"
-      },
-      "stockPortfolio": {
-        "name": "株式ポートフォリオ",
-        "description": "パッシブ +$1.00/秒"
-      },
-      "realEstate": {
-        "name": "不動産",
-        "description": "パッシブ +$5.00/秒"
-      },
-      "ventureCapital": {
-        "name": "ベンチャーキャピタル",
-        "description": "パッシブ +$25/秒"
-      }
+      "bulk-orders": { "name": "一括注文処理", "description": "10単位で取引を実行。" },
+      "limit-orders": { "name": "指値注文システム", "description": "目標価格を設定。保有分は自動的に売却。" },
+      "trend-analysis": { "name": "トレンド分析パッケージ", "description": "価格チャートに方向性インジケーターを表示。" },
+      "cpu-overclock": { "name": "CPUオーバークロック", "description": "生産サイクル速度を向上。不安定になる可能性あり。" },
+      "quality-assurance": { "name": "品質保証", "description": "生産のばらつきを軽減。最低収量保証。" },
+      "supply-chain": { "name": "サプライチェーン統合", "description": "余剰コモディティをプレミアム商品に変換。" },
+      "insider-newsletter": { "name": "インサイダーニュースレター", "description": "市場を動かすイベントの事前通知。10秒のリードタイム。" },
+      "analyst-reports": { "name": "アナリストレポート", "description": "トレンド強度の数値インジケーター。" },
+      "moving-average": { "name": "移動平均オーバーレイ", "description": "価格チャート用テクニカル分析ツール。" }
+    },
+    "influence": {
+      "promo-campaign": { "name": "プロモーションキャンペーン", "description": "選択したコモディティの人工的な需要を生成。" },
+      "negative-press": { "name": "ネガティブプレスリリース", "description": "対象コモディティの市場価値を一時的に下落させる。" },
+      "pump-and-dump": { "name": "パンプ・アンド・ダンプ", "description": "自動清算を伴う協調的な価格膨張。" }
     }
   },
   "welcome": {

@@ -117,14 +117,9 @@
     "qaFallback3": "🔬 QA: 不可用",
     "colorScheme": "配色: {{scheme}}",
     "language": "语言: {{language}}",
-    "hqOpen": "📊 总部 ▲",
-    "hqClosed": "📊 总部 ▼",
-    "github": "🐙 GitHub",
-    "unlockAt": "终身收益达到 ${{threshold}} 后解锁",
-    "makeMoney": "快速赚钱",
-    "tooltipWithOdds": "{{tagline}}\n成本: ${{cost}} | 奖金: ${{payout}} | {{successRate}}% 成功率",
-    "tooltipWithoutOdds": "{{tagline}}\n成本: ${{cost}} | 奖金: ${{payout}}",
-    "locked": "🔒 ${{threshold}}"
+    "tradeOpen": "📈 TRADE ▲",
+    "tradeClosed": "📈 TRADE ▼",
+    "github": "🐙 GitHub"
   },
   "qa": {
     "performance": "性能",
@@ -261,159 +256,59 @@
     "title": "编辑 - {{filename}}{{dirtyMarker}}",
     "position": "行 {{line}}，列 {{col}}"
   },
-  "businessPanel": {
-    "title": "商业总部",
-    "close": "×",
-    "improvements": "改进项目",
-    "transactions": "交易记录",
-    "balance": "💰 余额",
-    "revenue": "收益",
-    "success": "成功",
-    "streak": "连胜",
-    "bestWin": "最佳收益",
-    "acquired": "已获得",
-    "noTransactions": "暂无交易记录"
-  },
-  "businessGame": {
-    "ventures": {
-      "makeMoney": {
-        "name": "快速赚钱",
-        "tagline": "点击这里开始赚钱！"
-      },
-      "emailForward": {
-        "name": "邮件转发",
-        "tagline": "转发给朋友，赚取佣金！"
-      },
-      "punchMonkey": {
-        "name": "互动广告",
-        "tagline": "打猴子就能赢！"
-      },
-      "ringtones": {
-        "name": "高级铃声",
-        "tagline": "下载专属铃声！"
-      },
-      "workHome": {
-        "name": "居家商业套装",
-        "tagline": "在家工作装信封！"
-      },
-      "screensaver": {
-        "name": "桌面套件",
-        "tagline": "免费屏保和光标！"
-      },
-      "nigerianPrince": {
-        "name": "国际合作",
-        "tagline": "协助资金转移，获得 20% 回报！"
-      },
-      "vacation": {
-        "name": "度假所有权",
-        "tagline": "独家分时度假机会！"
-      },
-      "stockTips": {
-        "name": "内幕市场贴士",
-        "tagline": "每日送达热门股票建议！"
-      },
-      "mlm": {
-        "name": "多层次营销",
-        "tagline": "立即建立你的下线！"
-      },
-      "downloadRam": {
-        "name": "系统优化",
-        "tagline": "立即下载更多内存！"
-      },
-      "y2k": {
-        "name": "Y2K 准备套装",
-        "tagline": "为千禧年做好准备！"
-      },
-      "winner": {
-        "name": "恭喜你！！！",
-        "tagline": "您是第 1,000,000 位访客！"
-      },
-      "dotcomIpo": {
-        "name": "互联网公司 IPO",
-        "tagline": "抢占先机！"
-      }
+  "commodityExchange": {
+    "ui": {
+      "title": "商品交易终端",
+      "close": "×",
+      "portfolio": "投资组合",
+      "production": "生产",
+      "improvements": "改进",
+      "marketOperations": "市场操作",
+      "buy": "买入",
+      "sell": "卖出",
+      "sellAll": "全部卖出",
+      "deploy": "部署",
+      "acquire": "获取",
+      "execute": "执行",
+      "installed": "已安装",
+      "cooldown": "冷却中",
+      "qty": "数量",
+      "avgCost": "平均成本",
+      "pl": "盈亏",
+      "tick": "周期",
+      "deployed": "已部署",
+      "noHoldings": "暂无持仓。购买商品以开始交易。",
+      "unlockAt": "累计收益达${{threshold}}解锁"
+    },
+    "commodities": {
+      "EMAIL": { "name": "邮件数据库", "description": "经验证的选择性加入地址。每日更新。" },
+      "ADS": { "name": "横幅展示", "description": "优质468x60广告位。" },
+      "DOM": { "name": ".com域名", "description": "预注册优质域名。" },
+      "BW": { "name": "带宽", "description": "专用T1线路容量。1.544 Mbps。" },
+      "SOFT": { "name": "软件许可证", "description": "企业批量授权。包装完毕。" },
+      "VC": { "name": "风险投资", "description": "IPO前投资证券。限量供应。" }
+    },
+    "factories": {
+      "list-builder": { "name": "自动列表构建器", "description": "全天候采集经验证的电子邮件地址。结果可能有所不同。" },
+      "banner-exchange": { "name": "横幅广告交换", "description": "轮换广告网络。展示自动生成。" },
+      "colocation-rack": { "name": "托管机架", "description": "专用服务器托管。不保证正常运行时间。" },
+      "offshore-dev": { "name": "离岸开发团队", "description": "24小时开发周期。质量保证待定。" }
     },
     "upgrades": {
-      "ergonomicKeyboard": {
-        "name": "人体工学键盘",
-        "description": "基础点击收益 $0.02"
-      },
-      "salesTraining": {
-        "name": "销售培训",
-        "description": "所有项目风险 -5%"
-      },
-      "luckyTie": {
-        "name": "幸运领带",
-        "description": "连胜奖励 +15%"
-      },
-      "marketResearch": {
-        "name": "市场调研",
-        "description": "悬停时显示精确成功率"
-      },
-      "fastInternet": {
-        "name": "56k 调制解调器",
-        "description": "邮件转发收益 +$0.50"
-      },
-      "touchscreen": {
-        "name": "触摸屏显示器",
-        "description": "互动广告收益 +$2.00"
-      },
-      "cellPhone": {
-        "name": "诺基亚 3310",
-        "description": "高级铃声冷却时间 -3秒"
-      },
-      "calculator": {
-        "name": "商务计算器",
-        "description": "居家工作收益 +50%"
-      },
-      "advancedTraining": {
-        "name": "高级培训",
-        "description": "所有项目风险 -10%"
-      },
-      "motivationalPoster": {
-        "name": "励志海报",
-        "description": "连胜奖励 +25%"
-      },
-      "networkingEvent": {
-        "name": "社交活动",
-        "description": "国际合作收益 +$150"
-      },
-      "executiveDesk": {
-        "name": "高管办公桌",
-        "description": "基础点击收益 $0.05"
-      },
-      "pentiumIII": {
-        "name": "奔腾 III",
-        "description": "系统优化收益 +$100"
-      },
-      "leatherBriefcase": {
-        "name": "真皮公文包",
-        "description": "所有项目风险 -15%"
-      },
-      "goldenWatch": {
-        "name": "金表",
-        "description": "连胜奖励 +40%"
-      },
-      "franchiseRights": {
-        "name": "特许经营权",
-        "description": "多层次营销收益 +100%"
-      },
-      "cornerOffice": {
-        "name": "角落办公室",
-        "description": "被动收益 +$0.25/秒"
-      },
-      "stockPortfolio": {
-        "name": "股票投资组合",
-        "description": "被动收益 +$1.00/秒"
-      },
-      "realEstate": {
-        "name": "房地产",
-        "description": "被动收益 +$5.00/秒"
-      },
-      "ventureCapital": {
-        "name": "风险投资",
-        "description": "被动收益 +$25/秒"
-      }
+      "bulk-orders": { "name": "批量订单处理", "description": "以10为单位执行交易。" },
+      "limit-orders": { "name": "限价订单系统", "description": "设定目标价格。持仓自动卖出。" },
+      "trend-analysis": { "name": "趋势分析工具包", "description": "在价格图表上叠加方向性指标。" },
+      "cpu-overclock": { "name": "CPU超频", "description": "提高生产周期速度。可能导致不稳定。" },
+      "quality-assurance": { "name": "质量保证", "description": "减少产出波动。保证最低产量。" },
+      "supply-chain": { "name": "供应链整合", "description": "将过剩商品转化为优质商品。" },
+      "insider-newsletter": { "name": "内部通讯", "description": "市场动向事件提前通知。10秒领先时间。" },
+      "analyst-reports": { "name": "分析师报告", "description": "趋势强度数值指标。" },
+      "moving-average": { "name": "移动平均线叠加", "description": "价格图表技术分析工具。" }
+    },
+    "influence": {
+      "promo-campaign": { "name": "促销活动", "description": "为选定商品制造人为需求。" },
+      "negative-press": { "name": "负面新闻稿", "description": "暂时压低目标商品的市场价值。" },
+      "pump-and-dump": { "name": "拉高出货", "description": "协调价格膨胀并自动清算。" }
     }
   },
   "welcome": {

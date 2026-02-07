@@ -117,14 +117,9 @@
     "qaFallback3": "🔬 QA: N/A",
     "colorScheme": "Color: {{scheme}}",
     "language": "Language: {{language}}",
-    "hqOpen": "📊 HQ ▲",
-    "hqClosed": "📊 HQ ▼",
-    "github": "🐙 GitHub",
-    "unlockAt": "Unlock at ${{threshold}} lifetime earnings",
-    "makeMoney": "MAKE $$$ FAST",
-    "tooltipWithOdds": "{{tagline}}\nCost: ${{cost}} | Win: ${{payout}} | {{successRate}}% success",
-    "tooltipWithoutOdds": "{{tagline}}\nCost: ${{cost}} | Win: ${{payout}}",
-    "locked": "🔒 ${{threshold}}"
+    "tradeOpen": "📈 TRADE ▲",
+    "tradeClosed": "📈 TRADE ▼",
+    "github": "🐙 GitHub"
   },
   "qa": {
     "performance": "Performance",
@@ -261,158 +256,124 @@
     "title": "EDIT - {{filename}}{{dirtyMarker}}",
     "position": "Ln {{line}}, Col {{col}}"
   },
-  "businessPanel": {
-    "title": "BUSINESS HEADQUARTERS",
-    "close": "×",
-    "improvements": "IMPROVEMENTS",
-    "transactions": "TRANSACTIONS",
-    "balance": "💰 Balance",
-    "revenue": "Revenue",
-    "success": "Success",
-    "streak": "Streak",
-    "bestWin": "Best Win",
-    "acquired": "ACQUIRED",
-    "noTransactions": "No transactions yet"
-  },
-  "businessGame": {
-    "ventures": {
-      "makeMoney": {
-        "name": "MAKE $$$ FAST",
-        "tagline": "Click here to start earning!"
+  "commodityExchange": {
+    "ui": {
+      "title": "COMMODITY EXCHANGE TERMINAL",
+      "close": "×",
+      "portfolio": "PORTFOLIO",
+      "production": "PRODUCTION",
+      "improvements": "IMPROVEMENTS",
+      "marketOperations": "MARKET OPERATIONS",
+      "buy": "BUY",
+      "sell": "SELL",
+      "sellAll": "SELL ALL",
+      "deploy": "DEPLOY",
+      "acquire": "ACQUIRE",
+      "execute": "EXECUTE",
+      "installed": "INSTALLED",
+      "cooldown": "COOLDOWN",
+      "qty": "Qty",
+      "avgCost": "Avg Cost",
+      "pl": "P/L",
+      "tick": "tick",
+      "deployed": "deployed",
+      "noHoldings": "No holdings. Purchase commodities to begin trading.",
+      "unlockAt": "Unlock at ${{threshold}} lifetime earnings"
+    },
+    "commodities": {
+      "EMAIL": {
+        "name": "Email Databases",
+        "description": "Verified opt-in addresses. Updated daily."
       },
-      "emailForward": {
-        "name": "Email Forwarding",
-        "tagline": "Forward to friends, earn commissions!"
+      "ADS": {
+        "name": "Banner Impressions",
+        "description": "Premium 468x60 ad placements."
       },
-      "punchMonkey": {
-        "name": "Interactive Ad",
-        "tagline": "Punch the monkey to win!"
+      "DOM": {
+        "name": ".com Domains",
+        "description": "Pre-registered premium domain names."
       },
-      "ringtones": {
-        "name": "Premium Ringtones",
-        "tagline": "Download exclusive ringtones!"
+      "BW": {
+        "name": "Bandwidth",
+        "description": "Dedicated T1 line capacity. 1.544 Mbps."
       },
-      "workHome": {
-        "name": "Home Business Kit",
-        "tagline": "Work from home stuffing envelopes!"
+      "SOFT": {
+        "name": "Software Licenses",
+        "description": "Enterprise volume licensing. Shrinkwrap ready."
       },
-      "screensaver": {
-        "name": "Desktop Suite",
-        "tagline": "Free screensavers and cursors!"
+      "VC": {
+        "name": "Venture Capital",
+        "description": "Pre-IPO investment securities. Limited availability."
+      }
+    },
+    "factories": {
+      "list-builder": {
+        "name": "Automated List Builder",
+        "description": "Harvests verified email addresses 24/7. Results may vary."
       },
-      "nigerianPrince": {
-        "name": "International Partnership",
-        "tagline": "Help transfer funds, keep 20%!"
+      "banner-exchange": {
+        "name": "Banner Exchange",
+        "description": "Rotating ad network. Impressions generated automatically."
       },
-      "vacation": {
-        "name": "Vacation Ownership",
-        "tagline": "Exclusive timeshare opportunity!"
+      "colocation-rack": {
+        "name": "Co-Location Rack",
+        "description": "Dedicated server hosting. Uptime not guaranteed."
       },
-      "stockTips": {
-        "name": "Insider Market Tips",
-        "tagline": "Hot stock picks delivered daily!"
-      },
-      "mlm": {
-        "name": "Multi-Level Marketing",
-        "tagline": "Build your downline today!"
-      },
-      "downloadRam": {
-        "name": "System Optimization",
-        "tagline": "Download more RAM instantly!"
-      },
-      "y2k": {
-        "name": "Y2K Preparedness Kit",
-        "tagline": "Be ready for the millennium!"
-      },
-      "winner": {
-        "name": "CONGRATULATIONS!!!",
-        "tagline": "You are the 1,000,000th visitor!"
-      },
-      "dotcomIpo": {
-        "name": "Dot Com IPO",
-        "tagline": "Get in on the ground floor!"
+      "offshore-dev": {
+        "name": "Offshore Dev Team",
+        "description": "24-hour development cycle. Quality assurance pending."
       }
     },
     "upgrades": {
-      "ergonomicKeyboard": {
-        "name": "Ergonomic Keyboard",
-        "description": "Base click earns $0.02"
+      "bulk-orders": {
+        "name": "Bulk Order Processing",
+        "description": "Execute trades in quantities of 10."
       },
-      "salesTraining": {
-        "name": "Sales Training",
-        "description": "All ventures -5% risk"
+      "limit-orders": {
+        "name": "Limit Order System",
+        "description": "Set a target price. Holdings sold automatically."
       },
-      "luckyTie": {
-        "name": "Lucky Tie",
-        "description": "Hot streak bonus +15%"
+      "trend-analysis": {
+        "name": "Trend Analysis Package",
+        "description": "Directional indicators overlaid on price charts."
       },
-      "marketResearch": {
-        "name": "Market Research",
-        "description": "See exact success % on hover"
+      "cpu-overclock": {
+        "name": "CPU Overclock",
+        "description": "Increase production cycle speed. May cause instability."
       },
-      "fastInternet": {
-        "name": "56k Modem",
-        "description": "Email Forwarding pays +$0.50"
+      "quality-assurance": {
+        "name": "Quality Assurance",
+        "description": "Reduce output variance. Minimum yield guaranteed."
       },
-      "touchscreen": {
-        "name": "Touchscreen Monitor",
-        "description": "Interactive Ad pays +$2.00"
+      "supply-chain": {
+        "name": "Supply Chain Integration",
+        "description": "Convert surplus commodities into premium goods."
       },
-      "cellPhone": {
-        "name": "Nokia 3310",
-        "description": "Premium Ringtones cooldown -3s"
+      "insider-newsletter": {
+        "name": "Insider Newsletter",
+        "description": "Advance notice of market-moving events. 10 second lead time."
       },
-      "calculator": {
-        "name": "Business Calculator",
-        "description": "Work from Home +50% payout"
+      "analyst-reports": {
+        "name": "Analyst Reports",
+        "description": "Numerical trend strength indicators."
       },
-      "advancedTraining": {
-        "name": "Advanced Training",
-        "description": "All ventures -10% risk"
+      "moving-average": {
+        "name": "Moving Average Overlay",
+        "description": "Technical analysis tools for price chart."
+      }
+    },
+    "influence": {
+      "promo-campaign": {
+        "name": "Promotional Campaign",
+        "description": "Generate artificial demand for selected commodity."
       },
-      "motivationalPoster": {
-        "name": "Motivational Poster",
-        "description": "Streak bonus +25%"
+      "negative-press": {
+        "name": "Negative Press Release",
+        "description": "Temporarily depress market value of target commodity."
       },
-      "networkingEvent": {
-        "name": "Networking Event",
-        "description": "International Partnership +$150"
-      },
-      "executiveDesk": {
-        "name": "Executive Desk",
-        "description": "Base click earns $0.05"
-      },
-      "pentiumIII": {
-        "name": "Pentium III",
-        "description": "System Optimization pays +$100"
-      },
-      "leatherBriefcase": {
-        "name": "Leather Briefcase",
-        "description": "All ventures -15% risk"
-      },
-      "goldenWatch": {
-        "name": "Golden Watch",
-        "description": "Streak bonus +40%"
-      },
-      "franchiseRights": {
-        "name": "Franchise Rights",
-        "description": "MLM payout +100%"
-      },
-      "cornerOffice": {
-        "name": "Corner Office",
-        "description": "Passive +$0.25/sec"
-      },
-      "stockPortfolio": {
-        "name": "Stock Portfolio",
-        "description": "Passive +$1.00/sec"
-      },
-      "realEstate": {
-        "name": "Real Estate",
-        "description": "Passive +$5.00/sec"
-      },
-      "ventureCapital": {
-        "name": "Venture Capital",
-        "description": "Passive +$25/sec"
+      "pump-and-dump": {
+        "name": "Pump and Dump",
+        "description": "Coordinated price inflation with automated liquidation."
       }
     }
   },
