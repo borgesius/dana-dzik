@@ -1,3 +1,4 @@
+import { isCalmMode } from "./calmMode"
 import type { Severity } from "./systemFileValidator"
 
 type SystemEffect =
@@ -78,6 +79,7 @@ export class SystemCrashHandler {
         document.addEventListener("system-file-modified", ((
             e: CustomEvent<CrashEventDetail>
         ) => {
+            if (isCalmMode()) return
             const { filename, severity, broken, values } = e.detail
             const effect = FILE_EFFECTS[filename.toLowerCase()]
             if (!effect || this.effectActive) return

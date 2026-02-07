@@ -1,8 +1,18 @@
 import { expect, test } from "@playwright/test"
 
+const READY_TIMEOUT = 15000
+
+async function waitForDesktop(page: import("@playwright/test").Page): Promise<void> {
+    await page.waitForSelector(".desktop", {
+        state: "visible",
+        timeout: READY_TIMEOUT,
+    })
+}
+
 test.describe("Desktop Navigation", () => {
     test("desktop loads correctly", async ({ page }) => {
         await page.goto("/")
+        await waitForDesktop(page)
 
         await expect(page).toHaveTitle(/Dana.*Desktop/i)
         await expect(page.locator(".desktop")).toBeVisible()
@@ -12,8 +22,11 @@ test.describe("Desktop Navigation", () => {
 
     test("desktop icons are visible", async ({ page }) => {
         await page.goto("/")
+        await waitForDesktop(page)
 
-        await expect(page.locator(".desktop-icon")).toHaveCount(11)
+        await expect(page.locator(".desktop-icon")).toHaveCount(11, {
+            timeout: 5000,
+        })
         await expect(
             page.locator('.desktop-icon:has-text("Internet Explorer")')
         ).toBeVisible()
@@ -27,25 +40,18 @@ test.describe("Desktop Navigation", () => {
 
     test("welcome window opens by default", async ({ page }) => {
         await page.goto("/")
-        await page.waitForSelector(".loading-screen.hidden", {
-            state: "attached",
-            timeout: 10000,
-        })
+        await waitForDesktop(page)
 
-        await expect(page.locator(".window")).toBeVisible()
+        await expect(page.locator(".window")).toBeVisible({ timeout: 10000 })
         await expect(
             page.locator('.window-titlebar:has-text("Welcome")')
-        ).toBeVisible()
+        ).toBeVisible({ timeout: 5000 })
     })
 
     test("double-click opens windows", async ({ page }) => {
         await page.goto("/")
-        await page.waitForSelector(".loading-screen.hidden", {
-            state: "attached",
-            timeout: 10000,
-        })
+        await waitForDesktop(page)
 
-        // Close the Welcome window first to avoid it blocking clicks
         await page.locator(".window-btn.close").first().click()
         await expect(page.locator(".window")).toHaveCount(0, { timeout: 5000 })
 
@@ -59,12 +65,10 @@ test.describe("Desktop Navigation", () => {
 
     test("windows can be dragged", async ({ page }) => {
         await page.goto("/")
-        await page.waitForSelector(".loading-screen.hidden", {
-            state: "attached",
-            timeout: 10000,
-        })
+        await waitForDesktop(page)
 
         const window = page.locator(".window").first()
+        await expect(window).toBeVisible({ timeout: 10000 })
         const titlebar = window.locator(".window-titlebar")
 
         const initialBox = await window.boundingBox()
@@ -80,10 +84,7 @@ test.describe("Desktop Navigation", () => {
 
     test("windows can be closed", async ({ page }) => {
         await page.goto("/")
-        await page.waitForSelector(".loading-screen.hidden", {
-            state: "attached",
-            timeout: 10000,
-        })
+        await waitForDesktop(page)
 
         const windowCount = await page.locator(".window").count()
 
@@ -95,10 +96,7 @@ test.describe("Desktop Navigation", () => {
 
     test("start menu opens on click", async ({ page }) => {
         await page.goto("/")
-        await page.waitForSelector(".loading-screen.hidden", {
-            state: "attached",
-            timeout: 10000,
-        })
+        await waitForDesktop(page)
 
         await expect(page.locator(".start-menu")).not.toBeVisible()
 
@@ -109,12 +107,8 @@ test.describe("Desktop Navigation", () => {
 
     test("taskbar shows open windows", async ({ page }) => {
         await page.goto("/")
-        await page.waitForSelector(".loading-screen.hidden", {
-            state: "attached",
-            timeout: 10000,
-        })
+        await waitForDesktop(page)
 
-        // Close the Welcome window first to avoid it blocking clicks
         await page.locator(".window-btn.close").first().click()
         await expect(page.locator(".window")).toHaveCount(0, { timeout: 5000 })
 
@@ -122,7 +116,6 @@ test.describe("Desktop Navigation", () => {
         await expect(icon).toBeVisible({ timeout: 5000 })
         await icon.dblclick()
 
-        // After opening a new window, taskbar should show 1 button
         await expect(page.locator(".taskbar-window-button")).toHaveCount(1, {
             timeout: 5000,
         })
@@ -130,22 +123,16 @@ test.describe("Desktop Navigation", () => {
 
     test("toolbars are visible with game elements", async ({ page }) => {
         await page.goto("/")
-        await page.waitForSelector(".loading-screen.hidden", {
-            state: "attached",
-            timeout: 10000,
-        })
+        await waitForDesktop(page)
 
-        await expect(page.locator(".toolbar")).toHaveCount(2)
+        await expect(page.locator(".toolbar")).toHaveCount(2, { timeout: 5000 })
         await expect(page.locator(".market-ticker")).toBeVisible()
         await expect(page.locator(".money-counter")).toBeVisible()
     })
 
     test("widgets are visible", async ({ page }) => {
         await page.goto("/")
-        await page.waitForSelector(".loading-screen.hidden", {
-            state: "attached",
-            timeout: 10000,
-        })
+        await waitForDesktop(page)
 
         await expect(page.locator(".widgets-container")).toBeVisible()
         await expect(page.locator("#audio-widget")).toBeVisible()

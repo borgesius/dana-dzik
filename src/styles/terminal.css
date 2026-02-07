@@ -264,10 +264,17 @@
     background: #00cc33;
 }
 
-.editor-freakgpt-btn {
+.editor-btn-group {
     position: absolute;
     right: 24px;
     top: 12px;
+    display: flex;
+    gap: 8px;
+    z-index: 10;
+}
+
+.editor-freakgpt-btn,
+.editor-felix-btn {
     padding: 6px 14px;
     font-family: var(--theme-font-mono);
     font-size: 12px;
@@ -275,7 +282,6 @@
     color: var(--theme-terminal-text);
     border: 1px solid var(--theme-terminal-input-border);
     cursor: pointer;
-    z-index: 10;
     transition:
         border-color 0.2s,
         box-shadow 0.2s,
@@ -283,7 +289,8 @@
     text-shadow: 0 0 5px var(--theme-terminal-glow);
 }
 
-.editor-freakgpt-btn:hover:not(:disabled) {
+.editor-freakgpt-btn:hover:not(:disabled),
+.editor-felix-btn:hover {
     border-color: var(--theme-terminal-text);
     box-shadow:
         0 0 8px var(--theme-terminal-glow),

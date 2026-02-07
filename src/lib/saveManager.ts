@@ -30,6 +30,7 @@ export interface SaveData {
         theme: string
         colorScheme: string
         locale: string
+        calmMode: boolean
     }
     filesystem: FilesystemSaveData
     achievements: AchievementSaveData
@@ -47,6 +48,7 @@ function createEmptySaveData(): SaveData {
             theme: "win95",
             colorScheme: "system",
             locale: "en",
+            calmMode: false,
         },
         filesystem: {
             modified: {},
@@ -79,6 +81,7 @@ function migrateLegacyKeys(): Partial<SaveData> {
             theme: theme || "win95",
             colorScheme: colorScheme || "system",
             locale: locale || "en",
+            calmMode: false,
         }
     }
 

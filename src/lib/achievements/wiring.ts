@@ -41,6 +41,7 @@ export function wireAchievements(
     wireFelixEvents(mgr)
     wireGuestbookEvents(mgr)
     wireWeltEvents(mgr)
+    wireCalmMode(mgr)
     wireSessionTimer(mgr)
     wireSessionCost(mgr)
     wireQAReports(mgr)
@@ -294,15 +295,28 @@ function wireWeltEvents(mgr: AchievementManager): void {
     })
 
     document.addEventListener("welt:exercises-tested", ((
-        e: CustomEvent<{ passed: number }>
+        e: CustomEvent<{
+            passed: number
+            total: number
+            passedExercises?: number[]
+        }>
     ) => {
         if (e.detail.passed >= 1) mgr.earn("welt-beginner")
         if (e.detail.passed >= 3) mgr.earn("welt-intermediate")
+        if (e.detail.passed >= 5) mgr.earn("welt-advanced")
+        if (e.detail.passed >= 7) mgr.earn("erlosung")
     }) as EventListener)
 
     document.addEventListener("welt:all-exercises-passed", () => {
-        mgr.earn("welt-master")
+        mgr.earn("erlosung")
     })
+
+    document.addEventListener("welt:exercise-passed", ((
+        e: CustomEvent<{ exercise: number }>
+    ) => {
+        if (e.detail.exercise === 6) mgr.earn("welt-master")
+        if (e.detail.exercise === 7) mgr.earn("nibelung")
+    }) as EventListener)
 
     document.addEventListener("welt:error", ((
         e: CustomEvent<{ type: string }>
@@ -311,14 +325,45 @@ function wireWeltEvents(mgr: AchievementManager): void {
             case "thermal":
                 mgr.earn("thermal-protection")
                 break
-            case "divide-by-zero":
-                mgr.earn("divide-by-zero")
-                break
             case "suffering":
                 mgr.earn("suffering")
                 break
         }
     }) as EventListener)
+
+    document.addEventListener("grund:compiled", () => {
+        mgr.earn("grund-compiled")
+    })
+
+    document.addEventListener("grund:executed", () => {
+        mgr.earn("grund-executed")
+    })
+
+    document.addEventListener("grund:ring-overflow", () => {
+        mgr.earn("ring-overflow")
+    })
+
+    document.addEventListener("grund:ring-cycle", () => {
+        mgr.earn("ring-cycle")
+    })
+
+    document.addEventListener("grund:ring-spin", () => {
+        mgr.earn("ring-spin")
+    })
+
+    document.addEventListener("freak:used", () => {
+        mgr.earn("freakgpt")
+    })
+
+    document.addEventListener("felix:editor", () => {
+        mgr.earn("keyboard-cat")
+    })
+}
+
+function wireCalmMode(mgr: AchievementManager): void {
+    document.addEventListener("calm-mode:toggled", () => {
+        mgr.earn("calm-mode")
+    })
 }
 
 function wireSessionTimer(mgr: AchievementManager): void {

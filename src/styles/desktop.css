@@ -136,6 +136,11 @@ body {
     color: inherit;
 }
 
+.calm-mode-toggle.calm-active {
+    background: rgb(144 238 144 / 30%);
+    border-color: #66aa99;
+}
+
 .language-toggle-container {
     position: relative;
     display: inline-block;

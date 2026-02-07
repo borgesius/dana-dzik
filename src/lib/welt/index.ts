@@ -1,3 +1,6 @@
+import { compileProgram } from "./compiler"
+import { interpretGrund } from "./grundInterpreter"
+import { parseGrund } from "./grundParser"
 import { interpret } from "./interpreter"
 import { tokenize } from "./lexer"
 import { parse } from "./parser"
@@ -13,6 +16,24 @@ export async function runWeltProgram(
     const tokens = tokenize(source)
     const program = parse(tokens)
     return interpret(program, callbacks, initialMemory)
+}
+
+export function compileWeltProgram(
+    source: string,
+    sourceName?: string
+): string {
+    const tokens = tokenize(source)
+    const program = parse(tokens)
+    return compileProgram(program, sourceName)
+}
+
+export async function runGrundProgram(
+    source: string,
+    callbacks: WeltCallbacks,
+    initialMemory?: WeltValue[]
+): Promise<WeltValue[]> {
+    const program = parseGrund(source)
+    return interpretGrund(program, callbacks, initialMemory)
 }
 
 export async function getInitialMemory(
