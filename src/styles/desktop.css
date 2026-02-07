@@ -406,7 +406,7 @@ body {
 
 .cost-section-header {
     font-size: 10px;
-    color: #aaa;
+    color: #aaaaaa;
     margin-top: 8px;
     margin-bottom: 3px;
     text-align: left;
@@ -417,20 +417,20 @@ body {
 }
 
 .cost-row-sampled .cost-label {
-    color: #aaa;
+    color: #aaaaaa;
     font-style: italic;
 }
 
 .cost-row-sampled .cost-value {
-    color: #aaa;
+    color: #aaaaaa;
 }
 
 .cost-lottery {
     margin-top: 8px;
     font-size: 13px;
     font-weight: bold;
-    color: #ff0;
-    background: #000;
+    color: #ffff00;
+    background: #000000;
     padding: 3px 8px;
     animation: cost-blink 0.6s step-end infinite;
 }
