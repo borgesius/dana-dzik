@@ -137,10 +137,10 @@ export class Widgets {
 
         type AudioManagerType = {
             togglePlay: () => void
-            play: () => void
+            play: (fromUser?: boolean) => void
             pause: () => void
             stop: () => void
-            nextTrack: () => void
+            nextTrack: (fromUser?: boolean) => void
             previousTrack: () => void
             playTrack: (index: number) => void
             getCurrentTrack: () => { name: string; artist: string } | null
@@ -233,7 +233,7 @@ export class Widgets {
         nextBtn.addEventListener("click", () => {
             const audioManager = getAudioManager()
             if (audioManager) {
-                audioManager.nextTrack()
+                audioManager.nextTrack(true)
             }
         })
 
@@ -405,7 +405,54 @@ export class Widgets {
                 : "_"
         })
 
+        this.makeDraggable(widget, titlebar)
+
         widget.appendChild(titlebar)
         return widget
+    }
+
+    private makeDraggable(widget: HTMLElement, handle: HTMLElement): void {
+        let isDragging = false
+        let offsetX = 0
+        let offsetY = 0
+
+        handle.style.cursor = "grab"
+
+        handle.addEventListener("mousedown", (e: MouseEvent) => {
+            if ((e.target as HTMLElement).closest(".widget-btn")) return
+
+            isDragging = true
+            handle.style.cursor = "grabbing"
+
+            if (!widget.classList.contains("widget-dragged")) {
+                const rect = widget.getBoundingClientRect()
+                widget.style.position = "fixed"
+                widget.style.left = `${rect.left}px`
+                widget.style.top = `${rect.top}px`
+                widget.style.width = `${rect.width}px`
+                widget.style.margin = "0"
+                widget.classList.add("widget-dragged")
+            }
+
+            const rect = widget.getBoundingClientRect()
+            offsetX = e.clientX - rect.left
+            offsetY = e.clientY - rect.top
+
+            const onMouseMove = (e: MouseEvent): void => {
+                if (!isDragging) return
+                widget.style.left = `${e.clientX - offsetX}px`
+                widget.style.top = `${e.clientY - offsetY}px`
+            }
+
+            const onMouseUp = (): void => {
+                isDragging = false
+                handle.style.cursor = "grab"
+                document.removeEventListener("mousemove", onMouseMove)
+                document.removeEventListener("mouseup", onMouseUp)
+            }
+
+            document.addEventListener("mousemove", onMouseMove)
+            document.addEventListener("mouseup", onMouseUp)
+        })
     }
 }

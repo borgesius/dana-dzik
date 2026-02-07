@@ -566,6 +566,7 @@
     "popup-enjoyer": { "name": "Principe-Consorte Nigeriano", "description": "Riscuoti 5 popup bonus." },
     "y2k-survivor": { "name": "Sopravvissuto al Y2K", "description": "Mantieni una sessione attiva per 30 minuti." },
     "big-spender": { "name": "Giro di Soldi", "description": "Accumula un costo di sessione normalizzato di $0,001." },
-    "whale": { "name": "Cacciatore di Banconote", "description": "Accumula un costo di sessione normalizzato di $0,0025." }
+    "whale": { "name": "Cacciatore di Banconote", "description": "Accumula un costo di sessione normalizzato di $0,0025." },
+    "qa-inspector": { "name": "Funziona sul mio PC", "description": "Clicca su un badge di test per vedere i risultati CI." }
   }
 }

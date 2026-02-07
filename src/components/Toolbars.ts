@@ -736,6 +736,12 @@ export class Toolbars {
             }
 
             this.qaEl.innerHTML = badges
+
+            this.qaEl.querySelectorAll(".qa-badge").forEach((badge) => {
+                badge.addEventListener("click", () => {
+                    document.dispatchEvent(new CustomEvent("qa:report-clicked"))
+                })
+            })
         } catch {
             this.qaEl.innerHTML = pick([
                 getLocaleManager().t("toolbar.qaFallback1"),

@@ -67,6 +67,7 @@ export type AchievementId =
     | "y2k-survivor"
     | "big-spender"
     | "whale"
+    | "qa-inspector"
 
 export interface AchievementDef {
     id: AchievementId

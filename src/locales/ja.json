@@ -566,6 +566,7 @@
     "popup-enjoyer": { "name": "ナイジェリアの王配", "description": "ボーナスポップアップを5回受け取る。" },
     "y2k-survivor": { "name": "Y2Kサバイバー", "description": "セッションを30分間維持する。" },
     "big-spender": { "name": "金の動き", "description": "正規化セッションコストを$0.001まで上げる。" },
-    "whale": { "name": "札束追い", "description": "正規化セッションコストを$0.0025まで上げる。" }
+    "whale": { "name": "札束追い", "description": "正規化セッションコストを$0.0025まで上げる。" },
+    "qa-inspector": { "name": "俺の環境では動く", "description": "テストレポートバッジをクリックしてCI結果を確認する。" }
   }
 }

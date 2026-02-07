@@ -566,6 +566,7 @@
     "popup-enjoyer": { "name": "Nigerianischer Prinzgemahl", "description": "Beanspruche 5 Bonus-Popups." },
     "y2k-survivor": { "name": "Y2K-Überlebender", "description": "Habe eine Sitzung, die 30 Minuten läuft." },
     "big-spender": { "name": "Geldmacher", "description": "Verursache normalisierte Sitzungskosten von $0,001." },
-    "whale": { "name": "Großverdiener", "description": "Verursache normalisierte Sitzungskosten von $0,0025." }
+    "whale": { "name": "Großverdiener", "description": "Verursache normalisierte Sitzungskosten von $0,0025." },
+    "qa-inspector": { "name": "Läuft bei mir", "description": "Klicke auf ein Testbericht-Badge, um CI-Ergebnisse anzuzeigen." }
   }
 }

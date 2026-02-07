@@ -43,6 +43,7 @@ export function wireAchievements(
     wireWeltEvents(mgr)
     wireSessionTimer(mgr)
     wireSessionCost(mgr)
+    wireQAReports(mgr)
 }
 
 function wireWindowManager(
@@ -335,5 +336,11 @@ function wireSessionCost(mgr: AchievementManager): void {
     })
     document.addEventListener("session-cost:whale", () => {
         mgr.earn("whale")
+    })
+}
+
+function wireQAReports(mgr: AchievementManager): void {
+    document.addEventListener("qa:report-clicked", () => {
+        mgr.earn("qa-inspector")
     })
 }

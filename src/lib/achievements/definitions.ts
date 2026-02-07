@@ -321,6 +321,12 @@ export const ACHIEVEMENTS: AchievementDef[] = [
         icon: "🐋",
         hidden: true,
     },
+    {
+        id: "qa-inspector",
+        category: "exploration",
+        icon: "🔍",
+        hidden: false,
+    },
 ]
 
 export const ACHIEVEMENT_MAP: ReadonlyMap<string, AchievementDef> = new Map(
