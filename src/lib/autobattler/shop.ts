@@ -227,4 +227,3 @@ export function moveLineupToBench(
     state.bench.push(unit)
     return true
 }
-

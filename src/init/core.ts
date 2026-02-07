@@ -135,7 +135,7 @@ function showOfflineSummary(summary: OfflineSummary): void {
     const hasSalaries = summary.salariesPaid > 0
     if (!hasProduction && !hasSalaries) return
 
-    const hours = Math.round(summary.elapsedMs / (60 * 60 * 1000) * 10) / 10
+    const hours = Math.round((summary.elapsedMs / (60 * 60 * 1000)) * 10) / 10
     let html = `<div style="padding:12px;max-width:320px;font-family:var(--font-system,Geneva,sans-serif);font-size:12px">`
     html += `<strong>While you were away (${hours}h)...</strong><br><br>`
 
@@ -170,15 +170,21 @@ function showOfflineSummary(summary: OfflineSummary): void {
         `<div style="text-align:center;margin-top:8px"><button id="offline-dismiss" style="padding:4px 16px;cursor:pointer">OK</button></div>`
     overlay.appendChild(box)
     document.body.appendChild(overlay)
-    document.getElementById("offline-dismiss")?.addEventListener("click", () => {
-        overlay.remove()
-    })
+    document
+        .getElementById("offline-dismiss")
+        ?.addEventListener("click", () => {
+            overlay.remove()
+        })
 }
 
 export async function initServices(): Promise<void> {
     await getLocaleManager().init()
 
-    initSessionCostTracker(BIG_SPENDER_THRESHOLD, WHALE_THRESHOLD, LEVIATHAN_THRESHOLD)
+    initSessionCostTracker(
+        BIG_SPENDER_THRESHOLD,
+        WHALE_THRESHOLD,
+        LEVIATHAN_THRESHOLD
+    )
 
     trackPageview()
     trackFunnelStep("launched")

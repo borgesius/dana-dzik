@@ -1,6 +1,6 @@
 import { formatMoney } from "../../lib/formatMoney"
-import type { MarketEngine } from "../../lib/marketGame/MarketEngine"
 import { COMMODITIES, type CommodityId } from "../../lib/marketGame/commodities"
+import type { MarketEngine } from "../../lib/marketGame/MarketEngine"
 import {
     CREDIT_RATING_SCALE,
     DAS_MAX_POSITIONS,
@@ -43,7 +43,9 @@ export class PortfolioMgmtSection {
     }
 
     public updateVisibility(): void {
-        this.element.style.display = this.game.isPhaseUnlocked(6) ? "block" : "none"
+        this.element.style.display = this.game.isPhaseUnlocked(6)
+            ? "block"
+            : "none"
     }
 
     public render(): void {
@@ -83,10 +85,18 @@ export class PortfolioMgmtSection {
         if (securities.length > 0) {
             html += `<div class="desk-das-list">`
             for (const das of securities) {
-                const currentPrice = snapshot.markets[das.commodityId]?.price ?? 0
-                const commodityName = COMMODITIES.find((c) => c.id === das.commodityId)?.name ?? das.commodityId
+                const currentPrice =
+                    snapshot.markets[das.commodityId]?.price ?? 0
+                const commodityName =
+                    COMMODITIES.find((c) => c.id === das.commodityId)?.name ??
+                    das.commodityId
                 const health = currentPrice / das.securitizationPrice
-                const healthClass = health > 0.7 ? "healthy" : health > 0.55 ? "warning" : "critical"
+                const healthClass =
+                    health > 0.7
+                        ? "healthy"
+                        : health > 0.55
+                          ? "warning"
+                          : "critical"
                 html += `<div class="desk-das-item">
                     <div class="desk-das-header">
                         <span class="desk-das-id">${das.id}</span>
@@ -105,18 +115,25 @@ export class PortfolioMgmtSection {
 
         // Securitize form
         if (securities.length < DAS_MAX_POSITIONS) {
-            const availableCommodities = snapshot.unlockedCommodities.filter((cId) => {
-                const h = snapshot.holdings[cId]
-                return h && h.quantity >= DAS_MIN_QUANTITY
-            })
+            const availableCommodities = snapshot.unlockedCommodities.filter(
+                (cId) => {
+                    const h = snapshot.holdings[cId]
+                    return h && h.quantity >= DAS_MIN_QUANTITY
+                }
+            )
             if (availableCommodities.length > 0) {
                 html += `<div class="desk-create-form">
                     <select class="desk-commodity-select">
-                        ${availableCommodities.map((cId) => {
-                            const name = COMMODITIES.find((c) => c.id === cId)?.name ?? cId
-                            const qty = snapshot.holdings[cId]?.quantity ?? 0
-                            return `<option value="${cId}">${name} (${qty} avail)</option>`
-                        }).join("")}
+                        ${availableCommodities
+                            .map((cId) => {
+                                const name =
+                                    COMMODITIES.find((c) => c.id === cId)
+                                        ?.name ?? cId
+                                const qty =
+                                    snapshot.holdings[cId]?.quantity ?? 0
+                                return `<option value="${cId}">${name} (${qty} avail)</option>`
+                            })
+                            .join("")}
                     </select>
                     <input type="number" class="desk-qty-input" placeholder="Qty" min="${DAS_MIN_QUANTITY}" step="1" />
                     <button class="desk-btn desk-securitize-btn">Securitize</button>
@@ -141,7 +158,12 @@ export class PortfolioMgmtSection {
         if (debt > 0) {
             const portfolioVal = this.game.calculatePortfolioValue()
             const ratio = portfolioVal > 0 ? debt / portfolioVal : 0
-            const ratioClass = ratio > MARGIN_CALL_THRESHOLD ? "critical" : ratio > 0.7 ? "warning" : "healthy"
+            const ratioClass =
+                ratio > MARGIN_CALL_THRESHOLD
+                    ? "critical"
+                    : ratio > 0.7
+                      ? "warning"
+                      : "healthy"
             html += `<div class="desk-ratio desk-${ratioClass}">
                 Collateral Ratio: ${(ratio * 100).toFixed(1)}%${ratio > MARGIN_CALL_THRESHOLD ? " -- MARGIN EVENT IMMINENT" : ""}
             </div>`
@@ -184,25 +206,37 @@ export class PortfolioMgmtSection {
 
     private wireButtons(): void {
         // Unwind buttons
-        this.contentEl.querySelectorAll<HTMLElement>("[data-unwind]").forEach((btn) => {
-            btn.addEventListener("click", () => {
-                const dasId = btn.getAttribute("data-unwind")
-                if (dasId && this.game.unwindDAS(dasId)) {
-                    this.playSound("notify")
-                    this.render()
-                }
+        this.contentEl
+            .querySelectorAll<HTMLElement>("[data-unwind]")
+            .forEach((btn) => {
+                btn.addEventListener("click", () => {
+                    const dasId = btn.getAttribute("data-unwind")
+                    if (dasId && this.game.unwindDAS(dasId)) {
+                        this.playSound("notify")
+                        this.render()
+                    }
+                })
             })
-        })
 
         // Securitize
-        const securitizeBtn = this.contentEl.querySelector(".desk-securitize-btn")
+        const securitizeBtn = this.contentEl.querySelector(
+            ".desk-securitize-btn"
+        )
         if (securitizeBtn) {
             securitizeBtn.addEventListener("click", () => {
-                const select = this.contentEl.querySelector(".desk-commodity-select") as HTMLSelectElement
-                const qtyInput = this.contentEl.querySelector(".desk-qty-input") as HTMLInputElement
+                const select = this.contentEl.querySelector(
+                    ".desk-commodity-select"
+                ) as HTMLSelectElement
+                const qtyInput = this.contentEl.querySelector(
+                    ".desk-qty-input"
+                ) as HTMLInputElement
                 const cId = select?.value as CommodityId
                 const qty = parseInt(qtyInput?.value ?? "0")
-                if (cId && qty >= DAS_MIN_QUANTITY && this.game.securitize(cId, qty)) {
+                if (
+                    cId &&
+                    qty >= DAS_MIN_QUANTITY &&
+                    this.game.securitize(cId, qty)
+                ) {
                     this.playSound("notify")
                     this.render()
                 }
@@ -213,7 +247,9 @@ export class PortfolioMgmtSection {
         const borrowBtn = this.contentEl.querySelector(".desk-borrow-btn")
         if (borrowBtn) {
             borrowBtn.addEventListener("click", () => {
-                const input = this.contentEl.querySelector(".desk-borrow-input") as HTMLInputElement
+                const input = this.contentEl.querySelector(
+                    ".desk-borrow-input"
+                ) as HTMLInputElement
                 const amount = parseFloat(input?.value ?? "0")
                 if (amount > 0 && this.game.borrow(amount)) {
                     this.playSound("notify")
@@ -226,7 +262,9 @@ export class PortfolioMgmtSection {
         const repayBtn = this.contentEl.querySelector(".desk-repay-btn")
         if (repayBtn) {
             repayBtn.addEventListener("click", () => {
-                const input = this.contentEl.querySelector(".desk-repay-input") as HTMLInputElement
+                const input = this.contentEl.querySelector(
+                    ".desk-repay-input"
+                ) as HTMLInputElement
                 const amount = parseFloat(input?.value ?? "0")
                 if (amount > 0 && this.game.repay(amount)) {
                     this.playSound("notify")

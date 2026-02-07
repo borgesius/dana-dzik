@@ -545,11 +545,11 @@ body {
 }
 
 .cosmetic-desc {
-    color: #555;
+    color: #555555;
 }
 
 .cosmetic-hint {
-    color: #888;
+    color: #888888;
     font-style: italic;
     font-size: 9px;
 }

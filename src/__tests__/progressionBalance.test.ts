@@ -1,51 +1,43 @@
 import { describe, expect, it } from "vitest"
 
 import {
-    // XP / Progression
-    XP_REWARDS,
-    xpForLevel,
-    getAchievementXP,
-
-    // Autobattler economy
-    INITIAL_SCRAP,
-    SCRAP_PER_ROUND,
-    REROLL_COST,
-    SELL_REFUND_MULT,
-    DEFAULT_TOTAL_ROUNDS,
-    ROUND_PARAMS,
-    RUN_BUFFS,
-    ALL_UNITS,
-
-    // Prestige
-    PRESTIGE_THRESHOLD,
-    calculateHindsight,
-    HINDSIGHT_UPGRADES,
-
-    // Career
-    ALL_CAREER_NODES,
-    DORMANT_MULTIPLIER,
-
-    // Market
-    STARTING_CASH,
-
-    // Achievements
-    ACHIEVEMENTS,
-
     // Autobattler rewards
     AB_REWARDS,
-
+    // Achievements
+    ACHIEVEMENTS,
+    // Career
+    ALL_CAREER_NODES,
+    ALL_UNITS,
+    // Thresholds
+    BALANCE_THRESHOLDS,
+    calculateHindsight,
     // Phase 6: Structured Products Desk
     CREDIT_RATING_SCALE,
     DAS_BASE_YIELD,
     DAS_DEFAULT_THRESHOLD,
     DAS_SAME_COMMODITY_DECAY,
+    DEFAULT_TOTAL_ROUNDS,
+    DORMANT_MULTIPLIER,
+    getAchievementXP,
+    HINDSIGHT_UPGRADES,
+    // Autobattler economy
+    INITIAL_SCRAP,
     MARGIN_CALL_THRESHOLD,
+    // Prestige
+    PRESTIGE_THRESHOLD,
     RATING_INTEREST_RATE,
     RATING_LEVERAGE_RATIO,
     RATING_YIELD_MULT,
-
-    // Thresholds
-    BALANCE_THRESHOLDS,
+    REROLL_COST,
+    ROUND_PARAMS,
+    RUN_BUFFS,
+    SCRAP_PER_ROUND,
+    SELL_REFUND_MULT,
+    // Market
+    STARTING_CASH,
+    // XP / Progression
+    XP_REWARDS,
+    xpForLevel,
 } from "../config/balance"
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -72,7 +64,8 @@ describe("XP curve sanity", () => {
     it("level 50 requires substantial sustained play", () => {
         // Level 50 should require much more than a few runs
         const xp50 = xpForLevel(50)
-        const avgRunXP = XP_REWARDS.autobattlerWin * 3 + XP_REWARDS.autobattlerRun
+        const avgRunXP =
+            XP_REWARDS.autobattlerWin * 3 + XP_REWARDS.autobattlerRun
         expect(xp50 / avgRunXP).toBeGreaterThan(50)
     })
 })
@@ -120,16 +113,18 @@ describe("opponent difficulty scaling", () => {
     // Compute an estimate of opponent stat budget per round
     // vs what the player can afford at that point
 
-    const avgFactionStats = (() => {
+    const avgFactionStats = ((): number => {
         const combatUnits = ALL_UNITS.filter((u) => u.shopCost > 0)
         const totalATK = combatUnits.reduce((s, u) => s + u.baseATK, 0)
         const totalHP = combatUnits.reduce((s, u) => s + u.baseHP, 0)
         return (totalATK + totalHP) / combatUnits.length
     })()
 
-    const avgShopCost = (() => {
+    const avgShopCost = ((): number => {
         const combatUnits = ALL_UNITS.filter((u) => u.shopCost > 0)
-        return combatUnits.reduce((s, u) => s + u.shopCost, 0) / combatUnits.length
+        return (
+            combatUnits.reduce((s, u) => s + u.shopCost, 0) / combatUnits.length
+        )
     })()
 
     it("opponent budget ratio stays within threshold for all rounds", () => {
@@ -139,13 +134,16 @@ describe("opponent difficulty scaling", () => {
             const params = ROUND_PARAMS[r]
 
             // Opponent budget estimate: unitCount * avgStats * avgLevelMult
-            const avgLevel =
-                (params.levelRange[0] + params.levelRange[1]) / 2
-            const levelMult = AB_REWARDS.levelStatMult[Math.min(
-                Math.floor(avgLevel) - 1,
-                AB_REWARDS.levelStatMult.length - 1
-            )]
-            const opponentBudget = params.unitCount * avgFactionStats * levelMult
+            const avgLevel = (params.levelRange[0] + params.levelRange[1]) / 2
+            const levelMult =
+                AB_REWARDS.levelStatMult[
+                    Math.min(
+                        Math.floor(avgLevel) - 1,
+                        AB_REWARDS.levelStatMult.length - 1
+                    )
+                ]
+            const opponentBudget =
+                params.unitCount * avgFactionStats * levelMult
 
             // Player budget: how many stats can we afford?
             const affordableUnits = cumulativePlayerScrap / avgShopCost
@@ -159,8 +157,7 @@ describe("opponent difficulty scaling", () => {
             }
 
             // Next round: player gains more scrap (+ win bonus)
-            cumulativePlayerScrap +=
-                SCRAP_PER_ROUND + AB_REWARDS.winBonusScrap
+            cumulativePlayerScrap += SCRAP_PER_ROUND + AB_REWARDS.winBonusScrap
         }
     })
 })
@@ -228,9 +225,7 @@ describe("career node balance", () => {
     })
 
     it("dormant multiplier keeps bonuses above a meaningful threshold", () => {
-        const minBonus = Math.min(
-            ...ALL_CAREER_NODES.map((n) => n.bonusValue)
-        )
+        const minBonus = Math.min(...ALL_CAREER_NODES.map((n) => n.bonusValue))
         expect(minBonus * DORMANT_MULTIPLIER).toBeGreaterThan(0)
     })
 })

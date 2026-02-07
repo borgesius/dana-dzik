@@ -32,8 +32,8 @@
 }
 
 .chrome-corporate .window.inactive .window-titlebar {
-    background: linear-gradient(to bottom, #111 0%, #1a1a1a 40%, #222 80%, #111 100%) !important;
-    color: #666 !important;
+    background: linear-gradient(to bottom, #111111 0%, #1a1a1a 40%, #222222 80%, #111111 100%) !important;
+    color: #666666 !important;
 }
 
 .chrome-corporate .window {
@@ -53,7 +53,7 @@
     background: linear-gradient(to bottom, #704214 0%, #8b6914 40%, #c4a35a 80%, #704214 100%) !important;
     color: #f5e6c8 !important;
     border-bottom: 2px solid #5c4033;
-    font-family: "Georgia", serif;
+    font-family: Georgia, serif;
     text-shadow: 1px 1px 1px rgb(0 0 0 / 30%);
 }
 

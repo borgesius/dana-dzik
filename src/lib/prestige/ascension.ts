@@ -77,8 +77,7 @@ export const FORESIGHT_UPGRADES: ForesightUpgradeDef[] = [
     {
         id: "deep-hindsight",
         name: "Deep Hindsight",
-        description:
-            "Hindsight formula exponent increases (0.5 → 0.55 → 0.6)",
+        description: "Hindsight formula exponent increases (0.5 → 0.55 → 0.6)",
         cost: 10,
         maxPurchases: 2,
     },

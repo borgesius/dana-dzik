@@ -1,6 +1,6 @@
-import { ChartRenderer } from "../../lib/marketGame/ChartRenderer"
 import { formatMoney } from "../../lib/formatMoney"
 import { getLocaleManager } from "../../lib/localeManager"
+import { ChartRenderer } from "../../lib/marketGame/ChartRenderer"
 import type { MarketEngine } from "../../lib/marketGame/MarketEngine"
 import { COMMODITIES, type CommodityId } from "../../lib/marketGame/types"
 

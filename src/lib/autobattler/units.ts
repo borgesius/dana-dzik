@@ -342,8 +342,7 @@ const DEPUTY_UNITS: UnitDef[] = [
                 stat: "shield",
                 amount: 3,
             },
-            description:
-                "Combat start: gain +3 (+1/Deputy) Shield",
+            description: "Combat start: gain +3 (+1/Deputy) Shield",
             factionBonus: { perAlly: 1 },
         },
         shopCost: 3,
@@ -390,8 +389,7 @@ const DEPUTY_UNITS: UnitDef[] = [
                 stat: "hp",
                 amount: 2,
             },
-            description:
-                "Round start: all allies gain +2 (+1/Deputy) max HP",
+            description: "Round start: all allies gain +2 (+1/Deputy) max HP",
             factionBonus: { perAlly: 1 },
         },
         shopCost: 5,
@@ -537,7 +535,8 @@ const CLOCKWORK_UNITS: UnitDef[] = [
                     stat: "atk",
                     amount: 1,
                 },
-                description: "With 1+ Prospector: also gain +1 ATK on ally ability",
+                description:
+                    "With 1+ Prospector: also gain +1 ATK on ally ability",
             },
         },
         shopCost: 3,
@@ -552,8 +551,7 @@ const CLOCKWORK_UNITS: UnitDef[] = [
         ability: {
             trigger: "roundStart",
             effect: { type: "damage", target: "allEnemies", amount: 1 },
-            description:
-                "Round start: deal 1 (+1/Clockwork) to all enemies",
+            description: "Round start: deal 1 (+1/Clockwork) to all enemies",
             factionBonus: { perAlly: 1 },
         },
         shopCost: 4,
@@ -568,8 +566,7 @@ const CLOCKWORK_UNITS: UnitDef[] = [
         ability: {
             trigger: "onDeath",
             effect: { type: "damage", target: "allEnemies", amount: 5 },
-            description:
-                "On death: deal 5 (+2/Clockwork) to all enemies",
+            description: "On death: deal 5 (+2/Clockwork) to all enemies",
             factionBonus: { perAlly: 2 },
         },
         shopCost: 5,
@@ -751,8 +748,7 @@ const PROSPECTOR_UNITS: UnitDef[] = [
                 atkBonus: 1,
                 hpBonus: 1,
             },
-            description:
-                "Ally death: summon 2/2 Shade (+1/+0 per Prospector)",
+            description: "Ally death: summon 2/2 Shade (+1/+0 per Prospector)",
             factionBonus: { perAlly: 1 },
         },
         shopCost: 5,

@@ -1,9 +1,9 @@
-import type { RoutableWindow } from "../config/routing"
 import {
     getDeployEnv,
     getProductionUrl,
     getStagingUrl,
 } from "../config/environment"
+import type { RoutableWindow } from "../config/routing"
 import { getBuildInfo } from "../lib/buildInfo"
 import { getLocaleManager } from "../lib/localeManager"
 import { saveManager } from "../lib/saveManager"
@@ -283,8 +283,7 @@ export class Taskbar {
                 `<span class="env-badge env-staging">STAGING</span> · ` +
                 `<a href="${getProductionUrl()}" class="env-link">Production ↗</a>`
         } else if (env === "production") {
-            envSwitcher.innerHTML =
-                `<a href="${getStagingUrl()}" class="env-link">Staging ↗</a>`
+            envSwitcher.innerHTML = `<a href="${getStagingUrl()}" class="env-link">Staging ↗</a>`
         } else {
             envSwitcher.innerHTML =
                 `<span class="env-badge env-dev">DEV</span> · ` +
