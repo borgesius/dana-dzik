@@ -3,6 +3,7 @@ import {
     getBusinessGame,
     type Venture,
 } from "../lib/businessGame"
+import { getLocaleManager, type LocaleId } from "../lib/localeManager"
 import { initStrava } from "../lib/strava"
 import {
     type ColorScheme,
@@ -14,8 +15,6 @@ import { BusinessPanel } from "./BusinessPanel"
 function pick<T>(arr: T[]): T {
     return arr[Math.floor(Math.random() * arr.length)]
 }
-
-const QA_FALLBACKS = ["🔬 QA: ¯\\_(ツ)_/¯", "🔬 Tests: ?", "🔬 QA: N/A"]
 
 const YEAR_VARIATIONS = ["1997", "1997", "199?", "in the 90s"]
 
@@ -75,6 +74,7 @@ export class Toolbars {
         this.setupGameListeners()
 
         getThemeManager().on("themeChanged", () => this.applyThemeLabels())
+        getLocaleManager().on("localeChanged", () => this.applyTranslations())
     }
 
     private applyThemeLabels(): void {
@@ -82,6 +82,21 @@ export class Toolbars {
         if (this.searchInputEl) {
             this.searchInputEl.placeholder = labels.searchPlaceholder
         }
+    }
+
+    private applyTranslations(): void {
+        const lm = getLocaleManager()
+        const labels = getThemeManager().getLabels()
+        if (this.searchInputEl) {
+            this.searchInputEl.placeholder = labels.searchPlaceholder
+        }
+        if (this.weatherEl && this.weatherEl.textContent?.includes("Loading")) {
+            this.weatherEl.innerHTML = lm.t("toolbar.weatherLoading")
+        }
+        if (this.qaEl && this.qaEl.textContent?.includes("Loading")) {
+            this.qaEl.innerHTML = lm.t("toolbar.qaLoading")
+        }
+        this.renderVentureButtons()
     }
 
     private createElement(): HTMLElement {
@@ -99,19 +114,20 @@ export class Toolbars {
         const toolbar = document.createElement("div")
         toolbar.className = "toolbar"
 
+        const lm = getLocaleManager()
         const labels = getThemeManager().getLabels()
         const askJeeves = this.createSearchBar(labels.searchPlaceholder, "🔍")
         toolbar.appendChild(askJeeves)
 
         const weather = document.createElement("div")
         weather.className = "toolbar-weather"
-        weather.innerHTML = "☀️ Loading..."
+        weather.innerHTML = lm.t("toolbar.weatherLoading")
         this.weatherEl = weather
         toolbar.appendChild(weather)
 
         const qa = document.createElement("div")
         qa.className = "toolbar-qa"
-        qa.innerHTML = "🔬 QA: Loading..."
+        qa.innerHTML = lm.t("toolbar.qaLoading")
         this.qaEl = qa
         toolbar.appendChild(qa)
 
@@ -119,9 +135,96 @@ export class Toolbars {
         spacer.style.flex = "1"
         toolbar.appendChild(spacer)
 
+        toolbar.appendChild(this.createLanguageToggle())
         toolbar.appendChild(this.createColorSchemeToggle())
 
         return toolbar
+    }
+
+    private createLanguageToggle(): HTMLElement {
+        const LOCALE_ORDER: LocaleId[] = [
+            "en",
+            "es",
+            "fr",
+            "de",
+            "it",
+            "pt",
+            "ja",
+            "zh",
+        ]
+
+        const lm = getLocaleManager()
+        const container = document.createElement("div")
+        container.className = "language-toggle-container"
+        container.style.position = "relative"
+
+        const btn = document.createElement("button")
+        btn.className = "toolbar-button language-toggle"
+        btn.title = `${lm.t("toolbar.language", { language: lm.getLocaleName() })}`
+
+        const updateBtn = (): void => {
+            const locale = lm.getCurrentLocale()
+            btn.textContent = lm.getLocaleFlag(locale)
+            btn.title = `${lm.t("toolbar.language", { language: lm.getLocaleName() })}`
+        }
+
+        updateBtn()
+
+        const dropdown = document.createElement("div")
+        dropdown.className = "language-dropdown"
+        dropdown.style.display = "none"
+
+        LOCALE_ORDER.forEach((locale) => {
+            const option = document.createElement("button")
+            option.className = "language-option"
+            option.textContent = `${lm.getLocaleFlag(locale)} ${lm.getLocaleName(locale)}`
+            option.dataset.locale = locale
+
+            if (locale === lm.getCurrentLocale()) {
+                option.classList.add("active")
+            }
+
+            option.addEventListener("click", (e) => {
+                e.stopPropagation()
+                void lm.setLocale(locale)
+                updateBtn()
+                dropdown.style.display = "none"
+
+                dropdown.querySelectorAll(".language-option").forEach((opt) => {
+                    opt.classList.remove("active")
+                })
+                option.classList.add("active")
+            })
+
+            dropdown.appendChild(option)
+        })
+
+        btn.addEventListener("click", (e) => {
+            e.stopPropagation()
+            const isVisible = dropdown.style.display === "block"
+            dropdown.style.display = isVisible ? "none" : "block"
+        })
+
+        document.addEventListener("click", () => {
+            dropdown.style.display = "none"
+        })
+
+        lm.on("localeChanged", () => {
+            updateBtn()
+            dropdown.querySelectorAll(".language-option").forEach((opt) => {
+                const optLocale = opt.getAttribute("data-locale") as LocaleId
+                if (optLocale === lm.getCurrentLocale()) {
+                    opt.classList.add("active")
+                } else {
+                    opt.classList.remove("active")
+                }
+            })
+        })
+
+        container.appendChild(btn)
+        container.appendChild(dropdown)
+
+        return container
     }
 
     private createColorSchemeToggle(): HTMLElement {
@@ -134,14 +237,15 @@ export class Toolbars {
         const SCHEME_ORDER: ColorScheme[] = ["light", "dark", "system"]
 
         const tm = getThemeManager()
+        const lm = getLocaleManager()
         const btn = document.createElement("button")
         btn.className = "toolbar-button color-scheme-toggle"
-        btn.title = `Color: ${tm.getColorScheme()}`
+        btn.title = lm.t("toolbar.colorScheme", { scheme: tm.getColorScheme() })
 
         const updateBtn = (): void => {
             const scheme = tm.getColorScheme()
             btn.textContent = SCHEME_ICONS[scheme]
-            btn.title = `Color: ${scheme}`
+            btn.title = lm.t("toolbar.colorScheme", { scheme })
         }
 
         updateBtn()
@@ -160,6 +264,10 @@ export class Toolbars {
                 updateBtn()
             }
         )
+
+        lm.on("localeChanged", () => {
+            updateBtn()
+        })
 
         return btn
     }
@@ -183,18 +291,18 @@ export class Toolbars {
 
         const hqToggle = document.createElement("button")
         hqToggle.className = "toolbar-button hq-toggle"
-        hqToggle.innerHTML = "📊 HQ ▼"
+        hqToggle.innerHTML = getLocaleManager().t("toolbar.hqClosed")
         hqToggle.addEventListener("click", () => {
             this.businessPanel.toggle()
             hqToggle.innerHTML = this.businessPanel.isOpen()
-                ? "📊 HQ ▲"
-                : "📊 HQ ▼"
+                ? getLocaleManager().t("toolbar.hqOpen")
+                : getLocaleManager().t("toolbar.hqClosed")
         })
         toolbar.appendChild(hqToggle)
 
         const github = document.createElement("a")
         github.className = "toolbar-button"
-        github.textContent = "🐙 GitHub"
+        github.textContent = getLocaleManager().t("toolbar.github")
         github.href = "https://github.com/borgesius"
         github.target = "_blank"
         toolbar.appendChild(github)
@@ -249,9 +357,13 @@ export class Toolbars {
             const threshold = this.getTierThreshold(venture.tier)
             const lockedBtn = document.createElement("button")
             lockedBtn.className = "toolbar-button venture-btn locked"
-            lockedBtn.innerHTML = `🔒 $${threshold}`
+            lockedBtn.innerHTML = getLocaleManager().t("toolbar.locked", {
+                threshold,
+            })
             lockedBtn.disabled = true
-            lockedBtn.title = `Unlock at $${threshold} lifetime earnings`
+            lockedBtn.title = getLocaleManager().t("toolbar.unlockAt", {
+                threshold,
+            })
             this.ventureButtonsEl?.appendChild(lockedBtn)
         })
     }
@@ -269,13 +381,14 @@ export class Toolbars {
     }
 
     private createVentureButton(venture: Venture): HTMLButtonElement {
+        const lm = getLocaleManager()
         const btn = document.createElement("button")
         btn.className = `toolbar-button venture-btn ${venture.cost === 0 ? "green" : ""}`
         btn.dataset.ventureId = venture.id
 
         const displayName =
             venture.id === "make-money"
-                ? `${venture.emoji} MAKE $$$ FAST`
+                ? `${venture.emoji} ${lm.t("toolbar.makeMoney")}`
                 : `${venture.emoji} ${venture.name}`
 
         btn.innerHTML = `<span class="venture-text">${displayName}</span>`
@@ -284,9 +397,18 @@ export class Toolbars {
             const successRate = Math.round(
                 (1 - this.game.getEffectiveRisk(venture)) * 100
             )
-            btn.title = `${venture.tagline}\nCost: $${venture.cost.toFixed(2)} | Win: $${venture.payout.toFixed(2)} | ${successRate}% success`
+            btn.title = lm.t("toolbar.tooltipWithOdds", {
+                tagline: venture.tagline,
+                cost: venture.cost.toFixed(2),
+                payout: venture.payout.toFixed(2),
+                successRate,
+            })
         } else if (venture.cost > 0) {
-            btn.title = `${venture.tagline}\nCost: $${venture.cost.toFixed(2)} | Win: $${venture.payout.toFixed(2)}`
+            btn.title = lm.t("toolbar.tooltipWithoutOdds", {
+                tagline: venture.tagline,
+                cost: venture.cost.toFixed(2),
+                payout: venture.payout.toFixed(2),
+            })
         } else {
             btn.title = venture.tagline
         }
@@ -428,48 +550,51 @@ export class Toolbars {
         scores: LighthouseScores
         updatedAt: string | null
     }): string {
+        const lm = getLocaleManager()
         const s = lighthouse.scores
         const rows: string[] = []
 
         if (s.performance !== null) {
             rows.push(
-                `<div class="qa-tooltip-row"><span class="qa-tooltip-label">${this.scoreEmoji(s.performance)} Performance</span><span class="qa-tooltip-value">${s.performance}</span></div>`
+                `<div class="qa-tooltip-row"><span class="qa-tooltip-label">${this.scoreEmoji(s.performance)} ${lm.t("qa.performance")}</span><span class="qa-tooltip-value">${s.performance}</span></div>`
             )
         }
         if (s.accessibility !== null) {
             rows.push(
-                `<div class="qa-tooltip-row"><span class="qa-tooltip-label">${this.scoreEmoji(s.accessibility)} Accessibility</span><span class="qa-tooltip-value">${s.accessibility}</span></div>`
+                `<div class="qa-tooltip-row"><span class="qa-tooltip-label">${this.scoreEmoji(s.accessibility)} ${lm.t("qa.accessibility")}</span><span class="qa-tooltip-value">${s.accessibility}</span></div>`
             )
         }
         if (s.bestPractices !== null) {
             rows.push(
-                `<div class="qa-tooltip-row"><span class="qa-tooltip-label">${this.scoreEmoji(s.bestPractices)} Best Practices</span><span class="qa-tooltip-value">${s.bestPractices}</span></div>`
+                `<div class="qa-tooltip-row"><span class="qa-tooltip-label">${this.scoreEmoji(s.bestPractices)} ${lm.t("qa.bestPractices")}</span><span class="qa-tooltip-value">${s.bestPractices}</span></div>`
             )
         }
         if (s.seo !== null) {
             rows.push(
-                `<div class="qa-tooltip-row"><span class="qa-tooltip-label">${this.scoreEmoji(s.seo)} SEO</span><span class="qa-tooltip-value">${s.seo}</span></div>`
+                `<div class="qa-tooltip-row"><span class="qa-tooltip-label">${this.scoreEmoji(s.seo)} ${lm.t("qa.seo")}</span><span class="qa-tooltip-value">${s.seo}</span></div>`
             )
         }
 
         if (rows.length === 0) {
             rows.push(
-                '<div class="qa-tooltip-row"><span class="qa-tooltip-label">No scores available</span></div>'
+                `<div class="qa-tooltip-row"><span class="qa-tooltip-label">${lm.t("qa.noScores")}</span></div>`
             )
         }
 
         const statusText =
-            lighthouse.status === "success" ? "Passing" : "Failing"
+            lighthouse.status === "success"
+                ? lm.t("qa.passing")
+                : lm.t("qa.failing")
         const dateStr = lighthouse.updatedAt
             ? new Date(lighthouse.updatedAt).toLocaleDateString()
             : ""
 
         return `
             <div class="qa-tooltip">
-                <div class="qa-tooltip-title">Lighthouse Report</div>
+                <div class="qa-tooltip-title">${lm.t("qa.lighthouseReport")}</div>
                 ${rows.join("")}
                 <div class="qa-tooltip-status">${statusText}${dateStr ? ` · ${dateStr}` : ""}</div>
-                <div class="qa-tooltip-click">Click for full report</div>
+                <div class="qa-tooltip-click">${lm.t("qa.clickFullReport")}</div>
             </div>
         `
     }
@@ -478,8 +603,11 @@ export class Toolbars {
         status: string
         updatedAt: string | null
     }): string {
+        const lm = getLocaleManager()
         const passed = playwright.status === "success"
-        const statusText = passed ? "All tests passing" : "Tests failing"
+        const statusText = passed
+            ? lm.t("qa.allTestsPassing")
+            : lm.t("qa.testsFailing")
         const statusEmoji = passed ? "✅" : "❌"
         const dateStr = playwright.updatedAt
             ? new Date(playwright.updatedAt).toLocaleDateString()
@@ -487,13 +615,13 @@ export class Toolbars {
 
         return `
             <div class="qa-tooltip">
-                <div class="qa-tooltip-title">E2E Tests (Playwright)</div>
+                <div class="qa-tooltip-title">${lm.t("qa.e2eTests")}</div>
                 <div class="qa-tooltip-row">
-                    <span class="qa-tooltip-label">Status</span>
+                    <span class="qa-tooltip-label">${lm.t("qa.status")}</span>
                     <span class="qa-tooltip-value">${statusEmoji} ${statusText}</span>
                 </div>
-                <div class="qa-tooltip-status">Chromium · Latest on main${dateStr ? ` · ${dateStr}` : ""}</div>
-                <div class="qa-tooltip-click">Click for full report</div>
+                <div class="qa-tooltip-status">${lm.t("qa.chromiumLatest")}${dateStr ? ` · ${dateStr}` : ""}</div>
+                <div class="qa-tooltip-click">${lm.t("qa.clickFullReport")}</div>
             </div>
         `
     }
@@ -501,33 +629,34 @@ export class Toolbars {
     private buildCoverageTooltip(
         coverage: NonNullable<ReportsResponse["data"]>["coverage"]
     ): string {
+        const lm = getLocaleManager()
         const m = coverage.metrics
         const rows: string[] = []
 
         if (m.statements !== null) {
             rows.push(
-                `<div class="qa-tooltip-row"><span class="qa-tooltip-label">${this.scoreEmoji(m.statements)} Statements</span><span class="qa-tooltip-value">${m.statements}%</span></div>`
+                `<div class="qa-tooltip-row"><span class="qa-tooltip-label">${this.scoreEmoji(m.statements)} ${lm.t("qa.statements")}</span><span class="qa-tooltip-value">${m.statements}%</span></div>`
             )
         }
         if (m.branches !== null) {
             rows.push(
-                `<div class="qa-tooltip-row"><span class="qa-tooltip-label">${this.scoreEmoji(m.branches)} Branches</span><span class="qa-tooltip-value">${m.branches}%</span></div>`
+                `<div class="qa-tooltip-row"><span class="qa-tooltip-label">${this.scoreEmoji(m.branches)} ${lm.t("qa.branches")}</span><span class="qa-tooltip-value">${m.branches}%</span></div>`
             )
         }
         if (m.functions !== null) {
             rows.push(
-                `<div class="qa-tooltip-row"><span class="qa-tooltip-label">${this.scoreEmoji(m.functions)} Functions</span><span class="qa-tooltip-value">${m.functions}%</span></div>`
+                `<div class="qa-tooltip-row"><span class="qa-tooltip-label">${this.scoreEmoji(m.functions)} ${lm.t("qa.functions")}</span><span class="qa-tooltip-value">${m.functions}%</span></div>`
             )
         }
         if (m.lines !== null) {
             rows.push(
-                `<div class="qa-tooltip-row"><span class="qa-tooltip-label">${this.scoreEmoji(m.lines)} Lines</span><span class="qa-tooltip-value">${m.lines}%</span></div>`
+                `<div class="qa-tooltip-row"><span class="qa-tooltip-label">${this.scoreEmoji(m.lines)} ${lm.t("qa.lines")}</span><span class="qa-tooltip-value">${m.lines}%</span></div>`
             )
         }
 
         if (rows.length === 0) {
             rows.push(
-                '<div class="qa-tooltip-row"><span class="qa-tooltip-label">No metrics available</span></div>'
+                `<div class="qa-tooltip-row"><span class="qa-tooltip-label">${lm.t("qa.noMetrics")}</span></div>`
             )
         }
 
@@ -537,10 +666,10 @@ export class Toolbars {
 
         return `
             <div class="qa-tooltip">
-                <div class="qa-tooltip-title">Test Coverage</div>
+                <div class="qa-tooltip-title">${lm.t("qa.testCoverage")}</div>
                 ${rows.join("")}
-                <div class="qa-tooltip-status">v8 provider${dateStr ? ` · ${dateStr}` : ""}</div>
-                <div class="qa-tooltip-click">Click for CI run details</div>
+                <div class="qa-tooltip-status">${lm.t("qa.v8Provider")}${dateStr ? ` · ${dateStr}` : ""}</div>
+                <div class="qa-tooltip-click">${lm.t("qa.clickCIDetails")}</div>
             </div>
         `
     }
@@ -551,6 +680,8 @@ export class Toolbars {
 
     private async fetchQAReports(): Promise<void> {
         if (!this.qaEl) return
+
+        const lm = getLocaleManager()
 
         try {
             const controller = new AbortController()
@@ -564,7 +695,11 @@ export class Toolbars {
             const result = (await response.json()) as ReportsResponse
 
             if (!result.ok || !result.data) {
-                this.qaEl.innerHTML = pick(QA_FALLBACKS)
+                this.qaEl.innerHTML = pick([
+                    lm.t("toolbar.qaFallback1"),
+                    lm.t("toolbar.qaFallback2"),
+                    lm.t("toolbar.qaFallback3"),
+                ])
                 return
             }
 
@@ -600,7 +735,11 @@ export class Toolbars {
 
             this.qaEl.innerHTML = badges
         } catch {
-            this.qaEl.innerHTML = pick(QA_FALLBACKS)
+            this.qaEl.innerHTML = pick([
+                getLocaleManager().t("toolbar.qaFallback1"),
+                getLocaleManager().t("toolbar.qaFallback2"),
+                getLocaleManager().t("toolbar.qaFallback3"),
+            ])
         }
     }
 

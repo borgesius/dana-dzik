@@ -33,12 +33,14 @@ import {
 import { createAudioManager } from "./lib/audio"
 import { GlitchManager } from "./lib/glitchEffects"
 import { isMobile } from "./lib/isMobile"
+import { getLocaleManager } from "./lib/localeManager"
 import { Router } from "./lib/router"
 import { SystemCrashHandler } from "./lib/systemCrash"
 import { getThemeManager } from "./lib/themeManager"
 
 setupErrorHandlers()
 getThemeManager()
+void getLocaleManager().init()
 trackPageview()
 trackFunnelStep("launched")
 trackFunnelStep("boot_complete")

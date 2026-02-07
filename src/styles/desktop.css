@@ -136,6 +136,50 @@ body {
     color: inherit;
 }
 
+.language-toggle-container {
+    position: relative;
+    display: inline-block;
+}
+
+.language-dropdown {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background: var(--theme-toolbar-bg);
+    border: var(--theme-toolbar-btn-border);
+    min-width: 180px;
+    z-index: 1000;
+    margin-top: 2px;
+    box-shadow: 2px 2px 4px rgb(0 0 0 / 30%);
+}
+
+.language-option {
+    display: block;
+    width: 100%;
+    background: var(--theme-toolbar-btn-bg);
+    border: none;
+    border-bottom: 1px solid var(--theme-toolbar-border);
+    padding: 8px 12px;
+    font-size: 11px;
+    cursor: pointer;
+    text-align: left;
+    color: inherit;
+}
+
+.language-option:last-child {
+    border-bottom: none;
+}
+
+.language-option:hover {
+    background: var(--theme-toolbar-btn-hover-bg, var(--theme-active-bg));
+}
+
+.language-option.active {
+    background: var(--theme-active-bg);
+    font-weight: bold;
+}
+
+
 .toolbar-button:active {
     border-style: inset;
 }

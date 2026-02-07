@@ -1,6 +1,7 @@
 import { trackFunnelStep, trackWindowOpen } from "../lib/analytics"
 import { initFelixGPT } from "../lib/felixgpt"
 import { initGuestbook } from "../lib/guestbook"
+import { getLocaleManager } from "../lib/localeManager"
 import { initNowPlaying } from "../lib/nowPlaying"
 import { initPhotoSlideshows } from "../lib/photoSlideshow"
 import { initPinball, type PinballGame } from "../lib/pinball"
@@ -158,11 +159,12 @@ export class Window {
         buttons.className = "window-titlebar-buttons"
 
         const labels = getThemeManager().getLabels()
+        const lm = getLocaleManager()
 
         const minimizeBtn = document.createElement("button")
         minimizeBtn.className = "window-btn minimize"
         minimizeBtn.textContent = labels.minimizeButton || "_"
-        minimizeBtn.setAttribute("aria-label", "Minimize window")
+        minimizeBtn.setAttribute("aria-label", lm.t("window.minimize"))
         minimizeBtn.addEventListener("click", (e) => {
             e.stopPropagation()
             this.callbacks.onMinimize()
@@ -172,13 +174,13 @@ export class Window {
         const maximizeBtn = document.createElement("button")
         maximizeBtn.className = "window-btn maximize"
         maximizeBtn.textContent = labels.maximizeButton || "\u25A1"
-        maximizeBtn.setAttribute("aria-label", "Maximize window")
+        maximizeBtn.setAttribute("aria-label", lm.t("window.maximize"))
         buttons.appendChild(maximizeBtn)
 
         const closeBtn = document.createElement("button")
         closeBtn.className = "window-btn close"
         closeBtn.textContent = labels.closeButton || "\u00D7"
-        closeBtn.setAttribute("aria-label", "Close window")
+        closeBtn.setAttribute("aria-label", lm.t("window.close"))
         closeBtn.addEventListener("click", (e) => {
             e.stopPropagation()
             this.callbacks.onClose()

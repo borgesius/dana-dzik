@@ -57,6 +57,7 @@
     },
     "dependencies": {
         "@upstash/redis": "^1.36.2",
-        "debug": "^4.4.3"
+        "debug": "^4.4.3",
+        "i18next": "^25.8.4"
     }
 }
