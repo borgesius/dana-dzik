@@ -5,6 +5,7 @@ export interface ExerciseDefinition {
     stub: string
     test: string
     locked?: boolean
+    grund?: boolean
 }
 
 export const EXERCISE_6_SOURCE = `; Exercise 6: Die Welt
@@ -99,6 +100,26 @@ ERWARTE "146"`,
         test: `; Exercise 6: Die Welt
 ERWARTE "42"`,
         locked: true,
+    },
+    {
+        name: "exercise7",
+        stub: `; Exercise 7: Der Ring
+;
+; Compute (3 + 4) * (5 + 2) and output the result.
+;
+; Constraint: you may only use registers r0 and r1.
+; Use the ring buffer (tin/tab) for temporary storage.
+;
+; See 3:\\DAS\\grund.txt for the GRUND reference.
+
+.data
+
+.code
+
+  nov`,
+        test: `; Exercise 7: Der Ring
+ERWARTE "49"`,
+        grund: true,
     },
 ]
 

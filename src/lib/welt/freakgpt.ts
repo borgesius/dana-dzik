@@ -543,6 +543,75 @@ export const EXERCISE_5_SCHOPENHAUER_ESSAY = [
     ";",
 ]
 
+export const EXERCISE_7_GRUND_SOLUTION: string[] = [
+    "; ===== FreakGPT Solution =====",
+    "; As a GRUND code assistant, I've",
+    "; carefully analyzed your constraints.",
+    ";",
+    "; IMPORTANT: Only r0 and r1 are",
+    "; allowed. We must use the ring",
+    "; buffer (tin/tab) for temporaries.",
+    ";",
+    "; The ring buffer is like a hot tub.",
+    "; You push things in, they come back",
+    "; out warm and ready. \u{1F975}",
+    ";",
+    "; APPROACH:",
+    "; 1. Compute 3 + 4 = 7 in r0",
+    "; 2. Push r0 to ring (tin r0)",
+    "; 3. Compute 5 + 2 = 7 in r0",
+    "; 4. Pop ring to r1 (tab r1)",
+    "; 5. Multiply r0 * r1 = 49",
+    "; 6. Output result",
+    ";",
+    "; NOTE: The ring buffer has 4 slots.",
+    "; We only need 1. Plenty of room",
+    "; for what we're doing. \u{1F60F}",
+    "",
+    ".data",
+    "",
+    ".code",
+    "  ; Step 1: Compute first sum.",
+    "  ; Load 3 into r0.",
+    "  tar  r0, 3",
+    "  ; Load 4 into r1.",
+    "  tar  r1, 4",
+    "  ; r0 = r0 + r1 = 7",
+    "  kur  r0, r0, r1",
+    "",
+    "  ; Step 2: Stash first sum.",
+    "  ; Push r0 onto the ring.",
+    "  ; It'll wait for us. Patiently. \u{1F351}",
+    "  tin  r0",
+    "",
+    "  ; Step 3: Compute second sum.",
+    "  ; Load 5 into r0.",
+    "  tar  r0, 5",
+    "  ; Load 2 into r1.",
+    "  tar  r1, 2",
+    "  ; r0 = r0 + r1 = 7",
+    "  kur  r0, r0, r1",
+    "",
+    "  ; Step 4: Retrieve first sum.",
+    "  ; Pop from ring into r1.",
+    "  ; Welcome back, old friend. \u{1F618}",
+    "  tab  r1",
+    "",
+    "  ; Step 5: Multiply the two sums.",
+    "  ; r0 = r0 * r1 = 7 * 7 = 49",
+    "  ; Two sevens coming together.",
+    "  ; Lucky. \u{1F60F}",
+    "  mur  r0, r0, r1",
+    "",
+    "  ; Step 6: Output the result.",
+    "  mav  r0",
+    "",
+    "  ; Clean exit.",
+    "  ; The ring giveth, and the ring",
+    "  ; taketh away. \u{1F48D}",
+    "  nov",
+]
+
 export const NETWORK_ERRORS = [
     "FreakGPT: NetworkError: Failed to fetch completion",
     "FreakGPT: Retrying... (attempt 2/3)",
@@ -621,6 +690,10 @@ export function getFreakGPTSolution(filename: string): string[] | null {
         ]
     }
 
+    if (filename === "exercise7.grund") {
+        return [...EXERCISE_7_GRUND_SOLUTION]
+    }
+
     const lines = FREAKGPT_SOLUTIONS[filename]
     if (!lines) return null
 
@@ -628,5 +701,7 @@ export function getFreakGPTSolution(filename: string): string[] | null {
 }
 
 export function isExerciseFile(filename: string): boolean {
-    return /^exercise[1-5]\.welt$/.test(filename)
+    return (
+        /^exercise[1-5]\.welt$/.test(filename) || filename === "exercise7.grund"
+    )
 }

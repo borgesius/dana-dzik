@@ -220,9 +220,45 @@ export const ACHIEVEMENTS: AchievementDef[] = [
         hidden: false,
     },
     {
+        id: "welt-advanced",
+        category: "terminal",
+        icon: "💎",
+        hidden: false,
+    },
+    {
         id: "welt-master",
         category: "terminal",
         icon: "🌍",
+        hidden: true,
+    },
+    {
+        id: "nibelung",
+        category: "terminal",
+        icon: "💍",
+        hidden: true,
+    },
+    {
+        id: "erlosung",
+        category: "terminal",
+        icon: "🕊️",
+        hidden: true,
+    },
+    {
+        id: "grund-compiled",
+        category: "terminal",
+        icon: "🔨",
+        hidden: false,
+    },
+    {
+        id: "grund-executed",
+        category: "terminal",
+        icon: "⚡",
+        hidden: false,
+    },
+    {
+        id: "ring-overflow",
+        category: "terminal",
+        icon: "🔄",
         hidden: true,
     },
     {

@@ -48,15 +48,8 @@ const TRAY_TOOLTIPS = [
     "Helper.dll (helping)",
 ]
 
-const VERSION_STRINGS = [
-    "v-0.7.3a",
-    "v∞.0.1",
-    "build: later",
-    "revision ????",
-    "v4.51.NaN",
-    "v1.0 (beta) (alpha) (final)",
-    "version: yes",
-]
+const CHANGELOG_URL =
+    "https://github.com/borgesius/dana-dzik/blob/main/CHANGELOG.md"
 
 const GLITCH_TIMES = [
     "??:?? AM",
@@ -247,8 +240,8 @@ export class Taskbar {
             buildInfo.gitCommit !== "local"
                 ? `<a href="https://github.com/borgesius/dana-dzik/commit/${buildInfo.gitCommit}" target="_blank">${commitShort}</a>`
                 : commitShort
-        const versionStr = pick(VERSION_STRINGS)
-        versionInfo.innerHTML = `${versionStr} · ${commitLink} · <a href="https://github.com/borgesius/dana-dzik/blob/main/CHANGELOG.md" target="_blank">changelog</a>`
+        const versionLink = `<a href="${CHANGELOG_URL}" target="_blank">v${buildInfo.version}</a>`
+        versionInfo.innerHTML = `${versionLink} · ${commitLink}`
         footer.appendChild(versionInfo)
 
         const buttons = document.createElement("div")

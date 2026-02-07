@@ -1,4 +1,10 @@
-import { getInitialMemory, runWeltProgram, WeltError } from "../welt"
+import {
+    compileWeltProgram,
+    getInitialMemory,
+    runGrundProgram,
+    runWeltProgram,
+    WeltError,
+} from "../welt"
 import { EXERCISES } from "../welt/exercises"
 import { runAllTests } from "../welt/testRunner"
 import type { WeltValue } from "../welt/types"
@@ -82,7 +88,9 @@ const COMMANDS: Record<string, CommandHandler> = {
     edit <file>   Edit file (line editor)
 
   Programs:
-    welt <file>   Run a .welt program
+    welt <file>        Run a .welt or .grund program
+    welt --grund <f>   Compile .welt to GRUND assembly
+    grund <file>       Run a .grund program
 
   Utilities:
     help          Show this message
@@ -230,7 +238,56 @@ const COMMANDS: Record<string, CommandHandler> = {
 
     welt: async (args, ctx): Promise<CommandResult> => {
         if (args.length === 0) {
-            return { output: "Usage: welt <filename>", className: "error" }
+            return {
+                output: "Usage: welt [--grund] <filename>",
+                className: "error",
+            }
+        }
+
+        const compileMode = args[0] === "--grund"
+        const fileArgs = compileMode ? args.slice(1) : args
+        const filename = fileArgs.join(" ")
+
+        if (!filename) {
+            return {
+                output: "Usage: welt --grund <filename>",
+                className: "error",
+            }
+        }
+
+        const result = getFileContent(ctx.fs, filename)
+
+        if (result.error) {
+            return { output: result.error, className: "error" }
+        }
+
+        if (!result.content) {
+            return { output: `Empty file: ${filename}`, className: "error" }
+        }
+
+        if (compileMode) {
+            return compileWeltCommand(result.content, filename, ctx)
+        }
+
+        if (filename.endsWith(".grund")) {
+            return runGrundCommand(result.content, ctx)
+        }
+
+        const memoryNode = getNodeAtPath(ctx.fs, "3:\\DAS\\memory.welt")
+        const memoryContent = memoryNode?.content ?? ""
+        let initialMemory
+        try {
+            initialMemory = await getInitialMemory(memoryContent)
+        } catch {
+            initialMemory = undefined
+        }
+
+        return runWeltCommand(result.content, ctx, initialMemory)
+    },
+
+    grund: async (args, ctx): Promise<CommandResult> => {
+        if (args.length === 0) {
+            return { output: "Usage: grund <filename>", className: "error" }
         }
 
         const filename = args.join(" ")
@@ -244,16 +301,7 @@ const COMMANDS: Record<string, CommandHandler> = {
             return { output: `Empty file: ${filename}`, className: "error" }
         }
 
-        const memoryNode = getNodeAtPath(ctx.fs, "3:\\DAS\\memory.welt")
-        const memoryContent = memoryNode?.content ?? ""
-        let initialMemory
-        try {
-            initialMemory = await getInitialMemory(memoryContent)
-        } catch {
-            initialMemory = undefined
-        }
-
-        return runWeltCommand(result.content, ctx, initialMemory)
+        return runGrundCommand(result.content, ctx)
     },
 
     clear: (): CommandResult => ({ action: "clear" }),
@@ -322,6 +370,82 @@ async function runWeltCommand(
     }
 }
 
+function compileWeltCommand(
+    source: string,
+    filename: string,
+    ctx: CommandContext
+): CommandResult {
+    try {
+        const output = compileWeltProgram(source, filename)
+        ctx.print(output)
+        if (typeof document !== "undefined") {
+            document.dispatchEvent(new CustomEvent("grund:compiled"))
+        }
+        return { output: "" }
+    } catch (err) {
+        if (err instanceof WeltError) {
+            const lineInfo = err.line > 0 ? ` (line ${err.line})` : ""
+            return {
+                output: `WELT COMPILE ERROR${lineInfo}: ${err.message}`,
+                className: "error",
+            }
+        }
+        return {
+            output: `SYSTEM FAULT: ${err instanceof Error ? err.message : "Unknown error"}`,
+            className: "error",
+        }
+    }
+}
+
+async function runGrundCommand(
+    source: string,
+    ctx: CommandContext,
+    initialMemory?: WeltValue[]
+): Promise<CommandResult> {
+    try {
+        await runGrundProgram(
+            source,
+            {
+                onOutput: (text) => ctx.print(text),
+                onInput: () => ctx.requestInput(),
+            },
+            initialMemory
+        )
+        if (typeof document !== "undefined") {
+            document.dispatchEvent(new CustomEvent("grund:executed"))
+        }
+        return { output: "" }
+    } catch (err) {
+        if (err instanceof WeltError) {
+            const lineInfo = err.line > 0 ? ` (line ${err.line})` : ""
+            const msg = err.message
+            if (typeof document !== "undefined") {
+                if (msg.includes("OVERHEAT")) {
+                    document.dispatchEvent(
+                        new CustomEvent("welt:error", {
+                            detail: { type: "thermal" },
+                        })
+                    )
+                } else if (msg.includes("DIVISION BY ZERO")) {
+                    document.dispatchEvent(
+                        new CustomEvent("welt:error", {
+                            detail: { type: "divide-by-zero" },
+                        })
+                    )
+                }
+            }
+            return {
+                output: `GRUND ERROR${lineInfo}: ${msg}`,
+                className: "error",
+            }
+        }
+        return {
+            output: `SYSTEM FAULT: ${err instanceof Error ? err.message : "Unknown error"}`,
+            className: "error",
+        }
+    }
+}
+
 type HandlerFn = (ctx: CommandContext) => Promise<CommandResult>
 
 const HANDLERS: Record<string, HandlerFn> = {
@@ -343,10 +467,16 @@ async function handleWelttest(ctx: CommandContext): Promise<CommandResult> {
     const welttestSources: Record<string, string> = {}
 
     for (const [name, node] of Object.entries(currentNode.children)) {
-        if (name.endsWith(".welt") && node.content !== undefined) {
+        if (
+            (name.endsWith(".welt") || name.endsWith(".grund")) &&
+            node.content !== undefined
+        ) {
             exerciseSources[name] = node.content
         }
-        if (name.endsWith(".welttest") && node.content !== undefined) {
+        if (
+            (name.endsWith(".welttest") || name.endsWith(".grundtest")) &&
+            node.content !== undefined
+        ) {
             welttestSources[name] = node.content
         }
     }
@@ -390,6 +520,19 @@ async function handleWelttest(ctx: CommandContext): Promise<CommandResult> {
                 detail: { passed: passedCount, total: result.results.length },
             })
         )
+
+        for (const r of result.results) {
+            if (r.passed) {
+                const num = parseInt(r.name.replace("exercise", ""), 10)
+                if (!isNaN(num)) {
+                    document.dispatchEvent(
+                        new CustomEvent("welt:exercise-passed", {
+                            detail: { exercise: num },
+                        })
+                    )
+                }
+            }
+        }
     }
 
     if (result.allPassed) {
@@ -422,15 +565,17 @@ function handleReset(ctx: CommandContext): Promise<CommandResult> {
     }
 
     for (const exercise of EXERCISES) {
-        const weltName = `${exercise.name}.welt`
-        const testName = `${exercise.name}.welttest`
+        const srcExt = exercise.grund ? ".grund" : ".welt"
+        const testExt = exercise.grund ? ".grundtest" : ".welttest"
+        const srcName = `${exercise.name}${srcExt}`
+        const testName = `${exercise.name}${testExt}`
 
-        if (currentNode.children[weltName]) {
-            currentNode.children[weltName].content = exercise.stub
+        if (currentNode.children[srcName]) {
+            currentNode.children[srcName].content = exercise.stub
             if (exercise.locked) {
-                currentNode.children[weltName].readonly = true
+                currentNode.children[srcName].readonly = true
             }
-            ctx.print(`  Restored ${weltName}`)
+            ctx.print(`  Restored ${srcName}`)
         }
 
         if (currentNode.children[testName]) {

@@ -58,7 +58,13 @@ export type AchievementId =
     | "bounty-hunter"
     | "welt-beginner"
     | "welt-intermediate"
+    | "welt-advanced"
     | "welt-master"
+    | "nibelung"
+    | "erlosung"
+    | "grund-compiled"
+    | "grund-executed"
+    | "ring-overflow"
     // Hidden
     | "thermal-protection"
     | "suffering"
