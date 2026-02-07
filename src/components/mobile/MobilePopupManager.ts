@@ -16,12 +16,20 @@ const POPUP_LEVEL_INTERVALS: Record<number, number> = {
 const DEFAULT_SPAWN_INTERVAL = 12000
 const SPAWN_JITTER = 5000
 const BONUS_POPUP_CHANCE = 0.25
+const RECOVERY_POPUP_CHANCE = 0.6
 
 const PHASE_BONUS_MULTIPLIERS: Record<number, number> = {
     1: 1,
     2: 2,
     3: 5,
     4: 15,
+}
+
+const RECOVERY_THRESHOLDS: Record<number, number> = {
+    1: 0.05,
+    2: 3,
+    3: 5,
+    4: 25,
 }
 
 export class MobilePopupManager {
@@ -127,12 +135,21 @@ export class MobilePopupManager {
         }
     }
 
+    private getBonusChance(): number {
+        const game = getMarketGame()
+        const phase = game.getMaxUnlockedPhase()
+        const cash = game.getCash()
+        const threshold = RECOVERY_THRESHOLDS[phase] ?? 0.05
+
+        return cash < threshold ? RECOVERY_POPUP_CHANCE : BONUS_POPUP_CHANCE
+    }
+
     public spawnPopup(): void {
         if (this.activePopup) return
 
         let content: PopupContent
 
-        if (this.gameActivated && Math.random() < BONUS_POPUP_CHANCE) {
+        if (this.gameActivated && Math.random() < this.getBonusChance()) {
             const baseContent =
                 BONUS_POPUP_CONTENTS[
                     Math.floor(Math.random() * BONUS_POPUP_CONTENTS.length)
