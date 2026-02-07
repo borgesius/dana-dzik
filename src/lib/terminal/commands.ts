@@ -1,5 +1,6 @@
 import type { RoutableWindow } from "../../config/routing"
 import { emitAppEvent } from "../events"
+import { getLocaleManager } from "../localeManager"
 import { EXERCISES } from "../welt/exercises"
 import {
     compileWeltProgram,
@@ -74,34 +75,37 @@ __/ =| o |=-O=====O=====O=====O \\ ____Y___________|__
 ]
 
 const COMMANDS: Record<string, CommandHandler> = {
-    help: (): CommandResult => ({
-        output: `Available commands:
+    help: (): CommandResult => {
+        const lm = getLocaleManager()
+        return {
+            output: `${lm.t("terminalCommands.availableCommands")}
 
-  Navigation:
+  ${lm.t("terminalCommands.navigation")}
     cd <path>     Change directory
     ls, dir       List directory contents
     pwd           Print working directory
     tree          Show directory tree
 
-  Files:
+  ${lm.t("terminalCommands.files")}
     cat <file>    Display file contents
     type <file>   Display file contents
     open <file>   Open file/program
     edit <file>   Edit file (line editor)
 
-  Programs:
+  ${lm.t("terminalCommands.programs")}
     welt <file>        Run a .welt or .grund program
     welt --grund <f>   Compile .welt to GRUND assembly
     grund <file>       Run a .grund program
 
-  Utilities:
+  ${lm.t("terminalCommands.utilities")}
     help          Show this message
     clear, cls    Clear terminal
     whoami        Display user info
     exit          Close terminal
 
-  Tip: Type an .exe filename to run it directly`,
-    }),
+  ${lm.t("terminalCommands.tip")} Type an .exe filename to run it directly`,
+        }
+    },
 
     cd: (args, ctx): CommandResult => {
         if (args.length === 0) {
@@ -122,7 +126,13 @@ const COMMANDS: Record<string, CommandHandler> = {
             return { output: result.error, className: "error" }
         }
 
-        const lines = ["", ` Directory of ${formatPath(ctx.fs.cwd)}`, ""]
+        const lines = [
+            "",
+            getLocaleManager().t("terminalCommands.directoryOf", {
+                path: formatPath(ctx.fs.cwd),
+            }),
+            "",
+        ]
 
         for (const entry of result.entries) {
             const typeLabel = getTypeLabel(entry.type)
@@ -144,9 +154,10 @@ const COMMANDS: Record<string, CommandHandler> = {
     }),
 
     cat: (args, ctx): CommandResult => {
+        const lm = getLocaleManager()
         if (args.length === 0) {
             return {
-                output: "Usage: cat [-n] <filename>",
+                output: lm.t("terminalCommands.usageCat"),
                 className: "error",
             }
         }
@@ -156,7 +167,7 @@ const COMMANDS: Record<string, CommandHandler> = {
 
         if (fileArgs.length === 0) {
             return {
-                output: "Usage: cat [-n] <filename>",
+                output: lm.t("terminalCommands.usageCat"),
                 className: "error",
             }
         }
@@ -184,19 +195,23 @@ const COMMANDS: Record<string, CommandHandler> = {
 
         if (result.windowId) {
             return {
-                output: `[Binary file - use 'open ${filename}' to run]`,
+                output: lm.t("terminalCommands.binaryFile", { filename }),
                 className: "info",
             }
         }
 
-        return { output: "[Empty file]" }
+        return { output: lm.t("terminalCommands.emptyFile") }
     },
 
     type: (args, ctx) => COMMANDS.cat(args, ctx),
 
     open: (args, ctx): CommandResult => {
+        const lm = getLocaleManager()
         if (args.length === 0) {
-            return { output: "Usage: open <filename>", className: "error" }
+            return {
+                output: lm.t("terminalCommands.usageOpen"),
+                className: "error",
+            }
         }
 
         const filename = args.join(" ")
@@ -207,21 +222,25 @@ const COMMANDS: Record<string, CommandHandler> = {
 
         if (!windowId) {
             return {
-                output: `Cannot open: ${filename}`,
+                output: lm.t("terminalCommands.cannotOpen", { filename }),
                 className: "error",
             }
         }
 
         ctx.openWindow(windowId)
         return {
-            output: `[Opening ${filename}...]`,
+            output: lm.t("terminalCommands.opening", { filename }),
             className: "success",
         }
     },
 
     edit: (args, ctx): CommandResult => {
+        const lm = getLocaleManager()
         if (args.length === 0) {
-            return { output: "Usage: edit <filename>", className: "error" }
+            return {
+                output: lm.t("terminalCommands.usageEdit"),
+                className: "error",
+            }
         }
 
         const filename = args.join(" ")
@@ -231,7 +250,7 @@ const COMMANDS: Record<string, CommandHandler> = {
             const node = getNode(ctx.fs, resolved)
             if (node?.readonly) {
                 return {
-                    output: `Access denied: ${filename} is read-only`,
+                    output: lm.t("terminalCommands.accessDenied", { filename }),
                     className: "error",
                 }
             }
@@ -242,9 +261,10 @@ const COMMANDS: Record<string, CommandHandler> = {
     },
 
     welt: async (args, ctx): Promise<CommandResult> => {
+        const lm = getLocaleManager()
         if (args.length === 0) {
             return {
-                output: "Usage: welt [--grund] <filename>",
+                output: lm.t("terminalCommands.usageWelt"),
                 className: "error",
             }
         }
@@ -255,7 +275,7 @@ const COMMANDS: Record<string, CommandHandler> = {
 
         if (!filename) {
             return {
-                output: "Usage: welt --grund <filename>",
+                output: lm.t("terminalCommands.usageWeltGrund"),
                 className: "error",
             }
         }
@@ -267,7 +287,10 @@ const COMMANDS: Record<string, CommandHandler> = {
         }
 
         if (!result.content) {
-            return { output: `Empty file: ${filename}`, className: "error" }
+            return {
+                output: lm.t("terminalCommands.emptyFileEdit", { filename }),
+                className: "error",
+            }
         }
 
         if (compileMode) {
@@ -291,8 +314,12 @@ const COMMANDS: Record<string, CommandHandler> = {
     },
 
     grund: async (args, ctx): Promise<CommandResult> => {
+        const lm = getLocaleManager()
         if (args.length === 0) {
-            return { output: "Usage: grund <filename>", className: "error" }
+            return {
+                output: lm.t("terminalCommands.usageGrund"),
+                className: "error",
+            }
         }
 
         const filename = args.join(" ")
@@ -303,7 +330,10 @@ const COMMANDS: Record<string, CommandHandler> = {
         }
 
         if (!result.content) {
-            return { output: `Empty file: ${filename}`, className: "error" }
+            return {
+                output: lm.t("terminalCommands.emptyFileEdit", { filename }),
+                className: "error",
+            }
         }
 
         return runGrundCommand(result.content, ctx)
@@ -314,11 +344,7 @@ const COMMANDS: Record<string, CommandHandler> = {
     cls: (): CommandResult => ({ action: "clear" }),
 
     whoami: (): CommandResult => ({
-        output: `DANA\\Guest
-
-User: Guest
-Home: 3:\\Users\\Dana
-Terminal: HACKTERM v1.0`,
+        output: getLocaleManager().t("terminalCommands.whoamiOutput"),
     }),
 
     exit: (): CommandResult => ({ action: "exit" }),
@@ -331,6 +357,7 @@ async function runWeltCommand(
     ctx: CommandContext,
     initialMemory?: WeltValue[]
 ): Promise<CommandResult> {
+    const lm = getLocaleManager()
     try {
         await runWeltProgram(
             source,
@@ -356,12 +383,17 @@ async function runWeltCommand(
                 }
             }
             return {
-                output: `WELT ERROR${lineInfo}: ${msg}`,
+                output: lm.t("terminalCommands.weltError", {
+                    lineInfo,
+                    message: msg,
+                }),
                 className: "error",
             }
         }
         return {
-            output: `SYSTEM FAULT: ${err instanceof Error ? err.message : "Unknown error"}`,
+            output: lm.t("terminalCommands.systemFault", {
+                message: err instanceof Error ? err.message : "Unknown error",
+            }),
             className: "error",
         }
     }
@@ -372,6 +404,7 @@ function compileWeltCommand(
     filename: string,
     ctx: CommandContext
 ): CommandResult {
+    const lm = getLocaleManager()
     try {
         const output = compileWeltProgram(source, filename)
         ctx.print(output)
@@ -383,12 +416,17 @@ function compileWeltCommand(
         if (err instanceof WeltError) {
             const lineInfo = err.line > 0 ? ` (line ${err.line})` : ""
             return {
-                output: `WELT COMPILE ERROR${lineInfo}: ${err.message}`,
+                output: lm.t("terminalCommands.weltCompileError", {
+                    lineInfo,
+                    message: err.message,
+                }),
                 className: "error",
             }
         }
         return {
-            output: `SYSTEM FAULT: ${err instanceof Error ? err.message : "Unknown error"}`,
+            output: lm.t("terminalCommands.systemFault", {
+                message: err instanceof Error ? err.message : "Unknown error",
+            }),
             className: "error",
         }
     }
@@ -399,6 +437,7 @@ async function runGrundCommand(
     ctx: CommandContext,
     initialMemory?: WeltValue[]
 ): Promise<CommandResult> {
+    const lm = getLocaleManager()
     try {
         await runGrundProgram(
             source,
@@ -424,12 +463,17 @@ async function runGrundCommand(
                 }
             }
             return {
-                output: `GRUND ERROR${lineInfo}: ${msg}`,
+                output: lm.t("terminalCommands.grundError", {
+                    lineInfo,
+                    message: msg,
+                }),
                 className: "error",
             }
         }
         return {
-            output: `SYSTEM FAULT: ${err instanceof Error ? err.message : "Unknown error"}`,
+            output: lm.t("terminalCommands.systemFault", {
+                message: err instanceof Error ? err.message : "Unknown error",
+            }),
             className: "error",
         }
     }
@@ -443,13 +487,14 @@ const HANDLERS: Record<string, HandlerFn> = {
 }
 
 async function handleWelttest(ctx: CommandContext): Promise<CommandResult> {
-    ctx.print("WELT Test Runner v1.0")
-    ctx.print("=====================")
+    const lm = getLocaleManager()
+    ctx.print(lm.t("terminalCommands.testRunnerTitle"))
+    ctx.print(lm.t("terminalCommands.testRunnerSeparator"))
     ctx.print("")
 
     const currentNode = getCurrentNode(ctx.fs)
     if (!currentNode?.children) {
-        return { output: "No files in current directory.", className: "error" }
+        return { output: lm.t("terminalCommands.noFiles"), className: "error" }
     }
 
     const exerciseSources: Record<string, string> = {}
@@ -480,22 +525,31 @@ async function handleWelttest(ctx: CommandContext): Promise<CommandResult> {
     )
 
     if (result.tampered.length > 0) {
-        ctx.print("INTEGRITY CHECK FAILED", "error")
+        ctx.print(lm.t("terminalCommands.integrityFailed"), "error")
         ctx.print("")
         for (const file of result.tampered) {
-            ctx.print(`  TAMPERED: ${file}`, "error")
+            ctx.print(lm.t("terminalCommands.tampered", { file }), "error")
         }
         ctx.print("")
-        ctx.print("Test files must not be modified.", "error")
-        ctx.print("Run reset.exe to restore originals.")
+        ctx.print(lm.t("terminalCommands.testFilesModified"), "error")
+        ctx.print(lm.t("terminalCommands.runReset"))
         return { output: "" }
     }
 
     for (const r of result.results) {
         if (r.passed) {
-            ctx.print(`  PASS  ${r.name}`, "success")
+            ctx.print(
+                lm.t("terminalCommands.pass", { name: r.name }),
+                "success"
+            )
         } else {
-            ctx.print(`  FAIL  ${r.name}: ${r.error ?? "unknown"}`, "error")
+            ctx.print(
+                lm.t("terminalCommands.fail", {
+                    name: r.name,
+                    error: r.error ?? "unknown",
+                }),
+                "error"
+            )
         }
     }
 
@@ -520,30 +574,36 @@ async function handleWelttest(ctx: CommandContext): Promise<CommandResult> {
     }
 
     if (result.allPassed) {
-        ctx.print("=====================", "success")
-        ctx.print("  ALL TESTS PASSED", "success")
-        ctx.print("=====================", "success")
+        ctx.print(lm.t("terminalCommands.testRunnerSeparator"), "success")
+        ctx.print(lm.t("terminalCommands.allTestsPassed"), "success")
+        ctx.print(lm.t("terminalCommands.testRunnerSeparator"), "success")
         ctx.print("")
-        ctx.print("Die Welt als Wille und Vorstellung.", "success")
-        ctx.print("You have mastered the WELT language.", "success")
+        ctx.print(lm.t("terminalCommands.dieWelt"), "success")
+        ctx.print(lm.t("terminalCommands.mastered"), "success")
         if (typeof document !== "undefined") {
             emitAppEvent("welt:all-exercises-passed")
         }
     } else {
-        ctx.print(`${passedCount}/${result.results.length} exercises passed.`)
+        ctx.print(
+            lm.t("terminalCommands.exercisesPassed", {
+                passed: passedCount,
+                total: result.results.length,
+            })
+        )
     }
 
     return { output: "" }
 }
 
 function handleReset(ctx: CommandContext): Promise<CommandResult> {
-    ctx.print("Resetting exercises...")
+    const lm = getLocaleManager()
+    ctx.print(lm.t("terminalCommands.resetting"))
     ctx.print("")
 
     const currentNode = getCurrentNode(ctx.fs)
     if (!currentNode?.children) {
         return Promise.resolve({
-            output: "No files in current directory.",
+            output: lm.t("terminalCommands.noFiles"),
             className: "error",
         })
     }
@@ -559,34 +619,35 @@ function handleReset(ctx: CommandContext): Promise<CommandResult> {
             if (exercise.locked) {
                 currentNode.children[srcName].readonly = true
             }
-            ctx.print(`  Restored ${srcName}`)
+            ctx.print(lm.t("terminalCommands.restored", { file: srcName }))
         }
 
         if (currentNode.children[testName]) {
             currentNode.children[testName].content = exercise.test
-            ctx.print(`  Restored ${testName}`)
+            ctx.print(lm.t("terminalCommands.restored", { file: testName }))
         }
     }
 
     const memoryNode = getNodeAtPath(ctx.fs, "3:\\DAS\\memory.welt")
     if (memoryNode) {
         memoryNode.content = SYS_MEMORY
-        ctx.print("  Restored memory.welt")
+        ctx.print(lm.t("terminalCommands.restored", { file: "memory.welt" }))
     }
 
     ctx.print("")
-    ctx.print("All exercises and system files restored.", "success")
+    ctx.print(lm.t("terminalCommands.allRestored"), "success")
     return Promise.resolve({ output: "" })
 }
 
 function getTypeLabel(type: FileType): string {
+    const lm = getLocaleManager()
     switch (type) {
         case "directory":
-            return "<DIR> "
+            return lm.t("terminalCommands.dir")
         case "executable":
-            return "<EXE> "
+            return lm.t("terminalCommands.exe")
         case "shortcut":
-            return "<LNK> "
+            return lm.t("terminalCommands.lnk")
         default:
             return "      "
     }
@@ -614,7 +675,9 @@ function tryExecuteFile(
     if (windowId) {
         ctx.openWindow(windowId)
         return {
-            output: `[Launching ${filename}...]`,
+            output: getLocaleManager().t("terminalCommands.launching", {
+                filename,
+            }),
             className: "success",
         }
     }
@@ -650,8 +713,9 @@ export function executeCommand(
     }
 
     return {
-        output: `'${parts[0]}' is not recognized as an internal or external command,
-operable program or batch file.`,
+        output: getLocaleManager().t("terminalCommands.notRecognized", {
+            command: parts[0],
+        }),
         className: "error",
     }
 }

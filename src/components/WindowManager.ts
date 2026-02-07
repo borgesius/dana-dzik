@@ -1,5 +1,6 @@
 import { DESKTOP_ITEMS } from "../config/desktop"
 import type { RoutableWindow } from "../config/routing"
+import { getAchievementManager } from "../lib/achievements/AchievementManager"
 import { Window, type WindowConfig } from "./Window"
 
 /** Information about an open window for the taskbar */
@@ -127,6 +128,33 @@ const WINDOW_CONFIGS: Record<RoutableWindow, WindowConfig> = {
         style: "winxp",
         contentType: "achievements",
     },
+    autobattler: {
+        id: "autobattler",
+        title: "FRONTIER.exe",
+        icon: icon("autobattler"),
+        width: 600,
+        height: 550,
+        style: "win95",
+        contentType: "autobattler",
+    },
+    customize: {
+        id: "customize",
+        title: "Customization",
+        icon: "🎨",
+        width: 500,
+        height: 450,
+        style: "winxp",
+        contentType: "customize",
+    },
+    "career-tree": {
+        id: "career-tree",
+        title: "Career Development",
+        icon: "📋",
+        width: 480,
+        height: 520,
+        style: "win95",
+        contentType: "career-tree",
+    },
 }
 
 /**
@@ -149,7 +177,16 @@ export class WindowManager {
      * Opens a window by ID. If already open, focuses it instead.
      * @param windowId - The ID of the window to open
      */
+    /** Check if FelixGPT is gated (requires posse-up achievement) */
+    public isFelixGPTLocked(): boolean {
+        return !getAchievementManager().hasEarned("posse-up")
+    }
+
     public openWindow(windowId: RoutableWindow): void {
+        if (windowId === "felixgpt" && this.isFelixGPTLocked()) {
+            return
+        }
+
         if (this.windows.has(windowId)) {
             this.focusWindow(windowId)
             return

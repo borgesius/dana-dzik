@@ -10,6 +10,10 @@ import {
     type TradeResult,
     UPGRADES,
 } from "../marketGame/types"
+import { HINDSIGHT_UPGRADES } from "../prestige/constants"
+import { getPrestigeManager } from "../prestige/PrestigeManager"
+import { getCareerManager } from "../progression/CareerManager"
+import { getNodesForBranch } from "../progression/careers"
 import { getThemeManager } from "../themeManager"
 import type { AchievementManager } from "./AchievementManager"
 
@@ -38,6 +42,7 @@ export function wireAchievements(
     wireSessionTimer(mgr)
     wireSessionCost(mgr)
     wireQAReports(mgr)
+    wireProgressionEvents(mgr)
 }
 
 function wireWindowManager(
@@ -103,14 +108,14 @@ function wireMarketGame(mgr: AchievementManager): void {
         if (trade.action === "buy") {
             const market = game.getMarketState(trade.commodityId)
             if (market && market.trend === "bear") {
-                mgr.earn("buy-the-dip")
+                mgr.earn("fire-sale")
             }
         }
 
         if (trade.action === "sell") {
             const def = COMMODITIES.find((c) => c.id === trade.commodityId)
             if (def && trade.pricePerUnit >= def.basePrice * 5) {
-                mgr.earn("sell-the-top")
+                mgr.earn("first-out-the-door")
             }
         }
 
@@ -119,7 +124,7 @@ function wireMarketGame(mgr: AchievementManager): void {
             return h !== null && h.quantity > 0
         })
         if (allHeld) {
-            mgr.earn("diversified")
+            mgr.earn("who-are-we-selling-to")
         }
 
         if (trade.action === "buy") {
@@ -128,7 +133,7 @@ function wireMarketGame(mgr: AchievementManager): void {
                 holding &&
                 holding.quantity > CORNER_MARKET_FLOAT * CORNER_MARKET_THRESHOLD
             ) {
-                mgr.earn("cornered")
+                mgr.earn("could-be-wrong")
             }
         }
 
@@ -155,7 +160,7 @@ function wireMarketGame(mgr: AchievementManager): void {
 
     game.on("upgradeAcquired", () => {
         if (game.getOwnedUpgrades().length >= UPGRADES.length) {
-            mgr.earn("fully-automated")
+            mgr.earn("wasnt-brains")
         }
     })
 
@@ -182,7 +187,7 @@ function wireMarketGame(mgr: AchievementManager): void {
         const { influenceId } = data as { influenceId: string }
         const count = mgr.addToSet("influences-used", influenceId)
         if (count >= 3) {
-            mgr.earn("market-maker")
+            mgr.earn("speak-to-a-retriever")
         }
     })
 
@@ -357,10 +362,277 @@ function wireSessionCost(mgr: AchievementManager): void {
     onAppEvent("session-cost:whale", () => {
         mgr.earn("whale")
     })
+    onAppEvent("session-cost:leviathan", () => {
+        mgr.earn("leviathan")
+    })
 }
 
 function wireQAReports(mgr: AchievementManager): void {
     onAppEvent("qa:report-clicked", () => {
         mgr.earn("qa-inspector")
+    })
+}
+
+function wireProgressionEvents(mgr: AchievementManager): void {
+    // ── Prestige achievements ────────────────────────────────────────────
+    onAppEvent("prestige:triggered", (detail) => {
+        mgr.earn("ive-been-wrong")
+        if (detail.count >= 5) {
+            mgr.earn("doesnt-matter-what-floor")
+        }
+        if (detail.hindsight >= 50) {
+            mgr.earn("tell-them-theyll-be-ok")
+        }
+    })
+
+    onAppEvent("prestige:purchase", () => {
+        mgr.earn("hindsight-shopper")
+
+        const prestige = getPrestigeManager()
+        const allBought = HINDSIGHT_UPGRADES.every(
+            (u) => prestige.getUpgradePurchaseCount(u.id) >= u.maxPurchases
+        )
+        if (allBought) mgr.earn("pieces-of-paper")
+    })
+
+    // ── Autobattler achievements ─────────────────────────────────────────
+    let consecutiveWins = 0
+    let totalAutobattlerWins = 0
+    onAppEvent("autobattler:run-complete", (detail) => {
+        mgr.earn("first-draft")
+        if (detail.won) {
+            mgr.earn("posse-up")
+            totalAutobattlerWins++
+            consecutiveWins++
+
+            // Wrangler tiered group
+            if (totalAutobattlerWins >= 1) mgr.earn("greenhorn")
+            if (totalAutobattlerWins >= 5) mgr.earn("deputy")
+            if (totalAutobattlerWins >= 15) mgr.earn("sheriff")
+            if (totalAutobattlerWins >= 50) mgr.earn("marshal")
+
+            // Win streak (3 in a row)
+            if (consecutiveWins >= 3) mgr.earn("win-streak")
+        } else {
+            consecutiveWins = 0
+        }
+    })
+
+    onAppEvent("autobattler:unit-unlocked", () => {
+        mgr.earn("faction-recruit")
+    })
+
+    onAppEvent("autobattler:spiral-complete", () => {
+        mgr.earn("full-spiral")
+    })
+
+    // ── Level / Rank achievements ────────────────────────────────────────
+    onAppEvent("progression:level-up", (detail) => {
+        if (detail.level >= 5) mgr.earn("level-5")
+        if (detail.level >= 10) mgr.earn("level-10")
+        if (detail.level >= 20) mgr.earn("level-20")
+        if (detail.level >= 35) mgr.earn("level-35")
+        if (detail.level >= 50) mgr.earn("level-50")
+    })
+
+    // ── Phase 5 / 6 achievement ─────────────────────────────────────────
+    getMarketGame().on("phaseUnlocked", (data) => {
+        const phase = data as number
+        if (phase >= 5) mgr.earn("phase-5")
+        if (phase >= 6) mgr.earn("phase-6")
+    })
+
+    // ── Phase 6: Structured Products Desk achievements ───────────────────
+    wirePhase6Achievements(mgr)
+
+    // ── Career achievements ──────────────────────────────────────────────
+    onAppEvent("career:selected", () => {
+        mgr.earn("career-starter")
+    })
+
+    let careerSwitchCount = 0
+    onAppEvent("career:switched", () => {
+        mgr.earn("career-switcher")
+        careerSwitchCount++
+        if (careerSwitchCount >= 5) mgr.earn("serial-pivoter")
+
+        // Executive branch gate achievement
+        const career = getCareerManager()
+
+        if (career.isExecutiveUnlocked()) {
+            mgr.earn("executive-material")
+        }
+    })
+
+    let nodesUnlocked = 0
+    onAppEvent("career:node-unlocked", () => {
+        nodesUnlocked++
+        if (nodesUnlocked >= 5) mgr.earn("skill-tree-novice")
+        if (nodesUnlocked >= 15) mgr.earn("skill-tree-master")
+
+        const career = getCareerManager()
+        const branches = [
+            "engineering",
+            "trading",
+            "growth",
+            "executive",
+        ] as const
+        for (const branch of branches) {
+            const branchNodes = getNodesForBranch(branch)
+            const allUnlocked = branchNodes.every((n) =>
+                career.isNodeUnlocked(n.id)
+            )
+            if (allUnlocked && branchNodes.length >= 5) {
+                mgr.earn("overqualified")
+                break
+            }
+        }
+    })
+
+    // ── HR / Phase 5 achievements ────────────────────────────────────────
+    let totalHires = 0
+    onAppEvent("market:employee-hired", () => {
+        mgr.earn("that-ones-a-person")
+        totalHires++
+        if (totalHires >= 9) mgr.earn("we-make-nothing")
+    })
+
+    let totalFires = 0
+    onAppEvent("market:employee-fired", () => {
+        totalFires++
+        if (totalFires >= 3) mgr.earn("you-dont-get-to-choose")
+    })
+
+    onAppEvent("market:org-reorg", () => {
+        mgr.earn("reorg")
+    })
+
+    // ── Cross-system achievements ────────────────────────────────────────
+    // "Renaissance" = level 5 + complete autobattler run
+    // We check conditions lazily since either can trigger first
+    onAppEvent("progression:level-up", (detail) => {
+        if (detail.level >= 5 && mgr.hasEarned("first-draft")) {
+            mgr.earn("renaissance")
+        }
+    })
+    onAppEvent("autobattler:run-complete", () => {
+        // Already earned first-draft above; check for renaissance
+        // We can't easily get the level here without importing, so
+        // rely on the level-up event to pick this up
+    })
+
+    // "Full Stack" = prestige + win autobattler + career selected
+    const checkFullStack = (): void => {
+        if (
+            mgr.hasEarned("ive-been-wrong") &&
+            mgr.hasEarned("posse-up") &&
+            mgr.hasEarned("career-starter")
+        ) {
+            mgr.earn("full-stack")
+        }
+    }
+    onAppEvent("prestige:triggered", checkFullStack)
+    onAppEvent("autobattler:run-complete", checkFullStack)
+    onAppEvent("career:selected", checkFullStack)
+
+    // ── Faction-complete achievements ─────────────────────────────────────
+    const factionAchievementMap: Record<string, string> = {
+        quickdraw: "syndicate-complete",
+        deputies: "deputies-complete",
+        clockwork: "collective-complete",
+        prospectors: "prospectors-complete",
+    }
+    onAppEvent("autobattler:faction-complete", (detail) => {
+        const achievementId = factionAchievementMap[detail.faction]
+        if (achievementId) {
+            mgr.earn(achievementId as never)
+        }
+    })
+
+    // ── vertical-integration: nodes in all 3 main branches ───────────────
+    onAppEvent("career:node-unlocked", () => {
+        const career = getCareerManager()
+        const mainBranches = ["engineering", "trading", "growth"] as const
+        const allHaveNodes = mainBranches.every(
+            (b) => career.getUnlockedNodesForBranch(b).length > 0
+        )
+        if (allHaveNodes) {
+            mgr.earn("vertical-integration")
+        }
+    })
+
+    // ── exit-interview: career switch in same session as prestige ─────────
+    let prestigedThisSession = false
+    onAppEvent("prestige:triggered", () => {
+        prestigedThisSession = true
+    })
+    onAppEvent("career:switched", () => {
+        if (prestigedThisSession) {
+            mgr.earn("exit-interview")
+        }
+    })
+}
+
+/**
+ * Phase 6 achievements -- all named after Margin Call (2011) quotes.
+ */
+function wirePhase6Achievements(mgr: AchievementManager): void {
+    const game = getMarketGame()
+
+    // "its-just-money" -- Mint your first DAS
+    // "It's just money; it's made up."
+    game.on("dasCreated", () => {
+        mgr.earn("its-just-money")
+
+        // "music-stops" -- 6+ active DAS simultaneously
+        // "The music is about to stop..."
+        if (game.getSecurities().length >= 6) {
+            mgr.earn("music-stops")
+        }
+    })
+
+    // "be-first" -- Reach AAA credit rating
+    // "Be first. Be smarter. Or cheat."
+    game.on("ratingChanged", (data) => {
+        const { rating } = data as { rating: string; direction: string }
+        if (rating === "AAA") {
+            mgr.earn("be-first")
+        }
+    })
+
+    // "just-silence" -- Survive margin event and recover to A+ within 100 ticks
+    // "I don't hear a thing. Just... silence."
+    game.on("ratingChanged", (data) => {
+        const { rating, direction } = data as {
+            rating: string
+            direction: string
+        }
+        if (direction === "upgrade") {
+            const ratingIdx = ["F", "D", "C", "B", "A", "AA", "AAA"].indexOf(
+                rating
+            )
+            if (ratingIdx >= 4 && game.getTicksSinceMarginEvent() <= 100) {
+                mgr.earn("just-silence")
+            }
+        }
+    })
+
+    // "it-goes-quickly" -- Borrow at 90%+ of capacity
+    // "It goes quite quickly."
+    game.on("debtChanged", () => {
+        const capacity = game.getBorrowCapacity()
+        const debt = game.getDebt()
+        const total = capacity + debt
+        if (total > 0 && debt / total >= 0.9) {
+            mgr.earn("it-goes-quickly")
+        }
+    })
+
+    // "rainy-day" -- Fully repay all debt with 3+ DAS performing
+    // "I put 400 away for a rainy day."
+    game.on("debtChanged", () => {
+        if (game.getDebt() <= 0 && game.getSecurities().length >= 3) {
+            mgr.earn("rainy-day")
+        }
     })
 }

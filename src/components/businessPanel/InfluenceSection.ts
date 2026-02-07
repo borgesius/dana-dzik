@@ -1,11 +1,16 @@
 import { formatMoney } from "../../lib/formatMoney"
 import { getLocaleManager } from "../../lib/localeManager"
 import type { MarketEngine } from "../../lib/marketGame/MarketEngine"
-import { type CommodityId, INFLUENCES } from "../../lib/marketGame/types"
+import {
+    type CommodityId,
+    INFLUENCES,
+    PHASE_THRESHOLDS,
+} from "../../lib/marketGame/types"
 
 export class InfluenceSection {
     private element: HTMLElement
     private listEl: HTMLElement
+    private lockedEl: HTMLElement
     private game: MarketEngine
     private getSelectedCommodity: () => CommodityId
     private playSound: (type: string) => void
@@ -20,6 +25,8 @@ export class InfluenceSection {
         this.playSound = playSound
         this.listEl = document.createElement("div")
         this.listEl.className = "influence-list"
+        this.lockedEl = document.createElement("div")
+        this.lockedEl.className = "phase-locked-teaser"
         this.element = this.createElement()
         this.render()
     }
@@ -31,22 +38,38 @@ export class InfluenceSection {
     private createElement(): HTMLElement {
         const section = document.createElement("div")
         section.className = "influence-section"
-        section.style.display = this.game.isPhaseUnlocked(4) ? "block" : "none"
 
         const heading = document.createElement("h3")
         heading.textContent = getLocaleManager().t(
             "commodityExchange.ui.marketOperations"
         )
         section.appendChild(heading)
+        section.appendChild(this.lockedEl)
         section.appendChild(this.listEl)
 
+        this.updateVisibility()
         return section
     }
 
     public updateVisibility(): void {
-        this.element.style.display = this.game.isPhaseUnlocked(4)
-            ? "block"
-            : "none"
+        const unlocked = this.game.isPhaseUnlocked(4)
+        const prevUnlocked = this.game.isPhaseUnlocked(3)
+        if (unlocked) {
+            this.element.style.display = "block"
+            this.listEl.style.display = ""
+            this.lockedEl.style.display = "none"
+        } else if (prevUnlocked) {
+            this.element.style.display = "block"
+            this.listEl.style.display = "none"
+            const lm = getLocaleManager()
+            this.lockedEl.style.display = ""
+            this.lockedEl.textContent = lm.t(
+                "commodityExchange.ui.phaseEarningsHint",
+                { threshold: formatMoney(PHASE_THRESHOLDS.influence) }
+            )
+        } else {
+            this.element.style.display = "none"
+        }
     }
 
     public render(): void {

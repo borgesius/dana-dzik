@@ -1,11 +1,12 @@
 import { formatMoney } from "../../lib/formatMoney"
 import { getLocaleManager } from "../../lib/localeManager"
 import type { MarketEngine } from "../../lib/marketGame/MarketEngine"
-import { FACTORIES } from "../../lib/marketGame/types"
+import { FACTORIES, PHASE_THRESHOLDS } from "../../lib/marketGame/types"
 
 export class FactoriesSection {
     private element: HTMLElement
     private listEl: HTMLElement
+    private lockedEl: HTMLElement
     private game: MarketEngine
     private playSound: (type: string) => void
 
@@ -14,6 +15,8 @@ export class FactoriesSection {
         this.playSound = playSound
         this.listEl = document.createElement("div")
         this.listEl.className = "factories-list"
+        this.lockedEl = document.createElement("div")
+        this.lockedEl.className = "phase-locked-teaser"
         this.element = this.createElement()
         this.render()
     }
@@ -25,22 +28,36 @@ export class FactoriesSection {
     private createElement(): HTMLElement {
         const section = document.createElement("div")
         section.className = "factories-section"
-        section.style.display = this.game.isPhaseUnlocked(2) ? "block" : "none"
 
         const heading = document.createElement("h3")
         heading.textContent = getLocaleManager().t(
             "commodityExchange.ui.production"
         )
         section.appendChild(heading)
+        section.appendChild(this.lockedEl)
         section.appendChild(this.listEl)
 
+        this.updateVisibility()
         return section
     }
 
     public updateVisibility(): void {
-        this.element.style.display = this.game.isPhaseUnlocked(2)
-            ? "block"
-            : "none"
+        const unlocked = this.game.isPhaseUnlocked(2)
+        if (unlocked) {
+            this.element.style.display = "block"
+            this.listEl.style.display = ""
+            this.lockedEl.style.display = "none"
+        } else {
+            // Show locked teaser (phase 1 is always unlocked)
+            this.element.style.display = "block"
+            this.listEl.style.display = "none"
+            const lm = getLocaleManager()
+            this.lockedEl.style.display = ""
+            this.lockedEl.textContent = lm.t(
+                "commodityExchange.ui.phaseEarningsHint",
+                { threshold: formatMoney(PHASE_THRESHOLDS.factories) }
+            )
+        }
     }
 
     public render(): void {

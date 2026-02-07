@@ -88,4 +88,11 @@ export const DESKTOP_ITEMS: DesktopItemConfig[] = [
         windowId: "explorer",
         fileType: "directory",
     },
+    {
+        id: "autobattler",
+        filename: "FRONTIER.exe",
+        icon: "⚔️",
+        windowId: "autobattler",
+        fileType: "executable",
+    },
 ]
