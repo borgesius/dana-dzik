@@ -75,6 +75,10 @@ class LocaleManager {
         this.applyLocale()
     }
 
+    public isInitialized(): boolean {
+        return this.initialized
+    }
+
     public getLocaleIds(): readonly LocaleId[] {
         return LOCALE_IDS
     }
@@ -101,6 +105,9 @@ class LocaleManager {
     }
 
     public t(key: string, options?: Record<string, unknown>): string {
+        if (!this.initialized) {
+            return key
+        }
         return i18next.t(key, options)
     }
 
