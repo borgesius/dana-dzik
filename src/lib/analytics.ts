@@ -51,10 +51,26 @@ const PAGEVIEW_TRACKED_KEY = "pageview_tracked"
 const SESSION_BUDGET_KEY = "analytics_session_budget"
 
 export const PHOTO_VARIANTS = [
-    { id: "A", photo: "/assets/dana/IMG_5099.jpg" },
-    { id: "B", photo: "/assets/dana/IMG_5531.jpg" },
-    { id: "C", photo: "/assets/dana/IMG_5576.jpg" },
-    { id: "D", photo: "/assets/dana/IMG_7045.jpg" },
+    {
+        id: "A",
+        photo: "/assets/dana/IMG_5099.jpg",
+        webp: "/assets/dana/IMG_5099.webp",
+    },
+    {
+        id: "B",
+        photo: "/assets/dana/IMG_5531.jpg",
+        webp: "/assets/dana/IMG_5531.webp",
+    },
+    {
+        id: "C",
+        photo: "/assets/dana/IMG_5576.jpg",
+        webp: "/assets/dana/IMG_5576.webp",
+    },
+    {
+        id: "D",
+        photo: "/assets/dana/IMG_7045.jpg",
+        webp: "/assets/dana/IMG_7045.webp",
+    },
 ] as const
 
 export type PhotoVariant = (typeof PHOTO_VARIANTS)[number]["id"]
@@ -134,6 +150,11 @@ async function sendEvent(event: AnalyticsEvent): Promise<void> {
     const visitorId = getVisitorId()
 
     if (!isCriticalEvent(event.type)) {
+        document.dispatchEvent(
+            new CustomEvent("analytics:intent", {
+                detail: { type: event.type },
+            })
+        )
         if (!isClientSampled(visitorId)) return
         if (!consumeSessionBudget()) return
     }

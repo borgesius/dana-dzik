@@ -564,6 +564,9 @@
     "suffering": { "name": "Toute Vie Est Souffrance", "description": "Atteignez l'illumination." },
     "divide-by-zero": { "name": "Division par Zéro", "description": "Provoquez une division par zéro dans WELT." },
     "popup-enjoyer": { "name": "Prince-Consort Nigérian", "description": "Réclamez 5 popups bonus." },
-    "y2k-survivor": { "name": "Survivant du Bug de l'An 2000", "description": "Ayez une session active pendant 30 minutes." }
+    "y2k-survivor": { "name": "Survivant du Bug de l'An 2000", "description": "Ayez une session active pendant 30 minutes." },
+    "big-spender": { "name": "Coup de Fric", "description": "Accumulez un coût de session normalisé de 0,001 $." },
+    "whale": { "name": "Chasseur de Billets", "description": "Accumulez un coût de session normalisé de 0,0025 $." },
+    "qa-inspector": { "name": "Ça marche chez moi", "description": "Cliquez sur un badge de test pour voir les résultats CI." }
   }
 }

@@ -5,6 +5,10 @@ import {
     getMarketGame,
     type MarketEngine,
 } from "../lib/marketGame"
+import {
+    getSessionCostTracker,
+    type SessionCostTracker,
+} from "../lib/sessionCost"
 import { initStrava } from "../lib/strava"
 import {
     type ColorScheme,
@@ -61,6 +65,8 @@ export class Toolbars {
     private element: HTMLElement
     private weatherEl: HTMLElement | null = null
     private qaEl: HTMLElement | null = null
+    private costEl: HTMLElement | null = null
+    private costTooltipEl: HTMLElement | null = null
     private moneyEl: HTMLElement | null = null
     private tickerEl: HTMLElement | null = null
     private searchInputEl: HTMLInputElement | null = null
@@ -132,6 +138,9 @@ export class Toolbars {
         this.qaEl = qa
         toolbar.appendChild(qa)
 
+        const costWidget = this.createCostWidget()
+        toolbar.appendChild(costWidget)
+
         const spacer = document.createElement("div")
         spacer.style.flex = "1"
         toolbar.appendChild(spacer)
@@ -156,6 +165,116 @@ export class Toolbars {
             )
         })
         return btn
+    }
+
+    private createCostWidget(): HTMLElement {
+        const container = document.createElement("div")
+        container.className = "toolbar-cost"
+        container.innerHTML = "💸 $0.000000"
+        this.costEl = container
+
+        const tooltip = document.createElement("div")
+        tooltip.className = "toolbar-cost-tooltip"
+        tooltip.style.display = "none"
+        this.costTooltipEl = tooltip
+        container.appendChild(tooltip)
+
+        container.addEventListener("mouseenter", () => {
+            if (this.costTooltipEl) {
+                this.costTooltipEl.style.display = "block"
+            }
+        })
+        container.addEventListener("mouseleave", () => {
+            if (this.costTooltipEl) {
+                this.costTooltipEl.style.display = "none"
+            }
+        })
+
+        this.initCostTracking()
+
+        return container
+    }
+
+    private initCostTracking(): void {
+        const tracker: SessionCostTracker | null = getSessionCostTracker()
+        if (!tracker) return
+
+        const update = (): void => {
+            const breakdown = tracker.getBreakdown()
+            if (this.costEl) {
+                const costText = this.formatCostValue(breakdown.totalCost)
+                this.costEl.firstChild!.textContent = `💸 ${costText}`
+            }
+            if (this.costTooltipEl) {
+                this.costTooltipEl.innerHTML = this.renderCostTooltip(breakdown)
+            }
+        }
+
+        tracker.onUpdate(update)
+        update()
+    }
+
+    private formatCostValue(cost: number): string {
+        return `$${cost.toFixed(6)}`
+    }
+
+    private renderCostTooltip(breakdown: {
+        items: Array<{
+            label: string
+            cost: number
+            count: number
+            sampled: boolean
+        }>
+        bandwidthBytes: number
+        bandwidthCost: number
+        totalCost: number
+        isSampled: boolean
+    }): string {
+        const alwaysTracked = breakdown.items.filter((i) => !i.sampled)
+        const sampled = breakdown.items.filter((i) => i.sampled)
+
+        const alwaysRows = alwaysTracked
+            .map((item) => {
+                const costStr = this.formatCostValue(item.cost)
+                return `<div class="cost-row"><span class="cost-label">${item.label} ×${item.count}</span><span class="cost-value">${costStr}</span></div>`
+            })
+            .join("")
+
+        const mbStr = (breakdown.bandwidthBytes / (1024 * 1024)).toFixed(2)
+        const bwCostStr = this.formatCostValue(breakdown.bandwidthCost)
+        const bandwidthRow = `<div class="cost-row"><span class="cost-label">Bandwidth ~${mbStr} MB</span><span class="cost-value">${bwCostStr}</span></div>`
+
+        const sampledSection =
+            sampled.length > 0
+                ? `<div class="cost-section-header">Sampled (0.1%)</div>` +
+                  sampled
+                      .map((item) => {
+                          const costStr = this.formatCostValue(item.cost)
+                          return `<div class="cost-row cost-row-sampled"><span class="cost-label">${item.label} ×${item.count}</span><span class="cost-value">${costStr}</span></div>`
+                      })
+                      .join("")
+                : ""
+
+        const lotteryHtml = breakdown.isSampled
+            ? `<div class="cost-lottery cost-blink">🎰 YOU WON THE LOTTERY</div>`
+            : ""
+
+        const totalStr = this.formatCostValue(breakdown.totalCost)
+
+        return `
+            <picture>
+                <source srcset="/assets/gifs/broke.webp" type="image/webp" />
+                <img src="/assets/gifs/broke.png" alt="" class="cost-gif" onerror="this.style.display='none'" />
+            </picture>
+            <div class="cost-title">Normalized User Cost</div>
+            <div class="cost-divider"></div>
+            ${alwaysRows}
+            ${bandwidthRow}
+            ${sampledSection}
+            ${lotteryHtml}
+            <div class="cost-total-divider"></div>
+            <div class="cost-total">-${totalStr} :(</div>
+        `
     }
 
     private createLanguageToggle(): HTMLElement {
@@ -617,6 +736,12 @@ export class Toolbars {
             }
 
             this.qaEl.innerHTML = badges
+
+            this.qaEl.querySelectorAll(".qa-badge").forEach((badge) => {
+                badge.addEventListener("click", () => {
+                    document.dispatchEvent(new CustomEvent("qa:report-clicked"))
+                })
+            })
         } catch {
             this.qaEl.innerHTML = pick([
                 getLocaleManager().t("toolbar.qaFallback1"),
