@@ -28,6 +28,7 @@ export class InfluenceSection {
         this.lockedEl = document.createElement("div")
         this.lockedEl.className = "phase-locked-teaser"
         this.element = this.createElement()
+        this.updateVisibility()
         this.render()
     }
 
@@ -47,7 +48,6 @@ export class InfluenceSection {
         section.appendChild(this.lockedEl)
         section.appendChild(this.listEl)
 
-        this.updateVisibility()
         return section
     }
 
