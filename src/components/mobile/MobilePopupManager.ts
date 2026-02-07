@@ -1,5 +1,5 @@
-import { isCalmMode } from "../../lib/calmMode"
 import { POPUP_CONFIG } from "../../config"
+import { isCalmMode } from "../../lib/calmMode"
 import { formatMoney } from "../../lib/formatMoney"
 import { getMarketGame } from "../../lib/marketGame"
 import {

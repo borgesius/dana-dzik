@@ -1,3 +1,4 @@
+import { isCalmMode, setCalmMode } from "../lib/calmMode"
 import { formatMoney } from "../lib/formatMoney"
 import { getLocaleManager, type LocaleId } from "../lib/localeManager"
 import {
@@ -10,7 +11,6 @@ import {
     type SessionCostTracker,
 } from "../lib/sessionCost"
 import { initStrava } from "../lib/strava"
-import { isCalmMode, setCalmMode } from "../lib/calmMode"
 import {
     type ColorScheme,
     getThemeManager,

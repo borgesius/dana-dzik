@@ -35,6 +35,7 @@ import {
     trackPageview,
 } from "./lib/analytics"
 import { createAudioManager } from "./lib/audio"
+import { initCalmMode, isCalmMode } from "./lib/calmMode"
 import { GlitchManager } from "./lib/glitchEffects"
 import { isMobile } from "./lib/isMobile"
 import { getLocaleManager } from "./lib/localeManager"
@@ -46,7 +47,6 @@ import {
     initSessionCostTracker,
     WHALE_THRESHOLD,
 } from "./lib/sessionCost"
-import { initCalmMode, isCalmMode } from "./lib/calmMode"
 import { SystemCrashHandler } from "./lib/systemCrash"
 import {
     diffFilesystem,
