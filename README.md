@@ -32,7 +32,7 @@ Shell emulator with a tree-based virtual filesystem using Windows-style paths (`
 
 ### Welt Language
 
-Custom esoteric programming language with German/Kantian keywords. 8 memory slots (byte-wrapped, 0–255). Recursive descent parser, tree-walking interpreter. Compiles down to GRUND, a lower-level assembly with ring buffer and registers.
+Custom esoteric programming language with Schopenhauerian influence. 8 memory slots (byte-wrapped, 0–255). Recursive descent parser, tree-walking interpreter. Compiles down to GRUND, a lower-level assembly with ring buffer and registers.
 
 - [`src/lib/welt/`](src/lib/welt/) — lexer, parser, interpreter, compiler
 - [`src/lib/welt/grundInterpreter.ts`](src/lib/welt/grundInterpreter.ts) — GRUND assembly interpreter
