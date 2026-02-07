@@ -1,4 +1,5 @@
 import type { AchievementSaveData } from "./achievements/types"
+import type { MarketSaveData } from "./marketGame"
 
 const SAVE_KEY = "save"
 const SAVE_VERSION = 1
@@ -23,7 +24,7 @@ export interface SaveData {
     version: number
     savedAt: number
 
-    game: Record<string, unknown> | null
+    game: MarketSaveData | null
     pinball: { highScore: number }
     preferences: {
         theme: string

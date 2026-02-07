@@ -18,7 +18,6 @@ export type AchievementId =
     | "buy-the-dip"
     | "sell-the-top"
     | "diversified"
-    | "diamond-hands"
     // Production
     | "factory-floor"
     | "industrialist"
@@ -45,7 +44,6 @@ export type AchievementId =
     | "hacker"
     | "author"
     | "programmer"
-    | "original-work"
     | "navigator"
     | "choo-choo"
     // Social

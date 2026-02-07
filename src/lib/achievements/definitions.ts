@@ -56,13 +56,6 @@ export const ACHIEVEMENTS: AchievementDef[] = [
         icon: "🎯",
         hidden: false,
     },
-    {
-        id: "diamond-hands",
-        category: "trading",
-        icon: "💎",
-        hidden: false,
-    },
-
     // ── Production ───────────────────────────────────────────────────────────
     {
         id: "factory-floor",
@@ -200,12 +193,6 @@ export const ACHIEVEMENTS: AchievementDef[] = [
         id: "programmer",
         category: "terminal",
         icon: "🧑‍💻",
-        hidden: false,
-    },
-    {
-        id: "original-work",
-        category: "terminal",
-        icon: "📝",
         hidden: false,
     },
     {

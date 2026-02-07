@@ -38,6 +38,7 @@ import { createAudioManager } from "./lib/audio"
 import { GlitchManager } from "./lib/glitchEffects"
 import { isMobile } from "./lib/isMobile"
 import { getLocaleManager } from "./lib/localeManager"
+import { getMarketGame } from "./lib/marketGame"
 import { Router } from "./lib/router"
 import { type SaveData, saveManager } from "./lib/saveManager"
 import { SystemCrashHandler } from "./lib/systemCrash"
@@ -60,6 +61,10 @@ if (
         savedData.filesystem.deleted.length > 0)
 ) {
     patchFilesystem(getSharedFilesystem(), savedData.filesystem)
+}
+
+if (savedData.game) {
+    getMarketGame().loadState(savedData.game)
 }
 
 const achievements = getAchievementManager()
@@ -104,7 +109,7 @@ function initMobile(app: HTMLElement): void {
         return {
             version: 1,
             savedAt: Date.now(),
-            game: null,
+            game: getMarketGame().serialize(),
             pinball: { highScore: pinballHighScore },
             preferences: {
                 theme: getThemeManager().getCurrentTheme(),
@@ -161,6 +166,8 @@ function initDesktop(app: HTMLElement): void {
     getThemeManager().on("themeChanged", () => saveManager.requestSave())
     getThemeManager().on("colorSchemeChanged", () => saveManager.requestSave())
     getLocaleManager().on("localeChanged", () => saveManager.requestSave())
+    getMarketGame().on("tradeExecuted", () => saveManager.requestSave())
+    getMarketGame().on("stateChanged", () => saveManager.requestSave())
 
     saveManager.registerGatherFn((): SaveData => {
         const pinballHighScore =
@@ -169,7 +176,7 @@ function initDesktop(app: HTMLElement): void {
         return {
             version: 1,
             savedAt: Date.now(),
-            game: null,
+            game: getMarketGame().serialize(),
             pinball: { highScore: pinballHighScore },
             preferences: {
                 theme: getThemeManager().getCurrentTheme(),
