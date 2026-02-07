@@ -72,6 +72,7 @@ export class AudioManager {
     private autoplayAttempts = 0
     private maxAutoplayAttempts = 10
     private autoplayInterval: ReturnType<typeof setInterval> | null = null
+    private userEngaged = false
 
     private onTrackChangeCallbacks: AudioEventCallback[] = []
     private onPlayStateChangeCallbacks: AudioEventCallback[] = []
@@ -106,7 +107,12 @@ export class AudioManager {
         this.currentTrackIndex = Math.floor(Math.random() * PLAYLIST.length)
 
         this.player.addEventListener("ended", () => {
-            this.nextTrack()
+            if (this.userEngaged) {
+                this.nextTrack()
+            } else {
+                this.isPlaying = false
+                this.notifyPlayStateChange()
+            }
         })
 
         this.player.addEventListener("error", () => {
@@ -177,7 +183,8 @@ export class AudioManager {
         this.playSound(randomSound)
     }
 
-    public play(): void {
+    public play(fromUser = false): void {
+        if (fromUser) this.userEngaged = true
         if (!this.enabled || !this.player) return
 
         const track = PLAYLIST[this.currentTrackIndex]
@@ -198,6 +205,7 @@ export class AudioManager {
     }
 
     public pause(): void {
+        this.userEngaged = true
         if (this.player) {
             this.player.pause()
             this.isPlaying = false
@@ -206,6 +214,7 @@ export class AudioManager {
     }
 
     public stop(): void {
+        this.userEngaged = true
         if (this.player) {
             this.player.pause()
             this.player.currentTime = 0
@@ -215,14 +224,16 @@ export class AudioManager {
     }
 
     public togglePlay(): void {
+        this.userEngaged = true
         if (this.isPlaying) {
             this.pause()
         } else {
-            this.play()
+            this.play(true)
         }
     }
 
-    public nextTrack(): void {
+    public nextTrack(fromUser = false): void {
+        if (fromUser) this.userEngaged = true
         this.currentTrackIndex = (this.currentTrackIndex + 1) % PLAYLIST.length
         this.notifyTrackChange()
         if (this.isPlaying || this.player?.paused === false) {
@@ -232,6 +243,7 @@ export class AudioManager {
     }
 
     public previousTrack(): void {
+        this.userEngaged = true
         this.currentTrackIndex =
             (this.currentTrackIndex - 1 + PLAYLIST.length) % PLAYLIST.length
         this.notifyTrackChange()
@@ -242,6 +254,7 @@ export class AudioManager {
     }
 
     public playTrack(index: number): void {
+        this.userEngaged = true
         if (index < 0 || index >= PLAYLIST.length) return
         this.currentTrackIndex = index
         this.notifyTrackChange()

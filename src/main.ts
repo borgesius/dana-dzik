@@ -41,6 +41,11 @@ import { getLocaleManager } from "./lib/localeManager"
 import { getMarketGame } from "./lib/marketGame"
 import { Router } from "./lib/router"
 import { type SaveData, saveManager } from "./lib/saveManager"
+import {
+    BIG_SPENDER_THRESHOLD,
+    initSessionCostTracker,
+    WHALE_THRESHOLD,
+} from "./lib/sessionCost"
 import { SystemCrashHandler } from "./lib/systemCrash"
 import {
     diffFilesystem,
@@ -77,6 +82,8 @@ window.addEventListener("beforeunload", () => {
 
 void (async (): Promise<void> => {
     await getLocaleManager().init()
+
+    initSessionCostTracker(BIG_SPENDER_THRESHOLD, WHALE_THRESHOLD)
 
     trackPageview()
     trackFunnelStep("launched")

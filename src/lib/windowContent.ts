@@ -93,13 +93,19 @@ function getAboutContent(): string {
             <div class="layout">
                 <div class="sidebar">
                     <div class="photo-frame photo-slideshow" id="dana-photos">
-                        <img src="/assets/dana/IMG_5531.jpg" alt="${lm.t("about.altDana")}" />
+                        <picture>
+                            <source srcset="/assets/dana/IMG_5531.webp" type="image/webp" />
+                            <img src="/assets/dana/IMG_5531.jpg" alt="${lm.t("about.altDana")}" />
+                        </picture>
                     </div>
 
                     <hr />
 
                     <div class="photo-frame photo-slideshow" id="felix-photos">
-                        <img src="/assets/felix/IMG_7187.jpg" alt="${lm.t("about.altFelix")}" />
+                        <picture>
+                            <source srcset="/assets/felix/IMG_7187.webp" type="image/webp" />
+                            <img src="/assets/felix/IMG_7187.jpg" alt="${lm.t("about.altFelix")}" />
+                        </picture>
                     </div>
                     <p class="photo-caption">${lm.t("about.felixName")}</p>
                 </div>
@@ -233,7 +239,10 @@ function getFelixGPTContent(): string {
     return `
         <div class="felixgpt-content">
             <div class="felixgpt-header">
-                <img src="/assets/felix/IMG_7187.jpg" alt="Felix" class="felix-avatar" />
+                <picture>
+                    <source srcset="/assets/felix/IMG_7187.webp" type="image/webp" />
+                    <img src="/assets/felix/IMG_7187.jpg" alt="Felix" class="felix-avatar" />
+                </picture>
                 <div class="felix-info">
                     <h2>${lm.t("felixgpt.title")}</h2>
                     <p class="felix-status">${lm.t("felixgpt.status")}</p>

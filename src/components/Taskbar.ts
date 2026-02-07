@@ -154,12 +154,18 @@ export class Taskbar {
 
         const header = document.createElement("div")
         header.className = "start-menu-header"
+        const headerPicture = document.createElement("picture")
+        const headerSource = document.createElement("source")
+        headerSource.srcset = "/assets/dana/IMG_5531.webp"
+        headerSource.type = "image/webp"
         const headerImg = document.createElement("img")
         headerImg.src = "/assets/dana/IMG_5531.jpg"
         headerImg.alt = "User"
+        headerPicture.appendChild(headerSource)
+        headerPicture.appendChild(headerImg)
         const headerText = document.createElement("span")
         headerText.textContent = "Dana"
-        header.appendChild(headerImg)
+        header.appendChild(headerPicture)
         header.appendChild(headerText)
         menu.appendChild(header)
 

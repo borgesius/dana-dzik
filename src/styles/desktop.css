@@ -117,10 +117,10 @@ body {
 .toolbar {
     display: flex;
     align-items: center;
-    padding: 2px 4px;
+    padding: 4px 6px;
     background: var(--theme-toolbar-bg);
     border-bottom: 1px solid var(--theme-toolbar-border);
-    gap: 4px;
+    gap: 6px;
     flex-wrap: wrap;
 }
 
@@ -128,8 +128,8 @@ body {
     background: var(--theme-toolbar-btn-bg);
     border: var(--theme-toolbar-btn-border);
     padding: 6px 12px;
-    min-height: 24px;
-    font-size: 10px;
+    min-height: 28px;
+    font-size: 13px;
     cursor: pointer;
     white-space: nowrap;
     text-decoration: none;
@@ -209,10 +209,10 @@ body {
 }
 
 .toolbar-search input {
-    width: 120px;
-    padding: 2px;
+    width: 140px;
+    padding: 4px;
     border: 2px inset var(--theme-border-dark);
-    font-size: 11px;
+    font-size: 13px;
 }
 
 .toolbar-search button {
@@ -224,17 +224,17 @@ body {
 
 .toolbar-weather {
     background: var(--theme-weather-bg);
-    padding: 2px 6px;
-    font-size: 10px;
+    padding: 4px 8px;
+    font-size: 13px;
     border: 1px solid var(--theme-weather-border);
 }
 
 .toolbar-qa {
     display: flex;
     align-items: center;
-    gap: 4px;
-    padding: 2px 6px;
-    font-size: 10px;
+    gap: 6px;
+    padding: 4px 8px;
+    font-size: 13px;
     background: var(--theme-qa-bg);
     border: 1px solid var(--theme-qa-badge-border);
 }
@@ -246,13 +246,13 @@ body {
 .qa-badge {
     display: inline-flex;
     align-items: center;
-    padding: 2px 6px;
-    font-size: 9px;
+    padding: 4px 8px;
+    font-size: 12px;
     text-decoration: none;
     color: var(--theme-text-on-surface);
     border: 1px solid var(--theme-qa-badge-border);
     background: var(--theme-qa-badge-bg);
-    min-height: 24px;
+    min-height: 28px;
     cursor: pointer;
 }
 
@@ -333,4 +333,121 @@ body {
     font-size: 9px;
     color: var(--theme-accent);
     text-decoration: underline;
+}
+
+/* ── Session Cost Widget ─────────────────────────────────────────────────── */
+
+.toolbar-cost {
+    position: relative;
+    padding: 4px 8px;
+    font-size: 13px;
+    font-family: "Courier New", monospace;
+    background: var(--theme-weather-bg);
+    border: 1px solid var(--theme-weather-border);
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.toolbar-cost-tooltip {
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--theme-tooltip-bg);
+    border: var(--theme-tooltip-border);
+    padding: 12px 16px;
+    font-size: 12px;
+    font-family: "Courier New", monospace;
+    color: var(--theme-tooltip-text);
+    white-space: nowrap;
+    z-index: 8000;
+    box-shadow: var(--theme-tooltip-shadow);
+    min-width: 260px;
+    text-align: center;
+    pointer-events: none;
+}
+
+.cost-gif {
+    display: block;
+    margin: 0 auto 6px;
+    width: 48px;
+    height: auto;
+    image-rendering: pixelated;
+}
+
+.cost-title {
+    font-weight: bold;
+    font-size: 13px;
+    margin-bottom: 6px;
+}
+
+.cost-divider {
+    border-top: 1px solid var(--theme-border-dark);
+    margin: 4px 0;
+}
+
+.cost-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    text-align: left;
+    font-size: 12px;
+    line-height: 1.7;
+}
+
+.cost-label {
+    color: var(--theme-tooltip-text);
+}
+
+.cost-value {
+    font-weight: bold;
+    text-align: right;
+}
+
+.cost-section-header {
+    font-size: 10px;
+    color: #aaaaaa;
+    margin-top: 8px;
+    margin-bottom: 3px;
+    text-align: left;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-bottom: 1px dotted var(--theme-border-dark);
+    padding-bottom: 3px;
+}
+
+.cost-row-sampled .cost-label {
+    color: #aaaaaa;
+    font-style: italic;
+}
+
+.cost-row-sampled .cost-value {
+    color: #aaaaaa;
+}
+
+.cost-lottery {
+    margin-top: 8px;
+    font-size: 13px;
+    font-weight: bold;
+    color: #ffff00;
+    background: #000000;
+    padding: 3px 8px;
+    animation: cost-blink 0.6s step-end infinite;
+}
+
+.cost-total-divider {
+    border-top: 2px solid var(--theme-border-dark);
+    margin: 8px 0 6px;
+}
+
+.cost-total {
+    font-size: 20px;
+    font-weight: bold;
+    color: #cc0000;
+    animation: cost-blink 1s step-end infinite;
+}
+
+@keyframes cost-blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
 }

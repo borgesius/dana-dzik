@@ -630,6 +630,9 @@
     "suffering": { "name": "All Life Is Suffering", "description": "Become enlightened." },
     "divide-by-zero": { "name": "Divide by Zero", "description": "Cause a division by zero in WELT." },
     "popup-enjoyer": { "name": "Nigerian Prince-Consort", "description": "Claim 5 bonus popups." },
-    "y2k-survivor": { "name": "Y2K Survivor", "description": "Have a session running for 30 minutes." }
+    "y2k-survivor": { "name": "Y2K Survivor", "description": "Have a session running for 30 minutes." },
+    "big-spender": { "name": "Money Moves", "description": "Run up a $0.001 normalized session cost." },
+    "whale": { "name": "Paper Chaser", "description": "Run up a $0.0025 normalized session cost." },
+    "qa-inspector": { "name": "Works on My Machine", "description": "Click a test report badge to view CI results." }
   }
 }
