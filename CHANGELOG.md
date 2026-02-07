@@ -1,3 +1,10 @@
+# [1.37.0](https://github.com/borgesius/dana-dzik/compare/v1.36.0...v1.37.0) (2026-02-07)
+
+
+### Features
+
+* opex ([#34](https://github.com/borgesius/dana-dzik/issues/34)) ([ad492b4](https://github.com/borgesius/dana-dzik/commit/ad492b4dcf7fbf3789675431de435c8933f78e4e))
+
 # [1.36.0](https://github.com/borgesius/dana-dzik/compare/v1.35.0...v1.36.0) (2026-02-07)
 
 
