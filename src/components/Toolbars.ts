@@ -10,6 +10,7 @@ import {
     type SessionCostTracker,
 } from "../lib/sessionCost"
 import { initStrava } from "../lib/strava"
+import { isCalmMode, setCalmMode } from "../lib/calmMode"
 import {
     type ColorScheme,
     getThemeManager,
@@ -146,6 +147,7 @@ export class Toolbars {
         toolbar.appendChild(spacer)
 
         toolbar.appendChild(this.createAchievementsButton())
+        toolbar.appendChild(this.createCalmModeToggle())
         toolbar.appendChild(this.createLanguageToggle())
         toolbar.appendChild(this.createColorSchemeToggle())
 
@@ -164,6 +166,30 @@ export class Toolbars {
                 })
             )
         })
+        return btn
+    }
+
+    private createCalmModeToggle(): HTMLElement {
+        const btn = document.createElement("button")
+        btn.className = "toolbar-button calm-mode-toggle"
+        btn.textContent = "🧘"
+        btn.title = "Calm Mode"
+
+        const updateBtn = (): void => {
+            btn.classList.toggle("calm-active", isCalmMode())
+        }
+
+        updateBtn()
+
+        btn.addEventListener("click", () => {
+            setCalmMode(!isCalmMode())
+            updateBtn()
+        })
+
+        document.addEventListener("calm-mode:changed", () => {
+            updateBtn()
+        })
+
         return btn
     }
 

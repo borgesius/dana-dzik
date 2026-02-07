@@ -41,6 +41,7 @@ export function wireAchievements(
     wireFelixEvents(mgr)
     wireGuestbookEvents(mgr)
     wireWeltEvents(mgr)
+    wireCalmMode(mgr)
     wireSessionTimer(mgr)
     wireSessionCost(mgr)
     wireQAReports(mgr)
@@ -340,6 +341,20 @@ function wireWeltEvents(mgr: AchievementManager): void {
 
     document.addEventListener("grund:ring-overflow", () => {
         mgr.earn("ring-overflow")
+    })
+
+    document.addEventListener("freak:used", () => {
+        mgr.earn("freakgpt")
+    })
+
+    document.addEventListener("felix:editor", () => {
+        mgr.earn("keyboard-cat")
+    })
+}
+
+function wireCalmMode(mgr: AchievementManager): void {
+    document.addEventListener("calm-mode:toggled", () => {
+        mgr.earn("calm-mode")
     })
 }
 

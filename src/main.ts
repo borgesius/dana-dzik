@@ -46,6 +46,7 @@ import {
     initSessionCostTracker,
     WHALE_THRESHOLD,
 } from "./lib/sessionCost"
+import { initCalmMode, isCalmMode } from "./lib/calmMode"
 import { SystemCrashHandler } from "./lib/systemCrash"
 import {
     diffFilesystem,
@@ -75,6 +76,8 @@ if (savedData.game) {
 const achievements = getAchievementManager()
 achievements.deserialize(savedData.achievements)
 achievements.setDirtyCallback(() => saveManager.requestSave())
+
+initCalmMode(savedData.preferences.calmMode ?? false)
 
 window.addEventListener("beforeunload", () => {
     saveManager.saveImmediate()
@@ -122,6 +125,7 @@ function initMobile(app: HTMLElement): void {
                 theme: getThemeManager().getCurrentTheme(),
                 colorScheme: getThemeManager().getColorScheme(),
                 locale: getLocaleManager().getCurrentLocale(),
+                calmMode: isCalmMode(),
             },
             filesystem: diffFilesystem(getSharedFilesystem()),
             achievements: achievements.serialize(),
@@ -189,6 +193,7 @@ function initDesktop(app: HTMLElement): void {
                 theme: getThemeManager().getCurrentTheme(),
                 colorScheme: getThemeManager().getColorScheme(),
                 locale: getLocaleManager().getCurrentLocale(),
+                calmMode: isCalmMode(),
             },
             filesystem: diffFilesystem(getSharedFilesystem()),
             achievements: achievements.serialize(),

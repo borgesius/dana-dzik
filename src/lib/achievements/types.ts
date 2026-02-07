@@ -34,6 +34,7 @@ export type AchievementId =
     | "all-commodities"
     | "limit-filled"
     // Exploration
+    | "calm-mode"
     | "explorer"
     | "interior-decorator"
     | "dark-mode"

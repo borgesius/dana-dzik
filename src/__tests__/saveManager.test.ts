@@ -95,6 +95,7 @@ describe("SaveManager", () => {
                     theme: "apple2",
                     colorScheme: "dark",
                     locale: "ja",
+                    calmMode: false,
                 },
                 filesystem: { modified: {}, created: {}, deleted: [] },
                 achievements: {
@@ -130,6 +131,7 @@ describe("SaveManager", () => {
                     theme: "c64",
                     colorScheme: "dark",
                     locale: "fr",
+                    calmMode: false,
                 },
                 filesystem: { modified: {}, created: {}, deleted: [] },
                 achievements: {
@@ -158,6 +160,7 @@ describe("SaveManager", () => {
                     theme: "win95",
                     colorScheme: "system",
                     locale: "en",
+                    calmMode: false,
                 },
                 filesystem: {
                     modified: {
@@ -237,6 +240,7 @@ describe("SaveManager", () => {
                         theme: "win95",
                         colorScheme: "system",
                         locale: "en",
+                        calmMode: false,
                     },
                     filesystem: { modified: {}, created: {}, deleted: [] },
                     achievements: {
@@ -267,6 +271,7 @@ describe("SaveManager", () => {
                         theme: "mac-classic",
                         colorScheme: "light",
                         locale: "es",
+                        calmMode: false,
                     },
                     filesystem: { modified: {}, created: {}, deleted: [] },
                     achievements: {

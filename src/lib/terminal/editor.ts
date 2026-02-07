@@ -349,6 +349,10 @@ export class Editor {
 
         this.freakGenerating = true
         this.textareaEl.readOnly = true
+
+        if (typeof document !== "undefined") {
+            document.dispatchEvent(new CustomEvent("freak:used"))
+        }
         if (this.freakBtnEl) {
             this.freakBtnEl.disabled = true
             this.freakBtnEl.textContent = "\u{1F525} Generating..."
@@ -431,6 +435,7 @@ export class Editor {
 
         if (typeof document !== "undefined") {
             document.dispatchEvent(new CustomEvent("felix:message"))
+            document.dispatchEvent(new CustomEvent("felix:editor"))
         }
     }
 

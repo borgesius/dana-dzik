@@ -128,6 +128,12 @@ export const ACHIEVEMENTS: AchievementDef[] = [
 
     // ── Exploration ──────────────────────────────────────────────────────────
     {
+        id: "calm-mode",
+        category: "exploration",
+        icon: "🧘",
+        hidden: false,
+    },
+    {
         id: "explorer",
         category: "exploration",
         icon: "🗺️",
@@ -190,12 +196,6 @@ export const ACHIEVEMENTS: AchievementDef[] = [
         hidden: false,
     },
     {
-        id: "programmer",
-        category: "terminal",
-        icon: "🧑‍💻",
-        hidden: false,
-    },
-    {
         id: "navigator",
         category: "terminal",
         icon: "🧭",
@@ -207,70 +207,92 @@ export const ACHIEVEMENTS: AchievementDef[] = [
         icon: "🚂",
         hidden: false,
     },
+
+    // ── Coding ───────────────────────────────────────────────────────────────
     {
-        id: "welt-beginner",
-        category: "terminal",
-        icon: "📝",
+        id: "programmer",
+        category: "coding",
+        icon: "🧑‍💻",
         hidden: false,
-    },
-    {
-        id: "welt-intermediate",
-        category: "terminal",
-        icon: "🧩",
-        hidden: false,
-    },
-    {
-        id: "welt-advanced",
-        category: "terminal",
-        icon: "💎",
-        hidden: false,
-    },
-    {
-        id: "welt-master",
-        category: "terminal",
-        icon: "🌍",
-        hidden: true,
-    },
-    {
-        id: "nibelung",
-        category: "terminal",
-        icon: "💍",
-        hidden: true,
-    },
-    {
-        id: "erlosung",
-        category: "terminal",
-        icon: "🕊️",
-        hidden: true,
     },
     {
         id: "grund-compiled",
-        category: "terminal",
+        category: "coding",
         icon: "🔨",
         hidden: false,
     },
     {
         id: "grund-executed",
-        category: "terminal",
+        category: "coding",
         icon: "▶️",
         hidden: false,
     },
     {
         id: "ring-overflow",
-        category: "terminal",
+        category: "coding",
         icon: "🔄",
         hidden: true,
     },
     {
         id: "thermal-protection",
-        category: "terminal",
+        category: "coding",
         icon: "🔥",
         hidden: true,
     },
     {
         id: "suffering",
-        category: "terminal",
+        category: "coding",
         icon: "😔",
+        hidden: true,
+    },
+    {
+        id: "freakgpt",
+        category: "coding",
+        icon: "💋",
+        hidden: false,
+    },
+    {
+        id: "keyboard-cat",
+        category: "coding",
+        icon: "⌨️",
+        hidden: false,
+    },
+
+    // ── Exercises ────────────────────────────────────────────────────────────
+    {
+        id: "welt-beginner",
+        category: "exercises",
+        icon: "📝",
+        hidden: false,
+    },
+    {
+        id: "welt-intermediate",
+        category: "exercises",
+        icon: "🧩",
+        hidden: false,
+    },
+    {
+        id: "welt-advanced",
+        category: "exercises",
+        icon: "💎",
+        hidden: false,
+    },
+    {
+        id: "welt-master",
+        category: "exercises",
+        icon: "🌍",
+        hidden: true,
+    },
+    {
+        id: "nibelung",
+        category: "exercises",
+        icon: "💍",
+        hidden: true,
+    },
+    {
+        id: "erlosung",
+        category: "exercises",
+        icon: "🕊️",
         hidden: true,
     },
 
