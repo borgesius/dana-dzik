@@ -14,10 +14,7 @@ const TIERED_GROUP_LABELS: Record<TieredGroup, string> = {
     rank: "Rank",
 }
 
-function renderTierStars(
-    group: TieredGroup,
-    defs: AchievementDef[]
-): string {
+function renderTierStars(group: TieredGroup, defs: AchievementDef[]): string {
     const mgr = getAchievementManager()
     const sorted = [...defs].sort((a, b) => (a.tier ?? 0) - (b.tier ?? 0))
     const stars = sorted

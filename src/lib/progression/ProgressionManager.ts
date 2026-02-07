@@ -27,7 +27,10 @@ export class ProgressionManager {
 
     // ── Events ───────────────────────────────────────────────────────────────
 
-    public on(event: ProgressionEventType, callback: ProgressionCallback): void {
+    public on(
+        event: ProgressionEventType,
+        callback: ProgressionCallback
+    ): void {
         if (!this.eventListeners.has(event)) {
             this.eventListeners.set(event, [])
         }
@@ -44,7 +47,8 @@ export class ProgressionManager {
         if (amount <= 0) return
 
         const xpBonus = this.xpBonusProvider?.() ?? 0
-        const effective = xpBonus > 0 ? Math.ceil(amount * (1 + xpBonus)) : amount
+        const effective =
+            xpBonus > 0 ? Math.ceil(amount * (1 + xpBonus)) : amount
 
         this.totalXP += effective
         const newLevel = levelFromXP(this.totalXP)

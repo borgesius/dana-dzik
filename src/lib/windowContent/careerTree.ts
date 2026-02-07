@@ -5,8 +5,8 @@ import {
 import {
     CAREER_BRANCHES,
     type CareerNodeDef,
-    MASTERY_DEFS,
     getNodesForBranch,
+    MASTERY_DEFS,
 } from "../progression/careers"
 import type { CareerBranch } from "../progression/types"
 
@@ -252,15 +252,17 @@ function wireCareerTreeButtons(
     })
 
     // Mastery buttons
-    container.querySelectorAll<HTMLElement>(".ct-mastery-btn").forEach((btn) => {
-        btn.addEventListener("click", () => {
-            const masteryId = btn.getAttribute("data-mastery")
-            if (masteryId) {
-                career.purchaseMastery(masteryId)
-                renderCareerTreeWindow()
-            }
+    container
+        .querySelectorAll<HTMLElement>(".ct-mastery-btn")
+        .forEach((btn) => {
+            btn.addEventListener("click", () => {
+                const masteryId = btn.getAttribute("data-mastery")
+                if (masteryId) {
+                    career.purchaseMastery(masteryId)
+                    renderCareerTreeWindow()
+                }
+            })
         })
-    })
 
     // Career switch buttons
     container.querySelectorAll<HTMLElement>(".ct-switch-btn").forEach((btn) => {

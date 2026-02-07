@@ -8,7 +8,7 @@ import { getMarketGame } from "../marketGame/MarketEngine"
 import { getPrestigeManager } from "../prestige/PrestigeManager"
 import { getThemeManager } from "../themeManager"
 import { getCareerManager } from "./CareerManager"
-import { XP_REWARDS, getAchievementXP } from "./constants"
+import { getAchievementXP, XP_REWARDS } from "./constants"
 import type { ProgressionManager } from "./ProgressionManager"
 
 export function wireProgression(
@@ -139,7 +139,9 @@ function wireSocial(mgr: ProgressionManager): void {
 
 function wireAutobattler(mgr: ProgressionManager): void {
     onAppEvent("autobattler:run-complete", (detail) => {
-        mgr.addXP(detail.won ? XP_REWARDS.autobattlerWin : XP_REWARDS.autobattlerRun)
+        mgr.addXP(
+            detail.won ? XP_REWARDS.autobattlerWin : XP_REWARDS.autobattlerRun
+        )
     })
     onAppEvent("autobattler:unit-unlocked", () => {
         mgr.addXP(XP_REWARDS.autobattlerCollectionMilestone)
@@ -193,7 +195,8 @@ function wireCrossSystemHooks(): void {
         const { score } = detail
         if (score >= 1000) {
             const pinballBonus = career.getBonus("pinballBonus")
-            const cashBonus = Math.floor(score / 500) * 0.01 * (1 + pinballBonus)
+            const cashBonus =
+                Math.floor(score / 500) * 0.01 * (1 + pinballBonus)
             game.addBonus(cashBonus)
         }
     })
@@ -241,7 +244,7 @@ function wireCrossSystemHooks(): void {
 function wirePhase5Unlock(mgr: ProgressionManager): void {
     const game = getMarketGame()
 
-    const checkPhase5 = () => {
+    const checkPhase5 = (): void => {
         if (game.isPhaseUnlocked(5)) return
 
         const prestige = getPrestigeManager()
@@ -256,7 +259,7 @@ function wirePhase5Unlock(mgr: ProgressionManager): void {
         }
     }
 
-    const checkThirdVP = () => {
+    const checkThirdVP = (): void => {
         const orgChart = game.getOrgChart()
         if (orgChart.isThirdVPUnlocked()) return
 
@@ -295,7 +298,7 @@ function wirePhase5Unlock(mgr: ProgressionManager): void {
 function wirePhase6Unlock(mgr: ProgressionManager): void {
     const game = getMarketGame()
 
-    const checkPhase6 = () => {
+    const checkPhase6 = (): void => {
         if (game.isPhaseUnlocked(6)) return
 
         const prestige = getPrestigeManager()

@@ -6,9 +6,8 @@ import {
     FORESIGHT_UPGRADE_MAP,
 } from "./ascension"
 import {
-    calculateHindsight,
-    HINDSIGHT_UPGRADES,
     HINDSIGHT_UPGRADE_MAP,
+    HINDSIGHT_UPGRADES,
     PRESTIGE_THRESHOLD,
 } from "./constants"
 
@@ -84,9 +83,7 @@ export class PrestigeManager {
         if (!this.canPrestige(lifetimeEarnings)) return 0
 
         const exp = this.getHindsightExponent()
-        const baseHindsight = Math.floor(
-            Math.pow(lifetimeEarnings / 100, exp)
-        )
+        const baseHindsight = Math.floor(Math.pow(lifetimeEarnings / 100, exp))
         const hindsightBonus = this.hindsightBonusProvider?.() ?? 0
         const hindsightGained =
             hindsightBonus > 0
@@ -290,8 +287,7 @@ export class PrestigeManager {
         const def = FORESIGHT_UPGRADE_MAP.get(upgradeId)
         if (!def) return false
 
-        const currentCount =
-            this.purchasedForesightUpgrades.get(upgradeId) ?? 0
+        const currentCount = this.purchasedForesightUpgrades.get(upgradeId) ?? 0
         if (currentCount >= def.maxPurchases) return false
         if (this.foresight < def.cost) return false
 

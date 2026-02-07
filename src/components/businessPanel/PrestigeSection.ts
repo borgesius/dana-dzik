@@ -141,7 +141,9 @@ export class PrestigeSection {
             if (ascCount > 0) {
                 html += `<div class="foresight-shop"><h5>Foresight Shop</h5>`
                 for (const upgrade of FORESIGHT_UPGRADES) {
-                    const count = this.prestige.getForesightUpgradeCount(upgrade.id)
+                    const count = this.prestige.getForesightUpgradeCount(
+                        upgrade.id
+                    )
                     const maxed = count >= upgrade.maxPurchases
                     const canAfford = foresightBalance >= upgrade.cost
 

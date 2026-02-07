@@ -695,7 +695,7 @@
     cursor: pointer;
 }
 
-.hindsight-item:hover:not(.owned):not(.disabled) {
+.hindsight-item:hover:not(.owned, .disabled) {
     background: var(--theme-surface-secondary);
 }
 
@@ -1433,7 +1433,7 @@
 
 .desk-ratio.desk-critical {
     color: #c62828;
-    background: rgba(198, 40, 40, 0.08);
+    background: rgb(198 40 40 / 8%);
     border-left: 2px solid #c62828;
     animation: desk-blink 0.8s infinite;
 }

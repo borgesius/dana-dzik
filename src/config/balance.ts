@@ -8,36 +8,35 @@
 // ── Progression / XP ─────────────────────────────────────────────────────────
 
 export {
+    getAchievementXP,
+    levelFromXP,
     XP_REWARDS,
     xpForLevel,
-    levelFromXP,
     xpToNextLevel,
-    getAchievementXP,
 } from "../lib/progression/constants"
 
 // ── Autobattler economy ──────────────────────────────────────────────────────
 
+export type { RoundParams } from "../lib/autobattler/opponents"
+export { ROUND_PARAMS } from "../lib/autobattler/opponents"
+export { RUN_BUFFS } from "../lib/autobattler/runBuffs"
+export { DEFAULT_TOTAL_ROUNDS } from "../lib/autobattler/RunManager"
 export {
+    BASE_LINE_SLOTS,
     INITIAL_SCRAP,
-    SCRAP_PER_ROUND,
     REROLL_COST,
+    SCRAP_PER_ROUND,
     SELL_REFUND_MULT,
     SHOP_SIZE,
-    BASE_LINE_SLOTS,
 } from "../lib/autobattler/shop"
-
-export { DEFAULT_TOTAL_ROUNDS } from "../lib/autobattler/RunManager"
-export { ROUND_PARAMS } from "../lib/autobattler/opponents"
-export type { RoundParams } from "../lib/autobattler/opponents"
-export { RUN_BUFFS } from "../lib/autobattler/runBuffs"
 export { ALL_UNITS, UNIT_MAP } from "../lib/autobattler/units"
 
 // ── Prestige ─────────────────────────────────────────────────────────────────
 
 export {
-    PRESTIGE_THRESHOLD,
     calculateHindsight,
     HINDSIGHT_UPGRADES,
+    PRESTIGE_THRESHOLD,
 } from "../lib/prestige/constants"
 
 // ── Career tree ──────────────────────────────────────────────────────────────
@@ -45,18 +44,17 @@ export {
 export {
     ALL_CAREER_NODES,
     CAREER_NODE_MAP,
-    DORMANT_MULTIPLIER,
     CAREER_SWITCH_LEVEL_PENALTY,
+    DORMANT_MULTIPLIER,
 } from "../lib/progression/careers"
 
 // ── Market / Idler ───────────────────────────────────────────────────────────
 
 export {
+    PHASE_THRESHOLDS,
     STARTING_CASH,
     TICK_INTERVAL_MS,
-    PHASE_THRESHOLDS,
 } from "../lib/marketGame/types"
-
 export { FACTORIES, FACTORY_COST_SCALING } from "../lib/marketGame/types"
 
 // ── Phase 6: Structured Products Desk ────────────────────────────────────

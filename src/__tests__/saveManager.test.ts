@@ -276,8 +276,8 @@ describe("SaveManager", () => {
         it("saves gathered data to localStorage", async () => {
             const { saveManager } = await loadSaveManagerModule()
             saveManager.load()
-            saveManager.registerGatherFn((): SaveData =>
-                emptySaveData({ pinball: { highScore: 1234 } })
+            saveManager.registerGatherFn(
+                (): SaveData => emptySaveData({ pinball: { highScore: 1234 } })
             )
             saveManager.saveImmediate()
             const raw = localStorage.getItem("save")
@@ -289,16 +289,17 @@ describe("SaveManager", () => {
         it("writes back individual keys on save", async () => {
             const { saveManager } = await loadSaveManagerModule()
             saveManager.load()
-            saveManager.registerGatherFn((): SaveData =>
-                emptySaveData({
-                    pinball: { highScore: 777 },
-                    preferences: {
-                        theme: "mac-classic",
-                        colorScheme: "light",
-                        locale: "es",
-                        calmMode: false,
-                    },
-                })
+            saveManager.registerGatherFn(
+                (): SaveData =>
+                    emptySaveData({
+                        pinball: { highScore: 777 },
+                        preferences: {
+                            theme: "mac-classic",
+                            colorScheme: "light",
+                            locale: "es",
+                            calmMode: false,
+                        },
+                    })
             )
             saveManager.saveImmediate()
             expect(localStorage.getItem("theme")).toBe("mac-classic")
