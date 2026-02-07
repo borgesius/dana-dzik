@@ -4,6 +4,7 @@ import {
     type HistoryEntry,
     type Upgrade,
 } from "../lib/businessGame"
+import { getLocaleManager } from "../lib/localeManager"
 
 export class BusinessPanel {
     private element: HTMLElement
@@ -24,17 +25,18 @@ export class BusinessPanel {
         panel.className = "business-panel"
         panel.style.display = "none"
 
+        const lm = getLocaleManager()
         const header = document.createElement("div")
         header.className = "business-panel-header"
 
         const title = document.createElement("span")
         title.className = "business-panel-title"
-        title.textContent = "BUSINESS HEADQUARTERS"
+        title.textContent = lm.t("businessPanel.title")
         header.appendChild(title)
 
         const closeBtn = document.createElement("button")
         closeBtn.className = "business-panel-close"
-        closeBtn.textContent = "×"
+        closeBtn.textContent = lm.t("businessPanel.close")
         closeBtn.addEventListener("click", () => this.collapse())
         header.appendChild(closeBtn)
 
@@ -52,7 +54,7 @@ export class BusinessPanel {
         upgradesSection.className = "business-panel-upgrades"
 
         const upgradesTitle = document.createElement("h3")
-        upgradesTitle.textContent = "IMPROVEMENTS"
+        upgradesTitle.textContent = lm.t("businessPanel.improvements")
         upgradesSection.appendChild(upgradesTitle)
 
         const upgradesList = document.createElement("div")
@@ -66,7 +68,7 @@ export class BusinessPanel {
         historySection.className = "business-panel-history"
 
         const historyTitle = document.createElement("h3")
-        historyTitle.textContent = "TRANSACTIONS"
+        historyTitle.textContent = lm.t("businessPanel.transactions")
         historySection.appendChild(historyTitle)
 
         const historyList = document.createElement("div")
@@ -122,6 +124,7 @@ export class BusinessPanel {
     private renderStats(): void {
         if (!this.statsEl) return
 
+        const lm = getLocaleManager()
         const money = this.game.getMoney()
         const lifetime = this.game.getLifetimeEarnings()
         const wins = this.game.getWins()
@@ -139,25 +142,25 @@ export class BusinessPanel {
         this.statsEl.innerHTML = `
             <div class="stat-row">
                 <div class="stat-item">
-                    <span class="stat-label">💰 Balance</span>
+                    <span class="stat-label">${lm.t("businessPanel.balance")}</span>
                     <span class="stat-value money">$${money.toFixed(2)}</span>
                 </div>
                 <div class="stat-item">
-                    <span class="stat-label">Revenue</span>
+                    <span class="stat-label">${lm.t("businessPanel.revenue")}</span>
                     <span class="stat-value">$${lifetime.toFixed(2)}</span>
                 </div>
                 <div class="stat-item">
-                    <span class="stat-label">Success</span>
+                    <span class="stat-label">${lm.t("businessPanel.success")}</span>
                     <span class="stat-value">${wins}/${wins + losses}</span>
                 </div>
             </div>
             <div class="stat-row">
                 <div class="stat-item">
-                    <span class="stat-label">Streak</span>
+                    <span class="stat-label">${lm.t("businessPanel.streak")}</span>
                     <span class="stat-value">${streakDisplay}</span>
                 </div>
                 <div class="stat-item">
-                    <span class="stat-label">Best Win</span>
+                    <span class="stat-label">${lm.t("businessPanel.bestWin")}</span>
                     <span class="stat-value">$${bestWin.toFixed(2)}</span>
                 </div>
             </div>
@@ -183,7 +186,7 @@ export class BusinessPanel {
             if (isOwned) {
                 btn.innerHTML = `
                     <span class="upgrade-name">${upgrade.name}</span>
-                    <span class="upgrade-badge">ACQUIRED</span>
+                    <span class="upgrade-badge">${getLocaleManager().t("businessPanel.acquired")}</span>
                 `
                 btn.disabled = true
             } else {
@@ -212,8 +215,7 @@ export class BusinessPanel {
         const history = this.game.getHistory()
 
         if (history.length === 0) {
-            this.historyEl.innerHTML =
-                '<div class="history-empty">No transactions yet</div>'
+            this.historyEl.innerHTML = `<div class="history-empty">${getLocaleManager().t("businessPanel.noTransactions")}</div>`
             return
         }
 

@@ -33,26 +33,32 @@ import {
 import { createAudioManager } from "./lib/audio"
 import { GlitchManager } from "./lib/glitchEffects"
 import { isMobile } from "./lib/isMobile"
+import { getLocaleManager } from "./lib/localeManager"
 import { Router } from "./lib/router"
 import { SystemCrashHandler } from "./lib/systemCrash"
 import { getThemeManager } from "./lib/themeManager"
 
 setupErrorHandlers()
 getThemeManager()
-trackPageview()
-trackFunnelStep("launched")
-trackFunnelStep("boot_complete")
-getAbVariant()
-initPerfTracking()
 
-const app = document.getElementById("app")
-if (app) {
-    if (isMobile()) {
-        initMobile(app)
-    } else {
-        initDesktop(app)
+void (async (): Promise<void> => {
+    await getLocaleManager().init()
+
+    trackPageview()
+    trackFunnelStep("launched")
+    trackFunnelStep("boot_complete")
+    getAbVariant()
+    initPerfTracking()
+
+    const app = document.getElementById("app")
+    if (app) {
+        if (isMobile()) {
+            initMobile(app)
+        } else {
+            initDesktop(app)
+        }
     }
-}
+})()
 
 function initMobile(app: HTMLElement): void {
     const phone = new MobilePhone(app)

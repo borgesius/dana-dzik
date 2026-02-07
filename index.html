@@ -486,6 +486,25 @@
                 }
             })
         </script>
+        <script>
+            (function () {
+                const locale = localStorage.getItem("locale") || "en"
+                const translations = {
+                    en: "Please wait...",
+                    de: "Bitte warten...",
+                    it: "Attendere prego...",
+                    es: "Por favor espere...",
+                    fr: "Veuillez patienter...",
+                    pt: "Por favor aguarde...",
+                    ja: "お待ちください...",
+                    zh: "请稍候...",
+                }
+                const loadingText = document.getElementById("loading-text")
+                if (loadingText) {
+                    loadingText.textContent = translations[locale] || translations.en
+                }
+            })()
+        </script>
         <script type="module" src="/src/main.ts"></script>
     </body>
 </html>

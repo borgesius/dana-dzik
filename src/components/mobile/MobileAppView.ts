@@ -2,6 +2,7 @@ import { DESKTOP_ITEMS } from "../../config"
 import { trackFunnelStep, trackWindowOpen } from "../../lib/analytics"
 import { initFelixGPT } from "../../lib/felixgpt"
 import { initGuestbook } from "../../lib/guestbook"
+import { getLocaleManager } from "../../lib/localeManager"
 import { initNowPlaying } from "../../lib/nowPlaying"
 import { initPhotoSlideshows } from "../../lib/photoSlideshow"
 import { initSiteStats } from "../../lib/siteStats"
@@ -40,10 +41,27 @@ export class MobileAppView {
         this.element.appendChild(this.contentArea)
 
         this.setupSwipeBack()
+        this.setupLocaleListener()
 
         this.navTitle = this.element.querySelector(
             ".ios-nav-title"
         ) as HTMLElement
+    }
+
+    private setupLocaleListener(): void {
+        const lm = getLocaleManager()
+        lm.on("localeChanged", () => {
+            if (this.currentAppId) {
+                this.refreshContent()
+            }
+        })
+    }
+
+    private refreshContent(): void {
+        if (this.currentAppId) {
+            this.contentArea.innerHTML = getWindowContent(this.currentAppId)
+            this.initContentFeatures(this.currentAppId)
+        }
     }
 
     private createNavBar(): HTMLElement {
