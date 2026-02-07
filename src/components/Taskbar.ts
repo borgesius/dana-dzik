@@ -1,4 +1,9 @@
 import type { RoutableWindow } from "../config/routing"
+import {
+    getDeployEnv,
+    getProductionUrl,
+    getStagingUrl,
+} from "../config/environment"
 import { getBuildInfo } from "../lib/buildInfo"
 import { saveManager } from "../lib/saveManager"
 import { getThemeManager } from "../lib/themeManager"
@@ -245,9 +250,32 @@ export class Taskbar {
             buildInfo.gitCommit !== "local"
                 ? `<a href="https://github.com/borgesius/dana-dzik/commit/${buildInfo.gitCommit}" target="_blank">${commitShort}</a>`
                 : commitShort
-        const versionLink = `<a href="${CHANGELOG_URL}" target="_blank">v${buildInfo.version}</a>`
-        versionInfo.innerHTML = `${versionLink} · ${commitLink}`
+
+        const env = getDeployEnv()
+        if (env === "staging") {
+            versionInfo.innerHTML = commitLink
+        } else {
+            const versionLink = `<a href="${CHANGELOG_URL}" target="_blank">v${buildInfo.version}</a>`
+            versionInfo.innerHTML = `${versionLink} · ${commitLink}`
+        }
         footer.appendChild(versionInfo)
+
+        const envSwitcher = document.createElement("div")
+        envSwitcher.className = "start-menu-env"
+        if (env === "staging") {
+            envSwitcher.innerHTML =
+                `<span class="env-badge env-staging">STAGING</span> · ` +
+                `<a href="${getProductionUrl()}" class="env-link">Production ↗</a>`
+        } else if (env === "production") {
+            envSwitcher.innerHTML =
+                `<a href="${getStagingUrl()}" class="env-link">Staging ↗</a>`
+        } else {
+            envSwitcher.innerHTML =
+                `<span class="env-badge env-dev">DEV</span> · ` +
+                `<a href="${getProductionUrl()}" class="env-link">Production ↗</a> · ` +
+                `<a href="${getStagingUrl()}" class="env-link">Staging ↗</a>`
+        }
+        footer.appendChild(envSwitcher)
 
         const buttons = document.createElement("div")
         buttons.className = "start-menu-footer-buttons"

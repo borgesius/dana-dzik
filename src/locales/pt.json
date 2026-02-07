@@ -155,7 +155,10 @@
     "userAlt": "Usuário",
     "logOff": "Sair",
     "shutDown": "Desligar",
-    "changelog": "changelog"
+    "changelog": "changelog",
+    "staging": "STAGING",
+    "goToProduction": "Produção",
+    "goToStaging": "Staging"
   },
   "startMenu": {
     "programs": {

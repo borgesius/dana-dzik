@@ -155,7 +155,10 @@
     "userAlt": "Usuario",
     "logOff": "Cerrar Sesión",
     "shutDown": "Apagar",
-    "changelog": "registro de cambios"
+    "changelog": "registro de cambios",
+    "staging": "STAGING",
+    "goToProduction": "Producción",
+    "goToStaging": "Staging"
   },
   "startMenu": {
     "programs": {
