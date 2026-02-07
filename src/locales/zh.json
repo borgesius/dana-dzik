@@ -177,7 +177,7 @@
     "reset": "🔄 重置",
     "resetTooltip": "清除所有已保存的进度",
     "resetTitle": "⚠️ 重置所有数据",
-    "resetMessage": "这将永久清除所有进度、成就、市场游戏状态、文件系统编辑和偏好设置。此操作无法撤销。",
+    "resetMessage": "这将永久清除所有进度、成就、经济状态、文件系统编辑和偏好设置。此操作无法撤销。",
     "resetCancel": "取消",
     "resetConfirm": "清除所有内容"
   },

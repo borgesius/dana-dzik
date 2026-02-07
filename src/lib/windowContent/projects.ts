@@ -12,7 +12,7 @@ export function getProjectsContent(): string {
                     ${lm.t("projects.description")}
                 </p>
                 <p class="tech">
-                    <strong>${lm.t("projects.stack")}</strong> TypeScript, Vite
+                    <strong>${lm.t("projects.stack")}</strong> TypeScript, Vite, and Love <3
                 </p>
                 <p>
                     <a href="https://github.com/borgesius/dana-dzik" target="_blank">

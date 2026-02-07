@@ -177,7 +177,7 @@
     "reset": "🔄 Reiniciar",
     "resetTooltip": "Borrar todo el progreso guardado",
     "resetTitle": "⚠️ Reiniciar todos los datos",
-    "resetMessage": "Esto borrará permanentemente todo el progreso, logros, estado del juego de mercado, ediciones del sistema de archivos y preferencias. Esto no se puede deshacer.",
+    "resetMessage": "Esto borrará permanentemente todo el progreso, logros, estado de la economía, ediciones del sistema de archivos y preferencias. Esto no se puede deshacer.",
     "resetCancel": "Cancelar",
     "resetConfirm": "Borrar todo"
   },

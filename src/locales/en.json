@@ -1,783 +1,1086 @@
 {
-  "loading": {
-    "pleaseWait": "Please wait...",
-    "loading": "Loading...",
-    "das": "DAS"
-  },
-  "boot": {
-    "bios": {
-      "v1": "Fatitech BIOS v4.51 (C) 1997 Fatitech Industries",
-      "v2": "Fatitech BIOS v-3.7 (C) 1997-2003-1991",
-      "v3": "Fatitech BIOS vNaN (C) 19??",
-      "v4": "Fatitech BIOS v0.0.1 BETA (UNLICENSED)",
-      "v5": "Fatitech BIOS v∞.0.1 (C) Dr. T. Pferd"
+    "loading": {
+        "pleaseWait": "Please wait...",
+        "loading": "Loading...",
+        "das": "DAS"
     },
-    "cpu": {
-      "c1": "Fatitech QX-97 Quaternary Core @ 4.51MHz",
-      "c2": "Fatitech QX-97 @ probably (quaternary mode)",
-      "c3": "DAS-8 Q4 Core @ -200MHz (estimated)",
-      "c4": "Fatitech QX-97 Quaternary @ fast",
-      "c5": "Generic q86 @ 0.5MHz (fourfold root)"
+    "boot": {
+        "bios": {
+            "v1": "Fatitech BIOS v4.51 (C) 1997 Fatitech Industries",
+            "v2": "Fatitech BIOS v-3.7 (C) 1997-2003-1991",
+            "v3": "Fatitech BIOS vNaN (C) 19??",
+            "v4": "Fatitech BIOS v0.0.1 BETA (UNLICENSED)",
+            "v5": "Fatitech BIOS v∞.0.1 (C) Dr. T. Pferd"
+        },
+        "cpu": {
+            "c1": "Fatitech QX-97 Quaternary Core @ 4.51MHz",
+            "c2": "Fatitech QX-97 @ probably (quaternary mode)",
+            "c3": "DAS-8 Q4 Core @ -200MHz (estimated)",
+            "c4": "Fatitech QX-97 Quaternary @ fast",
+            "c5": "Generic q86 @ 0.5MHz (fourfold root)"
+        },
+        "ram": {
+            "r1": "8 DING registers OK (256 qbytes each)",
+            "r2": "2296 qbytes (quaternary verified)",
+            "r3": "????K qbytes detected",
+            "r4": "8 banks, 2296 qbytes free",
+            "r5": "enough (quaternary mode)"
+        },
+        "hdd": {
+            "h1": "IDE Primary: C:\\ (WELT filesystem)",
+            "h2": "ATA-33: Fatitech Industries (S/N: ????????)",
+            "h3": "HDD: C:\\WINDOWS\\system32 (7 files)",
+            "h4": "SCSI-0: 120MB (formatted as 2TB)",
+            "h5": "3.5\" Floppy (quaternary formatted)"
+        },
+        "warnings": {
+            "w1": "WELT THERMAL: Protection circuit armed (1818 iterations)",
+            "w2": "WARNING: System age exceeds expected operational lifetime",
+            "w3": "QUATERNARY OVERFLOW: Carry flag not cleared",
+            "w4": "NOTICE: DING 7 still occupied by DING 7",
+            "w5": "CMOS CHECKSUM: close enough",
+            "w6": "WARNING: VORSTELLUNG buffer not flushed",
+            "w7": "IRQ CONFLICT: IRQ 5 is already IRQ 5",
+            "w8": "KEYBOARD ERROR: keyboard not found"
+        },
+        "responses": {
+            "r1": "PROCEEDING...",
+            "r2": "IGNORING...",
+            "r3": "ACKNOWLEDGED...",
+            "r4": "OK...",
+            "r5": "VERNEINUNG..."
+        },
+        "bootPaths": {
+            "b1": "Executing C:\\WINDOWS\\system32\\boot.welt...",
+            "b2": "Loading C:\\WINDOWS\\system32\\config.welt...",
+            "b3": "ERWACHE... booting from boot.welt...",
+            "b4": "Booting from whatever boot.welt says...",
+            "b5": "Booting from C:\\WINDOWS\\system32\\..."
+        },
+        "loadingTexts": {
+            "set1": {
+                "l1": "Initializing VORSTELLUNG buffer...",
+                "l2": "Calibrating DING registers...",
+                "l3": "Ready (probably)"
+            },
+            "set2": {
+                "l1": "Loading WELT modules...",
+                "l2": "Reticulating splines...",
+                "l3": "VERNEINUNG"
+            },
+            "set3": {
+                "l1": "Defragmenting quaternary memory...",
+                "l2": "Warming up CRT...",
+                "l3": "Ready"
+            },
+            "set4": {
+                "l1": "Mounting C:\\...",
+                "l2": "Unmounting C:\\...",
+                "l3": "Remounting C:\\..."
+            },
+            "set5": {
+                "l1": "Loading...",
+                "l2": "Starting...",
+                "l3": "KERNEL OK"
+            }
+        },
+        "moduleResults": {
+            "m1": "OK",
+            "m2": "OK (probably)",
+            "m3": "OK (ignored errors)",
+            "m4": "OK (on second try)"
+        },
+        "detectingHardware": "Detecting hardware...",
+        "cpuLabel": "CPU:",
+        "ramLabel": "RAM:",
+        "hddLabel": "HDD:",
+        "loadingModules": "Loading system modules...",
+        "loadLabel": "LOAD:",
+        "dasLoading": "DAS loading..."
     },
-    "ram": {
-      "r1": "8 DING registers OK (256 qbytes each)",
-      "r2": "2296 qbytes (quaternary verified)",
-      "r3": "????K qbytes detected",
-      "r4": "8 banks, 2296 qbytes free",
-      "r5": "enough (quaternary mode)"
+    "common": {
+        "ok": "OK",
+        "cancel": "Cancel",
+        "close": "Close",
+        "save": "Save",
+        "quit": "Quit",
+        "yes": "Yes",
+        "no": "No",
+        "error": "Error",
+        "success": "Success"
     },
-    "hdd": {
-      "h1": "IDE Primary: C:\\ (WELT filesystem)",
-      "h2": "ATA-33: Fatitech Industries (S/N: ????????)",
-      "h3": "HDD: C:\\WINDOWS\\system32 (7 files)",
-      "h4": "SCSI-0: 120MB (formatted as 2TB)",
-      "h5": "3.5\" Floppy (quaternary formatted)"
+    "toolbar": {
+        "weatherLoading": "☀️ Loading...",
+        "qaLoading": "🔬 QA: Loading...",
+        "qaFallback1": "🔬 QA: ¯\\_(ツ)_/¯",
+        "qaFallback2": "🔬 Tests: ?",
+        "qaFallback3": "🔬 QA: N/A",
+        "colorScheme": "Color: {{scheme}}",
+        "language": "Language: {{language}}",
+        "tradeOpen": "📈 TRADE ▲",
+        "tradeClosed": "📈 TRADE ▼",
+        "github": "🐙 GitHub"
     },
-    "warnings": {
-      "w1": "WELT THERMAL: Protection circuit armed (1818 iterations)",
-      "w2": "WARNING: System age exceeds expected operational lifetime",
-      "w3": "QUATERNARY OVERFLOW: Carry flag not cleared",
-      "w4": "NOTICE: DING 7 still occupied by DING 7",
-      "w5": "CMOS CHECKSUM: close enough",
-      "w6": "WARNING: VORSTELLUNG buffer not flushed",
-      "w7": "IRQ CONFLICT: IRQ 5 is already IRQ 5",
-      "w8": "KEYBOARD ERROR: keyboard not found"
+    "qa": {
+        "performance": "Performance",
+        "accessibility": "Accessibility",
+        "bestPractices": "Best Practices",
+        "seo": "SEO",
+        "noScores": "No scores available",
+        "lighthouseReport": "Lighthouse Report",
+        "passing": "Passing",
+        "failing": "Failing",
+        "clickFullReport": "Click for full report",
+        "e2eTests": "E2E Tests (Playwright)",
+        "status": "Status",
+        "allTestsPassing": "All tests passing",
+        "testsFailing": "Tests failing",
+        "chromiumLatest": "Chromium · Latest on main",
+        "statements": "Statements",
+        "branches": "Branches",
+        "functions": "Functions",
+        "lines": "Lines",
+        "noMetrics": "No metrics available",
+        "testCoverage": "Test Coverage",
+        "v8Provider": "v8 provider",
+        "clickCIDetails": "Click for CI run details"
     },
-    "responses": {
-      "r1": "PROCEEDING...",
-      "r2": "IGNORING...",
-      "r3": "ACKNOWLEDGED...",
-      "r4": "OK...",
-      "r5": "VERNEINUNG..."
+    "window": {
+        "minimize": "Minimize window",
+        "maximize": "Maximize window",
+        "close": "Close window"
     },
-    "bootPaths": {
-      "b1": "Executing C:\\WINDOWS\\system32\\boot.welt...",
-      "b2": "Loading C:\\WINDOWS\\system32\\config.welt...",
-      "b3": "ERWACHE... booting from boot.welt...",
-      "b4": "Booting from whatever boot.welt says...",
-      "b5": "Booting from C:\\WINDOWS\\system32\\..."
+    "taskbar": {
+        "userName": "Dana",
+        "userAlt": "User",
+        "logOff": "Log Off",
+        "shutDown": "Shut Down",
+        "changelog": "changelog",
+        "staging": "STAGING",
+        "goToProduction": "Production",
+        "goToStaging": "Staging",
+        "fileExplorer": "File Explorer",
+        "terminal": "Terminal",
+        "achievements": "Achievements",
+        "pinball": "Pinball",
+        "felixgpt": "FelixGPT",
+        "frontier": "FRONTIER",
+        "customize": "Customize",
+        "careerDev": "Career Development",
+        "about": "About",
+        "projects": "Projects",
+        "resume": "Resume",
+        "links": "Links",
+        "guestbook": "Guestbook",
+        "locked": "(locked)",
+        "lockedTooltip": "Win a hacking run to unlock",
+        "reset": "🔄 Reset",
+        "resetTooltip": "Erase all saved progress",
+        "resetTitle": "⚠️ Reset All Data",
+        "resetMessage": "This will permanently erase all progress, achievements, economy state, filesystem edits, and preferences. This cannot be undone.",
+        "resetCancel": "Cancel",
+        "resetConfirm": "Erase Everything"
     },
-    "loadingTexts": {
-      "set1": {
-        "l1": "Initializing VORSTELLUNG buffer...",
-        "l2": "Calibrating DING registers...",
-        "l3": "Ready (probably)"
-      },
-      "set2": {
-        "l1": "Loading WELT modules...",
-        "l2": "Reticulating splines...",
-        "l3": "VERNEINUNG"
-      },
-      "set3": {
-        "l1": "Defragmenting quaternary memory...",
-        "l2": "Warming up CRT...",
-        "l3": "Ready"
-      },
-      "set4": {
-        "l1": "Mounting C:\\...",
-        "l2": "Unmounting C:\\...",
-        "l3": "Remounting C:\\..."
-      },
-      "set5": {
-        "l1": "Loading...",
-        "l2": "Starting...",
-        "l3": "KERNEL OK"
-      }
+    "startMenu": {
+        "programs": {
+            "browser1": "Internet Exploder",
+            "browser2": "Netscape Navigator 7.0 (IE Mode)",
+            "browser3": "The Web.exe",
+            "email1": "Outlook Distress",
+            "email2": "Microsoft Outcast Express",
+            "email3": "Mail (broken)",
+            "media1": "Windows Media Destroyer",
+            "media2": "RealPlayer (fake)",
+            "media3": "Winamp 2.91 (v5.8)",
+            "chat1": "MSN Messenger (AIM)",
+            "chat2": "ICQ/AIM/MSN/Yahoo (none)",
+            "chat3": "Chat.dll",
+            "game1": "3D Pinball (2D)",
+            "game2": "Space Cadet Pinball (broken)",
+            "game3": "Minesweeper (pinball mode)"
+        },
+        "folders": {
+            "docs1": "My Documents",
+            "docs2": "Your Documents",
+            "docs3": "Someone's Documents",
+            "docs4": "C:\\DOCS~1",
+            "pics1": "My Pictures",
+            "pics2": "My Pictures (empty)",
+            "pics3": "Pictures (missing)",
+            "pics4": "*.jpg",
+            "music1": "My Music",
+            "music2": "My Music (silent)",
+            "music3": "Audio Files (corrupt)",
+            "music4": "Sounds.wav",
+            "computer1": "My Computer",
+            "computer2": "This Computer",
+            "computer3": "A Computer",
+            "computer4": "Computer (probably)",
+            "control1": "Control Panel",
+            "control2": "Control Pannel",
+            "control3": "Settings.cpl",
+            "control4": "System32 (friendly mode)"
+        }
     },
-    "moduleResults": {
-      "m1": "OK",
-      "m2": "OK (probably)",
-      "m3": "OK (ignored errors)",
-      "m4": "OK (on second try)"
+    "windowManager": {
+        "welcomeTitle": "Welcome to Dana's Desktop",
+        "aboutTitle": "about_me.doc",
+        "projectsTitle": "cool_projects.zip",
+        "resumeTitle": "resume.pdf",
+        "linksTitle": "Bookmarks",
+        "guestbookTitle": "guestbook.exe",
+        "felixgptTitle": "FelixGPT",
+        "statsTitle": "Site Statistics",
+        "pinballTitle": "Pinball.exe",
+        "terminalTitle": "C:\\HACKTERM.EXE",
+        "explorerTitle": "File Explorer"
     },
-    "detectingHardware": "Detecting hardware...",
-    "cpuLabel": "CPU:",
-    "ramLabel": "RAM:",
-    "hddLabel": "HDD:",
-    "loadingModules": "Loading system modules...",
-    "loadLabel": "LOAD:",
-    "dasLoading": "DAS loading..."
-  },
-  "common": {
-    "ok": "OK",
-    "cancel": "Cancel",
-    "close": "Close",
-    "save": "Save",
-    "quit": "Quit",
-    "yes": "Yes",
-    "no": "No",
-    "error": "Error",
-    "success": "Success"
-  },
-  "toolbar": {
-    "weatherLoading": "☀️ Loading...",
-    "qaLoading": "🔬 QA: Loading...",
-    "qaFallback1": "🔬 QA: ¯\\_(ツ)_/¯",
-    "qaFallback2": "🔬 Tests: ?",
-    "qaFallback3": "🔬 QA: N/A",
-    "colorScheme": "Color: {{scheme}}",
-    "language": "Language: {{language}}",
-    "tradeOpen": "📈 TRADE ▲",
-    "tradeClosed": "📈 TRADE ▼",
-    "github": "🐙 GitHub"
-  },
-  "qa": {
-    "performance": "Performance",
-    "accessibility": "Accessibility",
-    "bestPractices": "Best Practices",
-    "seo": "SEO",
-    "noScores": "No scores available",
-    "lighthouseReport": "Lighthouse Report",
-    "passing": "Passing",
-    "failing": "Failing",
-    "clickFullReport": "Click for full report",
-    "e2eTests": "E2E Tests (Playwright)",
-    "status": "Status",
-    "allTestsPassing": "All tests passing",
-    "testsFailing": "Tests failing",
-    "chromiumLatest": "Chromium · Latest on main",
-    "statements": "Statements",
-    "branches": "Branches",
-    "functions": "Functions",
-    "lines": "Lines",
-    "noMetrics": "No metrics available",
-    "testCoverage": "Test Coverage",
-    "v8Provider": "v8 provider",
-    "clickCIDetails": "Click for CI run details"
-  },
-  "window": {
-    "minimize": "Minimize window",
-    "maximize": "Maximize window",
-    "close": "Close window"
-  },
-  "taskbar": {
-    "userName": "Dana",
-    "userAlt": "User",
-    "logOff": "Log Off",
-    "shutDown": "Shut Down",
-    "changelog": "changelog",
-    "staging": "STAGING",
-    "goToProduction": "Production",
-    "goToStaging": "Staging",
-    "fileExplorer": "File Explorer",
-    "terminal": "Terminal",
-    "achievements": "Achievements",
-    "pinball": "Pinball",
-    "felixgpt": "FelixGPT",
-    "frontier": "FRONTIER",
-    "customize": "Customize",
-    "careerDev": "Career Development",
-    "about": "About",
-    "projects": "Projects",
-    "resume": "Resume",
-    "links": "Links",
-    "guestbook": "Guestbook",
-    "locked": "(locked)",
-    "lockedTooltip": "Win a hacking run to unlock",
-    "reset": "🔄 Reset",
-    "resetTooltip": "Erase all saved progress",
-    "resetTitle": "⚠️ Reset All Data",
-    "resetMessage": "This will permanently erase all progress, achievements, market game state, filesystem edits, and preferences. This cannot be undone.",
-    "resetCancel": "Cancel",
-    "resetConfirm": "Erase Everything"
-  },
-  "startMenu": {
-    "programs": {
-      "browser1": "Internet Exploder",
-      "browser2": "Netscape Navigator 7.0 (IE Mode)",
-      "browser3": "The Web.exe",
-      "email1": "Outlook Distress",
-      "email2": "Microsoft Outcast Express",
-      "email3": "Mail (broken)",
-      "media1": "Windows Media Destroyer",
-      "media2": "RealPlayer (fake)",
-      "media3": "Winamp 2.91 (v5.8)",
-      "chat1": "MSN Messenger (AIM)",
-      "chat2": "ICQ/AIM/MSN/Yahoo (none)",
-      "chat3": "Chat.dll",
-      "game1": "3D Pinball (2D)",
-      "game2": "Space Cadet Pinball (broken)",
-      "game3": "Minesweeper (pinball mode)"
+    "fileExplorer": {
+        "up": "Up",
+        "fileFolder": "File Folder",
+        "application": "Application",
+        "shortcut": "Shortcut",
+        "file": "File",
+        "edit": "Edit",
+        "viewSource": "View source",
+        "open": "Open",
+        "view": "View"
     },
-    "folders": {
-      "docs1": "My Documents",
-      "docs2": "Your Documents",
-      "docs3": "Someone's Documents",
-      "docs4": "C:\\DOCS~1",
-      "pics1": "My Pictures",
-      "pics2": "My Pictures (empty)",
-      "pics3": "Pictures (missing)",
-      "pics4": "*.jpg",
-      "music1": "My Music",
-      "music2": "My Music (silent)",
-      "music3": "Audio Files (corrupt)",
-      "music4": "Sounds.wav",
-      "computer1": "My Computer",
-      "computer2": "This Computer",
-      "computer3": "A Computer",
-      "computer4": "Computer (probably)",
-      "control1": "Control Panel",
-      "control2": "Control Pannel",
-      "control3": "Settings.cpl",
-      "control4": "System32 (friendly mode)"
+    "terminal": {
+        "header": "HACKTERM v1.0 - UNAUTHORIZED ACCESS DETECTED",
+        "helpPrompt": "Type 'help' for available commands.",
+        "prompt": "? "
+    },
+    "terminalCommands": {
+        "availableCommands": "Available commands:",
+        "navigation": "Navigation:",
+        "files": "Files:",
+        "programs": "Programs:",
+        "utilities": "Utilities:",
+        "tip": "Tip:",
+        "usageCat": "Usage: cat [-n] <filename>",
+        "binaryFile": "[Binary file - use 'open {{filename}}' to run]",
+        "emptyFile": "[Empty file]",
+        "usageOpen": "Usage: open <filename>",
+        "cannotOpen": "Cannot open: {{filename}}",
+        "opening": "[Opening {{filename}}...]",
+        "usageEdit": "Usage: edit <filename>",
+        "accessDenied": "Access denied: {{filename}} is read-only",
+        "usageWelt": "Usage: welt [--grund] <filename>",
+        "usageWeltGrund": "Usage: welt --grund <filename>",
+        "usageGrund": "Usage: grund <filename>",
+        "emptyFileEdit": "Empty file: {{filename}}",
+        "whoamiOutput": "DANA\\Guest\n\nUser: Guest\nHome: 3:\\Users\\Dana\nTerminal: HACKTERM v1.0",
+        "systemFault": "SYSTEM FAULT: {{message}}",
+        "weltError": "WELT ERROR{{lineInfo}}: {{message}}",
+        "grundError": "GRUND ERROR{{lineInfo}}: {{message}}",
+        "weltCompileError": "WELT COMPILE ERROR{{lineInfo}}: {{message}}",
+        "notRecognized": "'{{command}}' is not recognized as an internal or external command,\noperable program or batch file.",
+        "directoryOf": " Directory of {{path}}",
+        "launching": "[Launching {{filename}}...]",
+        "dir": "<DIR> ",
+        "exe": "<EXE> ",
+        "lnk": "<LNK> ",
+        "testRunnerTitle": "WELT Test Runner v1.0",
+        "testRunnerSeparator": "=====================",
+        "noFiles": "No files in current directory.",
+        "integrityFailed": "INTEGRITY CHECK FAILED",
+        "tampered": "  TAMPERED: {{file}}",
+        "testFilesModified": "Test files must not be modified.",
+        "runReset": "Run reset.exe to restore originals.",
+        "pass": "  PASS  {{name}}",
+        "fail": "  FAIL  {{name}}: {{error}}",
+        "allTestsPassed": "  ALL TESTS PASSED",
+        "dieWelt": "Die Welt als Wille und Vorstellung.",
+        "mastered": "You have mastered the WELT language.",
+        "exercisesPassed": "{{passed}}/{{total}} exercises passed.",
+        "resetting": "Resetting exercises...",
+        "restored": "  Restored {{file}}",
+        "allRestored": "All exercises and system files restored."
+    },
+    "terminalEditor": {
+        "shortcuts": "^S Save  ^Q Quit",
+        "title": "EDIT - {{filename}}{{dirtyMarker}}",
+        "position": "Ln {{line}}, Col {{col}}",
+        "cannotEditDir": "Cannot edit a directory: {{filename}}",
+        "freakgpt": "🔥 FreakGPT",
+        "freakgptTooltip": "the gpt that gets a little freaky",
+        "felixgptLocked": "🔒 FelixGPT",
+        "felixgptLockedTooltip": "Win a hacking run to unlock",
+        "felixgpt": "🐱 FelixGPT",
+        "felixgptTooltip": "meow",
+        "generating": "🔥 Generating...",
+        "freakGreet": "🔥 FreakGPT: Hey there, gorgeous. 😏",
+        "freakDone": "🔥 FreakGPT: All done, hot stuff. 😘",
+        "freakContext": "🔥 FreakGPT: Adding some context... 🤔",
+        "unsavedChanges": "Unsaved changes! ^Q again to discard, ^S to save",
+        "modified": " [modified]",
+        "saveFailed": "Save failed: {{error}}",
+        "saved": "Saved {{filename}} ({{lineCount}} lines)"
+    },
+    "filesystem": {
+        "invalidPath": "Invalid path: {{path}}",
+        "pathNotFound": "The system cannot find the path specified: {{path}}",
+        "notADirectory": "Not a directory: {{path}}",
+        "cannotList": "Cannot list: not a directory",
+        "fileNotFound": "File not found: {{path}}",
+        "isADirectory": "{{path}} is a directory",
+        "fileSizeLimit": "File exceeds {{limit}} byte limit",
+        "dirNotFound": "Directory not found: {{path}}",
+        "fileExists": "File already exists: {{name}}",
+        "notFound": "Not found: {{path}}",
+        "dirNotEmpty": "Directory not empty: {{path}}",
+        "parentNotFound": "Parent directory not found",
+        "alreadyExists": "Already exists: {{name}}"
+    },
+    "commodityExchange": {
+        "ui": {
+            "title": "COMMODITY EXCHANGE TERMINAL",
+            "close": "×",
+            "portfolio": "PORTFOLIO",
+            "production": "PRODUCTION",
+            "improvements": "IMPROVEMENTS",
+            "marketOperations": "MARKET OPERATIONS",
+            "buy": "BUY",
+            "sell": "SELL",
+            "sellAll": "SELL ALL",
+            "deploy": "DEPLOY",
+            "acquire": "ACQUIRE",
+            "execute": "EXECUTE",
+            "installed": "INSTALLED",
+            "cooldown": "COOLDOWN",
+            "qty": "Qty",
+            "avgCost": "Avg Cost",
+            "pl": "P/L",
+            "tick": "tick",
+            "deployed": "deployed",
+            "noHoldings": "No holdings. Purchase commodities to begin trading.",
+            "unlockAt": "Unlock at ${{threshold}} lifetime earnings",
+            "phaseLocked": "🔒 {{name}}",
+            "phaseEarningsHint": "Earn {{threshold}} in lifetime earnings to unlock",
+            "phase5Hint": "Requires: 1st Prestige · Level 8 · 3 hacking wins"
+        },
+        "commodities": {
+            "EMAIL": {
+                "name": "Email Databases",
+                "description": "Verified opt-in addresses. Updated daily."
+            },
+            "ADS": {
+                "name": "Banner Impressions",
+                "description": "Premium 468x60 ad placements."
+            },
+            "DOM": {
+                "name": ".com Domains",
+                "description": "Pre-registered premium domain names."
+            },
+            "BW": {
+                "name": "Bandwidth",
+                "description": "Dedicated T1 line capacity. 1.544 Mbps."
+            },
+            "SOFT": {
+                "name": "Software Licenses",
+                "description": "Enterprise volume licensing. Shrinkwrap ready."
+            },
+            "VC": {
+                "name": "Venture Capital",
+                "description": "Pre-IPO investment securities. Limited availability."
+            }
+        },
+        "factories": {
+            "list-builder": {
+                "name": "Automated List Builder",
+                "description": "Harvests verified email addresses 24/7. Results may vary."
+            },
+            "banner-exchange": {
+                "name": "Banner Exchange",
+                "description": "Rotating ad network. Impressions generated automatically."
+            },
+            "colocation-rack": {
+                "name": "Co-Location Rack",
+                "description": "Dedicated server hosting. Uptime not guaranteed."
+            },
+            "offshore-dev": {
+                "name": "Offshore Dev Team",
+                "description": "24-hour development cycle. Quality assurance pending."
+            }
+        },
+        "upgrades": {
+            "bulk-orders": {
+                "name": "Bulk Order Processing",
+                "description": "Execute trades in quantities of 10."
+            },
+            "limit-orders": {
+                "name": "Limit Order System",
+                "description": "Set a target price. Holdings sold automatically."
+            },
+            "trend-analysis": {
+                "name": "Trend Analysis Package",
+                "description": "Directional indicators overlaid on price charts."
+            },
+            "cpu-overclock": {
+                "name": "CPU Overclock",
+                "description": "Increase production cycle speed. May cause instability."
+            },
+            "quality-assurance": {
+                "name": "Quality Assurance",
+                "description": "Reduce output variance. Minimum yield guaranteed."
+            },
+            "supply-chain": {
+                "name": "Supply Chain Integration",
+                "description": "Convert surplus commodities into premium goods."
+            },
+            "insider-newsletter": {
+                "name": "Insider Newsletter",
+                "description": "Advance notice of market-moving events. 10 second lead time."
+            },
+            "analyst-reports": {
+                "name": "Analyst Reports",
+                "description": "Numerical trend strength indicators."
+            },
+            "moving-average": {
+                "name": "Moving Average Overlay",
+                "description": "Technical analysis tools for price chart."
+            }
+        },
+        "influence": {
+            "promo-campaign": {
+                "name": "Promotional Campaign",
+                "description": "Generate artificial demand for selected commodity."
+            },
+            "negative-press": {
+                "name": "Negative Press Release",
+                "description": "Temporarily depress market value of target commodity."
+            },
+            "pump-and-dump": {
+                "name": "Pump and Dump",
+                "description": "Coordinated price inflation with automated liquidation."
+            }
+        }
+    },
+    "welcome": {
+        "title": "★☆★ WELCOME TO DANA'S HOMEPAGE ★☆★",
+        "visitorCount": "You are visitor #",
+        "signGuestbook": "Don't forget to sign the guestbook!",
+        "altWelcome": "Welcome",
+        "taglineDesktop": "Welcome to my website! Feel free to explore by double-clicking the icons on the desktop.",
+        "taglineMobile": "Welcome to my website! Feel free to explore by tapping the icons.",
+        "ctaGuestbook": "📖 Sign my guestbook!",
+        "underConstruction": "🚧 UNDER CONSTRUCTION 🚧",
+        "footer": "Last updated: February 2026 | Made with ❤️"
+    },
+    "about": {
+        "title": "📝 About Me",
+        "altDana": "Dana",
+        "altFelix": "Felix",
+        "felixName": "Felix Ramon Vanderbilt 🐱",
+        "hello": "Hello!",
+        "bio": "Hi, my name is <strong>Dana</strong>. I'm a software engineer who lives in San Francisco.",
+        "interests": "Interests:",
+        "interestsList": "🏃 Running • 🚴 Cycling • 💻 Technology • 📚 Literature • 🤔 Philosophy",
+        "cat": "Cat:",
+        "catName": "🐱 <strong>Felix Ramon Vanderbilt</strong>",
+        "recentlyPlayed": "Recently Played (3mo):",
+        "loading": "Loading...",
+        "emailMe": "📧 Email me!"
+    },
+    "projects": {
+        "title": "📦 Projects",
+        "thisWebsite": "🌐 This Website",
+        "description": "Why don't you click, drag and use keyboard arrows on danadzik.com?",
+        "stack": "Stack:",
+        "viewSource": "📦 View Source on GitHub"
+    },
+    "resume": {
+        "name": "Dana Dzik",
+        "experience": "Experience",
+        "title": "Senior Software Engineer",
+        "company": "Volley · San Francisco, CA",
+        "dates": "2021 – Present",
+        "education": "Education",
+        "school": "University of Chicago",
+        "degree": "B.A. with Honors in Mathematics and Philosophy",
+        "location": "Chicago, IL"
+    },
+    "links": {
+        "title": "🔗 Links"
+    },
+    "guestbook": {
+        "title": "📖 Guestbook",
+        "signButton": "✍️ Sign the Guestbook!",
+        "loadingEntries": "Loading entries...",
+        "couldNotLoad": "Could not load entries",
+        "noEntries": "No entries yet. Be the first to sign!",
+        "noMessage": "(no message)"
+    },
+    "felixgpt": {
+        "title": "🐱 FelixGPT",
+        "status": "Online • Ready to assist",
+        "greeting": "Meow! I'm FelixGPT, your feline AI assistant. Ask me anything!",
+        "placeholder": "Type a message...",
+        "send": "Send"
+    },
+    "stats": {
+        "title": "📊 Site Statistics",
+        "subtitle": "Real-time analytics",
+        "loading": "Loading analytics...",
+        "totalViews": "Total Views",
+        "windowOpens": "Window Opens",
+        "viewHeatmap": "🔥 View Heatmap",
+        "conversionFunnel": "📈 Conversion Funnel",
+        "abTest": "🧪 A/B Test: Boot Screen Photo",
+        "abQuestion": "Which photo gets more engagement?",
+        "performance": "⚡ Performance",
+        "couldNotLoad": "Could not load stats",
+        "couldNotLoadAnalytics": "Could not load analytics",
+        "noABData": "No A/B test data yet"
+    },
+    "popups": {
+        "winner1": {
+            "title": "Congratulations!!!",
+            "headline": "🎉 YOU ARE THE 1,000,000th VISITOR! 🎉",
+            "body": "Click OK to claim your FREE iPod Nano!",
+            "btn1": "OK!!!",
+            "btn2": "Claim Later"
+        },
+        "winner2": {
+            "title": "You Won!!!",
+            "headline": "🎉 VISITOR #0x0F4240 DETECTED! 🎉",
+            "body": "You have been selected!",
+            "btn1": "Claim Prize",
+            "btn2": "Later"
+        },
+        "error1": {
+            "title": "System Error",
+            "headline": "💾 DOWNLOAD MORE RAM 💾",
+            "body": "Your computer is running low on memory (-3KB free).",
+            "btn1": "Download RAM",
+            "btn2": "Cancel"
+        },
+        "ad1": {
+            "title": "Local Singles",
+            "headline": "😍 HOT SINGLES IN YOUR AREA 😍",
+            "body": "Just 3 miles away!",
+            "btn1": "Meet Them",
+            "btn2": "No Thanks"
+        },
+        "ad2": {
+            "title": "Speed Up PC",
+            "headline": "🚀 YOUR PC IS RUNNING 340% TOO SLOW 🚀",
+            "body": "Download PCSpeedUp.scr to fix!",
+            "btn1": "Speed Up",
+            "btn2": "Stay Slow"
+        },
+        "bonus1": {
+            "title": "Special Offer!",
+            "headline": "🎁 CLAIM YOUR BUSINESS BONUS! 🎁",
+            "body": "You've been selected for a special promotional offer!",
+            "btn1": "CLAIM NOW!",
+            "btn2": "No Thanks"
+        },
+        "bonus2": {
+            "title": "Survey Complete!",
+            "headline": "📋 THANK YOU FOR YOUR FEEDBACK! 📋",
+            "body": "As a token of appreciation, here's a cash reward!",
+            "btn1": "Collect Reward",
+            "btn2": "Decline"
+        },
+        "bonus3": {
+            "title": "Lucky Winner!",
+            "headline": "🍀 YOU'VE WON A PRIZE! 🍀",
+            "body": "Click below to add funds to your account!",
+            "btn1": "Add to Account",
+            "btn2": "Maybe Later"
+        }
+    },
+    "widgets": {
+        "winamp": {
+            "title": "WINAMP",
+            "stopped": "STOPPED",
+            "playing": "PLAYING",
+            "paused": "PAUSED",
+            "time": "--/--",
+            "clickToStart": "Click to start playback...",
+            "previous": "Previous",
+            "play": "Play",
+            "pause": "Pause",
+            "stop": "Stop",
+            "next": "Next",
+            "minimize": "Minimize"
+        },
+        "lastfm": {
+            "title": "🎧 Recently Played (3mo)",
+            "loading": "Loading...",
+            "apiNotAvailable": "API not available",
+            "noData": "No data",
+            "offline": "Offline",
+            "couldNotLoad": "Could not load"
+        },
+        "strava": {
+            "title": "🏃 Strava",
+            "loading": "Loading activities...",
+            "unavailable": "Strava unavailable",
+            "noActivities": "No recent activities",
+            "bestRun": "🏃 Best Run (3mo)",
+            "bestRide": "🚴 Best Ride (3mo)",
+            "longestRide": "🚴 Longest Ride (3mo)"
+        },
+        "level": "Lv.{{level}}",
+        "levelTooltip": "Level {{level}} · {{totalXP}} XP · {{current}}/{{next}} to next"
+    },
+    "levelUp": {
+        "label": "LEVEL UP",
+        "hint": "Skill point available — open Career Development"
+    },
+    "mobile": {
+        "carrier": "Pferd"
+    },
+    "themeLabels": {
+        "win95": {
+            "startButton": "Start",
+            "startMenuTitle": "Programs",
+            "searchPlaceholder": "Ask Jeeves",
+            "fileManager": "Explorer"
+        },
+        "macClassic": {
+            "startMenuTitle": "Apple Menu",
+            "searchPlaceholder": "Sherlock",
+            "fileManager": "Finder",
+            "aboutMe": "About Me",
+            "projects": "Projects",
+            "resume": "Résumé",
+            "bookmarks": "Bookmarks",
+            "guestBook": "Guest Book",
+            "felixgpt": "FelixGPT",
+            "siteStats": "Site Statistics",
+            "crystalQuest": "Crystal Quest",
+            "terminal": "Terminal"
+        },
+        "apple2": {
+            "startButton": "]",
+            "startMenuTitle": "CATALOG",
+            "searchPlaceholder": "SEARCH:",
+            "fileManager": "CATALOG"
+        },
+        "c64": {
+            "startButton": "RUN",
+            "startMenuTitle": "LOAD",
+            "fileManager": "DIRECTORY"
+        }
+    },
+    "achievements": {
+        "first-trade": {
+            "name": "Rookie Numbers",
+            "description": "Execute your first trade."
+        },
+        "penny-trader": {
+            "name": "Pink Sheet",
+            "description": "Earn $1 in lifetime earnings."
+        },
+        "small-business": {
+            "name": "Mom 'n' Pop",
+            "description": "Earn $10 in lifetime earnings."
+        },
+        "going-concern": {
+            "name": "Going Concern",
+            "description": "Earn $100 in lifetime earnings."
+        },
+        "dot-com-darling": {
+            "name": "Unrealized Potential",
+            "description": "Earn $1,000 in lifetime earnings."
+        },
+        "irrational-exuberance": {
+            "name": "Technological Magnate",
+            "description": "Earn $10,000 in lifetime earnings."
+        },
+        "fire-sale": {
+            "name": "It's a Fire Sale",
+            "description": "Buy during a bear market."
+        },
+        "first-out-the-door": {
+            "name": "First Out the Door, That's Not Panicking",
+            "description": "Sell when price exceeds 5x base value."
+        },
+        "who-are-we-selling-to": {
+            "name": "Who Are We Selling This To",
+            "description": "Hold all commodities simultaneously."
+        },
+        "factory-floor": {
+            "name": "Factory Floor",
+            "description": "Deploy your first factory."
+        },
+        "industrialist": {
+            "name": "Industrialist",
+            "description": "Deploy all factory types."
+        },
+        "assembly-line": {
+            "name": "Assembly Line",
+            "description": "Have 5 or more factories deployed."
+        },
+        "wasnt-brains": {
+            "name": "It Wasn't Brains That Got Me Here",
+            "description": "Own every upgrade."
+        },
+        "speak-to-a-retriever": {
+            "name": "Speak As You Might to a Golden Retriever",
+            "description": "Execute all influence operations."
+        },
+        "could-be-wrong": {
+            "name": "Your Entire Operation Could Be Wrong",
+            "description": "Corner the market on any commodity."
+        },
+        "phase-2": {
+            "name": "Phase 2",
+            "description": "Unlock the Production phase."
+        },
+        "phase-3": {
+            "name": "Phase 3",
+            "description": "Unlock the Improvements phase."
+        },
+        "phase-4": {
+            "name": "Phase 4",
+            "description": "Unlock the Market Operations phase."
+        },
+        "all-commodities": {
+            "name": "Day Trader",
+            "description": "Unlock all commodities."
+        },
+        "limit-filled": {
+            "name": "Limit Filled",
+            "description": "Have a limit order fill automatically."
+        },
+        "calm-mode": {
+            "name": "Business and Meetings are Important",
+            "description": "Enable calm mode."
+        },
+        "explorer": {
+            "name": "Internet Explorer",
+            "description": "Open every window type."
+        },
+        "interior-decorator": {
+            "name": "Eye for Style",
+            "description": "Try all 4 themes."
+        },
+        "dark-mode": {
+            "name": "Dark Mode",
+            "description": "Switch to dark mode."
+        },
+        "polyglot": {
+            "name": "Polyglot",
+            "description": "Try 4 or more languages."
+        },
+        "tourist": {
+            "name": "Tourist",
+            "description": "Visit About, Projects, Resume, and Links."
+        },
+        "archivist": {
+            "name": "Sysadmin",
+            "description": "Navigate to 3:\\DAS."
+        },
+        "syslog": { "name": "Syslog", "description": "Read syslog.txt." },
+        "readme": { "name": "RTFM", "description": "Read the WELT manual." },
+        "hacker": {
+            "name": "I'm In",
+            "description": "Run your first terminal command."
+        },
+        "author": {
+            "name": "Author",
+            "description": "Save a file with the editor."
+        },
+        "programmer": {
+            "name": "Programmer",
+            "description": "Run a WELT program."
+        },
+        "navigator": {
+            "name": "Navigator",
+            "description": "Use cd to visit 5 different directories."
+        },
+        "choo-choo": {
+            "name": "Choo Choo",
+            "description": "Run the sl command."
+        },
+        "guest": { "name": "Guest", "description": "Open the guestbook." },
+        "signed": {
+            "name": "H.A.G.S.",
+            "description": "Click the Sign the Guestbook button."
+        },
+        "cat-person": {
+            "name": "Cat Person",
+            "description": "Send 5 messages to FelixGPT."
+        },
+        "meow": { "name": "Cat Whisperer", "description": "Meow at FelixGPT." },
+        "pinball-wizard": {
+            "name": "Pinball Wizard",
+            "description": "Score 1,000 points in pinball."
+        },
+        "high-roller": {
+            "name": "High Roller",
+            "description": "Score 5,000 points in pinball."
+        },
+        "target-practice": {
+            "name": "Target Practice",
+            "description": "Hit all 4 targets in a single game."
+        },
+        "bounty-hunter": {
+            "name": "Bounty Hunter",
+            "description": "Score 10,000 points in pinball."
+        },
+        "welt-beginner": {
+            "name": "Hello World",
+            "description": "Pass your first exercise."
+        },
+        "welt-intermediate": {
+            "name": "Vorstellung",
+            "description": "Pass 3 exercises."
+        },
+        "welt-advanced": {
+            "name": "Ding an Sich",
+            "description": "Pass 5 exercises."
+        },
+        "welt-master": { "name": "Za Warudo", "description": "Pass Die Welt." },
+        "nibelung": { "name": "Nibelung", "description": "Forge the Ring." },
+        "erlosung": {
+            "name": "Erlösung",
+            "description": "Pass all exercises."
+        },
+        "grund-compiled": {
+            "name": "Grundlegung",
+            "description": "Compile a WELT program to GRUND."
+        },
+        "grund-executed": {
+            "name": "Sufficient Reason",
+            "description": "Run a GRUND program."
+        },
+        "ring-overflow": {
+            "name": "Wheel of Ixion",
+            "description": "Overflow the ring buffer."
+        },
+        "ring-cycle": {
+            "name": "Eternal Return",
+            "description": "Complete a full ring rotation."
+        },
+        "ring-spin": {
+            "name": "Wheel of Fortune",
+            "description": "Overwrite every slot in a full ring."
+        },
+        "thermal-protection": {
+            "name": "Thermal Protection",
+            "description": "Trigger WELT thermal protection."
+        },
+        "suffering": {
+            "name": "All Life Is Suffering",
+            "description": "Become enlightened."
+        },
+        "freakgpt": {
+            "name": "Altman Winklevossed Me in Q4 2025",
+            "description": "Use FreakGPT to fulfill your requests. 😩"
+        },
+        "keyboard-cat": {
+            "name": "Sitting on the Keyboard",
+            "description": "Ask FelixGPT for coding help."
+        },
+        "popup-enjoyer": {
+            "name": "Nigerian Prince-Consort",
+            "description": "Claim 5 bonus popups."
+        },
+        "y2k-survivor": {
+            "name": "Y2K Survivor",
+            "description": "Have a session running for 30 minutes."
+        },
+        "big-spender": {
+            "name": "Money Moves",
+            "description": "Run up a $0.001 normalized session cost."
+        },
+        "whale": {
+            "name": "Paper Chaser",
+            "description": "Run up a $0.002 normalized session cost."
+        },
+        "leviathan": {
+            "name": "Leviathan",
+            "description": "Run up a $0.003 normalized session cost."
+        },
+        "qa-inspector": {
+            "name": "Works on My Machine",
+            "description": "Click a test report badge to view CI results."
+        },
+        "first-draft": {
+            "name": "First Draft",
+            "description": "Complete your first hacking run."
+        },
+        "posse-up": { "name": "Posse Up", "description": "Win a hacking run." },
+        "faction-recruit": {
+            "name": "Faction Recruit",
+            "description": "Unlock your first faction unit."
+        },
+        "full-spiral": {
+            "name": "Full Spiral",
+            "description": "Complete the faction unlock spiral."
+        },
+        "no-drifters": {
+            "name": "No Drifters",
+            "description": "Win a run without any Drifter units."
+        },
+        "triple-threat": {
+            "name": "Triple Threat",
+            "description": "Level a unit to Level 3 in a single run."
+        },
+        "ive-been-wrong": {
+            "name": "If People Want Me to Say It, I've Been Wrong",
+            "description": "Prestige for the first time."
+        },
+        "doesnt-matter-what-floor": {
+            "name": "Doesn't Matter What Floor They're On",
+            "description": "Prestige 5 times."
+        },
+        "hindsight-shopper": {
+            "name": "Hindsight Shopper",
+            "description": "Purchase your first Hindsight upgrade."
+        },
+        "tell-them-theyll-be-ok": {
+            "name": "Someone to Tell Them They're Going to Be OK",
+            "description": "Accumulate 50 Hindsight currency."
+        },
+        "career-starter": {
+            "name": "Career Starter",
+            "description": "Choose your first career path."
+        },
+        "career-switcher": {
+            "name": "Pivot",
+            "description": "Switch careers."
+        },
+        "skill-tree-novice": {
+            "name": "Budding Professional",
+            "description": "Unlock 5 skill tree nodes."
+        },
+        "skill-tree-master": {
+            "name": "Career Completionist",
+            "description": "Unlock 15 skill tree nodes."
+        },
+        "renaissance": {
+            "name": "Renaissance",
+            "description": "Reach level 5 and complete a hacking run."
+        },
+        "full-stack": {
+            "name": "Full Stack",
+            "description": "Prestige, win a hacking run, and choose a career."
+        },
+        "that-ones-a-person": {
+            "name": "So That One's a Person",
+            "description": "Hire your first employee."
+        },
+        "we-make-nothing": {
+            "name": "Look at What We Do, We Make Nothing",
+            "description": "Fill every slot in the org chart."
+        },
+        "you-dont-get-to-choose": {
+            "name": "You Don't Get to Choose",
+            "description": "Fire 3 employees."
+        },
+        "reorg": {
+            "name": "Reorg",
+            "description": "Reorganize the org chart."
+        },
+        "greenhorn": {
+            "name": "Greenhorn",
+            "description": "Win your first hacking run."
+        },
+        "deputy": { "name": "Deputy", "description": "Win 5 hacking runs." },
+        "sheriff": { "name": "Sheriff", "description": "Win 15 hacking runs." },
+        "marshal": { "name": "Marshal", "description": "Win 50 hacking runs." },
+        "level-5": {
+            "name": "Level 5",
+            "description": "Reach player level 5."
+        },
+        "level-10": {
+            "name": "Level 10",
+            "description": "Reach player level 10."
+        },
+        "level-20": {
+            "name": "Level 20",
+            "description": "Reach player level 20."
+        },
+        "level-35": {
+            "name": "Level 35",
+            "description": "Reach player level 35."
+        },
+        "level-50": {
+            "name": "Level 50",
+            "description": "Reach player level 50."
+        },
+        "phase-5": {
+            "name": "Phase 5",
+            "description": "Unlock the Human Resources phase."
+        },
+        "win-streak": {
+            "name": "Hot Streak",
+            "description": "Win 3 hacking runs in a row."
+        },
+        "serial-pivoter": {
+            "name": "Serial Pivoter",
+            "description": "Switch careers 5 times."
+        },
+        "overqualified": {
+            "name": "Overqualified",
+            "description": "Max out any career branch."
+        },
+        "executive-material": {
+            "name": "Executive Material",
+            "description": "Unlock the Executive career branch."
+        },
+        "pieces-of-paper": {
+            "name": "Pieces of Paper With Pictures On It",
+            "description": "Buy every Hindsight upgrade."
+        },
+        "syndicate-complete": {
+            "name": "Syndicate Sweep",
+            "description": "Collect all Quickdraw faction units."
+        },
+        "deputies-complete": {
+            "name": "Badge Collector",
+            "description": "Collect all Deputies faction units."
+        },
+        "collective-complete": {
+            "name": "Clockwork Connoisseur",
+            "description": "Collect all Clockwork faction units."
+        },
+        "prospectors-complete": {
+            "name": "Ghost Town",
+            "description": "Collect all Prospectors faction units."
+        },
+        "vertical-integration": {
+            "name": "Vertical Integration",
+            "description": "Have unlocked nodes in all three main career branches."
+        },
+        "exit-interview": {
+            "name": "Exit Interview",
+            "description": "Switch careers during the same session as a prestige."
+        },
+        "phase-6": {
+            "name": "Phase 6",
+            "description": "Unlock the Structured Products Desk."
+        },
+        "its-just-money": {
+            "name": "It's Just Money, It's Made Up",
+            "description": "Mint your first Digital Asset Security."
+        },
+        "be-first": {
+            "name": "Be First, Be Smarter, Or Cheat",
+            "description": "Reach AAA credit rating."
+        },
+        "just-silence": {
+            "name": "I Don't Hear a Thing, Just Silence",
+            "description": "Recover to A+ within 100 ticks of a margin event."
+        },
+        "music-stops": {
+            "name": "The Music Is About to Stop",
+            "description": "Have 6+ active DAS simultaneously."
+        },
+        "it-goes-quickly": {
+            "name": "It Goes Quite Quickly",
+            "description": "Borrow at 90%+ of capacity."
+        },
+        "rainy-day": {
+            "name": "400 Away for a Rainy Day",
+            "description": "Fully repay all debt with 3+ DAS performing."
+        }
     }
-  },
-  "windowManager": {
-    "welcomeTitle": "Welcome to Dana's Desktop",
-    "aboutTitle": "about_me.doc",
-    "projectsTitle": "cool_projects.zip",
-    "resumeTitle": "resume.pdf",
-    "linksTitle": "Bookmarks",
-    "guestbookTitle": "guestbook.exe",
-    "felixgptTitle": "FelixGPT",
-    "statsTitle": "Site Statistics",
-    "pinballTitle": "Pinball.exe",
-    "terminalTitle": "C:\\HACKTERM.EXE",
-    "explorerTitle": "File Explorer"
-  },
-  "fileExplorer": {
-    "up": "Up",
-    "fileFolder": "File Folder",
-    "application": "Application",
-    "shortcut": "Shortcut",
-    "file": "File",
-    "edit": "Edit",
-    "viewSource": "View source",
-    "open": "Open",
-    "view": "View"
-  },
-  "terminal": {
-    "header": "HACKTERM v1.0 - UNAUTHORIZED ACCESS DETECTED",
-    "helpPrompt": "Type 'help' for available commands.",
-    "prompt": "? "
-  },
-  "terminalCommands": {
-    "availableCommands": "Available commands:",
-    "navigation": "Navigation:",
-    "files": "Files:",
-    "programs": "Programs:",
-    "utilities": "Utilities:",
-    "tip": "Tip:",
-    "usageCat": "Usage: cat [-n] <filename>",
-    "binaryFile": "[Binary file - use 'open {{filename}}' to run]",
-    "emptyFile": "[Empty file]",
-    "usageOpen": "Usage: open <filename>",
-    "cannotOpen": "Cannot open: {{filename}}",
-    "opening": "[Opening {{filename}}...]",
-    "usageEdit": "Usage: edit <filename>",
-    "accessDenied": "Access denied: {{filename}} is read-only",
-    "usageWelt": "Usage: welt [--grund] <filename>",
-    "usageWeltGrund": "Usage: welt --grund <filename>",
-    "usageGrund": "Usage: grund <filename>",
-    "emptyFileEdit": "Empty file: {{filename}}",
-    "whoamiOutput": "DANA\\Guest\n\nUser: Guest\nHome: 3:\\Users\\Dana\nTerminal: HACKTERM v1.0",
-    "systemFault": "SYSTEM FAULT: {{message}}",
-    "weltError": "WELT ERROR{{lineInfo}}: {{message}}",
-    "grundError": "GRUND ERROR{{lineInfo}}: {{message}}",
-    "weltCompileError": "WELT COMPILE ERROR{{lineInfo}}: {{message}}",
-    "notRecognized": "'{{command}}' is not recognized as an internal or external command,\noperable program or batch file.",
-    "directoryOf": " Directory of {{path}}",
-    "launching": "[Launching {{filename}}...]",
-    "dir": "<DIR> ",
-    "exe": "<EXE> ",
-    "lnk": "<LNK> ",
-    "testRunnerTitle": "WELT Test Runner v1.0",
-    "testRunnerSeparator": "=====================",
-    "noFiles": "No files in current directory.",
-    "integrityFailed": "INTEGRITY CHECK FAILED",
-    "tampered": "  TAMPERED: {{file}}",
-    "testFilesModified": "Test files must not be modified.",
-    "runReset": "Run reset.exe to restore originals.",
-    "pass": "  PASS  {{name}}",
-    "fail": "  FAIL  {{name}}: {{error}}",
-    "allTestsPassed": "  ALL TESTS PASSED",
-    "dieWelt": "Die Welt als Wille und Vorstellung.",
-    "mastered": "You have mastered the WELT language.",
-    "exercisesPassed": "{{passed}}/{{total}} exercises passed.",
-    "resetting": "Resetting exercises...",
-    "restored": "  Restored {{file}}",
-    "allRestored": "All exercises and system files restored."
-  },
-  "terminalEditor": {
-    "shortcuts": "^S Save  ^Q Quit",
-    "title": "EDIT - {{filename}}{{dirtyMarker}}",
-    "position": "Ln {{line}}, Col {{col}}",
-    "cannotEditDir": "Cannot edit a directory: {{filename}}",
-    "freakgpt": "🔥 FreakGPT",
-    "freakgptTooltip": "the gpt that gets a little freaky",
-    "felixgptLocked": "🔒 FelixGPT",
-    "felixgptLockedTooltip": "Win a hacking run to unlock",
-    "felixgpt": "🐱 FelixGPT",
-    "felixgptTooltip": "meow",
-    "generating": "🔥 Generating...",
-    "freakGreet": "🔥 FreakGPT: Hey there, gorgeous. 😏",
-    "freakDone": "🔥 FreakGPT: All done, hot stuff. 😘",
-    "freakContext": "🔥 FreakGPT: Adding some context... 🤔",
-    "unsavedChanges": "Unsaved changes! ^Q again to discard, ^S to save",
-    "modified": " [modified]",
-    "saveFailed": "Save failed: {{error}}",
-    "saved": "Saved {{filename}} ({{lineCount}} lines)"
-  },
-  "filesystem": {
-    "invalidPath": "Invalid path: {{path}}",
-    "pathNotFound": "The system cannot find the path specified: {{path}}",
-    "notADirectory": "Not a directory: {{path}}",
-    "cannotList": "Cannot list: not a directory",
-    "fileNotFound": "File not found: {{path}}",
-    "isADirectory": "{{path}} is a directory",
-    "fileSizeLimit": "File exceeds {{limit}} byte limit",
-    "dirNotFound": "Directory not found: {{path}}",
-    "fileExists": "File already exists: {{name}}",
-    "notFound": "Not found: {{path}}",
-    "dirNotEmpty": "Directory not empty: {{path}}",
-    "parentNotFound": "Parent directory not found",
-    "alreadyExists": "Already exists: {{name}}"
-  },
-  "commodityExchange": {
-    "ui": {
-      "title": "COMMODITY EXCHANGE TERMINAL",
-      "close": "×",
-      "portfolio": "PORTFOLIO",
-      "production": "PRODUCTION",
-      "improvements": "IMPROVEMENTS",
-      "marketOperations": "MARKET OPERATIONS",
-      "buy": "BUY",
-      "sell": "SELL",
-      "sellAll": "SELL ALL",
-      "deploy": "DEPLOY",
-      "acquire": "ACQUIRE",
-      "execute": "EXECUTE",
-      "installed": "INSTALLED",
-      "cooldown": "COOLDOWN",
-      "qty": "Qty",
-      "avgCost": "Avg Cost",
-      "pl": "P/L",
-      "tick": "tick",
-      "deployed": "deployed",
-      "noHoldings": "No holdings. Purchase commodities to begin trading.",
-      "unlockAt": "Unlock at ${{threshold}} lifetime earnings",
-      "phaseLocked": "🔒 {{name}}",
-      "phaseEarningsHint": "Earn {{threshold}} in lifetime earnings to unlock",
-      "phase5Hint": "Requires: 1st Prestige · Level 8 · 3 hacking wins"
-    },
-    "commodities": {
-      "EMAIL": {
-        "name": "Email Databases",
-        "description": "Verified opt-in addresses. Updated daily."
-      },
-      "ADS": {
-        "name": "Banner Impressions",
-        "description": "Premium 468x60 ad placements."
-      },
-      "DOM": {
-        "name": ".com Domains",
-        "description": "Pre-registered premium domain names."
-      },
-      "BW": {
-        "name": "Bandwidth",
-        "description": "Dedicated T1 line capacity. 1.544 Mbps."
-      },
-      "SOFT": {
-        "name": "Software Licenses",
-        "description": "Enterprise volume licensing. Shrinkwrap ready."
-      },
-      "VC": {
-        "name": "Venture Capital",
-        "description": "Pre-IPO investment securities. Limited availability."
-      }
-    },
-    "factories": {
-      "list-builder": {
-        "name": "Automated List Builder",
-        "description": "Harvests verified email addresses 24/7. Results may vary."
-      },
-      "banner-exchange": {
-        "name": "Banner Exchange",
-        "description": "Rotating ad network. Impressions generated automatically."
-      },
-      "colocation-rack": {
-        "name": "Co-Location Rack",
-        "description": "Dedicated server hosting. Uptime not guaranteed."
-      },
-      "offshore-dev": {
-        "name": "Offshore Dev Team",
-        "description": "24-hour development cycle. Quality assurance pending."
-      }
-    },
-    "upgrades": {
-      "bulk-orders": {
-        "name": "Bulk Order Processing",
-        "description": "Execute trades in quantities of 10."
-      },
-      "limit-orders": {
-        "name": "Limit Order System",
-        "description": "Set a target price. Holdings sold automatically."
-      },
-      "trend-analysis": {
-        "name": "Trend Analysis Package",
-        "description": "Directional indicators overlaid on price charts."
-      },
-      "cpu-overclock": {
-        "name": "CPU Overclock",
-        "description": "Increase production cycle speed. May cause instability."
-      },
-      "quality-assurance": {
-        "name": "Quality Assurance",
-        "description": "Reduce output variance. Minimum yield guaranteed."
-      },
-      "supply-chain": {
-        "name": "Supply Chain Integration",
-        "description": "Convert surplus commodities into premium goods."
-      },
-      "insider-newsletter": {
-        "name": "Insider Newsletter",
-        "description": "Advance notice of market-moving events. 10 second lead time."
-      },
-      "analyst-reports": {
-        "name": "Analyst Reports",
-        "description": "Numerical trend strength indicators."
-      },
-      "moving-average": {
-        "name": "Moving Average Overlay",
-        "description": "Technical analysis tools for price chart."
-      }
-    },
-    "influence": {
-      "promo-campaign": {
-        "name": "Promotional Campaign",
-        "description": "Generate artificial demand for selected commodity."
-      },
-      "negative-press": {
-        "name": "Negative Press Release",
-        "description": "Temporarily depress market value of target commodity."
-      },
-      "pump-and-dump": {
-        "name": "Pump and Dump",
-        "description": "Coordinated price inflation with automated liquidation."
-      }
-    }
-  },
-  "welcome": {
-    "title": "★☆★ WELCOME TO DANA'S HOMEPAGE ★☆★",
-    "visitorCount": "You are visitor #",
-    "signGuestbook": "Don't forget to sign the guestbook!",
-    "altWelcome": "Welcome",
-    "taglineDesktop": "Welcome to my website! Feel free to explore by double-clicking the icons on the desktop.",
-    "taglineMobile": "Welcome to my website! Feel free to explore by tapping the icons.",
-    "ctaGuestbook": "📖 Sign my guestbook!",
-    "underConstruction": "🚧 UNDER CONSTRUCTION 🚧",
-    "footer": "Last updated: February 2026 | Made with ❤️"
-  },
-  "about": {
-    "title": "📝 About Me",
-    "altDana": "Dana",
-    "altFelix": "Felix",
-    "felixName": "Felix Ramon Vanderbilt 🐱",
-    "hello": "Hello!",
-    "bio": "Hi, my name is <strong>Dana</strong>. I'm a software engineer who lives in San Francisco.",
-    "interests": "Interests:",
-    "interestsList": "🏃 Running • 🚴 Cycling • 💻 Technology • 📚 Literature • 🤔 Philosophy",
-    "cat": "Cat:",
-    "catName": "🐱 <strong>Felix Ramon Vanderbilt</strong>",
-    "recentlyPlayed": "Recently Played (3mo):",
-    "loading": "Loading...",
-    "emailMe": "📧 Email me!"
-  },
-  "projects": {
-    "title": "📦 Projects",
-    "thisWebsite": "🌐 This Website",
-    "description": "You're looking at it!",
-    "stack": "Stack:",
-    "viewSource": "📦 View Source on GitHub"
-  },
-  "resume": {
-    "name": "Dana Dzik",
-    "experience": "Experience",
-    "title": "Senior Software Engineer",
-    "company": "Volley · San Francisco, CA",
-    "dates": "2021 – Present",
-    "education": "Education",
-    "school": "University of Chicago",
-    "degree": "B.A. with Honors in Mathematics and Philosophy",
-    "location": "Chicago, IL"
-  },
-  "links": {
-    "title": "🔗 Links"
-  },
-  "guestbook": {
-    "title": "📖 Guestbook",
-    "signButton": "✍️ Sign the Guestbook!",
-    "loadingEntries": "Loading entries...",
-    "couldNotLoad": "Could not load entries",
-    "noEntries": "No entries yet. Be the first to sign!",
-    "noMessage": "(no message)"
-  },
-  "felixgpt": {
-    "title": "🐱 FelixGPT",
-    "status": "Online • Ready to assist",
-    "greeting": "Meow! I'm FelixGPT, your feline AI assistant. Ask me anything!",
-    "placeholder": "Type a message...",
-    "send": "Send"
-  },
-  "stats": {
-    "title": "📊 Site Statistics",
-    "subtitle": "Real-time analytics",
-    "loading": "Loading analytics...",
-    "totalViews": "Total Views",
-    "windowOpens": "Window Opens",
-    "viewHeatmap": "🔥 View Heatmap",
-    "conversionFunnel": "📈 Conversion Funnel",
-    "abTest": "🧪 A/B Test: Boot Screen Photo",
-    "abQuestion": "Which photo gets more engagement?",
-    "performance": "⚡ Performance",
-    "couldNotLoad": "Could not load stats",
-    "couldNotLoadAnalytics": "Could not load analytics",
-    "noABData": "No A/B test data yet"
-  },
-  "popups": {
-    "winner1": {
-      "title": "Congratulations!!!",
-      "headline": "🎉 YOU ARE THE 1,000,000th VISITOR! 🎉",
-      "body": "Click OK to claim your FREE iPod Nano!",
-      "btn1": "OK!!!",
-      "btn2": "Claim Later"
-    },
-    "winner2": {
-      "title": "You Won!!!",
-      "headline": "🎉 VISITOR #0x0F4240 DETECTED! 🎉",
-      "body": "You have been selected!",
-      "btn1": "Claim Prize",
-      "btn2": "Later"
-    },
-    "error1": {
-      "title": "System Error",
-      "headline": "💾 DOWNLOAD MORE RAM 💾",
-      "body": "Your computer is running low on memory (-3KB free).",
-      "btn1": "Download RAM",
-      "btn2": "Cancel"
-    },
-    "ad1": {
-      "title": "Local Singles",
-      "headline": "😍 HOT SINGLES IN YOUR AREA 😍",
-      "body": "Just 3 miles away!",
-      "btn1": "Meet Them",
-      "btn2": "No Thanks"
-    },
-    "ad2": {
-      "title": "Speed Up PC",
-      "headline": "🚀 YOUR PC IS RUNNING 340% TOO SLOW 🚀",
-      "body": "Download PCSpeedUp.scr to fix!",
-      "btn1": "Speed Up",
-      "btn2": "Stay Slow"
-    },
-    "bonus1": {
-      "title": "Special Offer!",
-      "headline": "🎁 CLAIM YOUR BUSINESS BONUS! 🎁",
-      "body": "You've been selected for a special promotional offer!",
-      "btn1": "CLAIM NOW!",
-      "btn2": "No Thanks"
-    },
-    "bonus2": {
-      "title": "Survey Complete!",
-      "headline": "📋 THANK YOU FOR YOUR FEEDBACK! 📋",
-      "body": "As a token of appreciation, here's a cash reward!",
-      "btn1": "Collect Reward",
-      "btn2": "Decline"
-    },
-    "bonus3": {
-      "title": "Lucky Winner!",
-      "headline": "🍀 YOU'VE WON A PRIZE! 🍀",
-      "body": "Click below to add funds to your account!",
-      "btn1": "Add to Account",
-      "btn2": "Maybe Later"
-    }
-  },
-  "widgets": {
-    "winamp": {
-      "title": "WINAMP",
-      "stopped": "STOPPED",
-      "playing": "PLAYING",
-      "paused": "PAUSED",
-      "time": "--/--",
-      "clickToStart": "Click to start playback...",
-      "previous": "Previous",
-      "play": "Play",
-      "pause": "Pause",
-      "stop": "Stop",
-      "next": "Next",
-      "minimize": "Minimize"
-    },
-    "lastfm": {
-      "title": "🎧 Recently Played (3mo)",
-      "loading": "Loading...",
-      "apiNotAvailable": "API not available",
-      "noData": "No data",
-      "offline": "Offline",
-      "couldNotLoad": "Could not load"
-    },
-    "strava": {
-      "title": "🏃 Strava",
-      "loading": "Loading activities...",
-      "unavailable": "Strava unavailable",
-      "noActivities": "No recent activities",
-      "bestRun": "🏃 Best Run (3mo)",
-      "bestRide": "🚴 Best Ride (3mo)",
-      "longestRide": "🚴 Longest Ride (3mo)"
-    },
-    "level": "Lv.{{level}}",
-    "levelTooltip": "Level {{level}} · {{totalXP}} XP · {{current}}/{{next}} to next"
-  },
-  "levelUp": {
-    "label": "LEVEL UP",
-    "hint": "Skill point available — open Career Development"
-  },
-  "mobile": {
-    "carrier": "Pferd"
-  },
-  "themeLabels": {
-    "win95": {
-      "startButton": "Start",
-      "startMenuTitle": "Programs",
-      "searchPlaceholder": "Ask Jeeves",
-      "fileManager": "Explorer"
-    },
-    "macClassic": {
-      "startMenuTitle": "Apple Menu",
-      "searchPlaceholder": "Sherlock",
-      "fileManager": "Finder",
-      "aboutMe": "About Me",
-      "projects": "Projects",
-      "resume": "Résumé",
-      "bookmarks": "Bookmarks",
-      "guestBook": "Guest Book",
-      "felixgpt": "FelixGPT",
-      "siteStats": "Site Statistics",
-      "crystalQuest": "Crystal Quest",
-      "terminal": "Terminal"
-    },
-    "apple2": {
-      "startButton": "]",
-      "startMenuTitle": "CATALOG",
-      "searchPlaceholder": "SEARCH:",
-      "fileManager": "CATALOG"
-    },
-    "c64": {
-      "startButton": "RUN",
-      "startMenuTitle": "LOAD",
-      "fileManager": "DIRECTORY"
-    }
-  },
-  "achievements": {
-    "first-trade": { "name": "Rookie Numbers", "description": "Execute your first trade." },
-    "penny-trader": { "name": "Pink Sheet", "description": "Earn $1 in lifetime earnings." },
-    "small-business": { "name": "Mom 'n' Pop", "description": "Earn $10 in lifetime earnings." },
-    "going-concern": { "name": "Going Concern", "description": "Earn $100 in lifetime earnings." },
-    "dot-com-darling": { "name": "Unrealized Potential", "description": "Earn $1,000 in lifetime earnings." },
-    "irrational-exuberance": { "name": "Technological Magnate", "description": "Earn $10,000 in lifetime earnings." },
-    "fire-sale": { "name": "It's a Fire Sale", "description": "Buy during a bear market." },
-    "first-out-the-door": { "name": "First Out the Door, That's Not Panicking", "description": "Sell when price exceeds 5x base value." },
-    "who-are-we-selling-to": { "name": "Who Are We Selling This To", "description": "Hold all commodities simultaneously." },
-    "factory-floor": { "name": "Factory Floor", "description": "Deploy your first factory." },
-    "industrialist": { "name": "Industrialist", "description": "Deploy all factory types." },
-    "assembly-line": { "name": "Assembly Line", "description": "Have 5 or more factories deployed." },
-    "wasnt-brains": { "name": "It Wasn't Brains That Got Me Here", "description": "Own every upgrade." },
-    "speak-to-a-retriever": { "name": "Speak As You Might to a Golden Retriever", "description": "Execute all influence operations." },
-    "could-be-wrong": { "name": "Your Entire Operation Could Be Wrong", "description": "Corner the market on any commodity." },
-    "phase-2": { "name": "Phase 2", "description": "Unlock the Production phase." },
-    "phase-3": { "name": "Phase 3", "description": "Unlock the Improvements phase." },
-    "phase-4": { "name": "Phase 4", "description": "Unlock the Market Operations phase." },
-    "all-commodities": { "name": "Day Trader", "description": "Unlock all commodities." },
-    "limit-filled": { "name": "Limit Filled", "description": "Have a limit order fill automatically." },
-    "calm-mode": { "name": "Business and Meetings are Important", "description": "Enable calm mode." },
-    "explorer": { "name": "Internet Explorer", "description": "Open every window type." },
-    "interior-decorator": { "name": "Eye for Style", "description": "Try all 4 themes." },
-    "dark-mode": { "name": "Dark Mode", "description": "Switch to dark mode." },
-    "polyglot": { "name": "Polyglot", "description": "Try 4 or more languages." },
-    "tourist": { "name": "Tourist", "description": "Visit About, Projects, Resume, and Links." },
-    "archivist": { "name": "Sysadmin", "description": "Navigate to 3:\\DAS." },
-    "syslog": { "name": "Syslog", "description": "Read syslog.txt." },
-    "readme": { "name": "RTFM", "description": "Read the WELT manual." },
-    "hacker": { "name": "I'm In", "description": "Run your first terminal command." },
-    "author": { "name": "Author", "description": "Save a file with the editor." },
-    "programmer": { "name": "Programmer", "description": "Run a WELT program." },
-    "navigator": { "name": "Navigator", "description": "Use cd to visit 5 different directories." },
-    "choo-choo": { "name": "Choo Choo", "description": "Run the sl command." },
-    "guest": { "name": "Guest", "description": "Open the guestbook." },
-    "signed": { "name": "H.A.G.S.", "description": "Click the Sign the Guestbook button." },
-    "cat-person": { "name": "Cat Person", "description": "Send 5 messages to FelixGPT." },
-    "meow": { "name": "Cat Whisperer", "description": "Meow at FelixGPT." },
-    "pinball-wizard": { "name": "Pinball Wizard", "description": "Score 1,000 points in pinball." },
-    "high-roller": { "name": "High Roller", "description": "Score 5,000 points in pinball." },
-    "target-practice": { "name": "Target Practice", "description": "Hit all 4 targets in a single game." },
-    "bounty-hunter": { "name": "Bounty Hunter", "description": "Score 10,000 points in pinball." },
-    "welt-beginner": { "name": "Hello World", "description": "Pass your first exercise." },
-    "welt-intermediate": { "name": "Vorstellung", "description": "Pass 3 exercises." },
-    "welt-advanced": { "name": "Ding an Sich", "description": "Pass 5 exercises." },
-    "welt-master": { "name": "Za Warudo", "description": "Pass Die Welt." },
-    "nibelung": { "name": "Nibelung", "description": "Forge the Ring." },
-    "erlosung": { "name": "Erlösung", "description": "Pass all exercises." },
-    "grund-compiled": { "name": "Grundlegung", "description": "Compile a WELT program to GRUND." },
-    "grund-executed": { "name": "Sufficient Reason", "description": "Run a GRUND program." },
-    "ring-overflow": { "name": "Wheel of Ixion", "description": "Overflow the ring buffer." },
-    "ring-cycle": { "name": "Eternal Return", "description": "Complete a full ring rotation." },
-    "ring-spin": { "name": "Wheel of Fortune", "description": "Overwrite every slot in a full ring." },
-    "thermal-protection": { "name": "Thermal Protection", "description": "Trigger WELT thermal protection." },
-    "suffering": { "name": "All Life Is Suffering", "description": "Become enlightened." },
-    "freakgpt": { "name": "Altman Winklevossed Me in Q4 2025", "description": "Use FreakGPT to fulfill your requests. 😩" },
-    "keyboard-cat": { "name": "Sitting on the Keyboard", "description": "Ask FelixGPT for coding help." },
-    "popup-enjoyer": { "name": "Nigerian Prince-Consort", "description": "Claim 5 bonus popups." },
-    "y2k-survivor": { "name": "Y2K Survivor", "description": "Have a session running for 30 minutes." },
-    "big-spender": { "name": "Money Moves", "description": "Run up a $0.001 normalized session cost." },
-    "whale": { "name": "Paper Chaser", "description": "Run up a $0.002 normalized session cost." },
-    "leviathan": { "name": "Leviathan", "description": "Run up a $0.003 normalized session cost." },
-    "qa-inspector": { "name": "Works on My Machine", "description": "Click a test report badge to view CI results." },
-    "first-draft": { "name": "First Draft", "description": "Complete your first hacking run." },
-    "posse-up": { "name": "Posse Up", "description": "Win a hacking run." },
-    "faction-recruit": { "name": "Faction Recruit", "description": "Unlock your first faction unit." },
-    "full-spiral": { "name": "Full Spiral", "description": "Complete the faction unlock spiral." },
-    "no-drifters": { "name": "No Drifters", "description": "Win a run without any Drifter units." },
-    "triple-threat": { "name": "Triple Threat", "description": "Level a unit to Level 3 in a single run." },
-    "ive-been-wrong": { "name": "If People Want Me to Say It, I've Been Wrong", "description": "Prestige for the first time." },
-    "doesnt-matter-what-floor": { "name": "Doesn't Matter What Floor They're On", "description": "Prestige 5 times." },
-    "hindsight-shopper": { "name": "Hindsight Shopper", "description": "Purchase your first Hindsight upgrade." },
-    "tell-them-theyll-be-ok": { "name": "Someone to Tell Them They're Going to Be OK", "description": "Accumulate 50 Hindsight currency." },
-    "career-starter": { "name": "Career Starter", "description": "Choose your first career path." },
-    "career-switcher": { "name": "Pivot", "description": "Switch careers." },
-    "skill-tree-novice": { "name": "Budding Professional", "description": "Unlock 5 skill tree nodes." },
-    "skill-tree-master": { "name": "Career Completionist", "description": "Unlock 15 skill tree nodes." },
-    "renaissance": { "name": "Renaissance", "description": "Reach level 5 and complete a hacking run." },
-    "full-stack": { "name": "Full Stack", "description": "Prestige, win a hacking run, and choose a career." },
-    "that-ones-a-person": { "name": "So That One's a Person", "description": "Hire your first employee." },
-    "we-make-nothing": { "name": "Look at What We Do, We Make Nothing", "description": "Fill every slot in the org chart." },
-    "you-dont-get-to-choose": { "name": "You Don't Get to Choose", "description": "Fire 3 employees." },
-    "reorg": { "name": "Reorg", "description": "Reorganize the org chart." },
-    "greenhorn": { "name": "Greenhorn", "description": "Win your first hacking run." },
-    "deputy": { "name": "Deputy", "description": "Win 5 hacking runs." },
-    "sheriff": { "name": "Sheriff", "description": "Win 15 hacking runs." },
-    "marshal": { "name": "Marshal", "description": "Win 50 hacking runs." },
-    "level-5": { "name": "Level 5", "description": "Reach player level 5." },
-    "level-10": { "name": "Level 10", "description": "Reach player level 10." },
-    "level-20": { "name": "Level 20", "description": "Reach player level 20." },
-    "level-35": { "name": "Level 35", "description": "Reach player level 35." },
-    "level-50": { "name": "Level 50", "description": "Reach player level 50." },
-    "phase-5": { "name": "Phase 5", "description": "Unlock the Human Resources phase." },
-    "win-streak": { "name": "Hot Streak", "description": "Win 3 hacking runs in a row." },
-    "serial-pivoter": { "name": "Serial Pivoter", "description": "Switch careers 5 times." },
-    "overqualified": { "name": "Overqualified", "description": "Max out any career branch." },
-    "executive-material": { "name": "Executive Material", "description": "Unlock the Executive career branch." },
-    "pieces-of-paper": { "name": "Pieces of Paper With Pictures On It", "description": "Buy every Hindsight upgrade." },
-    "syndicate-complete": { "name": "Syndicate Sweep", "description": "Collect all Quickdraw faction units." },
-    "deputies-complete": { "name": "Badge Collector", "description": "Collect all Deputies faction units." },
-    "collective-complete": { "name": "Clockwork Connoisseur", "description": "Collect all Clockwork faction units." },
-    "prospectors-complete": { "name": "Ghost Town", "description": "Collect all Prospectors faction units." },
-    "vertical-integration": { "name": "Vertical Integration", "description": "Have unlocked nodes in all three main career branches." },
-    "exit-interview": { "name": "Exit Interview", "description": "Switch careers during the same session as a prestige." },
-    "phase-6": { "name": "Phase 6", "description": "Unlock the Structured Products Desk." },
-    "its-just-money": { "name": "It's Just Money, It's Made Up", "description": "Mint your first Digital Asset Security." },
-    "be-first": { "name": "Be First, Be Smarter, Or Cheat", "description": "Reach AAA credit rating." },
-    "just-silence": { "name": "I Don't Hear a Thing, Just Silence", "description": "Recover to A+ within 100 ticks of a margin event." },
-    "music-stops": { "name": "The Music Is About to Stop", "description": "Have 6+ active DAS simultaneously." },
-    "it-goes-quickly": { "name": "It Goes Quite Quickly", "description": "Borrow at 90%+ of capacity." },
-    "rainy-day": { "name": "400 Away for a Rainy Day", "description": "Fully repay all debt with 3+ DAS performing." }
-  }
 }
