@@ -44,6 +44,22 @@ export class Window {
         this.config = config
         this.callbacks = callbacks
         this.element = this.createElement()
+        this.setupLocaleListener()
+    }
+
+    private setupLocaleListener(): void {
+        const lm = getLocaleManager()
+        lm.on("localeChanged", () => this.refreshContent())
+    }
+
+    private refreshContent(): void {
+        const content = this.element.querySelector(
+            ".window-content"
+        ) as HTMLElement
+        if (content) {
+            content.innerHTML = getWindowContent(this.config.contentType)
+            this.initContentFeatures()
+        }
     }
 
     private createElement(): HTMLElement {

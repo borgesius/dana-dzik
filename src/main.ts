@@ -40,21 +40,25 @@ import { getThemeManager } from "./lib/themeManager"
 
 setupErrorHandlers()
 getThemeManager()
-void getLocaleManager().init()
-trackPageview()
-trackFunnelStep("launched")
-trackFunnelStep("boot_complete")
-getAbVariant()
-initPerfTracking()
 
-const app = document.getElementById("app")
-if (app) {
-    if (isMobile()) {
-        initMobile(app)
-    } else {
-        initDesktop(app)
+void (async () => {
+    await getLocaleManager().init()
+
+    trackPageview()
+    trackFunnelStep("launched")
+    trackFunnelStep("boot_complete")
+    getAbVariant()
+    initPerfTracking()
+
+    const app = document.getElementById("app")
+    if (app) {
+        if (isMobile()) {
+            initMobile(app)
+        } else {
+            initDesktop(app)
+        }
     }
-}
+})()
 
 function initMobile(app: HTMLElement): void {
     const phone = new MobilePhone(app)
