@@ -177,7 +177,7 @@
     "reset": "🔄 Zurücksetzen",
     "resetTooltip": "Gesamten Fortschritt löschen",
     "resetTitle": "⚠️ Alle Daten zurücksetzen",
-    "resetMessage": "Dies wird dauerhaft allen Fortschritt, Erfolge, Marktspiel-Stand, Dateisystem-Änderungen und Einstellungen löschen. Dies kann nicht rückgängig gemacht werden.",
+    "resetMessage": "Dies wird dauerhaft allen Fortschritt, Erfolge, Wirtschafts-Stand, Dateisystem-Änderungen und Einstellungen löschen. Dies kann nicht rückgängig gemacht werden.",
     "resetCancel": "Abbrechen",
     "resetConfirm": "Alles löschen"
   },

@@ -177,7 +177,7 @@
     "reset": "🔄 Réinitialiser",
     "resetTooltip": "Effacer toute la progression sauvegardée",
     "resetTitle": "⚠️ Réinitialiser toutes les données",
-    "resetMessage": "Cela effacera définitivement toute la progression, les succès, l'état du jeu de marché, les modifications du système de fichiers et les préférences. Cette action est irréversible.",
+    "resetMessage": "Cela effacera définitivement toute la progression, les succès, l'état de l'économie, les modifications du système de fichiers et les préférences. Cette action est irréversible.",
     "resetCancel": "Annuler",
     "resetConfirm": "Tout effacer"
   },

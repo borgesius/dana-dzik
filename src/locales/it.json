@@ -177,7 +177,7 @@
     "reset": "🔄 Ripristina",
     "resetTooltip": "Cancella tutti i progressi salvati",
     "resetTitle": "⚠️ Ripristina tutti i dati",
-    "resetMessage": "Questo cancellerà permanentemente tutti i progressi, obiettivi, stato del gioco di mercato, modifiche al filesystem e preferenze. Questa azione non può essere annullata.",
+    "resetMessage": "Questo cancellerà permanentemente tutti i progressi, obiettivi, stato dell'economia, modifiche al filesystem e preferenze. Questa azione non può essere annullata.",
     "resetCancel": "Annulla",
     "resetConfirm": "Cancella tutto"
   },
