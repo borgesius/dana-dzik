@@ -202,7 +202,7 @@ export class Widgets {
         playBtn.addEventListener("click", () => {
             const audioManager = getAudioManager()
             if (audioManager) {
-                audioManager.play()
+                audioManager.play(true)
             }
         })
 

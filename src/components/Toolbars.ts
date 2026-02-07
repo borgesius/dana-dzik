@@ -266,7 +266,7 @@ export class Toolbars {
                 <source srcset="/assets/gifs/broke.webp" type="image/webp" />
                 <img src="/assets/gifs/broke.png" alt="" class="cost-gif" onerror="this.style.display='none'" />
             </picture>
-            <div class="cost-title">Normalized Session Cost</div>
+            <div class="cost-title">Normalized User Cost</div>
             <div class="cost-divider"></div>
             ${alwaysRows}
             ${bandwidthRow}
