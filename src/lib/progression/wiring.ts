@@ -4,6 +4,7 @@ import { onAppEvent } from "../events"
 import { getLocaleManager } from "../localeManager"
 import { getMarketGame } from "../marketGame/MarketEngine"
 import { getThemeManager } from "../themeManager"
+import { getCareerManager } from "./CareerManager"
 import { XP_REWARDS } from "./constants"
 import type { ProgressionManager } from "./ProgressionManager"
 
@@ -128,31 +129,47 @@ function wireSocial(mgr: ProgressionManager): void {
 
 /**
  * Minor cross-system hooks that connect disparate systems:
- * - WELT/GRUND exercise completions grant commodity stocks
- * - Pinball high scores grant cash
+ * - WELT/GRUND exercise completions grant commodity stocks (+ career bonuses)
+ * - Pinball high scores grant cash (+ career bonus)
+ * - Popup bonuses scaled by career bonus
  * - Autobattler run rewards grant cash/commodities
  */
 function wireCrossSystemHooks(): void {
     const game = getMarketGame()
+    const career = getCareerManager()
 
-    // WELT exercise pass -> grant 1 random commodity unit
+    // WELT exercise pass -> grant commodity units, scaled by weltBonus
     const commodities = ["EMAIL", "ADS", "DOM", "BW", "SOFT", "VC"] as const
     onAppEvent("welt:exercise-passed", () => {
+        const weltBonus = career.getBonus("weltBonus")
+        const qty = Math.max(1, Math.ceil(1 * (1 + weltBonus)))
         const pick = commodities[Math.floor(Math.random() * commodities.length)]
-        game.grantCommodity(pick, 1)
+        game.grantCommodity(pick, qty)
     })
 
-    // GRUND program execution -> grant 1 SOFT
+    // GRUND program execution -> grant SOFT, scaled by grundBonus
     onAppEvent("grund:executed", () => {
-        game.grantCommodity("SOFT", 1)
+        const grundBonus = career.getBonus("grundBonus")
+        const qty = Math.max(1, Math.ceil(1 * (1 + grundBonus)))
+        game.grantCommodity("SOFT", qty)
     })
 
-    // Pinball high scores -> grant cash
+    // Pinball high scores -> grant cash, scaled by pinballBonus
     onAppEvent("pinball:gameover", (detail) => {
         const { score } = detail
         if (score >= 1000) {
-            const cashBonus = Math.floor(score / 500) * 0.01
+            const pinballBonus = career.getBonus("pinballBonus")
+            const cashBonus = Math.floor(score / 500) * 0.01 * (1 + pinballBonus)
             game.addBonus(cashBonus)
+        }
+    })
+
+    // Popup bonus claims -> scale by popupBonus
+    onAppEvent("popup:bonus-claimed", () => {
+        const popupBonus = career.getBonus("popupBonus")
+        if (popupBonus > 0) {
+            // Grant an extra cash nudge proportional to the career bonus
+            game.addBonus(0.05 * popupBonus)
         }
     })
 

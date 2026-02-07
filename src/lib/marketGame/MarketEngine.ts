@@ -475,7 +475,7 @@ export class MarketEngine {
             holding.quantity
         )
         const tradeBonus = this.bonusProvider?.("tradeProfit") ?? 0
-        const revenue = Math.round(market.price * qty * (1 + tradeBonus))
+        const revenue = market.price * qty * (1 + tradeBonus)
 
         this.cash += revenue
         this.lifetimeEarnings += revenue
