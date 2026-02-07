@@ -1,0 +1,304 @@
+/* ── Autobattler Styles ──────────────────────────────────────────────────── */
+
+.autobattler-container {
+    height: 100%;
+    overflow-y: auto;
+    font-size: 11px;
+    padding: 8px;
+    color: var(--text-color, #000000);
+}
+
+/* ── Lobby ────────────────────────────────────────────────────────────────── */
+
+.ab-lobby h2 {
+    margin: 0 0 4px;
+    font-size: 16px;
+}
+
+.ab-subtitle {
+    font-style: italic;
+    color: var(--text-secondary, #666666);
+    margin: 0 0 12px;
+}
+
+.ab-stats {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 12px;
+    padding: 6px 8px;
+    background: var(--win-bg, #c0c0c0);
+    border: 2px inset var(--win-border-light, #dfdfdf);
+}
+
+.ab-stat {
+    display: flex;
+    gap: 4px;
+}
+
+.ab-stat span:last-child {
+    font-weight: 700;
+}
+
+.ab-start-btn {
+    padding: 8px 24px;
+    font-size: 13px;
+    font-weight: 700;
+    background: linear-gradient(135deg, #8b4513, #cd853f);
+    color: #ffffff;
+    border: 2px outset #cd853f;
+    cursor: pointer;
+    margin-bottom: 16px;
+}
+
+.ab-start-btn:hover {
+    filter: brightness(1.1);
+}
+
+.ab-start-btn:active {
+    border-style: inset;
+}
+
+.ab-collection-header h3 {
+    margin: 0 0 6px;
+    font-size: 12px;
+}
+
+.ab-collection-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 6px;
+}
+
+.ab-collection-card {
+    padding: 6px;
+    border: 1px solid var(--win-border-dark, #808080);
+    background: var(--win-bg, #c0c0c0);
+    font-size: 10px;
+}
+
+.ab-empty {
+    color: var(--text-secondary, #666666);
+    font-style: italic;
+    padding: 16px;
+    text-align: center;
+}
+
+/* ── Run Header ───────────────────────────────────────────────────────────── */
+
+.ab-run-header {
+    display: flex;
+    justify-content: space-between;
+    padding: 6px 8px;
+    background: #333333;
+    color: #ffffff;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+/* ── Shop ─────────────────────────────────────────────────────────────────── */
+
+.ab-shop h3 {
+    margin: 0 0 6px;
+}
+
+.ab-shop-offers {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+.ab-shop-card {
+    flex: 1;
+    padding: 8px;
+    border: 2px outset var(--win-border-light, #dfdfdf);
+    background: var(--win-bg, #c0c0c0);
+    cursor: pointer;
+    text-align: left;
+    font-size: 10px;
+}
+
+.ab-shop-card:hover:not(.sold):not(.disabled) {
+    background: var(--button-hover-bg, #d4d0c8);
+}
+
+.ab-shop-card.sold {
+    opacity: 0.4;
+    cursor: default;
+}
+
+.ab-shop-card.disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.ab-reroll-btn {
+    padding: 4px 12px;
+    font-size: 10px;
+    border: 2px outset var(--win-border-light, #dfdfdf);
+    background: var(--win-bg, #c0c0c0);
+    cursor: pointer;
+    margin-bottom: 12px;
+}
+
+.ab-reroll-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* ── Unit cards ───────────────────────────────────────────────────────────── */
+
+.ab-card-name {
+    font-weight: 700;
+    font-size: 11px;
+}
+
+.ab-card-stats {
+    color: #cc0000;
+    font-weight: 700;
+}
+
+.ab-card-faction {
+    font-size: 9px;
+    color: var(--text-secondary, #666666);
+}
+
+.ab-card-ability {
+    font-size: 9px;
+    color: var(--text-secondary, #555555);
+    margin-top: 2px;
+    font-style: italic;
+}
+
+.ab-card-cost {
+    font-weight: 700;
+    margin-top: 4px;
+    color: #8b4513;
+}
+
+/* ── Lineup ───────────────────────────────────────────────────────────────── */
+
+.ab-lineup h3 {
+    margin: 0 0 6px;
+}
+
+.ab-lineup-grid {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-bottom: 8px;
+}
+
+.ab-unit-card {
+    padding: 6px 8px;
+    border: 2px outset var(--win-border-light, #dfdfdf);
+    background: var(--win-bg, #c0c0c0);
+    min-width: 90px;
+    font-size: 10px;
+    position: relative;
+}
+
+.ab-sell-btn {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    font-size: 8px;
+    padding: 1px 4px;
+    cursor: pointer;
+    border: 1px solid #808080;
+    background: #c0c0c0;
+    color: #cc0000;
+}
+
+.ab-bench h4 {
+    margin: 0 0 4px;
+    font-size: 11px;
+}
+
+/* ── Actions ──────────────────────────────────────────────────────────────── */
+
+.ab-actions {
+    display: flex;
+    justify-content: center;
+    padding: 8px;
+}
+
+.ab-fight-btn {
+    padding: 8px 32px;
+    font-size: 14px;
+    font-weight: 700;
+    background: linear-gradient(135deg, #cc0000, #ff4444);
+    color: #ffffff;
+    border: 2px outset #ff4444;
+    cursor: pointer;
+}
+
+.ab-fight-btn:hover:not(:disabled) {
+    filter: brightness(1.1);
+}
+
+.ab-fight-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* ── Combat result ────────────────────────────────────────────────────────── */
+
+.ab-combat-result {
+    text-align: center;
+    padding: 16px;
+}
+
+.ab-combat-result.victory h2 {
+    color: #228b22;
+}
+
+.ab-combat-result.defeat h2 {
+    color: #cc0000;
+}
+
+.ab-combat-log {
+    text-align: left;
+    max-height: 150px;
+    overflow-y: auto;
+    background: #000000;
+    color: #00ff00;
+    padding: 8px;
+    font-family: monospace;
+    font-size: 10px;
+    margin: 8px 0;
+    border: 2px inset var(--win-border-dark, #808080);
+}
+
+.ab-log-entry {
+    margin-bottom: 2px;
+}
+
+.ab-rewards {
+    margin: 8px 0;
+}
+
+.ab-rewards h3 {
+    margin: 0 0 4px;
+    font-size: 12px;
+}
+
+.ab-reward {
+    font-size: 11px;
+    padding: 2px 0;
+}
+
+.ab-next-btn,
+.ab-return-btn {
+    padding: 8px 24px;
+    font-size: 12px;
+    font-weight: 700;
+    border: 2px outset var(--win-border-light, #dfdfdf);
+    background: var(--win-bg, #c0c0c0);
+    cursor: pointer;
+    margin-top: 8px;
+}
+
+.ab-next-btn:hover,
+.ab-return-btn:hover {
+    background: var(--button-hover-bg, #d4d0c8);
+}

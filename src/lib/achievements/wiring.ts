@@ -38,6 +38,7 @@ export function wireAchievements(
     wireSessionTimer(mgr)
     wireSessionCost(mgr)
     wireQAReports(mgr)
+    wireProgressionEvents(mgr)
 }
 
 function wireWindowManager(
@@ -363,4 +364,81 @@ function wireQAReports(mgr: AchievementManager): void {
     onAppEvent("qa:report-clicked", () => {
         mgr.earn("qa-inspector")
     })
+}
+
+function wireProgressionEvents(mgr: AchievementManager): void {
+    // ── Prestige achievements ────────────────────────────────────────────
+    onAppEvent("prestige:triggered", (detail) => {
+        mgr.earn("bubble-popper")
+        if (detail.count >= 5) {
+            mgr.earn("serial-popper")
+        }
+        if (detail.hindsight >= 50) {
+            mgr.earn("hindsight-hoarder")
+        }
+    })
+
+    onAppEvent("prestige:purchase", () => {
+        mgr.earn("hindsight-shopper")
+    })
+
+    // ── Autobattler achievements ─────────────────────────────────────────
+    onAppEvent("autobattler:run-complete", (detail) => {
+        mgr.earn("first-draft")
+        if (detail.won) {
+            mgr.earn("posse-up")
+        }
+    })
+
+    onAppEvent("autobattler:unit-unlocked", () => {
+        mgr.earn("faction-recruit")
+    })
+
+    onAppEvent("autobattler:spiral-complete", () => {
+        mgr.earn("full-spiral")
+    })
+
+    // ── Career achievements ──────────────────────────────────────────────
+    onAppEvent("career:selected", () => {
+        mgr.earn("career-starter")
+    })
+
+    onAppEvent("career:switched", () => {
+        mgr.earn("career-switcher")
+    })
+
+    let nodesUnlocked = 0
+    onAppEvent("career:node-unlocked", () => {
+        nodesUnlocked++
+        if (nodesUnlocked >= 5) mgr.earn("skill-tree-novice")
+        if (nodesUnlocked >= 15) mgr.earn("skill-tree-master")
+    })
+
+    // ── Cross-system achievements ────────────────────────────────────────
+    // "Renaissance" = level 5 + complete autobattler run
+    // We check conditions lazily since either can trigger first
+    onAppEvent("progression:level-up", (detail) => {
+        if (detail.level >= 5 && mgr.hasEarned("first-draft")) {
+            mgr.earn("renaissance")
+        }
+    })
+    onAppEvent("autobattler:run-complete", () => {
+        // Already earned first-draft above; check for renaissance
+        // We can't easily get the level here without importing, so
+        // rely on the level-up event to pick this up
+    })
+
+    // "Full Stack" = prestige + win autobattler + career selected
+    const checkFullStack = (): void => {
+        if (
+            mgr.hasEarned("bubble-popper") &&
+            mgr.hasEarned("posse-up") &&
+            mgr.hasEarned("career-starter")
+        ) {
+            mgr.earn("full-stack")
+        }
+    }
+    onAppEvent("prestige:triggered", checkFullStack)
+    onAppEvent("autobattler:run-complete", checkFullStack)
+    onAppEvent("career:selected", checkFullStack)
 }

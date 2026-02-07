@@ -10,6 +10,10 @@ import {
 import { initCalmMode } from "../lib/calmMode"
 import { getLocaleManager } from "../lib/localeManager"
 import { getMarketGame } from "../lib/marketGame/MarketEngine"
+import { getCollectionManager } from "../lib/autobattler/CollectionManager"
+import { getPrestigeManager } from "../lib/prestige/PrestigeManager"
+import { getCareerManager } from "../lib/progression/CareerManager"
+import { getProgressionManager } from "../lib/progression/ProgressionManager"
 import { saveManager } from "../lib/saveManager"
 import {
     BIG_SPENDER_THRESHOLD,
@@ -46,6 +50,29 @@ export function initCore(): void {
     const achievements = getAchievementManager()
     achievements.deserialize(savedData.achievements)
     achievements.setDirtyCallback(() => saveManager.requestSave())
+
+    const progression = getProgressionManager()
+    progression.deserialize(savedData.progression)
+    progression.setDirtyCallback(() => saveManager.requestSave())
+
+    const prestige = getPrestigeManager()
+    prestige.deserialize(savedData.prestige)
+    prestige.setDirtyCallback(() => saveManager.requestSave())
+
+    const collection = getCollectionManager()
+    collection.deserialize(savedData.autobattler)
+    collection.setDirtyCallback(() => saveManager.requestSave())
+
+    const career = getCareerManager()
+    career.deserialize(savedData.progression)
+    career.setDirtyCallback(() => saveManager.requestSave())
+
+    // ── Wire cross-system bonus providers ────────────────────────────────────
+    const marketGame = getMarketGame()
+    marketGame.bonusProvider = (type: string) => career.getBonus(type as never)
+
+    progression.xpBonusProvider = () => career.getBonus("xpRate")
+    prestige.hindsightBonusProvider = () => career.getBonus("hindsightRate")
 
     initCalmMode(savedData.preferences.calmMode ?? false)
 

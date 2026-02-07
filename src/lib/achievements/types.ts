@@ -8,6 +8,10 @@ export type AchievementCategory =
     | "exercises"
     | "social"
     | "pinball"
+    | "autobattler"
+    | "prestige"
+    | "career"
+    | "cross-system"
 
 export type AchievementId =
     // Trading
@@ -82,12 +86,41 @@ export type AchievementId =
     | "big-spender"
     | "whale"
     | "qa-inspector"
+    // Autobattler
+    | "first-draft"
+    | "posse-up"
+    | "faction-recruit"
+    | "full-spiral"
+    | "no-drifters"
+    | "triple-threat"
+    // Prestige
+    | "bubble-popper"
+    | "serial-popper"
+    | "hindsight-shopper"
+    | "hindsight-hoarder"
+    // Career
+    | "career-starter"
+    | "career-switcher"
+    | "skill-tree-novice"
+    | "skill-tree-master"
+    // Cross-system
+    | "renaissance"
+    | "full-stack"
+
+export type TieredGroup =
+    | "mogul"
+    | "scholar"
+    | "arcade"
+    | "industrialist"
+    | "phases"
 
 export interface AchievementDef {
     id: AchievementId
     category: AchievementCategory
     icon: string
     hidden: boolean
+    tieredGroup?: TieredGroup
+    tier?: number // 1-based tier within the group
 }
 
 export type CounterKey =

@@ -7,6 +7,7 @@ import { ChartSection } from "./businessPanel/ChartSection"
 import { FactoriesSection } from "./businessPanel/FactoriesSection"
 import { InfluenceSection } from "./businessPanel/InfluenceSection"
 import { PortfolioSection } from "./businessPanel/PortfolioSection"
+import { PrestigeSection } from "./businessPanel/PrestigeSection"
 import { TradeControls } from "./businessPanel/TradeControls"
 import { UpgradesSection } from "./businessPanel/UpgradesSection"
 
@@ -22,6 +23,7 @@ export class BusinessPanel {
     private factories: FactoriesSection
     private upgrades: UpgradesSection
     private influence: InfluenceSection
+    private prestige: PrestigeSection
 
     constructor() {
         this.game = getMarketGame()
@@ -42,6 +44,9 @@ export class BusinessPanel {
             this.game,
             () => this.chart.getSelectedCommodity(),
             (type) => this.playSound(type)
+        )
+        this.prestige = new PrestigeSection(this.game, (type) =>
+            this.playSound(type)
         )
         this.element = this.createElement()
         this.setupEventListeners()
@@ -92,6 +97,7 @@ export class BusinessPanel {
         rightCol.appendChild(this.factories.getElement())
         rightCol.appendChild(this.upgrades.getElement())
         rightCol.appendChild(this.influence.getElement())
+        rightCol.appendChild(this.prestige.getElement())
         content.appendChild(rightCol)
 
         panel.appendChild(content)
@@ -174,12 +180,14 @@ export class BusinessPanel {
         this.factories.render()
         this.upgrades.render()
         this.influence.render()
+        this.prestige.render()
     }
 
     private updatePhaseVisibility(): void {
         this.factories.updateVisibility()
         this.upgrades.updateVisibility()
         this.influence.updateVisibility()
+        this.prestige.updateVisibility()
     }
 
     private updateNewsTicker(text: string): void {

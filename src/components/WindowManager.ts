@@ -127,6 +127,15 @@ const WINDOW_CONFIGS: Record<RoutableWindow, WindowConfig> = {
         style: "winxp",
         contentType: "achievements",
     },
+    autobattler: {
+        id: "autobattler",
+        title: "FRONTIER.exe",
+        icon: icon("autobattler"),
+        width: 600,
+        height: 550,
+        style: "win95",
+        contentType: "autobattler",
+    },
 }
 
 /**

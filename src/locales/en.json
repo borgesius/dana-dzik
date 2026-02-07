@@ -643,6 +643,22 @@
     "y2k-survivor": { "name": "Y2K Survivor", "description": "Have a session running for 30 minutes." },
     "big-spender": { "name": "Money Moves", "description": "Run up a $0.001 normalized session cost." },
     "whale": { "name": "Paper Chaser", "description": "Run up a $0.0025 normalized session cost." },
-    "qa-inspector": { "name": "Works on My Machine", "description": "Click a test report badge to view CI results." }
+    "qa-inspector": { "name": "Works on My Machine", "description": "Click a test report badge to view CI results." },
+    "first-draft": { "name": "First Draft", "description": "Complete your first autobattler run." },
+    "posse-up": { "name": "Posse Up", "description": "Win an autobattler run." },
+    "faction-recruit": { "name": "Faction Recruit", "description": "Unlock your first faction unit." },
+    "full-spiral": { "name": "Full Spiral", "description": "Complete the faction unlock spiral." },
+    "no-drifters": { "name": "No Drifters", "description": "Win a run without any Drifter units." },
+    "triple-threat": { "name": "Triple Threat", "description": "Level a unit to Level 3 in a single run." },
+    "bubble-popper": { "name": "Bubble Popper", "description": "Prestige for the first time." },
+    "serial-popper": { "name": "Serial Popper", "description": "Prestige 5 times." },
+    "hindsight-shopper": { "name": "Hindsight Shopper", "description": "Purchase your first Hindsight upgrade." },
+    "hindsight-hoarder": { "name": "Diamond Hands", "description": "Accumulate 50 Hindsight currency." },
+    "career-starter": { "name": "Career Starter", "description": "Choose your first career path." },
+    "career-switcher": { "name": "Pivot", "description": "Switch careers." },
+    "skill-tree-novice": { "name": "Budding Professional", "description": "Unlock 5 skill tree nodes." },
+    "skill-tree-master": { "name": "Career Completionist", "description": "Unlock 15 skill tree nodes." },
+    "renaissance": { "name": "Renaissance", "description": "Reach level 5 and complete an autobattler run." },
+    "full-stack": { "name": "Full Stack", "description": "Prestige, win an autobattler run, and choose a career." }
   }
 }

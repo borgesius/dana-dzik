@@ -1,8 +1,18 @@
 import type { AchievementSaveData } from "./achievements/types"
 import type { MarketSaveData } from "./marketGame/types"
+import type {
+    AutobattlerSaveData,
+    PrestigeSaveData,
+    ProgressionSaveData,
+} from "./progression/types"
+import {
+    createEmptyAutobattlerData,
+    createEmptyPrestigeData,
+    createEmptyProgressionData,
+} from "./progression/types"
 
 const SAVE_KEY = "save"
-const SAVE_VERSION = 2
+const SAVE_VERSION = 3
 const MAX_SAVE_BYTES = 256 * 1024
 const WARN_SAVE_BYTES = 200 * 1024
 const DEBOUNCE_MS = 2000
@@ -34,6 +44,9 @@ export interface SaveData {
     }
     filesystem: FilesystemSaveData
     achievements: AchievementSaveData
+    prestige: PrestigeSaveData
+    progression: ProgressionSaveData
+    autobattler: AutobattlerSaveData
 }
 
 type SaveCallback = () => SaveData
@@ -61,6 +74,9 @@ function createEmptySaveData(): SaveData {
             sets: {},
             reported: [],
         },
+        prestige: createEmptyPrestigeData(),
+        progression: createEmptyProgressionData(),
+        autobattler: createEmptyAutobattlerData(),
     }
 }
 
@@ -130,9 +146,24 @@ function migrateV1ToV2(data: SaveData): void {
     data.filesystem.deleted = data.filesystem.deleted.map(migrateFilesystemPath)
 }
 
+function migrateV2ToV3(data: SaveData): void {
+    if (!data.prestige) {
+        data.prestige = createEmptyPrestigeData()
+    }
+    if (!data.progression) {
+        data.progression = createEmptyProgressionData()
+    }
+    if (!data.autobattler) {
+        data.autobattler = createEmptyAutobattlerData()
+    }
+}
+
 function migrate(data: SaveData): SaveData {
     if (data.version < 2) {
         migrateV1ToV2(data)
+    }
+    if (data.version < 3) {
+        migrateV2ToV3(data)
     }
     data.version = SAVE_VERSION
     return data
@@ -174,6 +205,18 @@ class SaveManagerImpl {
                 preferences: { ...empty.preferences, ...parsed.preferences },
                 filesystem: { ...empty.filesystem, ...parsed.filesystem },
                 achievements: { ...empty.achievements, ...parsed.achievements },
+                prestige: {
+                    ...empty.prestige,
+                    ...(parsed.prestige ?? {}),
+                },
+                progression: {
+                    ...empty.progression,
+                    ...(parsed.progression ?? {}),
+                },
+                autobattler: {
+                    ...empty.autobattler,
+                    ...(parsed.autobattler ?? {}),
+                },
             }
             const migrated = migrate(data)
             this.writeBackIndividualKeys(migrated)
