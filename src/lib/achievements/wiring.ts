@@ -182,8 +182,9 @@ function wireMarketGame(mgr: AchievementManager): void {
         }
     })
 
-    game.on("influenceExecuted", () => {
-        const count = mgr.incrementCounter("influences-executed")
+    game.on("influenceExecuted", (data) => {
+        const { influenceId } = data as { influenceId: string }
+        const count = mgr.addToSet("influences-used", influenceId)
         if (count >= 3) {
             mgr.earn("market-maker")
         }

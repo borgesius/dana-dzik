@@ -23,7 +23,7 @@
     box-shadow:
         inset -1px -1px 0 var(--border-dark),
         inset 1px 1px 0 var(--border-light),
-        2px 2px 8px rgba(0, 0, 0, 0.3);
+        2px 2px 8px rgb(0 0 0 / 30%);
     font-family: var(--font-system);
     font-size: 11px;
     pointer-events: auto;
@@ -59,7 +59,7 @@
     font-weight: bold;
     font-size: 10px;
     text-transform: uppercase;
-    color: var(--text-secondary, #666);
+    color: var(--text-secondary, #666666);
     margin-bottom: 2px;
 }
 
@@ -71,7 +71,7 @@
 
 .achievement-toast-desc {
     font-size: 11px;
-    color: var(--text-secondary, #666);
+    color: var(--text-secondary, #666666);
     margin-top: 1px;
 }
 
@@ -94,7 +94,7 @@
 }
 
 .achievements-progress {
-    color: var(--text-secondary, #666);
+    color: var(--text-secondary, #666666);
     font-size: 11px;
 }
 
@@ -156,18 +156,18 @@
 
 .achievement-card-desc {
     font-size: 10px;
-    color: var(--text-secondary, #666);
+    color: var(--text-secondary, #666666);
     margin-top: 1px;
 }
 
 .achievement-card-date {
     font-size: 9px;
-    color: var(--text-secondary, #888);
+    color: var(--text-secondary, #888888);
     margin-top: 2px;
 }
 
 .achievement-card-rarity {
     font-size: 9px;
-    color: var(--text-secondary, #888);
+    color: var(--text-secondary, #888888);
     margin-top: 1px;
 }

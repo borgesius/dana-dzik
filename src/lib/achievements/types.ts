@@ -78,7 +78,6 @@ export type CounterKey =
     | "languages-tried"
     | "themes-tried"
     | "windows-opened"
-    | "influences-executed"
 
 export interface AchievementSaveData {
     earned: Record<string, number>
