@@ -1,3 +1,4 @@
+import { emitAppEvent } from "../events"
 import type { GrundInstruction, GrundProgram } from "./grundParser"
 import { type WeltCallbacks, WeltError, type WeltValue } from "./types"
 
@@ -69,11 +70,7 @@ export async function interpretGrund(
         } else if (state.totalIterations === TOTAL_ITERATION_SUFFER) {
             callbacks.onOutput("Alles Leben ist Leiden.")
             if (typeof document !== "undefined") {
-                document.dispatchEvent(
-                    new CustomEvent("welt:error", {
-                        detail: { type: "suffering" },
-                    })
-                )
+                emitAppEvent("welt:error", { type: "suffering" })
             }
         }
 
@@ -240,13 +237,9 @@ function execTin(instr: GrundInstruction, state: GrundState): void {
     if (isOverflow) {
         state.ringOverflowStreak++
         if (typeof document !== "undefined") {
-            document.dispatchEvent(
-                new CustomEvent("grund:ring-overflow", {
-                    detail: { pointer: state.ringPointer },
-                })
-            )
+            emitAppEvent("grund:ring-overflow", { pointer: state.ringPointer })
             if (state.ringOverflowStreak >= RING_SIZE) {
-                document.dispatchEvent(new CustomEvent("grund:ring-spin"))
+                emitAppEvent("grund:ring-spin")
             }
         }
     }
@@ -263,7 +256,7 @@ function execTin(instr: GrundInstruction, state: GrundState): void {
         state.ringPointer === 0 &&
         typeof document !== "undefined"
     ) {
-        document.dispatchEvent(new CustomEvent("grund:ring-cycle"))
+        emitAppEvent("grund:ring-cycle")
     }
 }
 

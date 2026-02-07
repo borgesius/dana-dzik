@@ -4,7 +4,6 @@ import {
     buildTree,
     changeDirectory,
     createFile,
-    createFileSystem,
     type FileSystem,
     formatPath,
     getExecutableWindowId,
@@ -15,6 +14,7 @@ import {
     resolvePath,
     writeFile,
 } from "../lib/terminal/filesystem"
+import { createFileSystem } from "../lib/terminal/filesystemBuilder"
 
 describe("Terminal Filesystem", () => {
     let fs: FileSystem

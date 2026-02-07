@@ -166,6 +166,7 @@ export async function initStrava(): Promise<void> {
 
         if (!response.ok) return
 
+        // SAFETY: response shape controlled by our /api/strava endpoint
         const result = (await response.json()) as StravaApiResponse
         if (!result.ok || !result.data) return
 

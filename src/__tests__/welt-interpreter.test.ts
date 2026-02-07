@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest"
 
-import { runWeltProgram, WeltError } from "../lib/welt"
+import { runWeltProgram, WeltError } from "../lib/welt/runner"
 
 function runProgram(source: string, inputs: string[] = []): Promise<string[]> {
     const output: string[] = []

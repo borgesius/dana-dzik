@@ -1,0 +1,128 @@
+import { AchievementToast } from "../components/AchievementToast"
+import { CursorTrail } from "../components/CursorTrail"
+import { Desktop } from "../components/Desktop"
+import { PopupManager } from "../components/PopupManager"
+import { setTerminalInit } from "../components/Terminal"
+import { Widgets } from "../components/Widgets"
+import { getAchievementManager } from "../lib/achievements/AchievementManager"
+import { wireAchievements } from "../lib/achievements/wiring"
+import { createAudioManager } from "../lib/audio"
+import { isCalmMode } from "../lib/calmMode"
+import { onAppEvent } from "../lib/events"
+import { GlitchManager } from "../lib/glitchEffects"
+import { getLocaleManager } from "../lib/localeManager"
+import { getMarketGame } from "../lib/marketGame/MarketEngine"
+import { Router } from "../lib/router"
+import { type SaveData, saveManager } from "../lib/saveManager"
+import { SystemCrashHandler } from "../lib/systemCrash"
+import { getSharedFilesystem } from "../lib/terminal/filesystemBuilder"
+import { diffFilesystem } from "../lib/terminal/filesystemDiff"
+import { getThemeManager } from "../lib/themeManager"
+import { isRoutableWindow } from "./core"
+
+export function initDesktop(app: HTMLElement): void {
+    const achievements = getAchievementManager()
+    const desktop = new Desktop(app)
+    const windowManager = desktop.getWindowManager()
+
+    wireAchievements(achievements, (cb) => {
+        windowManager.onNewWindowOpen(cb)
+    })
+    new AchievementToast(achievements)
+
+    getThemeManager().on("themeChanged", () => saveManager.requestSave())
+    getThemeManager().on("colorSchemeChanged", () => saveManager.requestSave())
+    getLocaleManager().on("localeChanged", () => saveManager.requestSave())
+    getMarketGame().on("tradeExecuted", () => saveManager.requestSave())
+    getMarketGame().on("stateChanged", () => saveManager.requestSave())
+
+    saveManager.registerGatherFn((): SaveData => {
+        const pinballHighScore =
+            parseInt(localStorage.getItem("pinball-high-score") || "0", 10) || 0
+
+        return {
+            version: 1,
+            savedAt: Date.now(),
+            game: getMarketGame().serialize(),
+            pinball: { highScore: pinballHighScore },
+            preferences: {
+                theme: getThemeManager().getCurrentTheme(),
+                colorScheme: getThemeManager().getColorScheme(),
+                locale: getLocaleManager().getCurrentLocale(),
+                calmMode: isCalmMode(),
+            },
+            filesystem: diffFilesystem(getSharedFilesystem()),
+            achievements: achievements.serialize(),
+        }
+    })
+
+    const router = new Router((windowId) => {
+        windowManager.openWindow(windowId)
+    })
+
+    windowManager.onWindowsChange(() => {
+        const activeId = windowManager.getActiveWindowId()
+        if (activeId) {
+            router.updateUrl(activeId)
+        }
+    })
+
+    router.init()
+
+    const popupManager = new PopupManager(app)
+    new CursorTrail()
+    createAudioManager()
+    new GlitchManager()
+    new SystemCrashHandler()
+    new Widgets(app)
+
+    windowManager.onNewWindowOpen(() => {
+        popupManager.onWindowOpen()
+    })
+
+    document.addEventListener("click", (e) => {
+        const target = e.target as HTMLElement
+        const link = target.closest("[data-open-window]")
+        if (link) {
+            e.preventDefault()
+            const windowId = link.getAttribute("data-open-window")
+            if (windowId && isRoutableWindow(windowId)) {
+                windowManager.openWindow(windowId)
+            }
+        }
+    })
+
+    onAppEvent("terminal:file-saved", () => {
+        saveManager.requestSave()
+    })
+
+    onAppEvent("terminal:open-window", (detail) => {
+        const windowId = detail.windowId
+        if (windowId && isRoutableWindow(String(windowId))) {
+            windowManager.openWindow(windowId)
+        }
+    })
+
+    onAppEvent("explorer:open-terminal", (detail) => {
+        const { cwd, command } = detail
+        setTerminalInit({ cwd, command })
+        windowManager.closeWindow("terminal")
+        windowManager.openWindow("terminal")
+    })
+
+    addFloatingGifs(desktop)
+}
+
+function addFloatingGifs(desktop: Desktop): void {
+    const gifs = [
+        { src: "/assets/gifs/fire.gif", x: 100, y: 200 },
+        { src: "/assets/gifs/construction.gif", x: 700, y: 150 },
+        { src: "/assets/gifs/email.gif", x: 500, y: 400 },
+        { src: "/assets/gifs/globe.gif", x: 200, y: 500 },
+        { src: "/assets/gifs/star.gif", x: 800, y: 300 },
+    ]
+
+    gifs.forEach(({ src, x, y }) => {
+        desktop.addFloatingGif(src, x, y)
+    })
+}

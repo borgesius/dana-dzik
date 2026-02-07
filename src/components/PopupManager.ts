@@ -1,7 +1,8 @@
-import { POPUP_CONFIG } from "../config"
+import { POPUP_CONFIG } from "../config/popup"
 import { isCalmMode } from "../lib/calmMode"
+import { emitAppEvent } from "../lib/events"
 import { formatMoney } from "../lib/formatMoney"
-import { getMarketGame } from "../lib/marketGame"
+import { getMarketGame } from "../lib/marketGame/MarketEngine"
 import {
     BONUS_POPUP_CONTENTS,
     POPUP_CONTENTS,
@@ -268,7 +269,7 @@ export class PopupManager {
         const game = getMarketGame()
         game.addBonus(amount)
         this.playSound("notify")
-        document.dispatchEvent(new CustomEvent("popup:bonus-claimed"))
+        emitAppEvent("popup:bonus-claimed")
     }
 
     private closePopup(popup: HTMLElement): void {

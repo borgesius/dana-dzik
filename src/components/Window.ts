@@ -1,10 +1,12 @@
+import type { RoutableWindow } from "../config/routing"
 import { trackFunnelStep, trackWindowOpen } from "../lib/analytics"
+import { emitAppEvent } from "../lib/events"
 import { initFelixGPT } from "../lib/felixgpt"
 import { initGuestbook } from "../lib/guestbook"
 import { getLocaleManager } from "../lib/localeManager"
 import { initNowPlaying } from "../lib/nowPlaying"
 import { initPhotoSlideshows } from "../lib/photoSlideshow"
-import { initPinball, type PinballGame } from "../lib/pinball"
+import { initPinball, type PinballGame } from "../lib/pinball/PinballGame"
 import { initSiteStats } from "../lib/siteStats"
 import { getThemeManager } from "../lib/themeManager"
 import { initVisitorCount } from "../lib/visitorCount"
@@ -24,7 +26,7 @@ export interface WindowConfig {
     width: number
     height: number
     style: "win95" | "winxp"
-    contentType: string
+    contentType: RoutableWindow
 }
 
 export interface WindowCallbacks {
@@ -149,11 +151,9 @@ export class Window {
         if (container) {
             new Terminal(container, {
                 openWindow: (windowId): void => {
-                    document.dispatchEvent(
-                        new CustomEvent("terminal:open-window", {
-                            detail: { windowId },
-                        })
-                    )
+                    emitAppEvent("terminal:open-window", {
+                        windowId: windowId,
+                    })
                 },
                 closeTerminal: (): void => {
                     this.callbacks.onClose()

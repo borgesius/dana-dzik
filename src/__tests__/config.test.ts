@@ -1,6 +1,8 @@
 import { describe, expect, it } from "vitest"
 
-import { POPUP_CONFIG, SLIDESHOW_CONFIG, SOCIAL } from "../config"
+import { POPUP_CONFIG } from "../config/popup"
+import { SLIDESHOW_CONFIG } from "../config/slideshow"
+import { SOCIAL } from "../config/social"
 
 describe("Config", () => {
     describe("SOCIAL", () => {

@@ -1,3 +1,5 @@
+import { emitAppEvent } from "./events"
+
 let calm = false
 
 export function isCalmMode(): boolean {
@@ -7,9 +9,7 @@ export function isCalmMode(): boolean {
 export function initCalmMode(initial: boolean): void {
     calm = initial
     if (calm) {
-        document.dispatchEvent(
-            new CustomEvent("calm-mode:changed", { detail: { enabled: true } })
-        )
+        emitAppEvent("calm-mode:changed", { enabled: true })
     }
 }
 
@@ -17,11 +17,9 @@ export function setCalmMode(enabled: boolean): void {
     if (calm === enabled) return
     calm = enabled
 
-    document.dispatchEvent(
-        new CustomEvent("calm-mode:changed", { detail: { enabled } })
-    )
+    emitAppEvent("calm-mode:changed", { enabled })
 
     if (enabled) {
-        document.dispatchEvent(new CustomEvent("calm-mode:toggled"))
+        emitAppEvent("calm-mode:toggled")
     }
 }

@@ -1,4 +1,4 @@
-import { SLIDESHOW_CONFIG } from "../config"
+import { SLIDESHOW_CONFIG } from "../config/slideshow"
 
 interface SlideshowPhoto {
     jpg: string

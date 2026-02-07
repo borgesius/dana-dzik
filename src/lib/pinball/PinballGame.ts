@@ -1,3 +1,4 @@
+import { emitAppEvent } from "../events"
 import { Ball, Bumper, Flipper, Launcher, Target, Wall } from "./entities"
 import { LOGICAL_HEIGHT, SUBSTEPS, Vector2D } from "./physics"
 import { PinballRenderer } from "./renderer"
@@ -349,15 +350,11 @@ export class PinballGame {
                 this.playSound("pinball_gameover")
 
                 const allTargetsHit = this.targets.every((t) => t.isHit)
-                document.dispatchEvent(
-                    new CustomEvent("pinball:gameover", {
-                        detail: {
-                            score: this._score,
-                            highScore: this._highScore,
-                            allTargetsHit,
-                        },
-                    })
-                )
+                emitAppEvent("pinball:gameover", {
+                    score: this._score,
+                    highScore: this._highScore,
+                    allTargetsHit,
+                })
             } else {
                 this.resetBallPosition()
                 this.targets.forEach((t) => t.reset())

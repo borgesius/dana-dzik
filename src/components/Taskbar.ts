@@ -1,3 +1,4 @@
+import type { RoutableWindow } from "../config/routing"
 import { getBuildInfo } from "../lib/buildInfo"
 import { saveManager } from "../lib/saveManager"
 import { getThemeManager } from "../lib/themeManager"
@@ -167,7 +168,11 @@ export class Taskbar {
 
         const left = document.createElement("div")
         left.className = "start-menu-left"
-        const leftItems = [
+        const leftItems: Array<{
+            icon: string
+            text: string
+            windowId: RoutableWindow
+        }> = [
             {
                 icon: "📁",
                 text: "File Explorer",
@@ -208,7 +213,7 @@ export class Taskbar {
 
         const right = document.createElement("div")
         right.className = "start-menu-right"
-        const rightItems = [
+        const rightItems: Array<{ text: string; windowId: RoutableWindow }> = [
             { text: "About", windowId: "about" },
             { text: "Projects", windowId: "projects" },
             { text: "Resume", windowId: "resume" },

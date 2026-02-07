@@ -1,4 +1,5 @@
-import { DESKTOP_ITEMS } from "../../config"
+import { DESKTOP_ITEMS } from "../../config/desktop"
+import type { RoutableWindow } from "../../config/routing"
 import { trackFunnelStep, trackWindowOpen } from "../../lib/analytics"
 import { initFelixGPT } from "../../lib/felixgpt"
 import { initGuestbook } from "../../lib/guestbook"
@@ -26,7 +27,7 @@ export class MobileAppView {
     private navTitle: HTMLElement
     private contentArea: HTMLElement
     private onBack: () => void
-    private currentAppId: string | null = null
+    private currentAppId: RoutableWindow | null = null
 
     constructor(onBack: () => void) {
         this.onBack = onBack
@@ -116,7 +117,7 @@ export class MobileAppView {
         )
     }
 
-    public show(windowId: string): void {
+    public show(windowId: RoutableWindow): void {
         this.currentAppId = windowId
 
         const title =
@@ -149,7 +150,7 @@ export class MobileAppView {
         this.onBack()
     }
 
-    private initContentFeatures(contentType: string): void {
+    private initContentFeatures(contentType: RoutableWindow): void {
         trackWindowOpen(contentType)
 
         if (contentType === "guestbook") {

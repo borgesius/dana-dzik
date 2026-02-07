@@ -1,5 +1,5 @@
 import { EXERCISE_6_SOURCE, EXERCISES } from "./exercises"
-import { getInitialMemory, runGrundProgram, runWeltProgram } from "./index"
+import { getInitialMemory, runGrundProgram, runWeltProgram } from "./runner"
 import type { WeltValue } from "./types"
 
 export interface TestCase {

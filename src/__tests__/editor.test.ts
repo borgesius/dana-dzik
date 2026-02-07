@@ -2,7 +2,8 @@
 import { beforeEach, describe, expect, it, vi } from "vitest"
 
 import { Editor, type EditorCallbacks } from "../lib/terminal/editor"
-import { createFileSystem, type FileSystem } from "../lib/terminal/filesystem"
+import type { FileSystem } from "../lib/terminal/filesystem"
+import { createFileSystem } from "../lib/terminal/filesystemBuilder"
 
 describe("Editor", () => {
     let fs: FileSystem

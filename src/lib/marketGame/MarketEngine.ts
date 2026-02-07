@@ -942,3 +942,13 @@ export class MarketEngine {
         return INFLUENCES
     }
 }
+
+let gameInstance: MarketEngine | null = null
+
+export function getMarketGame(): MarketEngine {
+    if (!gameInstance) {
+        gameInstance = new MarketEngine()
+        gameInstance.start()
+    }
+    return gameInstance
+}
