@@ -117,14 +117,9 @@
     "qaFallback3": "🔬 QA: N/V",
     "colorScheme": "Farbe: {{scheme}}",
     "language": "Sprache: {{language}}",
-    "hqOpen": "📊 HQ ▲",
-    "hqClosed": "📊 HQ ▼",
-    "github": "🐙 GitHub",
-    "unlockAt": "Freischalten bei ${{threshold}} Lebenszeiteinkommen",
-    "makeMoney": "SCHNELL GELD VERDIENEN",
-    "tooltipWithOdds": "{{tagline}}\nKosten: ${{cost}} | Gewinn: ${{payout}} | {{successRate}}% Erfolg",
-    "tooltipWithoutOdds": "{{tagline}}\nKosten: ${{cost}} | Gewinn: ${{payout}}",
-    "locked": "🔒 ${{threshold}}"
+    "tradeOpen": "📈 TRADE ▲",
+    "tradeClosed": "📈 TRADE ▼",
+    "github": "🐙 GitHub"
   },
   "qa": {
     "performance": "Leistung",
@@ -261,159 +256,59 @@
     "title": "EDIT - {{filename}}{{dirtyMarker}}",
     "position": "Ln {{line}}, Sp {{col}}"
   },
-  "businessPanel": {
-    "title": "GESCHÄFTSZENTRALE",
-    "close": "×",
-    "improvements": "VERBESSERUNGEN",
-    "transactions": "TRANSAKTIONEN",
-    "balance": "💰 Guthaben",
-    "revenue": "Umsatz",
-    "success": "Erfolg",
-    "streak": "Serie",
-    "bestWin": "Bester Gewinn",
-    "acquired": "ERWORBEN",
-    "noTransactions": "Noch keine Transaktionen"
-  },
-  "businessGame": {
-    "ventures": {
-      "makeMoney": {
-        "name": "SCHNELL GELD VERDIENEN",
-        "tagline": "Hier klicken, um zu verdienen!"
-      },
-      "emailForward": {
-        "name": "E-Mail-Weiterleitung",
-        "tagline": "An Freunde weiterleiten, Provisionen verdienen!"
-      },
-      "punchMonkey": {
-        "name": "Interaktive Werbung",
-        "tagline": "Schlagen Sie den Affen, um zu gewinnen!"
-      },
-      "ringtones": {
-        "name": "Premium-Klingeltöne",
-        "tagline": "Exklusive Klingeltöne herunterladen!"
-      },
-      "workHome": {
-        "name": "Heimgeschäfts-Kit",
-        "tagline": "Von zu Hause aus arbeiten, Umschläge stopfen!"
-      },
-      "screensaver": {
-        "name": "Desktop-Suite",
-        "tagline": "Kostenlose Bildschirmschoner und Cursor!"
-      },
-      "nigerianPrince": {
-        "name": "Internationale Partnerschaft",
-        "tagline": "Helfen Sie bei der Überweisung, behalten Sie 20%!"
-      },
-      "vacation": {
-        "name": "Ferienimmobilien",
-        "tagline": "Exklusive Timeshare-Gelegenheit!"
-      },
-      "stockTips": {
-        "name": "Insider-Markttipps",
-        "tagline": "Heiße Aktientipps täglich geliefert!"
-      },
-      "mlm": {
-        "name": "Multi-Level-Marketing",
-        "tagline": "Bauen Sie Ihre Downline heute auf!"
-      },
-      "downloadRam": {
-        "name": "Systemoptimierung",
-        "tagline": "RAM sofort herunterladen!"
-      },
-      "y2k": {
-        "name": "Y2K-Vorsorge-Kit",
-        "tagline": "Seien Sie bereit für das Jahrtausend!"
-      },
-      "winner": {
-        "name": "HERZLICHEN GLÜCKWUNSCH!!!",
-        "tagline": "Sie sind der 1.000.000ste Besucher!"
-      },
-      "dotcomIpo": {
-        "name": "Dot-Com-Börsengang",
-        "tagline": "Steigen Sie im Erdgeschoss ein!"
-      }
+  "commodityExchange": {
+    "ui": {
+      "title": "ROHSTOFFHANDELS-TERMINAL",
+      "close": "×",
+      "portfolio": "PORTFOLIO",
+      "production": "PRODUKTION",
+      "improvements": "VERBESSERUNGEN",
+      "marketOperations": "MARKTOPERATIONEN",
+      "buy": "KAUFEN",
+      "sell": "VERKAUFEN",
+      "sellAll": "ALLES VERKAUFEN",
+      "deploy": "EINSETZEN",
+      "acquire": "ERWERBEN",
+      "execute": "AUSFÜHREN",
+      "installed": "INSTALLIERT",
+      "cooldown": "ABKÜHLUNG",
+      "qty": "Anz",
+      "avgCost": "Durchschn. Kosten",
+      "pl": "G/V",
+      "tick": "Tick",
+      "deployed": "eingesetzt",
+      "noHoldings": "Keine Bestände. Kaufen Sie Rohstoffe, um mit dem Handel zu beginnen.",
+      "unlockAt": "Freischalten bei ${{threshold}} Gesamteinnahmen"
+    },
+    "commodities": {
+      "EMAIL": { "name": "E-Mail-Datenbanken", "description": "Verifizierte Opt-in-Adressen. Tägliches Update." },
+      "ADS": { "name": "Banner-Impressionen", "description": "Premium 468x60 Werbeplatzierungen." },
+      "DOM": { "name": ".com-Domains", "description": "Vorregistrierte Premium-Domainnamen." },
+      "BW": { "name": "Bandbreite", "description": "Dedizierte T1-Leitungskapazität. 1,544 Mbps." },
+      "SOFT": { "name": "Softwarelizenzen", "description": "Enterprise-Volumenlizenzierung. Shrinkwrap-fertig." },
+      "VC": { "name": "Wagniskapital", "description": "Pre-IPO Investmentwertpapiere. Begrenzte Verfügbarkeit." }
+    },
+    "factories": {
+      "list-builder": { "name": "Automatisierter Listen-Builder", "description": "Sammelt verifizierte E-Mail-Adressen rund um die Uhr. Ergebnisse können variieren." },
+      "banner-exchange": { "name": "Banner-Tauschbörse", "description": "Rotierendes Werbenetzwerk. Impressionen werden automatisch generiert." },
+      "colocation-rack": { "name": "Co-Location-Rack", "description": "Dediziertes Server-Hosting. Verfügbarkeit nicht garantiert." },
+      "offshore-dev": { "name": "Offshore-Entwicklungsteam", "description": "24-Stunden-Entwicklungszyklus. Qualitätssicherung ausstehend." }
     },
     "upgrades": {
-      "ergonomicKeyboard": {
-        "name": "Ergonomische Tastatur",
-        "description": "Basisklick verdient $0,02"
-      },
-      "salesTraining": {
-        "name": "Vertriebsschulung",
-        "description": "Alle Ventures -5% Risiko"
-      },
-      "luckyTie": {
-        "name": "Glückskrawatte",
-        "description": "Serienbonus +15%"
-      },
-      "marketResearch": {
-        "name": "Marktforschung",
-        "description": "Genaue Erfolgs-% beim Hover anzeigen"
-      },
-      "fastInternet": {
-        "name": "56k-Modem",
-        "description": "E-Mail-Weiterleitung zahlt +$0,50"
-      },
-      "touchscreen": {
-        "name": "Touchscreen-Monitor",
-        "description": "Interaktive Werbung zahlt +$2,00"
-      },
-      "cellPhone": {
-        "name": "Nokia 3310",
-        "description": "Premium-Klingeltöne Abklingzeit -3s"
-      },
-      "calculator": {
-        "name": "Geschäftsrechner",
-        "description": "Heimarbeit +50% Auszahlung"
-      },
-      "advancedTraining": {
-        "name": "Fortgeschrittene Schulung",
-        "description": "Alle Ventures -10% Risiko"
-      },
-      "motivationalPoster": {
-        "name": "Motivationsposter",
-        "description": "Serienbonus +25%"
-      },
-      "networkingEvent": {
-        "name": "Networking-Event",
-        "description": "Internationale Partnerschaft +$150"
-      },
-      "executiveDesk": {
-        "name": "Chefschreibtisch",
-        "description": "Basisklick verdient $0,05"
-      },
-      "pentiumIII": {
-        "name": "Pentium III",
-        "description": "Systemoptimierung zahlt +$100"
-      },
-      "leatherBriefcase": {
-        "name": "Lederaktentasche",
-        "description": "Alle Ventures -15% Risiko"
-      },
-      "goldenWatch": {
-        "name": "Golduhr",
-        "description": "Serienbonus +40%"
-      },
-      "franchiseRights": {
-        "name": "Franchiserechte",
-        "description": "MLM-Auszahlung +100%"
-      },
-      "cornerOffice": {
-        "name": "Eckbüro",
-        "description": "Passiv +$0,25/Sek"
-      },
-      "stockPortfolio": {
-        "name": "Aktienportfolio",
-        "description": "Passiv +$1,00/Sek"
-      },
-      "realEstate": {
-        "name": "Immobilien",
-        "description": "Passiv +$5,00/Sek"
-      },
-      "ventureCapital": {
-        "name": "Wagniskapital",
-        "description": "Passiv +$25/Sek"
-      }
+      "bulk-orders": { "name": "Sammelbestellungsverarbeitung", "description": "Handeln Sie in Mengen von 10." },
+      "limit-orders": { "name": "Limit-Order-System", "description": "Zielpreis festlegen. Bestände werden automatisch verkauft." },
+      "trend-analysis": { "name": "Trendanalyse-Paket", "description": "Richtungsindikatoren auf Preischarts." },
+      "cpu-overclock": { "name": "CPU-Übertaktung", "description": "Produktionszyklusgeschwindigkeit erhöhen. Kann Instabilität verursachen." },
+      "quality-assurance": { "name": "Qualitätssicherung", "description": "Produktionsvarianz reduzieren. Mindestausbeute garantiert." },
+      "supply-chain": { "name": "Lieferkettenintegration", "description": "Überschüssige Rohstoffe in Premiumgüter umwandeln." },
+      "insider-newsletter": { "name": "Insider-Newsletter", "description": "Frühwarnung bei marktbewegenden Ereignissen. 10 Sekunden Vorsprung." },
+      "analyst-reports": { "name": "Analystenberichte", "description": "Numerische Trendstärke-Indikatoren." },
+      "moving-average": { "name": "Gleitender Durchschnitt", "description": "Technische Analysetools für Preischarts." }
+    },
+    "influence": {
+      "promo-campaign": { "name": "Werbekampagne", "description": "Künstliche Nachfrage für ausgewählten Rohstoff erzeugen." },
+      "negative-press": { "name": "Negative Pressemitteilung", "description": "Marktwert des Zielrohstoffs vorübergehend senken." },
+      "pump-and-dump": { "name": "Pump and Dump", "description": "Koordinierte Preisinflation mit automatisierter Liquidation." }
     }
   },
   "welcome": {

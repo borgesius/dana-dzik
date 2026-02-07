@@ -1,5 +1,6 @@
 import { POPUP_CONFIG } from "../config"
-import { getBusinessGame } from "../lib/businessGame"
+import { formatMoney } from "../lib/formatMoney"
+import { getMarketGame } from "../lib/marketGame"
 import {
     BONUS_POPUP_CONTENTS,
     POPUP_CONTENTS,
@@ -15,14 +16,20 @@ const POPUP_LEVEL_INTERVALS: Record<number, number> = {
 const DEFAULT_SPAWN_INTERVAL = 12000
 const SPAWN_JITTER = 5000
 const BONUS_POPUP_CHANCE = 0.25
+const RECOVERY_POPUP_CHANCE = 0.6
 
-const TIER_BONUS_MULTIPLIERS: Record<number, number> = {
+const PHASE_BONUS_MULTIPLIERS: Record<number, number> = {
     1: 1,
-    2: 1,
-    3: 2,
-    4: 5,
-    5: 10,
-    6: 25,
+    2: 2,
+    3: 5,
+    4: 15,
+}
+
+const RECOVERY_THRESHOLDS: Record<number, number> = {
+    1: 0.05,
+    2: 3,
+    3: 5,
+    4: 25,
 }
 
 /**
@@ -46,13 +53,13 @@ export class PopupManager {
     }
 
     private setupGameListener(): void {
-        const game = getBusinessGame()
+        const game = getMarketGame()
 
-        game.on("ventureResult", () => {
+        game.on("tradeExecuted", () => {
             this.onGameEngaged()
         })
 
-        game.on("popupsActivate", (level) => {
+        game.on("popupsActivate", (level: unknown) => {
             const lvl = level as number
             if (lvl > this.popupLevel) {
                 this.popupLevel = lvl
@@ -142,11 +149,20 @@ export class PopupManager {
         this.popupLevel = 0
     }
 
+    private getBonusChance(): number {
+        const game = getMarketGame()
+        const phase = game.getMaxUnlockedPhase()
+        const cash = game.getCash()
+        const threshold = RECOVERY_THRESHOLDS[phase] ?? 0.05
+
+        return cash < threshold ? RECOVERY_POPUP_CHANCE : BONUS_POPUP_CHANCE
+    }
+
     /** Spawns a random popup window. */
     public spawnPopup(): void {
         let content: PopupContent
 
-        if (this.gameActivated && Math.random() < BONUS_POPUP_CHANCE) {
+        if (this.gameActivated && Math.random() < this.getBonusChance()) {
             const baseContent =
                 BONUS_POPUP_CONTENTS[
                     Math.floor(Math.random() * BONUS_POPUP_CONTENTS.length)
@@ -167,15 +183,15 @@ export class PopupManager {
     }
 
     private scaleBonusPopup(baseContent: PopupContent): PopupContent {
-        const game = getBusinessGame()
-        const tier = game.getMaxUnlockedTier()
-        const multiplier = TIER_BONUS_MULTIPLIERS[tier] ?? 1
+        const game = getMarketGame()
+        const phase = game.getMaxUnlockedPhase()
+        const multiplier = PHASE_BONUS_MULTIPLIERS[phase] ?? 1
         const scaledAmount = (baseContent.bonusAmount ?? 0) * multiplier
 
         return {
             ...baseContent,
             bonusAmount: scaledAmount,
-            body: `${baseContent.body} Worth $${scaledAmount.toFixed(2)}!`,
+            body: `${baseContent.body} Worth ${formatMoney(scaledAmount)}!`,
         }
     }
 
@@ -241,7 +257,7 @@ export class PopupManager {
     }
 
     private claimBonus(amount: number): void {
-        const game = getBusinessGame()
+        const game = getMarketGame()
         game.addBonus(amount)
         this.playSound("notify")
     }

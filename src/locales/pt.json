@@ -117,14 +117,9 @@
     "qaFallback3": "🔬 QA: N/D",
     "colorScheme": "Cor: {{scheme}}",
     "language": "Idioma: {{language}}",
-    "hqOpen": "📊 HQ ▲",
-    "hqClosed": "📊 HQ ▼",
-    "github": "🐙 GitHub",
-    "unlockAt": "Desbloquear em ${{threshold}} de ganhos totais",
-    "makeMoney": "GANHE $$$ RÁPIDO",
-    "tooltipWithOdds": "{{tagline}}\nCusto: ${{cost}} | Ganho: ${{payout}} | {{successRate}}% de sucesso",
-    "tooltipWithoutOdds": "{{tagline}}\nCusto: ${{cost}} | Ganho: ${{payout}}",
-    "locked": "🔒 ${{threshold}}"
+    "tradeOpen": "📈 TRADE ▲",
+    "tradeClosed": "📈 TRADE ▼",
+    "github": "🐙 GitHub"
   },
   "qa": {
     "performance": "Desempenho",
@@ -261,159 +256,59 @@
     "title": "EDIT - {{filename}}{{dirtyMarker}}",
     "position": "Ln {{line}}, Col {{col}}"
   },
-  "businessPanel": {
-    "title": "SEDE DOS NEGÓCIOS",
-    "close": "×",
-    "improvements": "MELHORIAS",
-    "transactions": "TRANSAÇÕES",
-    "balance": "💰 Saldo",
-    "revenue": "Receita",
-    "success": "Sucesso",
-    "streak": "Sequência",
-    "bestWin": "Melhor Vitória",
-    "acquired": "ADQUIRIDO",
-    "noTransactions": "Ainda sem transações"
-  },
-  "businessGame": {
-    "ventures": {
-      "makeMoney": {
-        "name": "GANHE $$$ RÁPIDO",
-        "tagline": "Clique aqui para começar a ganhar!"
-      },
-      "emailForward": {
-        "name": "Encaminhamento de Email",
-        "tagline": "Encaminhe para amigos, ganhe comissões!"
-      },
-      "punchMonkey": {
-        "name": "Anúncio Interativo",
-        "tagline": "Acerte o macaco para ganhar!"
-      },
-      "ringtones": {
-        "name": "Toques Premium",
-        "tagline": "Baixe toques exclusivos!"
-      },
-      "workHome": {
-        "name": "Kit de Negócios em Casa",
-        "tagline": "Trabalhe em casa enchendo envelopes!"
-      },
-      "screensaver": {
-        "name": "Pacote Desktop",
-        "tagline": "Protetores de tela e cursores grátis!"
-      },
-      "nigerianPrince": {
-        "name": "Parceria Internacional",
-        "tagline": "Ajude a transferir fundos, fique com 20%!"
-      },
-      "vacation": {
-        "name": "Propriedade de Férias",
-        "tagline": "Oportunidade exclusiva de timeshare!"
-      },
-      "stockTips": {
-        "name": "Dicas Privilegiadas de Mercado",
-        "tagline": "Dicas quentes de ações diariamente!"
-      },
-      "mlm": {
-        "name": "Marketing Multinível",
-        "tagline": "Construa sua rede hoje!"
-      },
-      "downloadRam": {
-        "name": "Otimização de Sistema",
-        "tagline": "Baixe mais RAM instantaneamente!"
-      },
-      "y2k": {
-        "name": "Kit de Preparação Y2K",
-        "tagline": "Esteja pronto para o milênio!"
-      },
-      "winner": {
-        "name": "PARABÉNS!!!",
-        "tagline": "Você é o visitante 1.000.000!"
-      },
-      "dotcomIpo": {
-        "name": "IPO Ponto Com",
-        "tagline": "Entre no começo!"
-      }
+  "commodityExchange": {
+    "ui": {
+      "title": "TERMINAL DE CÂMBIO DE COMMODITIES",
+      "close": "×",
+      "portfolio": "PORTFÓLIO",
+      "production": "PRODUÇÃO",
+      "improvements": "MELHORIAS",
+      "marketOperations": "OPERAÇÕES DE MERCADO",
+      "buy": "COMPRAR",
+      "sell": "VENDER",
+      "sellAll": "VENDER TUDO",
+      "deploy": "IMPLANTAR",
+      "acquire": "ADQUIRIR",
+      "execute": "EXECUTAR",
+      "installed": "INSTALADO",
+      "cooldown": "RECARGA",
+      "qty": "Qtd",
+      "avgCost": "Custo Médio",
+      "pl": "L/P",
+      "tick": "tick",
+      "deployed": "implantado",
+      "noHoldings": "Sem posições. Compre commodities para começar.",
+      "unlockAt": "Desbloquear a ${{threshold}} de ganhos acumulados"
+    },
+    "commodities": {
+      "EMAIL": { "name": "Bases de Dados de Email", "description": "Endereços opt-in verificados. Atualização diária." },
+      "ADS": { "name": "Impressões de Banner", "description": "Espaços publicitários premium 468x60." },
+      "DOM": { "name": "Domínios .com", "description": "Nomes de domínio premium pré-registrados." },
+      "BW": { "name": "Largura de Banda", "description": "Capacidade dedicada de linha T1. 1,544 Mbps." },
+      "SOFT": { "name": "Licenças de Software", "description": "Licenciamento empresarial em volume. Pronto para envio." },
+      "VC": { "name": "Capital de Risco", "description": "Títulos de investimento pré-IPO. Disponibilidade limitada." }
+    },
+    "factories": {
+      "list-builder": { "name": "Construtor Automático de Listas", "description": "Coleta endereços de email verificados 24/7. Resultados podem variar." },
+      "banner-exchange": { "name": "Troca de Banners", "description": "Rede publicitária rotativa. Impressões geradas automaticamente." },
+      "colocation-rack": { "name": "Rack de Co-Localização", "description": "Hospedagem dedicada de servidores. Uptime não garantido." },
+      "offshore-dev": { "name": "Equipe de Desenvolvimento Offshore", "description": "Ciclo de desenvolvimento de 24 horas. Garantia de qualidade pendente." }
     },
     "upgrades": {
-      "ergonomicKeyboard": {
-        "name": "Teclado Ergonômico",
-        "description": "Clique base rende $0.02"
-      },
-      "salesTraining": {
-        "name": "Treinamento de Vendas",
-        "description": "Todos os empreendimentos -5% de risco"
-      },
-      "luckyTie": {
-        "name": "Gravata da Sorte",
-        "description": "Bônus de sequência +15%"
-      },
-      "marketResearch": {
-        "name": "Pesquisa de Mercado",
-        "description": "Veja % exato de sucesso ao passar o mouse"
-      },
-      "fastInternet": {
-        "name": "Modem 56k",
-        "description": "Encaminhamento de Email paga +$0.50"
-      },
-      "touchscreen": {
-        "name": "Monitor Touchscreen",
-        "description": "Anúncio Interativo paga +$2.00"
-      },
-      "cellPhone": {
-        "name": "Nokia 3310",
-        "description": "Toques Premium espera -3s"
-      },
-      "calculator": {
-        "name": "Calculadora de Negócios",
-        "description": "Trabalhar em Casa +50% pagamento"
-      },
-      "advancedTraining": {
-        "name": "Treinamento Avançado",
-        "description": "Todos os empreendimentos -10% de risco"
-      },
-      "motivationalPoster": {
-        "name": "Pôster Motivacional",
-        "description": "Bônus de sequência +25%"
-      },
-      "networkingEvent": {
-        "name": "Evento de Networking",
-        "description": "Parceria Internacional +$150"
-      },
-      "executiveDesk": {
-        "name": "Mesa Executiva",
-        "description": "Clique base rende $0.05"
-      },
-      "pentiumIII": {
-        "name": "Pentium III",
-        "description": "Otimização de Sistema paga +$100"
-      },
-      "leatherBriefcase": {
-        "name": "Pasta de Couro",
-        "description": "Todos os empreendimentos -15% de risco"
-      },
-      "goldenWatch": {
-        "name": "Relógio Dourado",
-        "description": "Bônus de sequência +40%"
-      },
-      "franchiseRights": {
-        "name": "Direitos de Franquia",
-        "description": "MLM pagamento +100%"
-      },
-      "cornerOffice": {
-        "name": "Escritório de Canto",
-        "description": "Passivo +$0.25/seg"
-      },
-      "stockPortfolio": {
-        "name": "Portfólio de Ações",
-        "description": "Passivo +$1.00/seg"
-      },
-      "realEstate": {
-        "name": "Imóveis",
-        "description": "Passivo +$5.00/seg"
-      },
-      "ventureCapital": {
-        "name": "Capital de Risco",
-        "description": "Passivo +$25/seg"
-      }
+      "bulk-orders": { "name": "Processamento de Pedidos em Lote", "description": "Executar operações em quantidades de 10." },
+      "limit-orders": { "name": "Sistema de Ordens Limitadas", "description": "Definir preço-alvo. Posições vendidas automaticamente." },
+      "trend-analysis": { "name": "Pacote de Análise de Tendências", "description": "Indicadores direcionais nos gráficos de preços." },
+      "cpu-overclock": { "name": "CPU Overclock", "description": "Aumentar velocidade do ciclo de produção. Pode causar instabilidade." },
+      "quality-assurance": { "name": "Garantia de Qualidade", "description": "Reduzir variância de produção. Rendimento mínimo garantido." },
+      "supply-chain": { "name": "Integração de Cadeia de Suprimentos", "description": "Converter commodities excedentes em bens premium." },
+      "insider-newsletter": { "name": "Newsletter Privilegiada", "description": "Aviso antecipado de eventos de mercado. 10 segundos de vantagem." },
+      "analyst-reports": { "name": "Relatórios de Analistas", "description": "Indicadores numéricos de força de tendência." },
+      "moving-average": { "name": "Média Móvel", "description": "Ferramentas de análise técnica para gráficos de preços." }
+    },
+    "influence": {
+      "promo-campaign": { "name": "Campanha Promocional", "description": "Gerar demanda artificial para a commodity selecionada." },
+      "negative-press": { "name": "Comunicado de Imprensa Negativo", "description": "Deprimir temporariamente o valor de mercado da commodity alvo." },
+      "pump-and-dump": { "name": "Pump and Dump", "description": "Inflação coordenada de preços com liquidação automatizada." }
     }
   },
   "welcome": {
