@@ -1,3 +1,10 @@
+# [1.38.0](https://github.com/borgesius/dana-dzik/compare/v1.37.0...v1.38.0) (2026-02-07)
+
+
+### Features
+
+* **das:** grund ([#35](https://github.com/borgesius/dana-dzik/issues/35)) ([741a0dd](https://github.com/borgesius/dana-dzik/commit/741a0ddff7ca709be078609119678febacf7fd1d))
+
 # [1.37.0](https://github.com/borgesius/dana-dzik/compare/v1.36.0...v1.37.0) (2026-02-07)
 
 
