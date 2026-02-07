@@ -31,7 +31,9 @@ describe("Terminal Commands", () => {
     describe("help command", () => {
         it("returns help text", async () => {
             const result = await executeCommand("help", ctx)
-            expect(result.output).toContain("terminalCommands.availableCommands")
+            expect(result.output).toContain(
+                "terminalCommands.availableCommands"
+            )
             expect(result.output).toContain("cd")
             expect(result.output).toContain("ls")
             expect(result.output).toContain("cat")
@@ -76,7 +78,9 @@ describe("Terminal Commands", () => {
 
         it("shows file type labels", async () => {
             const result = await executeCommand("ls", ctx)
-            expect(result.output).toMatch(/terminalCommands\.dir|terminalCommands\.exe|terminalCommands\.lnk/)
+            expect(result.output).toMatch(
+                /terminalCommands\.dir|terminalCommands\.exe|terminalCommands\.lnk/
+            )
         })
     })
 
@@ -269,8 +273,12 @@ describe("Terminal Commands", () => {
         it("commands are case insensitive", async () => {
             const result1 = await executeCommand("HELP", ctx)
             const result2 = await executeCommand("Help", ctx)
-            expect(result1.output).toContain("terminalCommands.availableCommands")
-            expect(result2.output).toContain("terminalCommands.availableCommands")
+            expect(result1.output).toContain(
+                "terminalCommands.availableCommands"
+            )
+            expect(result2.output).toContain(
+                "terminalCommands.availableCommands"
+            )
         })
 
         it("CD works uppercase", async () => {
