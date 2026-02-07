@@ -117,7 +117,7 @@ describe("Filesystem diff/patch", () => {
             const bigContent = "x".repeat(5000)
             const result = writeFile(fs, HACKTERM_README, bigContent)
             expect(result.success).toBe(false)
-            expect(result.error).toContain("4096")
+            expect(result.error).toContain("filesystem.fileSizeLimit")
         })
 
         it("rejects creation of files exceeding 4KB", () => {
@@ -125,7 +125,7 @@ describe("Filesystem diff/patch", () => {
             const bigContent = "x".repeat(5000)
             const result = createFile(fs, DESKTOP_DIR, "big.txt", bigContent)
             expect(result.success).toBe(false)
-            expect(result.error).toContain("4096")
+            expect(result.error).toContain("filesystem.fileSizeLimit")
         })
 
         it("allows files at exactly 4KB", () => {
@@ -153,7 +153,7 @@ describe("Filesystem diff/patch", () => {
             const fs = freshFs()
             const result = deleteFile(fs, HACKTERM_DIR)
             expect(result.success).toBe(false)
-            expect(result.error).toContain("not empty")
+            expect(result.error).toContain("filesystem.dirNotEmpty")
         })
 
         it("refuses to delete root", () => {
@@ -177,7 +177,7 @@ describe("Filesystem diff/patch", () => {
             createFile(fs, HACKTERM_DIR, "conflict.txt", "x")
             const result = renameFile(fs, HACKTERM_README, "conflict.txt")
             expect(result.success).toBe(false)
-            expect(result.error).toContain("Already exists")
+            expect(result.error).toContain("filesystem.alreadyExists")
         })
 
         it("fails for non-existent source", () => {

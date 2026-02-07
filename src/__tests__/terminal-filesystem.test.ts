@@ -185,13 +185,13 @@ describe("Terminal Filesystem", () => {
         it("fails for non-existent path", () => {
             const result = changeDirectory(fs, "3:\\NonExistent")
             expect(result.success).toBe(false)
-            expect(result.error).toContain("cannot find the path")
+            expect(result.error).toContain("filesystem.pathNotFound")
         })
 
         it("fails for file path", () => {
             const result = changeDirectory(fs, "3:\\DAS\\syslog.txt")
             expect(result.success).toBe(false)
-            expect(result.error).toContain("Not a directory")
+            expect(result.error).toContain("filesystem.notADirectory")
         })
     })
 
@@ -249,12 +249,12 @@ describe("Terminal Filesystem", () => {
 
         it("returns error for directory", () => {
             const result = getFileContent(fs, "3:\\Users")
-            expect(result.error).toContain("is a directory")
+            expect(result.error).toContain("filesystem.isADirectory")
         })
 
         it("returns error for non-existent file", () => {
             const result = getFileContent(fs, "nonexistent.txt")
-            expect(result.error).toContain("File not found")
+            expect(result.error).toContain("filesystem.fileNotFound")
         })
 
         it("returns windowId for executable", () => {
@@ -328,13 +328,13 @@ describe("Terminal Filesystem", () => {
         it("returns error for non-existent file", () => {
             const result = writeFile(fs, "3:\\nonexistent.txt", "content")
             expect(result.success).toBe(false)
-            expect(result.error).toContain("File not found")
+            expect(result.error).toContain("filesystem.fileNotFound")
         })
 
         it("returns error for directory", () => {
             const result = writeFile(fs, "3:\\DAS", "content")
             expect(result.success).toBe(false)
-            expect(result.error).toContain("is a directory")
+            expect(result.error).toContain("filesystem.isADirectory")
         })
     })
 
@@ -355,7 +355,7 @@ describe("Terminal Filesystem", () => {
         it("returns error if file already exists", () => {
             const result = createFile(fs, "3:\\DAS", "syslog.txt", "content")
             expect(result.success).toBe(false)
-            expect(result.error).toContain("already exists")
+            expect(result.error).toContain("filesystem.fileExists")
         })
 
         it("returns error for non-existent directory", () => {
@@ -366,7 +366,7 @@ describe("Terminal Filesystem", () => {
                 "content"
             )
             expect(result.success).toBe(false)
-            expect(result.error).toContain("not found")
+            expect(result.error).toContain("filesystem.dirNotFound")
         })
 
         it("returns error for non-directory path", () => {
@@ -377,7 +377,7 @@ describe("Terminal Filesystem", () => {
                 "content"
             )
             expect(result.success).toBe(false)
-            expect(result.error).toContain("Not a directory")
+            expect(result.error).toContain("filesystem.notADirectory")
         })
     })
 
