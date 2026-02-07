@@ -17,9 +17,9 @@ interface InterpreterState {
     lastOutput: string
 }
 
-function createInitialState(): InterpreterState {
+function createInitialState(initialMemory?: WeltValue[]): InterpreterState {
     return {
-        memory: [0, 0, 0, 4, 0, 0, 0, 97],
+        memory: initialMemory ? [...initialMemory] : [0, 0, 0, 4, 0, 0, 0, 97],
         carry: false,
         totalIterations: 0,
         lastOutput: "",
@@ -39,13 +39,15 @@ function wrapStore(val: WeltValue): WeltValue {
 
 export async function interpret(
     program: Program,
-    callbacks: WeltCallbacks
-): Promise<void> {
-    const state = createInitialState()
+    callbacks: WeltCallbacks,
+    initialMemory?: WeltValue[]
+): Promise<WeltValue[]> {
+    const state = createInitialState(initialMemory)
     const halted = await executeBlock(program.statements, state, callbacks)
     if (!halted) {
         callbacks.onOutput("Programm endete ohne Verneinung.")
     }
+    return [...state.memory]
 }
 
 async function executeBlock(

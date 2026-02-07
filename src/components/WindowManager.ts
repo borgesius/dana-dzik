@@ -101,7 +101,7 @@ const WINDOW_CONFIGS: Record<RoutableWindow, WindowConfig> = {
     },
     terminal: {
         id: "terminal",
-        title: "C:\\HACKTERM.EXE",
+        title: "3:\\HACKTERM.EXE",
         icon: icon("terminal"),
         width: 600,
         height: 400,

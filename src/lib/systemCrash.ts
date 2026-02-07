@@ -43,7 +43,7 @@ const HEAP_UNINIT_MESSAGES = [
 const GENERAL_MEMORY_MESSAGES = [
     "Not enough memory to complete this operation.",
     "Segmentation fault at 0x0000BEEF",
-    "Stack overflow in System32",
+    "Stack overflow in DAS",
     "Fatal: cannot allocate 0 bytes",
     "General protection fault in module WELT.DLL",
     "Exception 0x80000002: ARRAY_BOUNDS_EXCEEDED",
@@ -60,7 +60,7 @@ const BSOD_TEXT = `
    be terminated.
 
    *  The system has been halted because modification of
-      C:\\WINDOWS\\system32\\kernel.welt has compromised
+      3:\\DAS\\kernel.welt has compromised
       the integrity of the kernel process scheduler.
 
    *  Press any key to restart your computer. You will

@@ -41,7 +41,7 @@ const LABEL_MAPS: Record<ThemeId, ThemeLabels> = {
         maximizeButton: "\u25A1",
         searchPlaceholder: "Ask Jeeves",
         clockPrefix: "",
-        terminalPrompt: "C:\\>",
+        terminalPrompt: "3:\\>",
         windowTitleSuffix: "",
         fileManager: "Explorer",
         desktopIconLabels: {

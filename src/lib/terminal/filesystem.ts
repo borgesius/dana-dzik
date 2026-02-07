@@ -1,4 +1,5 @@
 import { DESKTOP_ITEMS } from "../../config"
+import { EXERCISES } from "../welt/exercises"
 import { randomSchopenhauer } from "./schopenhauer"
 
 export type FileType = "file" | "directory" | "executable" | "shortcut"
@@ -7,6 +8,8 @@ export interface FSNode {
     name: string
     type: FileType
     windowId?: string
+    handler?: string
+    readonly?: boolean
     content?: string
     children?: Record<string, FSNode>
 }
@@ -82,6 +85,9 @@ thing-in-itself (Ding an sich) directly -- only
 its representation. Similarly, a DING's contents
 are only revealed through VORSTELLUNG.
 
+Register contents are initialized by the system
+memory manager at boot time.
+
   HARDWARE NOTICE: The ALU carry flag is not
   automatically cleared between operations.
   Sequential arithmetic may produce unexpected
@@ -107,7 +113,7 @@ EXAMPLE
   VORSTELLUNG DING 0
   VERNEINUNG
 
-See C:\\Users\\Dana\\Desktop\\WELT\\examples\\ for more.
+See 3:\\Users\\Dana\\Desktop\\WELT\\examples\\ for more.
 
 KNOWN ISSUES
 ------------
@@ -449,6 +455,16 @@ DING 5 = DING 2 / 4
 DING 6 = 0
 DING 7 = "HEAP_READY"
 
+; Flush registers
+DING 0 = 0
+DING 1 = 0
+DING 2 = 0
+DING 3 = 4
+DING 4 = 0
+DING 5 = 0
+DING 6 = 0
+DING 7 = 97
+
 VORSTELLUNG "MEMORY OK"
 VERNEINUNG`
 
@@ -552,7 +568,7 @@ const SYS_LOG = `DAS SYSTEM LOG
 
 const DESKTOP_FILE_CONTENT: Partial<Record<string, string>> = {
     "Internet Explorer.lnk":
-        "[InternetShortcut]\nURL=file:///C:/Program Files/Internet Explorer/iexplore.exe",
+        "[InternetShortcut]\nURL=file:///3:/Programme/Internet Explorer/iexplore.exe",
     "about_me.doc": `=== ABOUT DANA ===
 
 Hi, my name is Dana.
@@ -659,6 +675,54 @@ Full docs: cat MANUAL.txt`,
             },
         },
     },
+    exercises: {
+        name: "exercises",
+        type: "directory",
+        children: buildExerciseChildren(),
+    },
+}
+
+function buildExerciseChildren(): Record<string, FSNode> {
+    const children: Record<string, FSNode> = {}
+
+    for (const exercise of EXERCISES) {
+        const weltName = `${exercise.name}.welt`
+        const testName = `${exercise.name}.welttest`
+
+        children[weltName] = {
+            name: weltName,
+            type: "file",
+            content: exercise.stub,
+            readonly: exercise.locked,
+        }
+
+        children[testName] = {
+            name: testName,
+            type: "file",
+            content: exercise.test,
+            readonly: true,
+        }
+    }
+
+    children["welttest.exe"] = {
+        name: "welttest.exe",
+        type: "executable",
+        content:
+            "WELT Test Runner v1.0\nRuns all .welttest files in the current directory.",
+        handler: "welttest",
+        readonly: true,
+    }
+
+    children["reset.exe"] = {
+        name: "reset.exe",
+        type: "executable",
+        content:
+            "WELT Exercise Reset v1.0\nRestores all exercises and system files to defaults.",
+        handler: "reset",
+        readonly: true,
+    }
+
+    return children
 }
 
 function buildDesktopChildren(): Record<string, FSNode> {
@@ -679,7 +743,7 @@ function buildDesktopChildren(): Record<string, FSNode> {
 }
 
 const FILESYSTEM_STRUCTURE: FSNode = {
-    name: "C:",
+    name: "3:",
     type: "directory",
     children: {
         Users: {
@@ -699,8 +763,8 @@ const FILESYSTEM_STRUCTURE: FSNode = {
                 },
             },
         },
-        "Program Files": {
-            name: "Program Files",
+        Programme: {
+            name: "Programme",
             type: "directory",
             children: {
                 HACKTERM: {
@@ -737,50 +801,44 @@ Commands:
                 },
             },
         },
-        WINDOWS: {
-            name: "WINDOWS",
+        DAS: {
+            name: "DAS",
             type: "directory",
             children: {
-                system32: {
-                    name: "system32",
-                    type: "directory",
-                    children: {
-                        "kernel.welt": {
-                            name: "kernel.welt",
-                            type: "file",
-                            content: SYS_KERNEL,
-                        },
-                        "display.welt": {
-                            name: "display.welt",
-                            type: "file",
-                            content: SYS_DISPLAY,
-                        },
-                        "clock.welt": {
-                            name: "clock.welt",
-                            type: "file",
-                            content: SYS_CLOCK,
-                        },
-                        "memory.welt": {
-                            name: "memory.welt",
-                            type: "file",
-                            content: SYS_MEMORY,
-                        },
-                        "boot.welt": {
-                            name: "boot.welt",
-                            type: "file",
-                            content: SYS_BOOT,
-                        },
-                        "config.welt": {
-                            name: "config.welt",
-                            type: "file",
-                            content: SYS_CONFIG,
-                        },
-                        "syslog.txt": {
-                            name: "syslog.txt",
-                            type: "file",
-                            content: SYS_LOG,
-                        },
-                    },
+                "kernel.welt": {
+                    name: "kernel.welt",
+                    type: "file",
+                    content: SYS_KERNEL,
+                },
+                "display.welt": {
+                    name: "display.welt",
+                    type: "file",
+                    content: SYS_DISPLAY,
+                },
+                "clock.welt": {
+                    name: "clock.welt",
+                    type: "file",
+                    content: SYS_CLOCK,
+                },
+                "memory.welt": {
+                    name: "memory.welt",
+                    type: "file",
+                    content: SYS_MEMORY,
+                },
+                "boot.welt": {
+                    name: "boot.welt",
+                    type: "file",
+                    content: SYS_BOOT,
+                },
+                "config.welt": {
+                    name: "config.welt",
+                    type: "file",
+                    content: SYS_CONFIG,
+                },
+                "syslog.txt": {
+                    name: "syslog.txt",
+                    type: "file",
+                    content: SYS_LOG,
                 },
             },
         },
@@ -799,7 +857,7 @@ export function createFileSystem(): FileSystem {
 
     return {
         root,
-        cwd: ["C:", "Users", "Dana", "Desktop"],
+        cwd: ["3:", "Users", "Dana", "Desktop"],
     }
 }
 
@@ -819,14 +877,14 @@ export function resetSharedFilesystem(): void {
 export function resolvePath(fs: FileSystem, pathStr: string): string[] | null {
     let parts: string[]
 
-    if (pathStr.startsWith("C:\\") || pathStr.startsWith("C:/")) {
+    if (pathStr.startsWith("3:\\") || pathStr.startsWith("3:/")) {
         parts = pathStr
             .slice(3)
             .split(/[/\\]/)
             .filter((p) => p.length > 0)
-        parts.unshift("C:")
-    } else if (pathStr === "C:" || pathStr === "C:\\") {
-        parts = ["C:"]
+        parts.unshift("3:")
+    } else if (pathStr === "3:" || pathStr === "3:\\") {
+        parts = ["3:"]
     } else {
         parts = [...fs.cwd]
         const segments = pathStr.split(/[/\\]/).filter((p) => p.length > 0)
@@ -860,7 +918,7 @@ function findChild(
 
 export function getNode(fs: FileSystem, path: string[]): FSNode | null {
     if (path.length === 0) return null
-    if (path[0] !== "C:") return null
+    if (path[0] !== "3:") return null
 
     let node = fs.root
     for (let i = 1; i < path.length; i++) {
@@ -888,8 +946,8 @@ export function getCurrentNode(fs: FileSystem): FSNode | null {
 }
 
 export function formatPath(path: string[]): string {
-    if (path.length === 1 && path[0] === "C:") {
-        return "C:\\"
+    if (path.length === 1 && path[0] === "3:") {
+        return "3:\\"
     }
     return path.join("\\")
 }
@@ -1215,10 +1273,10 @@ export function diffFilesystem(current: FileSystem): FilesystemDiff {
     const defaultFs = createFileSystem()
 
     const defaultFiles = new Map<string, string | undefined>()
-    collectFiles(defaultFs.root, ["C:"], defaultFiles)
+    collectFiles(defaultFs.root, ["3:"], defaultFiles)
 
     const currentFiles = new Map<string, string | undefined>()
-    collectFiles(current.root, ["C:"], currentFiles)
+    collectFiles(current.root, ["3:"], currentFiles)
 
     const modified: Record<string, string> = {}
     const created: Record<string, string> = {}

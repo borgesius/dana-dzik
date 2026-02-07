@@ -2,7 +2,7 @@ import type { AchievementSaveData } from "./achievements/types"
 import type { MarketSaveData } from "./marketGame"
 
 const SAVE_KEY = "save"
-const SAVE_VERSION = 1
+const SAVE_VERSION = 2
 const MAX_SAVE_BYTES = 256 * 1024
 const WARN_SAVE_BYTES = 200 * 1024
 const DEBOUNCE_MS = 2000
@@ -89,9 +89,47 @@ function migrateLegacyKeys(): Partial<SaveData> {
     return partial
 }
 
+function migrateFilesystemPath(oldPath: string): string {
+    let p = oldPath
+
+    if (p.startsWith("C:\\WINDOWS\\system32\\")) {
+        p = "3:\\DAS\\" + p.slice("C:\\WINDOWS\\system32\\".length)
+    } else if (p.startsWith("C:\\WINDOWS\\system32")) {
+        p = "3:\\DAS"
+    } else if (p.startsWith("C:\\Program Files\\")) {
+        p = "3:\\Programme\\" + p.slice("C:\\Program Files\\".length)
+    } else if (p.startsWith("C:\\Program Files")) {
+        p = "3:\\Programme"
+    } else if (p.startsWith("C:\\")) {
+        p = "3:\\" + p.slice("C:\\".length)
+    } else if (p === "C:") {
+        p = "3:"
+    }
+
+    return p
+}
+
+function migratePathRecord(
+    record: Record<string, string>
+): Record<string, string> {
+    const result: Record<string, string> = {}
+    for (const [key, value] of Object.entries(record)) {
+        result[migrateFilesystemPath(key)] = value
+    }
+    return result
+}
+
+function migrateV1ToV2(data: SaveData): void {
+    if (!data.filesystem) return
+
+    data.filesystem.modified = migratePathRecord(data.filesystem.modified)
+    data.filesystem.created = migratePathRecord(data.filesystem.created)
+    data.filesystem.deleted = data.filesystem.deleted.map(migrateFilesystemPath)
+}
+
 function migrate(data: SaveData): SaveData {
-    if (data.version < SAVE_VERSION) {
-        // Future migrations go here, applied sequentially
+    if (data.version < 2) {
+        migrateV1ToV2(data)
     }
     data.version = SAVE_VERSION
     return data

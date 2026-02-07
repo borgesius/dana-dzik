@@ -335,15 +335,14 @@ export class Editor {
 
     private async checkSystemFile(content: string): Promise<void> {
         if (
-            this.filePath.length < 4 ||
-            this.filePath[0] !== "C:" ||
-            this.filePath[1].toLowerCase() !== "windows" ||
-            this.filePath[2].toLowerCase() !== "system32"
+            this.filePath.length < 3 ||
+            this.filePath[0] !== "3:" ||
+            this.filePath[1].toLowerCase() !== "das"
         ) {
             return
         }
 
-        const filename = this.filePath[3].toLowerCase()
+        const filename = this.filePath[2].toLowerCase()
         const result = await validateSystemFile(filename, content)
         if (!result || result.severity === "none") return
 

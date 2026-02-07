@@ -174,7 +174,7 @@ export class MobileAppView {
             "#explorer-content"
         ) as HTMLElement
         if (container) {
-            new FileExplorer(container, "C:\\Users\\Dana\\Desktop\\WELT")
+            new FileExplorer(container, "3:\\Users\\Dana\\Desktop\\WELT")
         }
     }
 

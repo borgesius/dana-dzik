@@ -39,30 +39,30 @@ describe("Terminal Commands", () => {
 
     describe("cd command", () => {
         it("changes directory", async () => {
-            await executeCommand("cd C:\\WINDOWS", ctx)
-            expect(fs.cwd).toEqual(["C:", "WINDOWS"])
+            await executeCommand("cd 3:\\DAS", ctx)
+            expect(fs.cwd).toEqual(["3:", "DAS"])
         })
 
         it("shows current directory when no args", async () => {
             const result = await executeCommand("cd", ctx)
-            expect(result.output).toContain("C:\\Users\\Dana\\Desktop")
+            expect(result.output).toContain("3:\\Users\\Dana\\Desktop")
         })
 
         it("returns error for invalid path", async () => {
-            const result = await executeCommand("cd C:\\NonExistent", ctx)
+            const result = await executeCommand("cd 3:\\NonExistent", ctx)
             expect(result.output).toContain("cannot find the path")
             expect(result.className).toBe("error")
         })
 
         it("handles relative paths", async () => {
             await executeCommand("cd ..", ctx)
-            expect(fs.cwd).toEqual(["C:", "Users", "Dana"])
+            expect(fs.cwd).toEqual(["3:", "Users", "Dana"])
         })
     })
 
     describe("ls command", () => {
         it("lists directory contents", async () => {
-            fs.cwd = ["C:", "WINDOWS", "system32"]
+            fs.cwd = ["3:", "DAS"]
             const result = await executeCommand("ls", ctx)
             expect(result.output).toContain("syslog.txt")
             expect(result.output).toContain("config.welt")
@@ -71,7 +71,7 @@ describe("Terminal Commands", () => {
         it("shows directory header", async () => {
             const result = await executeCommand("ls", ctx)
             expect(result.output).toContain("Directory of")
-            expect(result.output).toContain("C:\\Users\\Dana\\Desktop")
+            expect(result.output).toContain("3:\\Users\\Dana\\Desktop")
         })
 
         it("shows file type labels", async () => {
@@ -90,19 +90,19 @@ describe("Terminal Commands", () => {
     describe("pwd command", () => {
         it("shows current directory", async () => {
             const result = await executeCommand("pwd", ctx)
-            expect(result.output).toBe("C:\\Users\\Dana\\Desktop")
+            expect(result.output).toBe("3:\\Users\\Dana\\Desktop")
         })
 
         it("updates after cd", async () => {
-            await executeCommand("cd C:\\WINDOWS", ctx)
+            await executeCommand("cd 3:\\DAS", ctx)
             const result = await executeCommand("pwd", ctx)
-            expect(result.output).toBe("C:\\WINDOWS")
+            expect(result.output).toBe("3:\\DAS")
         })
     })
 
     describe("tree command", () => {
         it("shows directory tree", async () => {
-            fs.cwd = ["C:", "Program Files", "HACKTERM"]
+            fs.cwd = ["3:", "Programme", "HACKTERM"]
             const result = await executeCommand("tree", ctx)
             expect(result.output).toContain("HACKTERM")
             expect(result.output).toContain("readme.txt")
@@ -111,10 +111,7 @@ describe("Terminal Commands", () => {
 
     describe("cat command", () => {
         it("shows file contents", async () => {
-            const result = await executeCommand(
-                "cat C:\\WINDOWS\\system32\\syslog.txt",
-                ctx
-            )
+            const result = await executeCommand("cat 3:\\DAS\\syslog.txt", ctx)
             expect(result.output).toContain("SYSTEM LOG")
         })
 
@@ -136,7 +133,7 @@ describe("Terminal Commands", () => {
         })
 
         it("returns error for directory", async () => {
-            const result = await executeCommand("cat C:\\Users", ctx)
+            const result = await executeCommand("cat 3:\\Users", ctx)
             expect(result.output).toContain("is a directory")
             expect(result.className).toBe("error")
         })
@@ -150,7 +147,7 @@ describe("Terminal Commands", () => {
 
     describe("cat -n flag", () => {
         it("shows line numbers with -n flag", async () => {
-            fs.cwd = ["C:", "Program Files", "HACKTERM"]
+            fs.cwd = ["3:", "Programme", "HACKTERM"]
             const result = await executeCommand("cat -n readme.txt", ctx)
             expect(result.output).toMatch(/^\s*1\|/)
         })
@@ -162,7 +159,7 @@ describe("Terminal Commands", () => {
         })
 
         it("shows content without line numbers by default", async () => {
-            fs.cwd = ["C:", "Program Files", "HACKTERM"]
+            fs.cwd = ["3:", "Programme", "HACKTERM"]
             const result = await executeCommand("cat readme.txt", ctx)
             expect(result.output).not.toMatch(/^\s*1\|/)
         })
@@ -170,10 +167,7 @@ describe("Terminal Commands", () => {
 
     describe("type command", () => {
         it("is alias for cat", async () => {
-            const result = await executeCommand(
-                "type C:\\WINDOWS\\system32\\syslog.txt",
-                ctx
-            )
+            const result = await executeCommand("type 3:\\DAS\\syslog.txt", ctx)
             expect(result.output).toContain("SYSTEM LOG")
         })
     })
@@ -199,7 +193,7 @@ describe("Terminal Commands", () => {
 
         it("returns error for file without windowId", async () => {
             const result = await executeCommand(
-                "open C:\\WINDOWS\\system32\\config.welt",
+                "open 3:\\DAS\\config.welt",
                 ctx
             )
             expect(result.output).toContain("Cannot open")
@@ -282,8 +276,8 @@ describe("Terminal Commands", () => {
         })
 
         it("CD works uppercase", async () => {
-            await executeCommand("CD C:\\WINDOWS", ctx)
-            expect(fs.cwd).toEqual(["C:", "WINDOWS"])
+            await executeCommand("CD 3:\\DAS", ctx)
+            expect(fs.cwd).toEqual(["3:", "DAS"])
         })
     })
 
@@ -326,14 +320,14 @@ describe("Terminal Commands", () => {
         })
 
         it("runs a valid welt program", async () => {
-            fs.cwd = ["C:", "Users", "Dana", "Desktop", "WELT", "examples"]
+            fs.cwd = ["3:", "Users", "Dana", "Desktop", "WELT", "examples"]
             const result = await executeCommand("welt hello.welt", ctx)
             expect(ctx.print).toHaveBeenCalledWith("Hello, World!")
             expect(result.output).toBe("")
         })
 
         it("reports welt errors", async () => {
-            fs.cwd = ["C:", "WINDOWS", "system32"]
+            fs.cwd = ["3:", "DAS"]
             const result = await executeCommand("welt syslog.txt", ctx)
             expect(result.output).toContain("WELT ERROR")
             expect(result.className).toBe("error")
@@ -343,19 +337,19 @@ describe("Terminal Commands", () => {
     describe("getPrompt", () => {
         it("returns prompt with current path", () => {
             const prompt = getPrompt(fs)
-            expect(prompt).toBe("C:\\Users\\Dana\\Desktop> ")
+            expect(prompt).toBe("3:\\Users\\Dana\\Desktop> ")
         })
 
         it("updates after directory change", () => {
-            fs.cwd = ["C:", "WINDOWS"]
+            fs.cwd = ["3:", "DAS"]
             const prompt = getPrompt(fs)
-            expect(prompt).toBe("C:\\WINDOWS> ")
+            expect(prompt).toBe("3:\\DAS> ")
         })
 
         it("shows root correctly", () => {
-            fs.cwd = ["C:"]
+            fs.cwd = ["3:"]
             const prompt = getPrompt(fs)
-            expect(prompt).toBe("C:\\> ")
+            expect(prompt).toBe("3:\\> ")
         })
     })
 

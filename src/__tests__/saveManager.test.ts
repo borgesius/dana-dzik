@@ -36,7 +36,7 @@ describe("SaveManager", () => {
         it("creates empty save data when nothing stored", async () => {
             const { saveManager } = await loadSaveManagerModule()
             const data = saveManager.load()
-            expect(data.version).toBe(1)
+            expect(data.version).toBe(2)
             expect(data.pinball.highScore).toBe(0)
             expect(data.preferences.theme).toBe("win95")
             expect(data.preferences.colorScheme).toBe("system")
@@ -116,7 +116,7 @@ describe("SaveManager", () => {
             localStorage.setItem("save", "not-valid-json{{")
             const { saveManager } = await loadSaveManagerModule()
             const data = saveManager.load()
-            expect(data.version).toBe(1)
+            expect(data.version).toBe(2)
             expect(data.pinball.highScore).toBe(0)
         })
 
@@ -146,6 +146,68 @@ describe("SaveManager", () => {
             expect(localStorage.getItem("colorScheme")).toBe("dark")
             expect(localStorage.getItem("locale")).toBe("fr")
             expect(localStorage.getItem("pinball-high-score")).toBe("500")
+        })
+
+        it("migrates v1 filesystem paths to v2", async () => {
+            const saveData: SaveData = {
+                version: 1,
+                savedAt: Date.now(),
+                game: null,
+                pinball: { highScore: 0 },
+                preferences: {
+                    theme: "win95",
+                    colorScheme: "system",
+                    locale: "en",
+                },
+                filesystem: {
+                    modified: {
+                        "C:\\WINDOWS\\system32\\memory.welt":
+                            "modified content",
+                        "C:\\Users\\Dana\\Desktop\\WELT\\examples\\hello.welt":
+                            "hello",
+                    },
+                    created: {
+                        "C:\\Users\\Dana\\Desktop\\WELT\\myfile.welt":
+                            "new content",
+                        "C:\\Program Files\\test.txt": "test",
+                    },
+                    deleted: [
+                        "C:\\WINDOWS\\system32\\syslog.txt",
+                        "C:\\Program Files\\HACKTERM\\readme.txt",
+                    ],
+                },
+                achievements: {
+                    earned: {},
+                    counters: {},
+                    sets: {},
+                    reported: [],
+                },
+            }
+            localStorage.setItem("save", JSON.stringify(saveData))
+            const { saveManager } = await loadSaveManagerModule()
+            const loaded = saveManager.load()
+
+            expect(loaded.version).toBe(2)
+            expect(loaded.filesystem.modified["3:\\DAS\\memory.welt"]).toBe(
+                "modified content"
+            )
+            expect(
+                loaded.filesystem.modified[
+                    "3:\\Users\\Dana\\Desktop\\WELT\\examples\\hello.welt"
+                ]
+            ).toBe("hello")
+            expect(
+                loaded.filesystem.created[
+                    "3:\\Users\\Dana\\Desktop\\WELT\\myfile.welt"
+                ]
+            ).toBe("new content")
+            expect(loaded.filesystem.created["3:\\Programme\\test.txt"]).toBe(
+                "test"
+            )
+            expect(loaded.filesystem.deleted).toContain("3:\\DAS\\syslog.txt")
+            expect(loaded.filesystem.deleted).toContain(
+                "3:\\Programme\\HACKTERM\\readme.txt"
+            )
         })
 
         it("fills in missing fields with defaults", async () => {

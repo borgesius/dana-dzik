@@ -15,9 +15,9 @@ import {
     writeFile,
 } from "../lib/terminal/filesystem"
 
-const HACKTERM_README = "C:\\Program Files\\HACKTERM\\readme.txt"
-const HACKTERM_DIR = "C:\\Program Files\\HACKTERM"
-const DESKTOP_DIR = "C:\\Users\\Dana\\Desktop"
+const HACKTERM_README = "3:\\Programme\\HACKTERM\\readme.txt"
+const HACKTERM_DIR = "3:\\Programme\\HACKTERM"
+const DESKTOP_DIR = "3:\\Users\\Dana\\Desktop"
 
 function freshFs(): FileSystem {
     return createFileSystem()
@@ -159,7 +159,7 @@ describe("Filesystem diff/patch", () => {
 
         it("refuses to delete root", () => {
             const fs = freshFs()
-            const result = deleteFile(fs, "C:")
+            const result = deleteFile(fs, "3:")
             expect(result.success).toBe(false)
         })
     })

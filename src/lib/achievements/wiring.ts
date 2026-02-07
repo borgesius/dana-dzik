@@ -230,7 +230,7 @@ function wireTerminalEvents(mgr: AchievementManager): void {
 
         if (cmd === "cd") {
             const raw = e.detail.raw.toLowerCase()
-            if (raw.includes("system32")) {
+            if (raw.includes("das")) {
                 mgr.earn("archivist")
             }
         }
@@ -289,6 +289,10 @@ function wireGuestbookEvents(mgr: AchievementManager): void {
 function wireWeltEvents(mgr: AchievementManager): void {
     document.addEventListener("welt:completed", () => {
         mgr.earn("programmer")
+    })
+
+    document.addEventListener("welt:all-exercises-passed", () => {
+        mgr.earn("welt-master")
     })
 
     document.addEventListener("welt:error", ((
