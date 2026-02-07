@@ -588,3 +588,19 @@ export interface TradeResult {
     pricePerUnit: number
     totalCost: number
 }
+
+// ---------------------------------------------------------------------------
+// Serializable save data (player progress only, not volatile market state)
+// ---------------------------------------------------------------------------
+
+export interface MarketSaveData {
+    cash: number
+    lifetimeEarnings: number
+    holdings: Record<string, Holding>
+    factories: Record<string, number>
+    ownedUpgrades: UpgradeId[]
+    unlockedCommodities: CommodityId[]
+    unlockedPhases: number[]
+    limitOrders: LimitOrder[]
+    popupLevel: number
+}

@@ -24,7 +24,7 @@ describe("Editor", () => {
 
     describe("constructor", () => {
         it("prints error and exits when trying to edit a directory", () => {
-            fs.cwd = ["C:"]
+            fs.cwd = ["3:"]
             new Editor(fs, "Users", callbacks)
 
             expect(callbacks.print).toHaveBeenCalledWith(
@@ -35,7 +35,7 @@ describe("Editor", () => {
         })
 
         it("creates editor UI for existing file", () => {
-            fs.cwd = ["C:", "Program Files", "HACKTERM"]
+            fs.cwd = ["3:", "Programme", "HACKTERM"]
             const editor = new Editor(fs, "readme.txt", callbacks)
 
             expect(container.querySelector(".editor-container")).toBeTruthy()
@@ -44,7 +44,7 @@ describe("Editor", () => {
         })
 
         it("creates editor UI for new file", () => {
-            fs.cwd = ["C:", "Users", "Dana", "Desktop"]
+            fs.cwd = ["3:", "Users", "Dana", "Desktop"]
             const editor = new Editor(fs, "newfile.txt", callbacks)
 
             expect(container.querySelector(".editor-container")).toBeTruthy()
@@ -53,7 +53,7 @@ describe("Editor", () => {
         })
 
         it("loads existing file content into textarea", () => {
-            fs.cwd = ["C:", "Program Files", "HACKTERM"]
+            fs.cwd = ["3:", "Programme", "HACKTERM"]
             new Editor(fs, "readme.txt", callbacks)
 
             const textarea = container.querySelector(
@@ -64,7 +64,7 @@ describe("Editor", () => {
         })
 
         it("starts with empty textarea for new file", () => {
-            fs.cwd = ["C:", "Users", "Dana", "Desktop"]
+            fs.cwd = ["3:", "Users", "Dana", "Desktop"]
             new Editor(fs, "newfile.txt", callbacks)
 
             const textarea = container.querySelector(
@@ -77,7 +77,7 @@ describe("Editor", () => {
 
     describe("UI structure", () => {
         it("creates header, body with gutter and textarea, and status bar", () => {
-            fs.cwd = ["C:", "Program Files", "HACKTERM"]
+            fs.cwd = ["3:", "Programme", "HACKTERM"]
             new Editor(fs, "readme.txt", callbacks)
 
             expect(container.querySelector(".editor-header")).toBeTruthy()
@@ -88,7 +88,7 @@ describe("Editor", () => {
         })
 
         it("shows filename in header", () => {
-            fs.cwd = ["C:", "Program Files", "HACKTERM"]
+            fs.cwd = ["3:", "Programme", "HACKTERM"]
             new Editor(fs, "readme.txt", callbacks)
 
             const header = container.querySelector(".editor-header")
@@ -96,7 +96,7 @@ describe("Editor", () => {
         })
 
         it("shows line numbers in gutter", () => {
-            fs.cwd = ["C:", "Program Files", "HACKTERM"]
+            fs.cwd = ["3:", "Programme", "HACKTERM"]
             new Editor(fs, "readme.txt", callbacks)
 
             const gutter = container.querySelector(".editor-gutter")
@@ -106,7 +106,7 @@ describe("Editor", () => {
 
     describe("destroy", () => {
         it("calls onExit callback", () => {
-            fs.cwd = ["C:", "Users", "Dana", "Desktop"]
+            fs.cwd = ["3:", "Users", "Dana", "Desktop"]
             const editor = new Editor(fs, "newfile.txt", callbacks)
 
             editor.destroy()
@@ -115,7 +115,7 @@ describe("Editor", () => {
         })
 
         it("removes editor container from DOM", () => {
-            fs.cwd = ["C:", "Users", "Dana", "Desktop"]
+            fs.cwd = ["3:", "Users", "Dana", "Desktop"]
             const editor = new Editor(fs, "newfile.txt", callbacks)
 
             expect(container.querySelector(".editor-container")).toBeTruthy()
@@ -128,7 +128,7 @@ describe("Editor", () => {
 
     describe("focusTextarea", () => {
         it("does not throw", () => {
-            fs.cwd = ["C:", "Users", "Dana", "Desktop"]
+            fs.cwd = ["3:", "Users", "Dana", "Desktop"]
             const editor = new Editor(fs, "newfile.txt", callbacks)
 
             expect(() => editor.focusTextarea()).not.toThrow()

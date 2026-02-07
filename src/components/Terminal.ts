@@ -8,8 +8,8 @@ import {
 import { Editor } from "../lib/terminal/editor"
 import {
     changeDirectory,
-    createFileSystem,
     type FileSystem,
+    getSharedFilesystem,
 } from "../lib/terminal/filesystem"
 
 let pendingInit: { cwd?: string; command?: string } | null = null
@@ -53,7 +53,7 @@ export class Terminal {
     constructor(container: HTMLElement, callbacks: TerminalCallbacks) {
         this.container = container
         this.callbacks = callbacks
-        this.fs = createFileSystem()
+        this.fs = getSharedFilesystem()
 
         this.container.innerHTML = ""
         this.container.className = "terminal-container"
@@ -260,6 +260,12 @@ export class Terminal {
         }
 
         const result = await executeCommand(input, ctx)
+
+        document.dispatchEvent(
+            new CustomEvent("terminal:command", {
+                detail: { command: input.trim().split(/\s+/)[0], raw: input },
+            })
+        )
 
         if (result.action === "clear") {
             this.clearOutput()

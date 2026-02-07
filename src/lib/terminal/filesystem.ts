@@ -1,4 +1,5 @@
 import { DESKTOP_ITEMS } from "../../config"
+import { EXERCISES } from "../welt/exercises"
 import { randomSchopenhauer } from "./schopenhauer"
 
 export type FileType = "file" | "directory" | "executable" | "shortcut"
@@ -7,6 +8,8 @@ export interface FSNode {
     name: string
     type: FileType
     windowId?: string
+    handler?: string
+    readonly?: boolean
     content?: string
     children?: Record<string, FSNode>
 }
@@ -82,6 +85,9 @@ thing-in-itself (Ding an sich) directly -- only
 its representation. Similarly, a DING's contents
 are only revealed through VORSTELLUNG.
 
+Register contents are initialized by the system
+memory manager at boot time.
+
   HARDWARE NOTICE: The ALU carry flag is not
   automatically cleared between operations.
   Sequential arithmetic may produce unexpected
@@ -107,7 +113,7 @@ EXAMPLE
   VORSTELLUNG DING 0
   VERNEINUNG
 
-See C:\\Users\\Dana\\Desktop\\WELT\\examples\\ for more.
+See 3:\\Users\\Dana\\Desktop\\WELT\\examples\\ for more.
 
 KNOWN ISSUES
 ------------
@@ -449,6 +455,16 @@ DING 5 = DING 2 / 4
 DING 6 = 0
 DING 7 = "HEAP_READY"
 
+; Flush registers
+DING 0 = 0
+DING 1 = 0
+DING 2 = 0
+DING 3 = 4
+DING 4 = 0
+DING 5 = 0
+DING 6 = 0
+DING 7 = 97
+
 VORSTELLUNG "MEMORY OK"
 VERNEINUNG`
 
@@ -552,7 +568,7 @@ const SYS_LOG = `DAS SYSTEM LOG
 
 const DESKTOP_FILE_CONTENT: Partial<Record<string, string>> = {
     "Internet Explorer.lnk":
-        "[InternetShortcut]\nURL=file:///C:/Program Files/Internet Explorer/iexplore.exe",
+        "[InternetShortcut]\nURL=file:///3:/Programme/Internet Explorer/iexplore.exe",
     "about_me.doc": `=== ABOUT DANA ===
 
 Hi, my name is Dana.
@@ -659,6 +675,54 @@ Full docs: cat MANUAL.txt`,
             },
         },
     },
+    exercises: {
+        name: "exercises",
+        type: "directory",
+        children: buildExerciseChildren(),
+    },
+}
+
+function buildExerciseChildren(): Record<string, FSNode> {
+    const children: Record<string, FSNode> = {}
+
+    for (const exercise of EXERCISES) {
+        const weltName = `${exercise.name}.welt`
+        const testName = `${exercise.name}.welttest`
+
+        children[weltName] = {
+            name: weltName,
+            type: "file",
+            content: exercise.stub,
+            readonly: exercise.locked,
+        }
+
+        children[testName] = {
+            name: testName,
+            type: "file",
+            content: exercise.test,
+            readonly: true,
+        }
+    }
+
+    children["welttest.exe"] = {
+        name: "welttest.exe",
+        type: "executable",
+        content:
+            "WELT Test Runner v1.0\nRuns all .welttest files in the current directory.",
+        handler: "welttest",
+        readonly: true,
+    }
+
+    children["reset.exe"] = {
+        name: "reset.exe",
+        type: "executable",
+        content:
+            "WELT Exercise Reset v1.0\nRestores all exercises and system files to defaults.",
+        handler: "reset",
+        readonly: true,
+    }
+
+    return children
 }
 
 function buildDesktopChildren(): Record<string, FSNode> {
@@ -679,7 +743,7 @@ function buildDesktopChildren(): Record<string, FSNode> {
 }
 
 const FILESYSTEM_STRUCTURE: FSNode = {
-    name: "C:",
+    name: "3:",
     type: "directory",
     children: {
         Users: {
@@ -699,8 +763,8 @@ const FILESYSTEM_STRUCTURE: FSNode = {
                 },
             },
         },
-        "Program Files": {
-            name: "Program Files",
+        Programme: {
+            name: "Programme",
             type: "directory",
             children: {
                 HACKTERM: {
@@ -737,50 +801,44 @@ Commands:
                 },
             },
         },
-        WINDOWS: {
-            name: "WINDOWS",
+        DAS: {
+            name: "DAS",
             type: "directory",
             children: {
-                system32: {
-                    name: "system32",
-                    type: "directory",
-                    children: {
-                        "kernel.welt": {
-                            name: "kernel.welt",
-                            type: "file",
-                            content: SYS_KERNEL,
-                        },
-                        "display.welt": {
-                            name: "display.welt",
-                            type: "file",
-                            content: SYS_DISPLAY,
-                        },
-                        "clock.welt": {
-                            name: "clock.welt",
-                            type: "file",
-                            content: SYS_CLOCK,
-                        },
-                        "memory.welt": {
-                            name: "memory.welt",
-                            type: "file",
-                            content: SYS_MEMORY,
-                        },
-                        "boot.welt": {
-                            name: "boot.welt",
-                            type: "file",
-                            content: SYS_BOOT,
-                        },
-                        "config.welt": {
-                            name: "config.welt",
-                            type: "file",
-                            content: SYS_CONFIG,
-                        },
-                        "syslog.txt": {
-                            name: "syslog.txt",
-                            type: "file",
-                            content: SYS_LOG,
-                        },
-                    },
+                "kernel.welt": {
+                    name: "kernel.welt",
+                    type: "file",
+                    content: SYS_KERNEL,
+                },
+                "display.welt": {
+                    name: "display.welt",
+                    type: "file",
+                    content: SYS_DISPLAY,
+                },
+                "clock.welt": {
+                    name: "clock.welt",
+                    type: "file",
+                    content: SYS_CLOCK,
+                },
+                "memory.welt": {
+                    name: "memory.welt",
+                    type: "file",
+                    content: SYS_MEMORY,
+                },
+                "boot.welt": {
+                    name: "boot.welt",
+                    type: "file",
+                    content: SYS_BOOT,
+                },
+                "config.welt": {
+                    name: "config.welt",
+                    type: "file",
+                    content: SYS_CONFIG,
+                },
+                "syslog.txt": {
+                    name: "syslog.txt",
+                    type: "file",
+                    content: SYS_LOG,
                 },
             },
         },
@@ -799,21 +857,34 @@ export function createFileSystem(): FileSystem {
 
     return {
         root,
-        cwd: ["C:", "Users", "Dana", "Desktop"],
+        cwd: ["3:", "Users", "Dana", "Desktop"],
     }
+}
+
+let persistentFs: FileSystem | null = null
+
+export function getSharedFilesystem(): FileSystem {
+    if (!persistentFs) {
+        persistentFs = createFileSystem()
+    }
+    return persistentFs
+}
+
+export function resetSharedFilesystem(): void {
+    persistentFs = null
 }
 
 export function resolvePath(fs: FileSystem, pathStr: string): string[] | null {
     let parts: string[]
 
-    if (pathStr.startsWith("C:\\") || pathStr.startsWith("C:/")) {
+    if (pathStr.startsWith("3:\\") || pathStr.startsWith("3:/")) {
         parts = pathStr
             .slice(3)
             .split(/[/\\]/)
             .filter((p) => p.length > 0)
-        parts.unshift("C:")
-    } else if (pathStr === "C:" || pathStr === "C:\\") {
-        parts = ["C:"]
+        parts.unshift("3:")
+    } else if (pathStr === "3:" || pathStr === "3:\\") {
+        parts = ["3:"]
     } else {
         parts = [...fs.cwd]
         const segments = pathStr.split(/[/\\]/).filter((p) => p.length > 0)
@@ -847,7 +918,7 @@ function findChild(
 
 export function getNode(fs: FileSystem, path: string[]): FSNode | null {
     if (path.length === 0) return null
-    if (path[0] !== "C:") return null
+    if (path[0] !== "3:") return null
 
     let node = fs.root
     for (let i = 1; i < path.length; i++) {
@@ -875,8 +946,8 @@ export function getCurrentNode(fs: FileSystem): FSNode | null {
 }
 
 export function formatPath(path: string[]): string {
-    if (path.length === 1 && path[0] === "C:") {
-        return "C:\\"
+    if (path.length === 1 && path[0] === "3:") {
+        return "3:\\"
     }
     return path.join("\\")
 }
@@ -963,6 +1034,8 @@ export function getExecutableWindowId(
     return node.windowId ?? null
 }
 
+const MAX_FILE_BYTES = 4096
+
 export function writeFile(
     fs: FileSystem,
     pathStr: string,
@@ -980,6 +1053,13 @@ export function writeFile(
 
     if (node.type === "directory") {
         return { success: false, error: `${pathStr} is a directory` }
+    }
+
+    if (new Blob([content]).size > MAX_FILE_BYTES) {
+        return {
+            success: false,
+            error: `File exceeds ${MAX_FILE_BYTES} byte limit`,
+        }
     }
 
     node.content = content
@@ -1017,11 +1097,110 @@ export function createFile(
         return { success: false, error: `File already exists: ${name}` }
     }
 
+    if (new Blob([content]).size > MAX_FILE_BYTES) {
+        return {
+            success: false,
+            error: `File exceeds ${MAX_FILE_BYTES} byte limit`,
+        }
+    }
+
     dirNode.children[name] = {
         name,
         type: "file",
         content,
     }
+
+    return { success: true }
+}
+
+export function deleteFile(
+    fs: FileSystem,
+    pathStr: string
+): { success: boolean; error?: string } {
+    const resolved = resolvePath(fs, pathStr)
+    if (!resolved || resolved.length < 2) {
+        return { success: false, error: `Invalid path: ${pathStr}` }
+    }
+
+    const node = getNode(fs, resolved)
+    if (!node) {
+        return { success: false, error: `Not found: ${pathStr}` }
+    }
+
+    if (
+        node.type === "directory" &&
+        node.children &&
+        Object.keys(node.children).length > 0
+    ) {
+        return {
+            success: false,
+            error: `Directory not empty: ${pathStr}`,
+        }
+    }
+
+    const parentPath = resolved.slice(0, -1)
+    const parentNode = getNode(fs, parentPath)
+    if (
+        !parentNode ||
+        parentNode.type !== "directory" ||
+        !parentNode.children
+    ) {
+        return { success: false, error: `Parent directory not found` }
+    }
+
+    const fileName = resolved[resolved.length - 1]
+    const key = Object.keys(parentNode.children).find(
+        (k) => k.toLowerCase() === fileName.toLowerCase()
+    )
+    if (key) {
+        delete parentNode.children[key]
+    }
+
+    return { success: true }
+}
+
+export function renameFile(
+    fs: FileSystem,
+    pathStr: string,
+    newName: string
+): { success: boolean; error?: string } {
+    const resolved = resolvePath(fs, pathStr)
+    if (!resolved || resolved.length < 2) {
+        return { success: false, error: `Invalid path: ${pathStr}` }
+    }
+
+    const node = getNode(fs, resolved)
+    if (!node) {
+        return { success: false, error: `Not found: ${pathStr}` }
+    }
+
+    const parentPath = resolved.slice(0, -1)
+    const parentNode = getNode(fs, parentPath)
+    if (
+        !parentNode ||
+        parentNode.type !== "directory" ||
+        !parentNode.children
+    ) {
+        return { success: false, error: `Parent directory not found` }
+    }
+
+    if (parentNode.children[newName]) {
+        return {
+            success: false,
+            error: `Already exists: ${newName}`,
+        }
+    }
+
+    const oldKey = Object.keys(parentNode.children).find(
+        (k) => k.toLowerCase() === resolved[resolved.length - 1].toLowerCase()
+    )
+    if (!oldKey) {
+        return { success: false, error: `Not found: ${pathStr}` }
+    }
+
+    node.name = newName
+    parentNode.children[newName] = node
+    delete parentNode.children[oldKey]
 
     return { success: true }
 }
@@ -1062,4 +1241,119 @@ export function buildTree(
     }
 
     return lines.join("\n")
+}
+
+// ─── Diff / Patch (for save/load) ───────────────────────────────────────────
+
+export interface FilesystemDiff {
+    modified: Record<string, string>
+    created: Record<string, string>
+    deleted: string[]
+}
+
+function collectFiles(
+    node: FSNode,
+    path: string[],
+    out: Map<string, string | undefined>
+): void {
+    const fullPath = path.join("\\")
+
+    if (node.type !== "directory") {
+        out.set(fullPath, node.content)
+        return
+    }
+
+    if (!node.children) return
+    for (const child of Object.values(node.children)) {
+        collectFiles(child, [...path, child.name], out)
+    }
+}
+
+export function diffFilesystem(current: FileSystem): FilesystemDiff {
+    const defaultFs = createFileSystem()
+
+    const defaultFiles = new Map<string, string | undefined>()
+    collectFiles(defaultFs.root, ["3:"], defaultFiles)
+
+    const currentFiles = new Map<string, string | undefined>()
+    collectFiles(current.root, ["3:"], currentFiles)
+
+    const modified: Record<string, string> = {}
+    const created: Record<string, string> = {}
+    const deleted: string[] = []
+
+    for (const [path, content] of currentFiles) {
+        if (defaultFiles.has(path)) {
+            if (content !== defaultFiles.get(path) && content !== undefined) {
+                modified[path] = content
+            }
+        } else if (content !== undefined) {
+            created[path] = content
+        }
+    }
+
+    for (const path of defaultFiles.keys()) {
+        if (!currentFiles.has(path)) {
+            deleted.push(path)
+        }
+    }
+
+    return { modified, created, deleted }
+}
+
+export function patchFilesystem(fs: FileSystem, diff: FilesystemDiff): void {
+    for (const path of diff.deleted) {
+        const parts = path.split("\\")
+        if (parts.length < 2) continue
+        const parentPath = parts.slice(0, -1)
+        const parentNode = getNode(fs, parentPath)
+        if (parentNode?.type === "directory" && parentNode.children) {
+            const name = parts[parts.length - 1]
+            delete parentNode.children[name]
+        }
+    }
+
+    for (const [path, content] of Object.entries(diff.modified)) {
+        const parts = path.split("\\")
+        const node = getNode(fs, parts)
+        if (node && node.type !== "directory") {
+            node.content = content
+        }
+    }
+
+    for (const [path, content] of Object.entries(diff.created)) {
+        const parts = path.split("\\")
+        if (parts.length < 2) continue
+        const parentParts = parts.slice(0, -1)
+        const name = parts[parts.length - 1]
+
+        let parentNode = getNode(fs, parentParts)
+
+        if (!parentNode) {
+            for (let i = 1; i < parentParts.length; i++) {
+                const existing = getNode(fs, parentParts.slice(0, i + 1))
+                if (!existing) {
+                    const parent = getNode(fs, parentParts.slice(0, i))
+                    if (parent?.type === "directory") {
+                        if (!parent.children) parent.children = {}
+                        parent.children[parentParts[i]] = {
+                            name: parentParts[i],
+                            type: "directory",
+                            children: {},
+                        }
+                    }
+                }
+            }
+            parentNode = getNode(fs, parentParts)
+        }
+
+        if (parentNode?.type === "directory") {
+            if (!parentNode.children) parentNode.children = {}
+            parentNode.children[name] = {
+                name,
+                type: "file",
+                content,
+            }
+        }
+    }
 }
