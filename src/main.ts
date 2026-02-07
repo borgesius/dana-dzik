@@ -41,7 +41,7 @@ import { getThemeManager } from "./lib/themeManager"
 setupErrorHandlers()
 getThemeManager()
 
-void (async () => {
+void (async (): Promise<void> => {
     await getLocaleManager().init()
 
     trackPageview()
