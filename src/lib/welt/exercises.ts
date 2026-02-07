@@ -12,6 +12,11 @@ export const EXERCISE_6_SOURCE = `; Exercise 6: Die Welt
 ;
 ; This program cannot be modified.
 ; Make it output the correct values.
+;
+; "Naturalmente they speak always of
+;  67, or of 69 -- but never of '68.
+;  This does not surprise me in the
+;  slightest." --T. Pferd
 
 ERWACHE
 DING 4 = 250
@@ -98,7 +103,7 @@ ERWARTE "146"`,
         name: "exercise6",
         stub: EXERCISE_6_SOURCE,
         test: `; Exercise 6: Die Welt
-ERWARTE "42"`,
+ERWARTE "68"`,
         locked: true,
     },
     {

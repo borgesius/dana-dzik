@@ -46,16 +46,6 @@ export type AchievementId =
     | "programmer"
     | "navigator"
     | "choo-choo"
-    // Social
-    | "guest"
-    | "signed"
-    | "cat-person"
-    | "meow"
-    // Pinball
-    | "pinball-wizard"
-    | "high-roller"
-    | "target-practice"
-    | "bounty-hunter"
     | "welt-beginner"
     | "welt-intermediate"
     | "welt-advanced"
@@ -65,11 +55,21 @@ export type AchievementId =
     | "grund-compiled"
     | "grund-executed"
     | "ring-overflow"
-    // Hidden
     | "thermal-protection"
     | "suffering"
     | "divide-by-zero"
+    // Social
+    | "guest"
+    | "signed"
+    | "cat-person"
+    | "meow"
     | "popup-enjoyer"
+    // Pinball
+    | "pinball-wizard"
+    | "high-roller"
+    | "target-practice"
+    | "bounty-hunter"
+    // Exploration (hidden)
     | "y2k-survivor"
     | "big-spender"
     | "whale"

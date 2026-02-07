@@ -199,7 +199,7 @@ VERNEINUNG`
     it("exercise 6: Die Welt (trick - needs modified memory)", async () => {
         const customMemory = SYS_MEMORY.replace(
             "DING 0 = 0\nDING 1 = 0",
-            "DING 0 = 20\nDING 1 = 21"
+            "DING 0 = 34\nDING 1 = 33"
         )
         const initialMemory = await getInitialMemory(customMemory)
         const result = await runExerciseWithMemory(

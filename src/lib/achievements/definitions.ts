@@ -53,7 +53,7 @@ export const ACHIEVEMENTS: AchievementDef[] = [
     {
         id: "diversified",
         category: "trading",
-        icon: "🎯",
+        icon: "📊",
         hidden: false,
     },
     // ── Production ───────────────────────────────────────────────────────────
@@ -148,7 +148,7 @@ export const ACHIEVEMENTS: AchievementDef[] = [
     {
         id: "polyglot",
         category: "exploration",
-        icon: "🌍",
+        icon: "🗣️",
         hidden: false,
     },
     {
@@ -252,7 +252,7 @@ export const ACHIEVEMENTS: AchievementDef[] = [
     {
         id: "grund-executed",
         category: "terminal",
-        icon: "⚡",
+        icon: "▶️",
         hidden: false,
     },
     {
@@ -284,13 +284,13 @@ export const ACHIEVEMENTS: AchievementDef[] = [
     {
         id: "guest",
         category: "social",
-        icon: "📖",
+        icon: "📕",
         hidden: false,
     },
     {
         id: "signed",
         category: "social",
-        icon: "✍️",
+        icon: "🖊️",
         hidden: false,
     },
     {
