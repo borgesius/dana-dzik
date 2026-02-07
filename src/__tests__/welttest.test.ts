@@ -1,12 +1,6 @@
 import { describe, expect, it } from "vitest"
 
-import { SYS_MEMORY } from "../lib/terminal/filesystem"
-import {
-    compileWeltProgram,
-    getInitialMemory,
-    runGrundProgram,
-    runWeltProgram,
-} from "../lib/welt"
+import { SYS_MEMORY } from "../lib/terminal/content/systemFiles"
 import {
     DEFAULT_INITIAL_MEMORY,
     EXERCISE_6_SOURCE,
@@ -21,6 +15,12 @@ import {
     isExerciseFile,
 } from "../lib/welt/freakgpt"
 import { parseGrund } from "../lib/welt/grundParser"
+import {
+    compileWeltProgram,
+    getInitialMemory,
+    runGrundProgram,
+    runWeltProgram,
+} from "../lib/welt/runner"
 import {
     checkFileIntegrity,
     parseWeltTest,

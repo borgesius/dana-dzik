@@ -4,8 +4,8 @@ import {
     SYS_DISPLAY,
     SYS_KERNEL,
     SYS_MEMORY,
-} from "./terminal/filesystem"
-import { runWeltProgram } from "./welt"
+} from "./terminal/content/systemFiles"
+import { runWeltProgram } from "./welt/runner"
 
 export type Severity = "none" | "minor" | "moderate" | "critical"
 

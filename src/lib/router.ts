@@ -1,4 +1,8 @@
-import { ROUTABLE_WINDOWS, type RoutableWindow, ROUTE_MAP } from "../config"
+import {
+    ROUTABLE_WINDOWS,
+    type RoutableWindow,
+    ROUTE_MAP,
+} from "../config/routing"
 
 /**
  * Simple hash-based router for navigating to windows via URL.
@@ -27,8 +31,8 @@ export class Router {
      * Updates the URL to reflect the current window.
      * @param windowId - The window ID to reflect in the URL
      */
-    public updateUrl(windowId: string): void {
-        if (ROUTABLE_WINDOWS.includes(windowId as RoutableWindow)) {
+    public updateUrl(windowId: RoutableWindow): void {
+        if (ROUTABLE_WINDOWS.includes(windowId)) {
             const path = windowId === "welcome" ? "/" : `/${windowId}`
             window.history.pushState({ windowId }, "", path)
         }

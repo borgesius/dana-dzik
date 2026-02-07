@@ -1,5 +1,6 @@
-import { ANALYTICS_CONFIG } from "../config"
+import { ANALYTICS_CONFIG } from "../config/analytics"
 import { getVisitorId, isClientSampled } from "./analytics"
+import { emitAppEvent, onAppEvent } from "./events"
 
 const COST_PER_INVOCATION = 0.000006
 const COST_PER_REDIS_COMMAND = 0.000002
@@ -121,6 +122,7 @@ export class SessionCostTracker {
 
     private recordAnalyticsPost(init?: RequestInit, key?: string): void {
         try {
+            // SAFETY: init.body is our own serialized analytics payload
             const body: Record<string, unknown> | null =
                 typeof init?.body === "string"
                     ? (JSON.parse(init.body) as Record<string, unknown>)
@@ -136,8 +138,7 @@ export class SessionCostTracker {
     }
 
     private listenForAnalyticsIntents(): void {
-        document.addEventListener("analytics:intent", (e: Event) => {
-            const detail = (e as CustomEvent<{ type: string }>).detail
+        onAppEvent("analytics:intent", (detail) => {
             this.recordSampledIntent(detail.type)
         })
     }
@@ -263,12 +264,12 @@ export class SessionCostTracker {
             breakdown.totalCost >= this.bigSpenderThreshold
         ) {
             this.bigSpenderFired = true
-            document.dispatchEvent(new CustomEvent("session-cost:big-spender"))
+            emitAppEvent("session-cost:big-spender")
         }
 
         if (!this.whaleFired && breakdown.totalCost >= this.whaleThreshold) {
             this.whaleFired = true
-            document.dispatchEvent(new CustomEvent("session-cost:whale"))
+            emitAppEvent("session-cost:whale")
         }
     }
 }

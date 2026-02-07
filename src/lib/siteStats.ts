@@ -45,6 +45,7 @@ async function fetchAndDisplayStats(): Promise<void> {
             return
         }
 
+        // SAFETY: response shape controlled by our /api/stats endpoint
         const result = (await response.json()) as StatsResponse
 
         if (!result.ok || !result.data) {

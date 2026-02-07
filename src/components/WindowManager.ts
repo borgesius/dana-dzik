@@ -1,9 +1,10 @@
-import { DESKTOP_ITEMS, type RoutableWindow } from "../config"
+import { DESKTOP_ITEMS } from "../config/desktop"
+import type { RoutableWindow } from "../config/routing"
 import { Window, type WindowConfig } from "./Window"
 
 /** Information about an open window for the taskbar */
 export interface OpenWindowInfo {
-    id: string
+    id: RoutableWindow
     title: string
     icon: string
     isActive: boolean
@@ -133,11 +134,11 @@ const WINDOW_CONFIGS: Record<RoutableWindow, WindowConfig> = {
  */
 export class WindowManager {
     private container: HTMLElement
-    private windows: Map<string, Window> = new Map()
-    private activeWindowId: string | null = null
+    private windows: Map<RoutableWindow, Window> = new Map()
+    private activeWindowId: RoutableWindow | null = null
     private zIndexCounter = 100
     private changeCallbacks: Array<() => void> = []
-    private newWindowCallbacks: Array<(windowId: string) => void> = []
+    private newWindowCallbacks: Array<(windowId: RoutableWindow) => void> = []
 
     constructor(container: HTMLElement) {
         this.container = container
@@ -148,13 +149,13 @@ export class WindowManager {
      * Opens a window by ID. If already open, focuses it instead.
      * @param windowId - The ID of the window to open
      */
-    public openWindow(windowId: string): void {
+    public openWindow(windowId: RoutableWindow): void {
         if (this.windows.has(windowId)) {
             this.focusWindow(windowId)
             return
         }
 
-        const config = WINDOW_CONFIGS[windowId as RoutableWindow]
+        const config = WINDOW_CONFIGS[windowId]
         if (!config) {
             console.error(`Unknown window: ${windowId}`)
             return
@@ -187,7 +188,7 @@ export class WindowManager {
      * Closes a window by ID.
      * @param windowId - The ID of the window to close
      */
-    public closeWindow(windowId: string): void {
+    public closeWindow(windowId: RoutableWindow): void {
         const win = this.windows.get(windowId)
         if (win) {
             win.destroy()
@@ -220,7 +221,7 @@ export class WindowManager {
      * Brings a window to the front and marks it as active.
      * @param windowId - The ID of the window to focus
      */
-    public focusWindow(windowId: string): void {
+    public focusWindow(windowId: RoutableWindow): void {
         const win = this.windows.get(windowId)
         if (!win) return
 
@@ -243,7 +244,7 @@ export class WindowManager {
      * Minimizes a window to the taskbar.
      * @param windowId - The ID of the window to minimize
      */
-    public minimizeWindow(windowId: string): void {
+    public minimizeWindow(windowId: RoutableWindow): void {
         const win = this.windows.get(windowId)
         if (win) {
             win.minimize()
@@ -279,14 +280,14 @@ export class WindowManager {
      * Does not fire when an existing window is focused.
      * @param callback - Function to call with the new window's ID
      */
-    public onNewWindowOpen(callback: (windowId: string) => void): void {
+    public onNewWindowOpen(callback: (windowId: RoutableWindow) => void): void {
         this.newWindowCallbacks.push(callback)
     }
 
     /**
      * Returns the ID of the currently active window, or null if none.
      */
-    public getActiveWindowId(): string | null {
+    public getActiveWindowId(): RoutableWindow | null {
         return this.activeWindowId
     }
 

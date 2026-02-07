@@ -1,3 +1,4 @@
+import { emitAppEvent } from "../events"
 import {
     type Severity,
     validateSystemFile,
@@ -351,7 +352,7 @@ export class Editor {
         this.textareaEl.readOnly = true
 
         if (typeof document !== "undefined") {
-            document.dispatchEvent(new CustomEvent("freak:used"))
+            emitAppEvent("freak:used")
         }
         if (this.freakBtnEl) {
             this.freakBtnEl.disabled = true
@@ -434,8 +435,8 @@ export class Editor {
         this.textareaEl.focus()
 
         if (typeof document !== "undefined") {
-            document.dispatchEvent(new CustomEvent("felix:message"))
-            document.dispatchEvent(new CustomEvent("felix:editor"))
+            emitAppEvent("felix:message")
+            emitAppEvent("felix:editor")
         }
     }
 
@@ -555,15 +556,11 @@ export class Editor {
         this.showStatusMessage(`Saved ${this.filename} (${lineCount} lines)`)
         this.updateHeader()
 
-        document.dispatchEvent(
-            new CustomEvent("terminal:file-saved", {
-                detail: {
-                    filename: this.filename,
-                    path: formatPath(this.filePath),
-                    isNew: false,
-                },
-            })
-        )
+        emitAppEvent("terminal:file-saved", {
+            filename: this.filename,
+            path: formatPath(this.filePath),
+            isNew: false,
+        })
 
         void this.checkSystemFile(content)
     }
@@ -588,16 +585,12 @@ export class Editor {
         const totalDelay = 300 + warningCount * 300 + 500
 
         setTimeout(() => {
-            document.dispatchEvent(
-                new CustomEvent("system-file-modified", {
-                    detail: {
-                        filename,
-                        severity: result.severity,
-                        broken: result.broken,
-                        values: result.values,
-                    },
-                })
-            )
+            emitAppEvent("system-file-modified", {
+                filename,
+                severity: result.severity,
+                broken: result.broken,
+                values: result.values,
+            })
         }, totalDelay)
     }
 

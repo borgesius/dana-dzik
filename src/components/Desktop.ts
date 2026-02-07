@@ -1,4 +1,4 @@
-import { DESKTOP_ITEMS } from "../config"
+import { DESKTOP_ITEMS } from "../config/desktop"
 import { DesktopIcon, type IconConfig } from "./DesktopIcon"
 import { Taskbar } from "./Taskbar"
 import { Toolbars } from "./Toolbars"

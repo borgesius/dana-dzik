@@ -32,6 +32,7 @@ async function fetchAndDisplayEntries(): Promise<void> {
             return
         }
 
+        // SAFETY: response shape per GitHub Issues REST API v3 contract
         const allIssues = (await response.json()) as GitHubIssue[]
         const issues = allIssues.filter((issue) => !issue.pull_request)
 

@@ -1,11 +1,13 @@
+import type { RoutableWindow } from "../config/routing"
+import { emitAppEvent } from "../lib/events"
 import {
     type FileSystem,
     formatPath,
     type FSNode,
     getNode,
-    getSharedFilesystem,
     resolvePath,
 } from "../lib/terminal/filesystem"
+import { getSharedFilesystem } from "../lib/terminal/filesystemBuilder"
 
 export class FileExplorer {
     private container: HTMLElement
@@ -121,11 +123,9 @@ export class FileExplorer {
         }
 
         if (node.windowId) {
-            document.dispatchEvent(
-                new CustomEvent("terminal:open-window", {
-                    detail: { windowId: node.windowId },
-                })
-            )
+            emitAppEvent("terminal:open-window", {
+                windowId: node.windowId as RoutableWindow,
+            })
             return
         }
 
@@ -172,11 +172,9 @@ export class FileExplorer {
             menu.appendChild(openItem)
         } else if (node.windowId) {
             const openItem = this.createMenuItem("Open", () => {
-                document.dispatchEvent(
-                    new CustomEvent("terminal:open-window", {
-                        detail: { windowId: node.windowId },
-                    })
-                )
+                emitAppEvent("terminal:open-window", {
+                    windowId: node.windowId as RoutableWindow,
+                })
             })
             menu.appendChild(openItem)
         } else if (node.content) {
@@ -223,10 +221,6 @@ export class FileExplorer {
 
     private openTerminalWith(command: string): void {
         const cwd = formatPath(this.currentPath)
-        document.dispatchEvent(
-            new CustomEvent("explorer:open-terminal", {
-                detail: { cwd, command },
-            })
-        )
+        emitAppEvent("explorer:open-terminal", { cwd, command })
     }
 }

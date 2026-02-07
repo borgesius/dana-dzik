@@ -1,35 +1,28 @@
+import { ROUTABLE_WINDOWS, type RoutableWindow } from "../../config/routing"
+import { onAppEvent } from "../events"
 import { getLocaleManager } from "../localeManager"
+import { getMarketGame } from "../marketGame/MarketEngine"
 import {
     COMMODITIES,
     CORNER_MARKET_FLOAT,
     CORNER_MARKET_THRESHOLD,
     FACTORIES,
-    getMarketGame,
     type TradeResult,
     UPGRADES,
-} from "../marketGame"
+} from "../marketGame/types"
 import { getThemeManager } from "../themeManager"
 import type { AchievementManager } from "./AchievementManager"
 
-const ROUTABLE_WINDOW_IDS = [
-    "welcome",
+const TOURIST_WINDOWS: RoutableWindow[] = [
     "about",
     "projects",
     "resume",
     "links",
-    "guestbook",
-    "felixgpt",
-    "stats",
-    "pinball",
-    "terminal",
-    "explorer",
 ]
-
-const TOURIST_WINDOWS = ["about", "projects", "resume", "links"]
 
 export function wireAchievements(
     mgr: AchievementManager,
-    windowOpenCallback: (cb: (windowId: string) => void) => void
+    windowOpenCallback: (cb: (windowId: RoutableWindow) => void) => void
 ): void {
     wireWindowManager(mgr, windowOpenCallback)
     wireThemeManager(mgr)
@@ -49,12 +42,12 @@ export function wireAchievements(
 
 function wireWindowManager(
     mgr: AchievementManager,
-    onNewWindowOpen: (cb: (windowId: string) => void) => void
+    onNewWindowOpen: (cb: (windowId: RoutableWindow) => void) => void
 ): void {
-    onNewWindowOpen((windowId: string) => {
+    onNewWindowOpen((windowId: RoutableWindow) => {
         const count = mgr.addToSet("windows-opened", windowId)
 
-        if (count >= ROUTABLE_WINDOW_IDS.length) {
+        if (count >= ROUTABLE_WINDOWS.length) {
             mgr.earn("explorer")
         }
 
@@ -199,12 +192,10 @@ function wireMarketGame(mgr: AchievementManager): void {
 }
 
 function wireTerminalEvents(mgr: AchievementManager): void {
-    document.addEventListener("terminal:command", ((
-        e: CustomEvent<{ command: string; raw: string }>
-    ) => {
+    onAppEvent("terminal:command", (detail) => {
         mgr.earn("hacker")
 
-        const cmd = e.detail.command.toLowerCase()
+        const cmd = detail.command.toLowerCase()
 
         if (cmd === "sl") {
             mgr.earn("choo-choo")
@@ -222,7 +213,7 @@ function wireTerminalEvents(mgr: AchievementManager): void {
         }
 
         if (cmd === "cat" || cmd === "type") {
-            const raw = e.detail.raw.toLowerCase()
+            const raw = detail.raw.toLowerCase()
             if (raw.includes("syslog")) {
                 mgr.earn("syslog")
             }
@@ -232,37 +223,31 @@ function wireTerminalEvents(mgr: AchievementManager): void {
         }
 
         if (cmd === "cd") {
-            const raw = e.detail.raw.toLowerCase()
+            const raw = detail.raw.toLowerCase()
             if (raw.includes("das")) {
                 mgr.earn("archivist")
             }
         }
-    }) as EventListener)
+    })
 
-    document.addEventListener("terminal:file-saved", (() => {
+    onAppEvent("terminal:file-saved", () => {
         mgr.earn("author")
-    }) as EventListener)
+    })
 }
 
 function wirePinballEvents(mgr: AchievementManager): void {
-    document.addEventListener("pinball:gameover", ((
-        e: CustomEvent<{
-            score: number
-            highScore: number
-            allTargetsHit: boolean
-        }>
-    ) => {
-        const { score, allTargetsHit } = e.detail
+    onAppEvent("pinball:gameover", (detail) => {
+        const { score, allTargetsHit } = detail
 
         if (score >= 1000) mgr.earn("pinball-wizard")
         if (score >= 5000) mgr.earn("high-roller")
         if (score >= 10000) mgr.earn("bounty-hunter")
         if (allTargetsHit) mgr.earn("target-practice")
-    }) as EventListener)
+    })
 }
 
 function wirePopupEvents(mgr: AchievementManager): void {
-    document.addEventListener("popup:bonus-claimed", () => {
+    onAppEvent("popup:bonus-claimed", () => {
         const count = mgr.incrementCounter("bonus-popups-claimed")
         if (count >= 5) {
             mgr.earn("popup-enjoyer")
@@ -271,7 +256,7 @@ function wirePopupEvents(mgr: AchievementManager): void {
 }
 
 function wireFelixEvents(mgr: AchievementManager): void {
-    document.addEventListener("felix:message", () => {
+    onAppEvent("felix:message", () => {
         mgr.earn("meow")
         const count = mgr.incrementCounter("felix-messages")
         if (count >= 5) {
@@ -290,38 +275,28 @@ function wireGuestbookEvents(mgr: AchievementManager): void {
 }
 
 function wireWeltEvents(mgr: AchievementManager): void {
-    document.addEventListener("welt:completed", () => {
+    onAppEvent("welt:completed", () => {
         mgr.earn("programmer")
     })
 
-    document.addEventListener("welt:exercises-tested", ((
-        e: CustomEvent<{
-            passed: number
-            total: number
-            passedExercises?: number[]
-        }>
-    ) => {
-        if (e.detail.passed >= 1) mgr.earn("welt-beginner")
-        if (e.detail.passed >= 3) mgr.earn("welt-intermediate")
-        if (e.detail.passed >= 5) mgr.earn("welt-advanced")
-        if (e.detail.passed >= 7) mgr.earn("erlosung")
-    }) as EventListener)
+    onAppEvent("welt:exercises-tested", (detail) => {
+        if (detail.passed >= 1) mgr.earn("welt-beginner")
+        if (detail.passed >= 3) mgr.earn("welt-intermediate")
+        if (detail.passed >= 5) mgr.earn("welt-advanced")
+        if (detail.passed >= 7) mgr.earn("erlosung")
+    })
 
-    document.addEventListener("welt:all-exercises-passed", () => {
+    onAppEvent("welt:all-exercises-passed", () => {
         mgr.earn("erlosung")
     })
 
-    document.addEventListener("welt:exercise-passed", ((
-        e: CustomEvent<{ exercise: number }>
-    ) => {
-        if (e.detail.exercise === 6) mgr.earn("welt-master")
-        if (e.detail.exercise === 7) mgr.earn("nibelung")
-    }) as EventListener)
+    onAppEvent("welt:exercise-passed", (detail) => {
+        if (detail.exercise === 6) mgr.earn("welt-master")
+        if (detail.exercise === 7) mgr.earn("nibelung")
+    })
 
-    document.addEventListener("welt:error", ((
-        e: CustomEvent<{ type: string }>
-    ) => {
-        switch (e.detail.type) {
+    onAppEvent("welt:error", (detail) => {
+        switch (detail.type) {
             case "thermal":
                 mgr.earn("thermal-protection")
                 break
@@ -329,39 +304,39 @@ function wireWeltEvents(mgr: AchievementManager): void {
                 mgr.earn("suffering")
                 break
         }
-    }) as EventListener)
+    })
 
-    document.addEventListener("grund:compiled", () => {
+    onAppEvent("grund:compiled", () => {
         mgr.earn("grund-compiled")
     })
 
-    document.addEventListener("grund:executed", () => {
+    onAppEvent("grund:executed", () => {
         mgr.earn("grund-executed")
     })
 
-    document.addEventListener("grund:ring-overflow", () => {
+    onAppEvent("grund:ring-overflow", () => {
         mgr.earn("ring-overflow")
     })
 
-    document.addEventListener("grund:ring-cycle", () => {
+    onAppEvent("grund:ring-cycle", () => {
         mgr.earn("ring-cycle")
     })
 
-    document.addEventListener("grund:ring-spin", () => {
+    onAppEvent("grund:ring-spin", () => {
         mgr.earn("ring-spin")
     })
 
-    document.addEventListener("freak:used", () => {
+    onAppEvent("freak:used", () => {
         mgr.earn("freakgpt")
     })
 
-    document.addEventListener("felix:editor", () => {
+    onAppEvent("felix:editor", () => {
         mgr.earn("keyboard-cat")
     })
 }
 
 function wireCalmMode(mgr: AchievementManager): void {
-    document.addEventListener("calm-mode:toggled", () => {
+    onAppEvent("calm-mode:toggled", () => {
         mgr.earn("calm-mode")
     })
 }
@@ -376,16 +351,16 @@ function wireSessionTimer(mgr: AchievementManager): void {
 }
 
 function wireSessionCost(mgr: AchievementManager): void {
-    document.addEventListener("session-cost:big-spender", () => {
+    onAppEvent("session-cost:big-spender", () => {
         mgr.earn("big-spender")
     })
-    document.addEventListener("session-cost:whale", () => {
+    onAppEvent("session-cost:whale", () => {
         mgr.earn("whale")
     })
 }
 
 function wireQAReports(mgr: AchievementManager): void {
-    document.addEventListener("qa:report-clicked", () => {
+    onAppEvent("qa:report-clicked", () => {
         mgr.earn("qa-inspector")
     })
 }

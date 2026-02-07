@@ -1,14 +1,12 @@
-import {
-    DESKTOP_ITEMS,
-    MOBILE_DOCK_IDS,
-    MOBILE_EXCLUDED_IDS,
-} from "../../config"
+import { DESKTOP_ITEMS } from "../../config/desktop"
+import { MOBILE_DOCK_IDS, MOBILE_EXCLUDED_IDS } from "../../config/mobile"
+import type { RoutableWindow } from "../../config/routing"
 
 export class MobileHomeScreen {
     private element: HTMLElement
-    private onAppOpen: (windowId: string) => void
+    private onAppOpen: (windowId: RoutableWindow) => void
 
-    constructor(onAppOpen: (windowId: string) => void) {
+    constructor(onAppOpen: (windowId: RoutableWindow) => void) {
         this.onAppOpen = onAppOpen
         this.element = this.createElement()
     }
@@ -69,7 +67,7 @@ export class MobileHomeScreen {
     private createAppIcon(
         icon: string,
         label: string,
-        windowId: string
+        windowId: RoutableWindow
     ): HTMLElement {
         const wrapper = document.createElement("div")
         wrapper.className = "ios-app-icon-wrapper"
