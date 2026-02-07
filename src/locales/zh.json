@@ -155,7 +155,10 @@
     "userAlt": "用户",
     "logOff": "注销",
     "shutDown": "关机",
-    "changelog": "更新日志"
+    "changelog": "更新日志",
+    "staging": "STAGING",
+    "goToProduction": "生产环境",
+    "goToStaging": "预发布环境"
   },
   "startMenu": {
     "programs": {

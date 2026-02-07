@@ -155,7 +155,10 @@
     "userAlt": "Benutzer",
     "logOff": "Abmelden",
     "shutDown": "Herunterfahren",
-    "changelog": "Änderungsprotokoll"
+    "changelog": "Änderungsprotokoll",
+    "staging": "STAGING",
+    "goToProduction": "Produktion",
+    "goToStaging": "Staging"
   },
   "startMenu": {
     "programs": {

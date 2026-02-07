@@ -155,7 +155,10 @@
     "userAlt": "ユーザー",
     "logOff": "ログオフ",
     "shutDown": "シャットダウン",
-    "changelog": "変更履歴"
+    "changelog": "変更履歴",
+    "staging": "STAGING",
+    "goToProduction": "本番環境",
+    "goToStaging": "ステージング"
   },
   "startMenu": {
     "programs": {

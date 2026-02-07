@@ -1,6 +1,6 @@
 {
     "$schema": "https://openapi.vercel.sh/vercel.json",
-    "ignoreCommand": "git log -1 --pretty=%s | grep -qvE '^chore\\((release|weekly)\\):'",
+    "ignoreCommand": "if [ \"$VERCEL_GIT_COMMIT_REF\" = \"staging\" ]; then exit 1; fi; if [ \"$VERCEL_GIT_COMMIT_REF\" != \"main\" ]; then exit 0; fi; git log -1 --pretty=%s | grep -qvE '^chore\\((release|weekly)\\):'",
     "buildCommand": "npm run build",
     "outputDirectory": "dist",
     "framework": "vite",
