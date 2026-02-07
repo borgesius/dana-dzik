@@ -33,6 +33,7 @@ export interface AppEventMap {
     "felix:message": undefined
     "session-cost:big-spender": undefined
     "session-cost:whale": undefined
+    "session-cost:leviathan": undefined
     "system-file-modified": {
         filename: string
         severity: string
@@ -43,13 +44,21 @@ export interface AppEventMap {
     // Progression system events
     "prestige:triggered": { count: number; hindsight: number }
     "prestige:purchase": { upgradeId: string }
-    "autobattler:run-complete": { won: boolean }
+    "prestige:ascension": { count: number; foresight: number }
+    "prestige:foresight-purchase": { upgradeId: string }
+    "autobattler:run-complete": { won: boolean; majorityFaction?: string }
     "autobattler:unit-unlocked": { unitId: string }
     "autobattler:spiral-complete": undefined
     "career:selected": { branch: string }
     "career:switched": { from: string; to: string }
     "career:node-unlocked": { nodeId: string }
     "progression:level-up": { level: number }
+    "market:employee-hired": { type: string }
+    "market:employee-fired": { type: string }
+    "market:org-reorg": undefined
+    "market:scrap-dividend": Record<string, never>
+    "autobattler:faction-complete": { faction: string }
+    "cosmetic:unlocked": { type: string; id: string }
 }
 
 export function emitAppEvent<K extends keyof AppEventMap>(

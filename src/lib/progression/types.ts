@@ -24,6 +24,8 @@ export interface ProgressionSaveData {
         }
     >
     educationNodes: string[]
+    /** Mastery ranks: masteryId -> count */
+    masteryRanks?: Record<string, number>
 }
 
 export function createEmptyProgressionData(): ProgressionSaveData {
@@ -44,6 +46,11 @@ export interface PrestigeSaveData {
     currency: number // Hindsight
     purchasedUpgrades: string[]
     lifetimeAcrossPrestiges: number
+    /** Ascension layer */
+    ascensionCount?: number
+    foresight?: number
+    purchasedForesightUpgrades?: string[]
+    totalHindsightSpent?: number
 }
 
 export function createEmptyPrestigeData(): PrestigeSaveData {
@@ -52,6 +59,10 @@ export function createEmptyPrestigeData(): PrestigeSaveData {
         currency: 0,
         purchasedUpgrades: [],
         lifetimeAcrossPrestiges: 0,
+        ascensionCount: 0,
+        foresight: 0,
+        purchasedForesightUpgrades: [],
+        totalHindsightSpent: 0,
     }
 }
 

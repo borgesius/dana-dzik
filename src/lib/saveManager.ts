@@ -1,4 +1,5 @@
 import type { AchievementSaveData } from "./achievements/types"
+import type { CosmeticSaveData } from "./cosmetics/CosmeticManager"
 import type { MarketSaveData } from "./marketGame/types"
 import type {
     AutobattlerSaveData,
@@ -47,6 +48,7 @@ export interface SaveData {
     prestige: PrestigeSaveData
     progression: ProgressionSaveData
     autobattler: AutobattlerSaveData
+    cosmetics?: CosmeticSaveData
 }
 
 type SaveCallback = () => SaveData

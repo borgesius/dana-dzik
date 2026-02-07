@@ -262,7 +262,7 @@ body {
 }
 
 .qa-badge:hover {
-    background: #d0d0d0;
+    background: var(--theme-surface-secondary);
 }
 
 .qa-badge.qa-success {
@@ -318,7 +318,7 @@ body {
 }
 
 .qa-tooltip-label {
-    color: #404040;
+    color: var(--theme-tooltip-text);
 }
 
 .qa-tooltip-value {
@@ -330,7 +330,7 @@ body {
     padding-top: 3px;
     border-top: 1px solid var(--theme-border-dark);
     font-size: 9px;
-    color: #606060;
+    color: var(--theme-text-secondary);
 }
 
 .qa-tooltip-click {
@@ -411,7 +411,7 @@ body {
 
 .cost-section-header {
     font-size: 10px;
-    color: #aaaaaa;
+    color: var(--theme-text-secondary);
     margin-top: 8px;
     margin-bottom: 3px;
     text-align: left;
@@ -422,12 +422,12 @@ body {
 }
 
 .cost-row-sampled .cost-label {
-    color: #aaaaaa;
+    color: var(--theme-text-secondary);
     font-style: italic;
 }
 
 .cost-row-sampled .cost-value {
-    color: #aaaaaa;
+    color: var(--theme-text-secondary);
 }
 
 .cost-lottery {
@@ -448,11 +448,120 @@ body {
 .cost-total {
     font-size: 20px;
     font-weight: bold;
-    color: #cc0000;
+    color: var(--theme-color-danger);
     animation: cost-blink 1s step-end infinite;
 }
 
 @keyframes cost-blink {
     0%, 100% { opacity: 1; }
     50% { opacity: 0; }
+}
+
+/* ── Cosmetic Wallpapers ──────────────────────────────────────────────── */
+
+.wp-quickdraw-sunset .desktop {
+    background: linear-gradient(135deg, #8b2500 0%, #cd661d 30%, #ff8c00 60%, #ffd700 100%) !important;
+}
+
+.wp-deputies-badge .desktop {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 30%, #4169e1 60%, #b0c4de 100%) !important;
+}
+
+.wp-clockwork-gears .desktop {
+    background:
+        repeating-conic-gradient(rgb(184 115 51 / 15%) 0% 25%, transparent 0% 50%) 0 0 / 40px 40px,
+        linear-gradient(135deg, #5c4033 0%, #b87333 50%, #daa520 100%) !important;
+}
+
+.wp-prospectors-mine .desktop {
+    background: linear-gradient(135deg, #1a0033 0%, #2d1b4e 30%, #2e8b57 60%, #00ff7f 100%) !important;
+}
+
+.wp-prestige-gold .desktop {
+    background: linear-gradient(135deg, #462300 0%, #b8860b 30%, #ffd700 60%, #fffacd 100%) !important;
+}
+
+/* ── Customization Window ─────────────────────────────────────────────── */
+
+.customize-container {
+    padding: 8px;
+    overflow-y: auto;
+    max-height: 100%;
+}
+
+.customize-section {
+    margin-bottom: 12px;
+}
+
+.customize-section h3 {
+    margin: 0 0 6px;
+    font-size: 13px;
+    border-bottom: 1px solid var(--win-border-dark, #808080);
+    padding-bottom: 2px;
+}
+
+.customize-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+    gap: 6px;
+}
+
+.cosmetic-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    padding: 8px 4px;
+    border: 2px solid var(--win-border-light, #dfdfdf);
+    background: var(--win-bg, #c0c0c0);
+    cursor: pointer;
+    text-align: center;
+    font-size: 10px;
+    position: relative;
+    transition: border-color 0.15s;
+}
+
+.cosmetic-card:hover:not(.locked) {
+    border-color: var(--theme-color-primary, #0078d4);
+}
+
+.cosmetic-card.active {
+    border-color: #00cc00;
+    background: rgb(0 204 0 / 10%);
+}
+
+.cosmetic-card.locked {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.cosmetic-icon {
+    font-size: 22px;
+}
+
+.cosmetic-name {
+    font-weight: 700;
+    font-size: 11px;
+}
+
+.cosmetic-desc {
+    color: #555;
+}
+
+.cosmetic-hint {
+    color: #888;
+    font-style: italic;
+    font-size: 9px;
+}
+
+.cosmetic-active-badge {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    background: #00cc00;
+    color: white;
+    font-size: 8px;
+    padding: 1px 4px;
+    border-radius: 2px;
+    font-weight: 700;
 }

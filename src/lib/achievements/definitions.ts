@@ -49,19 +49,19 @@ export const ACHIEVEMENTS: AchievementDef[] = [
         tier: 5,
     },
     {
-        id: "buy-the-dip",
+        id: "fire-sale",
         category: "trading",
         icon: "📉",
         hidden: false,
     },
     {
-        id: "sell-the-top",
+        id: "first-out-the-door",
         category: "trading",
         icon: "📈",
         hidden: false,
     },
     {
-        id: "diversified",
+        id: "who-are-we-selling-to",
         category: "trading",
         icon: "📊",
         hidden: false,
@@ -92,19 +92,19 @@ export const ACHIEVEMENTS: AchievementDef[] = [
         tier: 2,
     },
     {
-        id: "fully-automated",
+        id: "wasnt-brains",
         category: "production",
         icon: "🤖",
         hidden: false,
     },
     {
-        id: "market-maker",
+        id: "speak-to-a-retriever",
         category: "production",
         icon: "🎭",
         hidden: false,
     },
     {
-        id: "cornered",
+        id: "could-be-wrong",
         category: "production",
         icon: "👑",
         hidden: false,
@@ -190,18 +190,21 @@ export const ACHIEVEMENTS: AchievementDef[] = [
         category: "exploration",
         icon: "🗄️",
         hidden: false,
+        desktopOnly: true,
     },
     {
         id: "syslog",
         category: "exploration",
         icon: "📋",
         hidden: false,
+        desktopOnly: true,
     },
     {
         id: "readme",
         category: "exploration",
         icon: "📖",
         hidden: false,
+        desktopOnly: true,
     },
 
     // ── Terminal ──────────────────────────────────────────────────────────────
@@ -210,24 +213,28 @@ export const ACHIEVEMENTS: AchievementDef[] = [
         category: "terminal",
         icon: "💻",
         hidden: false,
+        desktopOnly: true,
     },
     {
         id: "author",
         category: "terminal",
         icon: "✍️",
         hidden: false,
+        desktopOnly: true,
     },
     {
         id: "navigator",
         category: "terminal",
         icon: "🧭",
         hidden: false,
+        desktopOnly: true,
     },
     {
         id: "choo-choo",
         category: "terminal",
         icon: "🚂",
         hidden: false,
+        desktopOnly: true,
     },
 
     // ── Coding ───────────────────────────────────────────────────────────────
@@ -236,60 +243,70 @@ export const ACHIEVEMENTS: AchievementDef[] = [
         category: "coding",
         icon: "🧑‍💻",
         hidden: false,
+        desktopOnly: true,
     },
     {
         id: "grund-compiled",
         category: "coding",
         icon: "🔨",
         hidden: false,
+        desktopOnly: true,
     },
     {
         id: "grund-executed",
         category: "coding",
         icon: "▶️",
         hidden: false,
+        desktopOnly: true,
     },
     {
         id: "ring-overflow",
         category: "coding",
         icon: "🔄",
         hidden: true,
+        desktopOnly: true,
     },
     {
         id: "ring-cycle",
         category: "coding",
         icon: "⭕",
         hidden: true,
+        desktopOnly: true,
     },
     {
         id: "ring-spin",
         category: "coding",
         icon: "🎰",
         hidden: true,
+        desktopOnly: true,
     },
     {
         id: "thermal-protection",
         category: "coding",
         icon: "🔥",
         hidden: true,
+        desktopOnly: true,
     },
     {
         id: "suffering",
         category: "coding",
         icon: "😔",
         hidden: true,
+        desktopOnly: true,
     },
     {
         id: "freakgpt",
         category: "coding",
         icon: "💋",
         hidden: false,
+        desktopOnly: true,
     },
     {
         id: "keyboard-cat",
         category: "coding",
         icon: "⌨️",
         hidden: false,
+        desktopOnly: true,
     },
 
     // ── Exercises ────────────────────────────────────────────────────────────
@@ -298,6 +315,7 @@ export const ACHIEVEMENTS: AchievementDef[] = [
         category: "exercises",
         icon: "📝",
         hidden: false,
+        desktopOnly: true,
         tieredGroup: "scholar",
         tier: 1,
     },
@@ -306,6 +324,7 @@ export const ACHIEVEMENTS: AchievementDef[] = [
         category: "exercises",
         icon: "🧩",
         hidden: false,
+        desktopOnly: true,
         tieredGroup: "scholar",
         tier: 2,
     },
@@ -314,6 +333,7 @@ export const ACHIEVEMENTS: AchievementDef[] = [
         category: "exercises",
         icon: "💎",
         hidden: false,
+        desktopOnly: true,
         tieredGroup: "scholar",
         tier: 3,
     },
@@ -322,18 +342,21 @@ export const ACHIEVEMENTS: AchievementDef[] = [
         category: "exercises",
         icon: "🌍",
         hidden: true,
+        desktopOnly: true,
     },
     {
         id: "nibelung",
         category: "exercises",
         icon: "💍",
         hidden: true,
+        desktopOnly: true,
     },
     {
         id: "erlosung",
         category: "exercises",
         icon: "🕊️",
         hidden: true,
+        desktopOnly: true,
     },
 
     // ── Social ───────────────────────────────────────────────────────────────
@@ -374,6 +397,7 @@ export const ACHIEVEMENTS: AchievementDef[] = [
         category: "pinball",
         icon: "🪩",
         hidden: false,
+        desktopOnly: true,
         tieredGroup: "arcade",
         tier: 1,
     },
@@ -382,6 +406,7 @@ export const ACHIEVEMENTS: AchievementDef[] = [
         category: "pinball",
         icon: "🎰",
         hidden: false,
+        desktopOnly: true,
         tieredGroup: "arcade",
         tier: 2,
     },
@@ -390,12 +415,16 @@ export const ACHIEVEMENTS: AchievementDef[] = [
         category: "pinball",
         icon: "🎯",
         hidden: false,
+        desktopOnly: true,
     },
     {
         id: "bounty-hunter",
         category: "pinball",
         icon: "🏆",
         hidden: false,
+        desktopOnly: true,
+        tieredGroup: "arcade",
+        tier: 3,
     },
 
     // ── Exploration (hidden) ─────────────────────────────────────────────────
@@ -415,6 +444,12 @@ export const ACHIEVEMENTS: AchievementDef[] = [
         id: "whale",
         category: "exploration",
         icon: "🐋",
+        hidden: true,
+    },
+    {
+        id: "leviathan",
+        category: "exploration",
+        icon: "🦑",
         hidden: true,
     },
     {
@@ -462,15 +497,55 @@ export const ACHIEVEMENTS: AchievementDef[] = [
         hidden: true,
     },
 
+    // ── Autobattler (faction complete) ──────────────────────────────────────
+    {
+        id: "syndicate-complete",
+        category: "autobattler",
+        icon: "🔫",
+        hidden: false,
+    },
+    {
+        id: "deputies-complete",
+        category: "autobattler",
+        icon: "🏛️",
+        hidden: false,
+    },
+    {
+        id: "collective-complete",
+        category: "autobattler",
+        icon: "⚙️",
+        hidden: false,
+    },
+    {
+        id: "prospectors-complete",
+        category: "autobattler",
+        icon: "💀",
+        hidden: false,
+    },
+
+    // ── Cross-system (hidden) ────────────────────────────────────────────
+    {
+        id: "vertical-integration",
+        category: "cross-system",
+        icon: "📐",
+        hidden: true,
+    },
+    {
+        id: "exit-interview",
+        category: "cross-system",
+        icon: "🚪",
+        hidden: true,
+    },
+
     // ── Prestige ─────────────────────────────────────────────────────────────
     {
-        id: "bubble-popper",
+        id: "ive-been-wrong",
         category: "prestige",
         icon: "💥",
         hidden: false,
     },
     {
-        id: "serial-popper",
+        id: "doesnt-matter-what-floor",
         category: "prestige",
         icon: "🫧",
         hidden: false,
@@ -482,7 +557,7 @@ export const ACHIEVEMENTS: AchievementDef[] = [
         hidden: false,
     },
     {
-        id: "hindsight-hoarder",
+        id: "tell-them-theyll-be-ok",
         category: "prestige",
         icon: "💎",
         hidden: false,
@@ -514,7 +589,197 @@ export const ACHIEVEMENTS: AchievementDef[] = [
         hidden: false,
     },
 
-    // ── Cross-system ─────────────────────────────────────────────────────────
+    // ── HR / Phase 5 ────────────────────────────────────────────────────────
+    {
+        id: "that-ones-a-person",
+        category: "production",
+        icon: "🤝",
+        hidden: false,
+    },
+    {
+        id: "we-make-nothing",
+        category: "production",
+        icon: "🏢",
+        hidden: false,
+    },
+    {
+        id: "you-dont-get-to-choose",
+        category: "production",
+        icon: "📉",
+        hidden: true,
+    },
+    {
+        id: "reorg",
+        category: "production",
+        icon: "🔀",
+        hidden: true,
+    },
+
+    // ── Autobattler (tiered - Wrangler) ─────────────────────────────────────
+    {
+        id: "greenhorn",
+        category: "autobattler",
+        icon: "🤠",
+        hidden: false,
+        tieredGroup: "wrangler",
+        tier: 1,
+    },
+    {
+        id: "deputy",
+        category: "autobattler",
+        icon: "⭐",
+        hidden: false,
+        tieredGroup: "wrangler",
+        tier: 2,
+    },
+    {
+        id: "sheriff",
+        category: "autobattler",
+        icon: "🏅",
+        hidden: false,
+        tieredGroup: "wrangler",
+        tier: 3,
+    },
+    {
+        id: "marshal",
+        category: "autobattler",
+        icon: "🎖️",
+        hidden: false,
+        tieredGroup: "wrangler",
+        tier: 4,
+    },
+
+    // ── Milestones (tiered - Rank) ───────────────────────────────────────
+    {
+        id: "level-5",
+        category: "milestones",
+        icon: "5️⃣",
+        hidden: false,
+        tieredGroup: "rank",
+        tier: 1,
+    },
+    {
+        id: "level-10",
+        category: "milestones",
+        icon: "🔟",
+        hidden: false,
+        tieredGroup: "rank",
+        tier: 2,
+    },
+    {
+        id: "level-20",
+        category: "milestones",
+        icon: "📊",
+        hidden: false,
+        tieredGroup: "rank",
+        tier: 3,
+    },
+    {
+        id: "level-35",
+        category: "milestones",
+        icon: "💫",
+        hidden: false,
+        tieredGroup: "rank",
+        tier: 4,
+    },
+    {
+        id: "level-50",
+        category: "milestones",
+        icon: "🌟",
+        hidden: false,
+        tieredGroup: "rank",
+        tier: 5,
+    },
+
+    // ── Milestones (phase-5 / phase-6 extensions) ─────────────────────────
+    {
+        id: "phase-5",
+        category: "milestones",
+        icon: "5️⃣",
+        hidden: false,
+        tieredGroup: "phases",
+        tier: 4,
+    },
+    {
+        id: "phase-6",
+        category: "milestones",
+        icon: "6️⃣",
+        hidden: false,
+        tieredGroup: "phases",
+        tier: 5,
+    },
+
+    // ── Phase 6: Structured Products Desk (Margin Call) ──────────────────
+    {
+        id: "its-just-money",
+        category: "production",
+        icon: "📄",
+        hidden: false,
+    },
+    {
+        id: "be-first",
+        category: "milestones",
+        icon: "🏆",
+        hidden: true,
+    },
+    {
+        id: "just-silence",
+        category: "milestones",
+        icon: "🔇",
+        hidden: true,
+    },
+    {
+        id: "music-stops",
+        category: "production",
+        icon: "🎵",
+        hidden: false,
+    },
+    {
+        id: "it-goes-quickly",
+        category: "trading",
+        icon: "💸",
+        hidden: true,
+    },
+    {
+        id: "rainy-day",
+        category: "milestones",
+        icon: "🌧️",
+        hidden: false,
+    },
+
+    // ── Standalone new achievements ──────────────────────────────────────
+    {
+        id: "win-streak",
+        category: "autobattler",
+        icon: "🔥",
+        hidden: true,
+    },
+    {
+        id: "serial-pivoter",
+        category: "career",
+        icon: "🔄",
+        hidden: true,
+    },
+    {
+        id: "overqualified",
+        category: "career",
+        icon: "🎓",
+        hidden: true,
+    },
+    {
+        id: "executive-material",
+        category: "career",
+        icon: "🏛️",
+        hidden: false,
+    },
+    {
+        id: "pieces-of-paper",
+        category: "prestige",
+        icon: "🛍️",
+        hidden: true,
+    },
+
+    // ── Cross-system ─────────────────────────────────────────────────────
     {
         id: "renaissance",
         category: "cross-system",

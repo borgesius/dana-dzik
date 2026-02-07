@@ -1,4 +1,13 @@
-export function createWidgetFrame(title: string, id: string): HTMLElement {
+interface WidgetFrameOptions {
+    lazy?: boolean
+    onFirstExpand?: () => void
+}
+
+export function createWidgetFrame(
+    title: string,
+    id: string,
+    options?: WidgetFrameOptions
+): HTMLElement {
     const widget = document.createElement("div")
     widget.className = "widget"
     widget.id = id
@@ -11,11 +20,27 @@ export function createWidgetFrame(title: string, id: string): HTMLElement {
     `
 
     const minimizeBtn = titlebar.querySelector(".minimize") as HTMLButtonElement
+
+    if (options?.lazy) {
+        widget.classList.add("minimized")
+        minimizeBtn.textContent = "□"
+    }
+
+    let firstExpandFired = false
     minimizeBtn.addEventListener("click", () => {
         widget.classList.toggle("minimized")
         minimizeBtn.textContent = widget.classList.contains("minimized")
             ? "□"
             : "_"
+
+        if (
+            !firstExpandFired &&
+            !widget.classList.contains("minimized") &&
+            options?.onFirstExpand
+        ) {
+            firstExpandFired = true
+            options.onFirstExpand()
+        }
     })
 
     makeDraggable(widget, titlebar)

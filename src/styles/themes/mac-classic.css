@@ -134,6 +134,9 @@
     --theme-qa-badge-border: #999999;
     --theme-weather-bg: #d4ecff;
     --theme-weather-border: #8cb4d8;
+
+    /* Terminal success on white bg */
+    --theme-terminal-success: #228b22;
 }
 
 /* Mac-style pinstripe title bar lines */

@@ -381,6 +381,8 @@ Type 'help' for available commands.
         train.textContent = frames[0]
         animContainer.appendChild(train)
 
+        this.scrollToBottom()
+
         let frameIndex = 0
         const frameInterval = setInterval(() => {
             frameIndex = (frameIndex + 1) % frames.length

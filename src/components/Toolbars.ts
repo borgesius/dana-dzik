@@ -6,7 +6,6 @@ import {
     getMarketGame,
     type MarketEngine,
 } from "../lib/marketGame/MarketEngine"
-import { initStrava } from "../lib/strava"
 import { getThemeManager } from "../lib/themeManager"
 import { BusinessPanel } from "./BusinessPanel"
 import { createColorSchemeToggle } from "./toolbars/ColorSchemeToggle"
@@ -37,8 +36,6 @@ export class Toolbars {
 
         getThemeManager().on("themeChanged", () => this.applyThemeLabels())
         getLocaleManager().on("localeChanged", () => this.applyTranslations())
-
-        void initStrava()
     }
 
     private applyThemeLabels(): void {

@@ -14,6 +14,8 @@ import {
     getWindowContent,
     renderAchievementsWindow,
     renderAutobattlerWindow,
+    renderCareerTreeWindow,
+    renderCustomizeWindow,
     renderResumeWindow,
 } from "../lib/windowContent"
 import { FileExplorer } from "./FileExplorer"
@@ -138,6 +140,10 @@ export class Window {
             renderAutobattlerWindow()
         } else if (this.config.contentType === "resume") {
             renderResumeWindow()
+        } else if (this.config.contentType === "customize") {
+            renderCustomizeWindow()
+        } else if (this.config.contentType === "career-tree") {
+            renderCareerTreeWindow()
         }
     }
 
@@ -225,10 +231,13 @@ export class Window {
         if ((e.target as HTMLElement).closest(".window-btn")) return
 
         this.isDragging = true
-        const rect = this.element.getBoundingClientRect()
+
+        // Use offsetLeft/offsetTop (relative to offset parent) instead of
+        // getBoundingClientRect (viewport coords) so toolbar height doesn't
+        // cause the window to jump when dragging starts.
         this.dragOffset = {
-            x: e.clientX - rect.left,
-            y: e.clientY - rect.top,
+            x: e.clientX - this.element.offsetLeft,
+            y: e.clientY - this.element.offsetTop,
         }
 
         const onMouseMove = (e: MouseEvent): void => {

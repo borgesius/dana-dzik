@@ -7,6 +7,23 @@ export type FactionId =
     | "prospectors"
     | "drifters"
 
+/** Advantage cycle: each faction beats the next one in the array (wraps) */
+export const FACTION_CYCLE: FactionId[] = [
+    "quickdraw",
+    "clockwork",
+    "deputies",
+    "prospectors",
+]
+
+/** Cross-aisle partners: non-adjacent factions that form bridge synergies */
+export const CROSS_AISLE: Record<FactionId, FactionId> = {
+    quickdraw: "deputies",
+    deputies: "quickdraw",
+    clockwork: "prospectors",
+    prospectors: "clockwork",
+    drifters: "drifters",
+}
+
 // ── Ability triggers ─────────────────────────────────────────────────────────
 
 export type AbilityTrigger =
@@ -21,9 +38,24 @@ export type AbilityTrigger =
     | "onEnemyEnterFront"
 
 export type AbilityEffect =
-    | { type: "damage"; target: "frontEnemy" | "backEnemy" | "randomEnemy" | "allEnemies"; amount: number }
-    | { type: "buff"; target: "self" | "allAllies" | "randomAlly"; stat: "atk" | "hp" | "shield"; amount: number }
-    | { type: "summon"; unitId: string; position: "front" | "back" }
+    | {
+          type: "damage"
+          target: "frontEnemy" | "backEnemy" | "randomEnemy" | "allEnemies"
+          amount: number
+      }
+    | {
+          type: "buff"
+          target: "self" | "allAllies" | "randomAlly"
+          stat: "atk" | "hp" | "shield"
+          amount: number
+      }
+    | {
+          type: "summon"
+          unitId: string
+          position: "front" | "back"
+          atkBonus?: number
+          hpBonus?: number
+      }
     | { type: "doubleDamage" }
     | { type: "heal"; target: "self" | "allAllies"; amount: number }
 
@@ -31,6 +63,17 @@ export interface AbilityDef {
     trigger: AbilityTrigger
     effect: AbilityEffect
     description: string
+    /** Same-faction scaling: the effect's numeric amount increases per same-faction ally */
+    factionBonus?: {
+        perAlly: number
+    }
+    /** Cross-aisle bridge: bonus effect when cross-faction allies are present */
+    crossBonus?: {
+        faction: FactionId
+        minAllies: number
+        effect: AbilityEffect
+        description: string
+    }
 }
 
 // ── Unit definitions ─────────────────────────────────────────────────────────

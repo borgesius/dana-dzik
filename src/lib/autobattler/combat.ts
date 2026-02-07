@@ -4,6 +4,7 @@ import type {
     CombatLogEntry,
     CombatResult,
     CombatUnit,
+    FactionId,
     UnitDef,
 } from "./types"
 import { UNIT_MAP } from "./units"
@@ -76,10 +77,9 @@ export function resolveCombat(
     let round = 0
 
     // ── Combat start abilities ───────────────────────────────────────────
-    triggerAbilities("combatStart", player, opponent, log, 0)
-    triggerAbilities("combatStart", opponent, player, log, 0)
+    triggerAbilities("combatStart", player, opponent, log, 0, "player")
+    triggerAbilities("combatStart", opponent, player, log, 0, "opponent")
 
-    // Clean up dead from combat start
     removeDeadUnits(player, opponent, log, 0)
     removeDeadUnits(opponent, player, log, 0)
 
@@ -91,12 +91,16 @@ export function resolveCombat(
         round++
 
         // ── Round start abilities ────────────────────────────────────────
-        triggerAbilities("roundStart", player, opponent, log, round)
-        triggerAbilities("roundStart", opponent, player, log, round)
+        triggerAbilities("roundStart", player, opponent, log, round, "player")
+        triggerAbilities("roundStart", opponent, player, log, round, "opponent")
         removeDeadUnits(player, opponent, log, round)
         removeDeadUnits(opponent, player, log, round)
 
-        if (player.filter(isAlive).length === 0 || opponent.filter(isAlive).length === 0) break
+        if (
+            player.filter(isAlive).length === 0 ||
+            opponent.filter(isAlive).length === 0
+        )
+            break
 
         // ── Front-line clash ─────────────────────────────────────────────
         const pFront = player.find(isAlive)
@@ -106,28 +110,60 @@ export function resolveCombat(
         // Player attacks first
         let pDmg = pFront.currentATK
         if (!pFront.hasAttacked) {
-            triggerAbilities("onFirstAttack", [pFront], opponent, log, round)
+            triggerAbilities(
+                "onFirstAttack",
+                [pFront],
+                opponent,
+                log,
+                round,
+                "player"
+            )
             const def = getUnitDef(pFront)
-            if (def?.ability.trigger === "onFirstAttack" && def.ability.effect.type === "doubleDamage") {
+            if (
+                def?.ability.trigger === "onFirstAttack" &&
+                def.ability.effect.type === "doubleDamage"
+            ) {
                 pDmg *= 2
             }
             pFront.hasAttacked = true
         }
         const pDmgDealt = dealDamage(oFront, pDmg)
-        log.push({ round, description: `${pFront.unitDefId} attacks ${oFront.unitDefId} for ${pDmgDealt}` })
+        log.push({
+            round,
+            description: `${pFront.unitDefId} attacks ${oFront.unitDefId} for ${pDmgDealt}`,
+        })
 
         if (pDmgDealt > 0) {
-            triggerAbilities("onDealDamage", [pFront], opponent, log, round)
-            triggerAbilities("onTakeDamage", [oFront], player, log, round)
+            triggerAbilities(
+                "onDealDamage",
+                [pFront],
+                opponent,
+                log,
+                round,
+                "player"
+            )
+            triggerAbilities(
+                "onTakeDamage",
+                [oFront],
+                player,
+                log,
+                round,
+                "opponent"
+            )
         }
 
-        // Check if opponent front died
         if (!isAlive(oFront)) {
-            handleDeath(oFront, opponent, player, log, round)
-            // Trigger onEnemyEnterFront for the player
+            handleDeath(oFront, opponent, player, log, round, "opponent")
             const newOFront = opponent.find(isAlive)
             if (newOFront) {
-                triggerAbilities("onEnemyEnterFront", player, opponent, log, round)
+                triggerAbilities(
+                    "onEnemyEnterFront",
+                    player,
+                    opponent,
+                    log,
+                    round,
+                    "player"
+                )
             }
         }
 
@@ -137,31 +173,64 @@ export function resolveCombat(
         if (oAttacker && pTarget) {
             let oDmg = oAttacker.currentATK
             if (!oAttacker.hasAttacked) {
-                triggerAbilities("onFirstAttack", [oAttacker], player, log, round)
+                triggerAbilities(
+                    "onFirstAttack",
+                    [oAttacker],
+                    player,
+                    log,
+                    round,
+                    "opponent"
+                )
                 const def = getUnitDef(oAttacker)
-                if (def?.ability.trigger === "onFirstAttack" && def.ability.effect.type === "doubleDamage") {
+                if (
+                    def?.ability.trigger === "onFirstAttack" &&
+                    def.ability.effect.type === "doubleDamage"
+                ) {
                     oDmg *= 2
                 }
                 oAttacker.hasAttacked = true
             }
             const oDmgDealt = dealDamage(pTarget, oDmg)
-            log.push({ round, description: `${oAttacker.unitDefId} attacks ${pTarget.unitDefId} for ${oDmgDealt}` })
+            log.push({
+                round,
+                description: `${oAttacker.unitDefId} attacks ${pTarget.unitDefId} for ${oDmgDealt}`,
+            })
 
             if (oDmgDealt > 0) {
-                triggerAbilities("onDealDamage", [oAttacker], player, log, round)
-                triggerAbilities("onTakeDamage", [pTarget], opponent, log, round)
+                triggerAbilities(
+                    "onDealDamage",
+                    [oAttacker],
+                    player,
+                    log,
+                    round,
+                    "opponent"
+                )
+                triggerAbilities(
+                    "onTakeDamage",
+                    [pTarget],
+                    opponent,
+                    log,
+                    round,
+                    "player"
+                )
             }
 
             if (!isAlive(pTarget)) {
-                handleDeath(pTarget, player, opponent, log, round)
+                handleDeath(pTarget, player, opponent, log, round, "player")
                 const newPFront = player.find(isAlive)
                 if (newPFront) {
-                    triggerAbilities("onEnemyEnterFront", opponent, player, log, round)
+                    triggerAbilities(
+                        "onEnemyEnterFront",
+                        opponent,
+                        player,
+                        log,
+                        round,
+                        "opponent"
+                    )
                 }
             }
         }
 
-        // Clean up any remaining deaths from ability triggers
         removeDeadUnits(player, opponent, log, round)
         removeDeadUnits(opponent, player, log, round)
     }
@@ -187,29 +256,74 @@ export function resolveCombat(
     }
 }
 
+/** Count allies of a specific faction (excluding the owner) */
+function countFactionAllies(
+    owner: CombatUnit,
+    allies: CombatUnit[],
+    faction: FactionId
+): number {
+    return allies.filter(
+        (a) => a !== owner && isAlive(a) && a.faction === faction
+    ).length
+}
+
 function triggerAbilities(
     trigger: AbilityTrigger,
     owners: CombatUnit[],
     enemies: CombatUnit[],
     log: CombatLogEntry[],
-    round: number
+    round: number,
+    side?: "player" | "opponent"
 ): void {
     for (const unit of owners) {
         if (!isAlive(unit)) continue
         const def = getUnitDef(unit)
         if (!def || def.ability.trigger !== trigger) continue
 
-        applyEffect(def.ability.effect, unit, owners, enemies, log, round)
+        applyAbility(def, unit, owners, enemies, log, round, side)
 
         // Trigger onAllyAbility for allies
         for (const ally of owners) {
             if (ally === unit || !isAlive(ally)) continue
             const allyDef = getUnitDef(ally)
             if (allyDef?.ability.trigger === "onAllyAbility") {
-                applyEffect(allyDef.ability.effect, ally, owners, enemies, log, round)
+                applyAbility(allyDef, ally, owners, enemies, log, round, side)
             }
         }
     }
+}
+
+/**
+ * Apply a unit's full ability: main effect (with faction scaling) + crossBonus.
+ */
+function applyAbility(
+    def: UnitDef,
+    owner: CombatUnit,
+    allies: CombatUnit[],
+    enemies: CombatUnit[],
+    log: CombatLogEntry[],
+    round: number,
+    side?: "player" | "opponent"
+): void {
+    const sameFactionCount = countFactionAllies(owner, allies, owner.faction)
+
+    applyEffect(def.ability.effect, owner, allies, enemies, log, round, side, {
+        factionBonus: def.ability.factionBonus,
+        sameFactionCount,
+    })
+
+    if (def.ability.crossBonus) {
+        const cb = def.ability.crossBonus
+        const crossCount = countFactionAllies(owner, allies, cb.faction)
+        if (crossCount >= cb.minAllies) {
+            applyEffect(cb.effect, owner, allies, enemies, log, round, side)
+        }
+    }
+}
+
+interface FactionScalingCtx {
+    factionBonus?: { perAlly: number }
+    sameFactionCount: number
 }
 
 function applyEffect(
@@ -218,47 +332,70 @@ function applyEffect(
     allies: CombatUnit[],
     enemies: CombatUnit[],
     log: CombatLogEntry[],
-    round: number
+    round: number,
+    side?: "player" | "opponent",
+    scaling?: FactionScalingCtx
 ): void {
+    const bonus = scaling?.factionBonus
+        ? scaling.sameFactionCount * scaling.factionBonus.perAlly
+        : 0
+
     switch (effect.type) {
         case "damage": {
+            const amount = effect.amount + bonus
             const targets = selectTargets(effect.target, enemies)
             for (const t of targets) {
-                dealDamage(t, effect.amount)
-                log.push({ round, description: `${owner.unitDefId} ability deals ${effect.amount} to ${t.unitDefId}` })
+                dealDamage(t, amount)
+                log.push({
+                    round,
+                    description: `${owner.unitDefId} ability deals ${amount} to ${t.unitDefId}`,
+                })
             }
             break
         }
         case "buff": {
+            const amount = effect.amount + bonus
             const targets = selectBuffTargets(effect.target, owner, allies)
             for (const t of targets) {
-                if (effect.stat === "atk") t.currentATK += effect.amount
+                if (effect.stat === "atk") t.currentATK += amount
                 else if (effect.stat === "hp") {
-                    t.currentHP += effect.amount
-                    t.maxHP += effect.amount
+                    t.currentHP += amount
+                    t.maxHP += amount
                 } else if (effect.stat === "shield") {
-                    t.shield += effect.amount
+                    t.shield += amount
                 }
             }
             break
         }
         case "summon": {
             const summoned = createCombatUnit(effect.unitId, 1)
+            if (effect.atkBonus) {
+                summoned.currentATK += effect.atkBonus
+            }
+            if (effect.hpBonus) {
+                summoned.currentHP += effect.hpBonus
+                summoned.maxHP += effect.hpBonus
+            }
             if (effect.position === "front") {
                 allies.unshift(summoned)
             } else {
                 allies.push(summoned)
             }
-            log.push({ round, description: `${owner.unitDefId} summons ${effect.unitId}` })
+            const sideTag = side ? ` [${side}]` : ""
+            log.push({
+                round,
+                description: `${owner.unitDefId} summons ${effect.unitId}${sideTag}`,
+            })
             break
         }
         case "doubleDamage":
             // Handled inline in combat resolution
             break
         case "heal": {
+            const amount = effect.amount + bonus
             const targets = selectBuffTargets(effect.target, owner, allies)
             for (const t of targets) {
-                const healAmt = Math.min(effect.amount, t.maxHP - t.currentHP)
+                const healAmt = Math.min(amount, t.maxHP - t.currentHP)
                 t.currentHP += healAmt
             }
             break
@@ -309,22 +446,23 @@ function handleDeath(
     ownTeam: CombatUnit[],
     enemyTeam: CombatUnit[],
     log: CombatLogEntry[],
-    round: number
+    round: number,
+    side?: "player" | "opponent"
 ): void {
     log.push({ round, description: `${deadUnit.unitDefId} dies` })
 
-    // Trigger onDeath
+    // Trigger onDeath (with faction scaling + cross bonus)
     const def = getUnitDef(deadUnit)
     if (def?.ability.trigger === "onDeath") {
-        applyEffect(def.ability.effect, deadUnit, ownTeam, enemyTeam, log, round)
+        applyAbility(def, deadUnit, ownTeam, enemyTeam, log, round, side)
     }
 
-    // Trigger onAllyDeath for teammates
+    // Trigger onAllyDeath for teammates (with faction scaling + cross bonus)
     for (const ally of ownTeam) {
         if (ally === deadUnit || !isAlive(ally)) continue
         const allyDef = getUnitDef(ally)
         if (allyDef?.ability.trigger === "onAllyDeath") {
-            applyEffect(allyDef.ability.effect, ally, ownTeam, enemyTeam, log, round)
+            applyAbility(allyDef, ally, ownTeam, enemyTeam, log, round, side)
         }
     }
 }

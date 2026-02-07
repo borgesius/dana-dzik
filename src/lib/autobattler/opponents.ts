@@ -1,189 +1,173 @@
-import type { FactionId, OpponentDef } from "./types"
+import type { FactionId, OpponentDef, UnitTier } from "./types"
+import { getUnitsForFaction } from "./units"
 
-/**
- * Opponent templates organized by round difficulty.
- * Early rounds feature drifters, later rounds feature themed factions.
- */
-const ROUND_OPPONENTS: OpponentDef[][] = [
+// ── Round parameters ────────────────────────────────────────────────────────
+
+export interface RoundParams {
+    unitCount: number
+    /** Min and max unit level for the round */
+    levelRange: [number, number]
+    /** Probability (0-1) that the primary faction is a themed faction vs drifters */
+    factionWeight: number
+    /** Probability a high-tier unit appears */
+    eliteChance: number
+}
+
+export const ROUND_PARAMS: RoundParams[] = [
     // Round 1: Easy drifters
-    [
-        {
-            name: "Dusty Wanderer",
-            faction: "drifters",
-            units: [
-                { unitId: "drifter-brawler", level: 1 },
-                { unitId: "drifter-scout", level: 1 },
-            ],
-        },
-        {
-            name: "Lost Traveler",
-            faction: "drifters",
-            units: [
-                { unitId: "drifter-scout", level: 1 },
-                { unitId: "drifter-medic", level: 1 },
-            ],
-        },
-    ],
+    { unitCount: 2, levelRange: [1, 1], factionWeight: 0.0, eliteChance: 0.0 },
     // Round 2: Slightly harder drifters
-    [
-        {
-            name: "Road Agent",
-            faction: "drifters",
-            units: [
-                { unitId: "drifter-brawler", level: 1 },
-                { unitId: "drifter-brawler", level: 1 },
-                { unitId: "drifter-scout", level: 1 },
-            ],
-        },
-        {
-            name: "Frontier Posse",
-            faction: "drifters",
-            units: [
-                { unitId: "drifter-heavy", level: 1 },
-                { unitId: "drifter-medic", level: 1 },
-            ],
-        },
-    ],
-    // Round 3: Faction themed
-    [
-        {
-            name: "Quickdraw Patrol",
-            faction: "quickdraw",
-            units: [
-                { unitId: "qd-sharpshooter", level: 1 },
-                { unitId: "qd-dynamiter", level: 1 },
-                { unitId: "drifter-scout", level: 1 },
-            ],
-        },
-        {
-            name: "Deputy Outpost",
-            faction: "deputies",
-            units: [
-                { unitId: "dep-barricader", level: 1 },
-                { unitId: "dep-trapper", level: 1 },
-                { unitId: "drifter-medic", level: 1 },
-            ],
-        },
-        {
-            name: "Clockwork Scout",
-            faction: "clockwork",
-            units: [
-                { unitId: "cw-accumulator", level: 1 },
-                { unitId: "cw-gearsmith", level: 1 },
-                { unitId: "drifter-brawler", level: 1 },
-            ],
-        },
-        {
-            name: "Bone Miners",
-            faction: "prospectors",
-            units: [
-                { unitId: "bp-tunneler", level: 1 },
-                { unitId: "bp-rattler", level: 1 },
-                { unitId: "bp-tunneler", level: 1 },
-            ],
-        },
-    ],
+    { unitCount: 3, levelRange: [1, 1], factionWeight: 0.2, eliteChance: 0.0 },
+    // Round 3: Faction themed, some L2
+    { unitCount: 3, levelRange: [1, 2], factionWeight: 0.9, eliteChance: 0.3 },
     // Round 4: Stronger faction
-    [
-        {
-            name: "Syndicate Enforcer",
-            faction: "quickdraw",
-            units: [
-                { unitId: "qd-deadeye", level: 1 },
-                { unitId: "qd-sharpshooter", level: 1 },
-                { unitId: "qd-dynamiter", level: 1 },
-            ],
-        },
-        {
-            name: "Iron Fortress",
-            faction: "deputies",
-            units: [
-                { unitId: "dep-marshal", level: 1 },
-                { unitId: "dep-barricader", level: 1 },
-                { unitId: "dep-trapper", level: 1 },
-            ],
-        },
-        {
-            name: "Clockwork Workshop",
-            faction: "clockwork",
-            units: [
-                { unitId: "cw-tesla-coil", level: 1 },
-                { unitId: "cw-accumulator", level: 1 },
-                { unitId: "cw-gearsmith", level: 1 },
-            ],
-        },
-        {
-            name: "Bone Excavation",
-            faction: "prospectors",
-            units: [
-                { unitId: "bp-foreman", level: 1 },
-                { unitId: "bp-tunneler", level: 1 },
-                { unitId: "bp-rattler", level: 1 },
-            ],
-        },
-    ],
+    { unitCount: 4, levelRange: [1, 2], factionWeight: 1.0, eliteChance: 0.5 },
     // Round 5: Boss round
-    [
-        {
-            name: "Syndicate Boss",
-            faction: "quickdraw",
-            units: [
-                { unitId: "qd-kingpin", level: 1 },
-                { unitId: "qd-deadeye", level: 1 },
-                { unitId: "qd-outlaw", level: 1 },
-                { unitId: "qd-sharpshooter", level: 1 },
-            ],
-        },
-        {
-            name: "The Hanging Judge",
-            faction: "deputies",
-            units: [
-                { unitId: "dep-judge", level: 1 },
-                { unitId: "dep-warden", level: 1 },
-                { unitId: "dep-marshal", level: 1 },
-                { unitId: "dep-barricader", level: 1 },
-            ],
-        },
-        {
-            name: "Grand Architect",
-            faction: "clockwork",
-            units: [
-                { unitId: "cw-architect", level: 1 },
-                { unitId: "cw-overcharger", level: 1 },
-                { unitId: "cw-tesla-coil", level: 1 },
-                { unitId: "cw-accumulator", level: 1 },
-            ],
-        },
-        {
-            name: "Bone Patriarch",
-            faction: "prospectors",
-            units: [
-                { unitId: "bp-patriarch", level: 1 },
-                { unitId: "bp-necrominer", level: 1 },
-                { unitId: "bp-foreman", level: 1 },
-                { unitId: "bp-tunneler", level: 1 },
-            ],
-        },
-    ],
+    { unitCount: 4, levelRange: [2, 3], factionWeight: 1.0, eliteChance: 0.8 },
 ]
+
+// ── Themed factions (excludes drifters) ─────────────────────────────────────
+
+const THEMED_FACTIONS: FactionId[] = [
+    "quickdraw",
+    "deputies",
+    "clockwork",
+    "prospectors",
+]
+
+// ── Name generation ─────────────────────────────────────────────────────────
+
+const ADJECTIVES = [
+    "Dusty",
+    "Grizzled",
+    "Veteran",
+    "Ruthless",
+    "Ironclad",
+    "Spectral",
+    "Reckless",
+    "Weathered",
+    "Cunning",
+    "Notorious",
+]
+
+const FACTION_NOUNS: Record<FactionId, string[]> = {
+    quickdraw: [
+        "Gunslingers",
+        "Syndicate",
+        "Outlaws",
+        "Desperados",
+        "Shootists",
+    ],
+    deputies: ["Lawmen", "Garrison", "Posse", "Marshals", "Sentinels"],
+    clockwork: ["Workshop", "Collective", "Assembly", "Automata", "Foundry"],
+    prospectors: [
+        "Excavation",
+        "Bone Diggers",
+        "Miners",
+        "Specter Crew",
+        "Unearthed",
+    ],
+    drifters: ["Wanderers", "Drifters", "Stragglers", "Vagrants", "Roamers"],
+}
+
+function generateOpponentName(faction: FactionId): string {
+    const adj = ADJECTIVES[Math.floor(Math.random() * ADJECTIVES.length)]
+    const nouns = FACTION_NOUNS[faction]
+    const noun = nouns[Math.floor(Math.random() * nouns.length)]
+    return `${adj} ${noun}`
+}
+
+// ── Level assignment ────────────────────────────────────────────────────────
+
+function assignLevel(
+    tier: UnitTier,
+    levelRange: [number, number],
+    eliteChance: number
+): number {
+    const [minLvl, maxLvl] = levelRange
+    if (minLvl === maxLvl) return minLvl
+
+    // Higher-tier units are more likely to be leveled up
+    const tierBoost = tier >= 2 ? 0.3 : 0.0
+    const roll = Math.random()
+
+    if (roll < eliteChance + tierBoost) {
+        return maxLvl
+    }
+    return minLvl
+}
+
+// ── Procedural generation ───────────────────────────────────────────────────
+
+function generateOpponent(
+    round: number,
+    preferredFaction?: FactionId
+): OpponentDef {
+    const roundIdx = Math.min(round - 1, ROUND_PARAMS.length - 1)
+    const params = ROUND_PARAMS[roundIdx]
+
+    // Pick primary faction
+    let faction: FactionId
+    if (preferredFaction && preferredFaction !== "drifters") {
+        faction = preferredFaction
+    } else if (Math.random() < params.factionWeight) {
+        faction =
+            THEMED_FACTIONS[Math.floor(Math.random() * THEMED_FACTIONS.length)]
+    } else {
+        faction = "drifters"
+    }
+
+    const pool = getUnitsForFaction(faction)
+    const drifterPool = getUnitsForFaction("drifters")
+
+    if (pool.length === 0) {
+        // Fallback to drifters if faction has no units
+        faction = "drifters"
+    }
+
+    const activePool = pool.length > 0 ? pool : drifterPool
+    const units: { unitId: string; level: number }[] = []
+
+    for (let i = 0; i < params.unitCount; i++) {
+        // Occasionally mix in a drifter for variety (20% chance, not on boss rounds)
+        const useDrifter =
+            faction !== "drifters" &&
+            drifterPool.length > 0 &&
+            i > 0 &&
+            round < 5 &&
+            Math.random() < 0.2
+
+        const unitPool = useDrifter ? drifterPool : activePool
+        const picked = unitPool[Math.floor(Math.random() * unitPool.length)]
+        const level = assignLevel(
+            picked.tier,
+            params.levelRange,
+            params.eliteChance
+        )
+
+        units.push({ unitId: picked.id, level })
+    }
+
+    // Sort lineup: higher tier / higher level units toward the front for strategic play
+    units.sort((a, b) => b.level - a.level)
+
+    return {
+        name: generateOpponentName(faction),
+        faction,
+        units,
+    }
+}
+
+// ── Public API ──────────────────────────────────────────────────────────────
 
 /**
  * Pick an opponent for the given round.
- * If a preferred faction is specified, try to pick an opponent of that faction.
+ * Uses procedural generation with round-based difficulty scaling.
+ * If a preferred faction is specified, the opponent will use that faction.
  */
 export function pickOpponent(
     round: number,
     preferredFaction?: FactionId
 ): OpponentDef {
-    const roundIdx = Math.min(round - 1, ROUND_OPPONENTS.length - 1)
-    const pool = ROUND_OPPONENTS[roundIdx]
-
-    if (preferredFaction) {
-        const factioned = pool.filter((o) => o.faction === preferredFaction)
-        if (factioned.length > 0) {
-            return factioned[Math.floor(Math.random() * factioned.length)]
-        }
-    }
-
-    return pool[Math.floor(Math.random() * pool.length)]
+    return generateOpponent(round, preferredFaction)
 }

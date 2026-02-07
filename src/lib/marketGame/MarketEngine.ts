@@ -1,3 +1,5 @@
+import { getEmployeeSalary } from "./employees"
+import { OrgChart } from "./orgChart"
 import {
     BULK_ORDER_QUANTITY,
     COMMODITIES,
@@ -6,6 +8,15 @@ import {
     CORNER_MARKET_FLOAT,
     CORNER_MARKET_PRICE_BOOST,
     CORNER_MARKET_THRESHOLD,
+    CREDIT_RATING_SCALE,
+    type CreditFacilityState,
+    type CreditRating,
+    DAS_BASE_YIELD,
+    DAS_DEFAULT_THRESHOLD,
+    DAS_MAX_POSITIONS,
+    DAS_MIN_QUANTITY,
+    DAS_SAME_COMMODITY_DECAY,
+    type DigitalAssetSecurity,
     EVENT_MAX_TICKS,
     EVENT_MIN_TICKS,
     FACTORIES,
@@ -20,6 +31,7 @@ import {
     type InfluenceId,
     INFLUENCES,
     type LimitOrder,
+    MARGIN_CALL_THRESHOLD,
     MARKET_EVENTS,
     type MarketEventDef,
     type MarketSaveData,
@@ -30,6 +42,15 @@ import {
     PRICE_CEILING_FACTOR,
     PRICE_FLOOR_FACTOR,
     PRICE_HISTORY_LENGTH,
+    RATING_DEGRADE_RATIO,
+    RATING_DEGRADE_TICKS,
+    RATING_DIVERSIFICATION_MIN,
+    RATING_IMPROVE_RATIO,
+    RATING_INTEREST_RATE,
+    RATING_LEVERAGE_RATIO,
+    RATING_NO_DEFAULT_WINDOW,
+    RATING_REVIEW_INTERVAL,
+    RATING_YIELD_MULT,
     SeededRng,
     STARTING_CASH,
     TICK_INTERVAL_MS,
@@ -66,11 +87,35 @@ export class MarketEngine {
 
     private rng: SeededRng
 
+    /** Phase 5: HR org chart */
+    private orgChart: OrgChart = new OrgChart()
+
+    /** Phase 6: Structured Products Desk */
+    private securities: DigitalAssetSecurity[] = []
+    private creditRating: CreditRating = "C"
+    private facility: CreditFacilityState = {
+        outstandingDebt: 0,
+        totalInterestPaid: 0,
+    }
+    private ticksSinceLastDefault: number = 999
+    private ticksAboveDegradeRatio: number = 0
+    private totalTickCount: number = 0
+    private dasIdCounter: number = 0
+    /** For margin-survivor achievement tracking. */
+    private marginEventTick: number = -999
+    private ratingAtMarginEvent: CreditRating = "C"
+
     /**
      * Optional external bonus provider. Returns a multiplier for a given bonus type.
      * E.g. bonusProvider("factoryOutput") might return 0.15 for +15%.
      */
     public bonusProvider: ((type: string) => number) | null = null
+
+    /**
+     * Optional prestige provider for prestige-based modifiers.
+     * Returns values keyed by modifier name.
+     */
+    public prestigeProvider: ((key: string) => number) | null = null
 
     constructor(seed?: number) {
         this.rng = new SeededRng(seed)
@@ -92,6 +137,11 @@ export class MarketEngine {
 
     private emit(event: GameEventType, data?: unknown): void {
         this.eventListeners.get(event)?.forEach((cb) => cb(data))
+    }
+
+    /** Public emit for Phase 5 UI integration (employee events). */
+    public emitEvent(event: GameEventType, data?: unknown): void {
+        this.emit(event, data)
     }
 
     // -----------------------------------------------------------------------
@@ -125,10 +175,6 @@ export class MarketEngine {
         }
     }
 
-    // -----------------------------------------------------------------------
-    // Start / stop
-    // -----------------------------------------------------------------------
-
     public start(): void {
         if (this.tickInterval) return
         this.tickInterval = setInterval(() => this.tick(), TICK_INTERVAL_MS)
@@ -145,16 +191,15 @@ export class MarketEngine {
         this.stop()
     }
 
-    // -----------------------------------------------------------------------
-    // Tick
-    // -----------------------------------------------------------------------
-
     public tick(): void {
+        this.totalTickCount++
         this.updatePrices()
         this.processFactories()
         this.processLimitOrders()
         this.processEvents()
         this.processCornerMarket()
+        this.processSalaries()
+        this.processPhase6()
         this.emit("marketTick")
     }
 
@@ -237,9 +282,18 @@ export class MarketEngine {
             const counter = (this.factoryTickCounters.get(fDef.id) ?? 0) + 1
             this.factoryTickCounters.set(fDef.id, counter)
 
-            const effectiveCycle = this.hasUpgrade("cpu-overclock")
+            let effectiveCycle = this.hasUpgrade("cpu-overclock")
                 ? Math.max(1, fDef.ticksPerCycle - 1)
                 : fDef.ticksPerCycle
+
+            const speedMult =
+                this.prestigeProvider?.("productionSpeedMultiplier") ?? 1
+            if (speedMult > 1) {
+                effectiveCycle = Math.max(
+                    1,
+                    Math.round(effectiveCycle / speedMult)
+                )
+            }
 
             if (counter < effectiveCycle) continue
             this.factoryTickCounters.set(fDef.id, 0)
@@ -268,7 +322,6 @@ export class MarketEngine {
             }
 
             if (totalProduced > 0) {
-                // Apply career bonus for factory output
                 const factoryBonus = this.bonusProvider?.("factoryOutput") ?? 0
                 if (factoryBonus > 0) {
                     totalProduced = Math.ceil(
@@ -422,6 +475,58 @@ export class MarketEngine {
         }
     }
 
+    private processSalaries(): void {
+        if (!this.unlockedPhases.has(5)) return
+
+        this.orgChart.tickPool(this.getMaxCandidateLevel())
+
+        if (this.orgChart.getEmployeeCount() === 0) return
+
+        // Tenure ticking (raise demands)
+        const tenureEvents = this.orgChart.tickTenure()
+        for (const evt of tenureEvents) {
+            this.emit("moraleEvent", evt)
+        }
+
+        // Morale ticking (burnout, chemistry, quit detection)
+        const moraleEvents = this.orgChart.tickMorale()
+        for (const evt of moraleEvents) {
+            this.emit("moraleEvent", evt)
+            if (evt.type === "quit") {
+                this.emit("orgChartChanged")
+            }
+        }
+
+        const totalSalary = this.orgChart.getTotalSalary()
+        this.cash -= totalSalary
+
+        // Graceful payroll shedding: if salary exceeds cash, shed most expensive
+        while (this.cash < 0 && this.orgChart.getEmployeeCount() > 0) {
+            const fired = this.orgChart.fireMostExpensive()
+            if (fired) {
+                this.emit("employeeFired", fired)
+                this.emit("moraleEvent", {
+                    type: "quit",
+                    employeeName: fired.name,
+                    message: `${fired.name} has been laid off due to budget constraints`,
+                })
+                // Refund this tick's salary since they were just let go
+                this.cash += getEmployeeSalary(fired)
+            } else {
+                break
+            }
+        }
+
+        this.emit("moneyChanged", this.cash)
+    }
+
+    private getMaxCandidateLevel(): 1 | 2 | 3 {
+        // Higher prestige/earnings -> better candidates
+        if (this.lifetimeEarnings > 10000) return 3
+        if (this.lifetimeEarnings > 500) return 2
+        return 1
+    }
+
     // -----------------------------------------------------------------------
     // Trading
     // -----------------------------------------------------------------------
@@ -559,7 +664,10 @@ export class MarketEngine {
         const def = FACTORIES.find((f) => f.id === factoryId)
         if (!def) return Infinity
         const owned = this.factories.get(factoryId) ?? 0
-        return def.cost * Math.pow(FACTORY_COST_SCALING, owned)
+        const scaling =
+            this.prestigeProvider?.("factoryCostScaling") ??
+            FACTORY_COST_SCALING
+        return def.cost * Math.pow(scaling, owned)
     }
 
     public deployFactory(factoryId: FactoryId): boolean {
@@ -682,6 +790,9 @@ export class MarketEngine {
 
     private checkUnlocks(): void {
         const earnings = this.lifetimeEarnings
+        const thresholdReduction =
+            this.prestigeProvider?.("phaseThresholdReduction") ?? 0
+        const thresholdMult = 1 - thresholdReduction
 
         for (const c of COMMODITIES) {
             if (
@@ -695,21 +806,21 @@ export class MarketEngine {
 
         if (
             !this.unlockedPhases.has(2) &&
-            earnings >= PHASE_THRESHOLDS.factories
+            earnings >= PHASE_THRESHOLDS.factories * thresholdMult
         ) {
             this.unlockedPhases.add(2)
             this.emit("phaseUnlocked", 2)
         }
         if (
             !this.unlockedPhases.has(3) &&
-            earnings >= PHASE_THRESHOLDS.upgrades
+            earnings >= PHASE_THRESHOLDS.upgrades * thresholdMult
         ) {
             this.unlockedPhases.add(3)
             this.emit("phaseUnlocked", 3)
         }
         if (
             !this.unlockedPhases.has(4) &&
-            earnings >= PHASE_THRESHOLDS.influence
+            earnings >= PHASE_THRESHOLDS.influence * thresholdMult
         ) {
             this.unlockedPhases.add(4)
             this.emit("phaseUnlocked", 4)
@@ -742,10 +853,6 @@ export class MarketEngine {
         this.addToHoldings(commodityId, quantity, 0)
         this.emit("portfolioChanged")
     }
-
-    // -----------------------------------------------------------------------
-    // Getters
-    // -----------------------------------------------------------------------
 
     public getCash(): number {
         return this.cash
@@ -799,8 +906,32 @@ export class MarketEngine {
         return this.unlockedPhases.has(phase)
     }
 
+    /** Externally unlock a phase (for cross-system gates like Phase 5). */
+    public unlockPhase(phase: number): void {
+        if (this.unlockedPhases.has(phase)) return
+        this.unlockedPhases.add(phase)
+        this.emit("phaseUnlocked", phase)
+    }
+
     public getMaxUnlockedPhase(): number {
         return Math.max(...this.unlockedPhases)
+    }
+
+    // -----------------------------------------------------------------------
+    // Phase 5: HR / Org chart
+    // -----------------------------------------------------------------------
+
+    public getOrgChart(): OrgChart {
+        return this.orgChart
+    }
+
+    /**
+     * Get aggregated employee bonuses. These are added on top of career
+     * bonuses via the bonusProvider callback.
+     */
+    public getEmployeeBonus(type: string): number {
+        if (!this.unlockedPhases.has(5)) return 0
+        return this.orgChart.calculateBonuses().get(type) ?? 0
     }
 
     public getLimitOrders(): LimitOrder[] {
@@ -835,7 +966,10 @@ export class MarketEngine {
     }
 
     public canShowTrend(): boolean {
-        return this.hasUpgrade("trend-analysis")
+        return (
+            this.hasUpgrade("trend-analysis") ||
+            (this.prestigeProvider?.("marketIntuition") ?? 0) > 0
+        )
     }
 
     public canShowTrendStrength(): boolean {
@@ -893,8 +1027,365 @@ export class MarketEngine {
     }
 
     // -----------------------------------------------------------------------
-    // Save / Load
+    // Phase 6: Structured Products Desk
     // -----------------------------------------------------------------------
+
+    private processPhase6(): void {
+        if (!this.unlockedPhases.has(6)) return
+
+        this.ticksSinceLastDefault++
+
+        // ── DAS yield + default check ────────────────────────────────────
+        let anyDefaulted = false
+        for (const das of this.securities) {
+            if (das.status !== "performing") continue
+
+            const currentPrice = this.markets.get(das.commodityId)?.price ?? 0
+
+            // Default check
+            if (
+                currentPrice <
+                das.securitizationPrice * DAS_DEFAULT_THRESHOLD
+            ) {
+                das.status = "defaulted"
+                anyDefaulted = true
+                this.ticksSinceLastDefault = 0
+                this.emit("dasDefaulted", {
+                    dasId: das.id,
+                    commodityId: das.commodityId,
+                })
+                continue
+            }
+
+            // Yield: baseYield * lockedQty * currentPrice * ratingMult * decay
+            const sameCount = this.securities.filter(
+                (s) =>
+                    s.commodityId === das.commodityId &&
+                    s.status === "performing" &&
+                    s.id !== das.id
+            ).length
+            const decay = Math.pow(DAS_SAME_COMMODITY_DECAY, sameCount)
+            const yieldAmount =
+                DAS_BASE_YIELD *
+                das.lockedQuantity *
+                currentPrice *
+                RATING_YIELD_MULT[this.creditRating] *
+                decay
+
+            this.cash += yieldAmount
+            this.lifetimeEarnings += yieldAmount
+        }
+
+        // Remove defaulted DAS (collateral lost)
+        if (anyDefaulted) {
+            this.securities = this.securities.filter(
+                (s) => s.status !== "defaulted"
+            )
+            // Default immediately drops rating
+            this.adjustRating(-1)
+            this.emit("portfolioChanged")
+            this.emit("moneyChanged", this.cash)
+        }
+
+        // ── Interest on debt ─────────────────────────────────────────────
+        if (this.facility.outstandingDebt > 0) {
+            const interest =
+                this.facility.outstandingDebt *
+                RATING_INTEREST_RATE[this.creditRating]
+            this.facility.outstandingDebt += interest
+            this.facility.totalInterestPaid += interest
+            this.cash -= interest
+        }
+
+        // ── Margin call check ────────────────────────────────────────────
+        if (this.facility.outstandingDebt > 0) {
+            const portfolioVal = this.calculatePortfolioValue()
+            if (
+                portfolioVal > 0 &&
+                this.facility.outstandingDebt / portfolioVal >
+                    MARGIN_CALL_THRESHOLD
+            ) {
+                this.fireMarginEvent()
+            }
+        }
+
+        // ── Credit rating review (every N ticks) ─────────────────────────
+        if (this.totalTickCount % RATING_REVIEW_INTERVAL === 0) {
+            this.reviewCreditRating()
+        }
+
+        // Emit money change from yield/interest
+        if (this.securities.some((s) => s.status === "performing")) {
+            this.emit("moneyChanged", this.cash)
+        }
+    }
+
+    private fireMarginEvent(): void {
+        // Record for achievement tracking
+        this.marginEventTick = this.totalTickCount
+        this.ratingAtMarginEvent = this.creditRating
+
+        // Force-liquidate lowest-value DAS
+        const performing = this.securities.filter(
+            (s) => s.status === "performing"
+        )
+        if (performing.length > 0) {
+            performing.sort((a, b) => {
+                const aVal =
+                    a.lockedQuantity *
+                    (this.markets.get(a.commodityId)?.price ?? 0)
+                const bVal =
+                    b.lockedQuantity *
+                    (this.markets.get(b.commodityId)?.price ?? 0)
+                return aVal - bVal
+            })
+            const victim = performing[0]
+            victim.status = "defaulted"
+            this.securities = this.securities.filter(
+                (s) => s.status !== "defaulted"
+            )
+        }
+        // Note: if no DAS to liquidate, debt persists at punishing rate.
+        // Does NOT cascade into payroll or other systems.
+
+        this.adjustRating(-1)
+        this.emit("marginEvent", {
+            debt: this.facility.outstandingDebt,
+            rating: this.creditRating,
+        })
+        this.emit("portfolioChanged")
+    }
+
+    private reviewCreditRating(): void {
+        const portfolioVal = this.calculatePortfolioValue()
+        const debtRatio =
+            portfolioVal > 0 ? this.facility.outstandingDebt / portfolioVal : 0
+
+        // Check degradation from sustained high ratio
+        if (debtRatio > RATING_DEGRADE_RATIO) {
+            this.ticksAboveDegradeRatio += RATING_REVIEW_INTERVAL
+            if (this.ticksAboveDegradeRatio >= RATING_DEGRADE_TICKS) {
+                this.adjustRating(-1)
+                this.ticksAboveDegradeRatio = 0
+            }
+        } else {
+            this.ticksAboveDegradeRatio = 0
+        }
+
+        // Check improvement: low ratio + no recent defaults + diversified
+        if (debtRatio < RATING_IMPROVE_RATIO) {
+            if (this.ticksSinceLastDefault >= RATING_NO_DEFAULT_WINDOW) {
+                const performingCommodities = new Set(
+                    this.securities
+                        .filter((s) => s.status === "performing")
+                        .map((s) => s.commodityId)
+                )
+                if (performingCommodities.size >= RATING_DIVERSIFICATION_MIN) {
+                    this.adjustRating(1)
+                }
+            }
+        }
+    }
+
+    private adjustRating(delta: number): void {
+        const idx = CREDIT_RATING_SCALE.indexOf(this.creditRating)
+        const newIdx = Math.max(
+            0,
+            Math.min(CREDIT_RATING_SCALE.length - 1, idx + delta)
+        )
+        const newRating = CREDIT_RATING_SCALE[newIdx]
+        if (newRating !== this.creditRating) {
+            this.creditRating = newRating
+            this.emit("ratingChanged", {
+                rating: this.creditRating,
+                direction: delta > 0 ? "upgrade" : "downgrade",
+            })
+        }
+    }
+
+    public calculatePortfolioValue(): number {
+        let value = Math.max(0, this.cash)
+
+        for (const [cId, holding] of this.holdings) {
+            const price = this.markets.get(cId)?.price ?? 0
+            value += holding.quantity * price
+        }
+
+        for (const das of this.securities) {
+            if (das.status !== "performing") continue
+            const price = this.markets.get(das.commodityId)?.price ?? 0
+            value += das.lockedQuantity * price
+        }
+
+        return value
+    }
+
+    // ── Securitize ───────────────────────────────────────────────────────
+
+    public securitize(
+        commodityId: CommodityId,
+        quantity: number
+    ): string | null {
+        if (!this.unlockedPhases.has(6)) return null
+        if (quantity < DAS_MIN_QUANTITY) return null
+
+        const performing = this.securities.filter(
+            (s) => s.status === "performing"
+        )
+        if (performing.length >= DAS_MAX_POSITIONS) return null
+
+        const holding = this.holdings.get(commodityId)
+        if (!holding || holding.quantity < quantity) return null
+
+        const currentPrice = this.markets.get(commodityId)?.price ?? 0
+        if (currentPrice <= 0) return null
+
+        const avgCost = holding.totalCost / holding.quantity
+        holding.quantity -= quantity
+        holding.totalCost = holding.quantity * avgCost
+        if (holding.quantity <= 0) {
+            this.holdings.delete(commodityId)
+        }
+
+        const dasId = `DAS-${String(this.dasIdCounter++).padStart(4, "0")}`
+        this.securities.push({
+            id: dasId,
+            commodityId,
+            lockedQuantity: quantity,
+            securitizationPrice: currentPrice,
+            createdAtTick: this.totalTickCount,
+            status: "performing",
+        })
+
+        this.emit("dasCreated", { dasId, commodityId, quantity })
+        this.emit("portfolioChanged")
+        return dasId
+    }
+
+    public unwindDAS(dasId: string): boolean {
+        const idx = this.securities.findIndex(
+            (s) => s.id === dasId && s.status === "performing"
+        )
+        if (idx === -1) return false
+
+        const das = this.securities[idx]
+        this.addToHoldings(das.commodityId, das.lockedQuantity, 0)
+        this.securities.splice(idx, 1)
+
+        this.emit("dasUnwound", { dasId, commodityId: das.commodityId })
+        this.emit("portfolioChanged")
+        return true
+    }
+
+    // ── Credit Facility ──────────────────────────────────────────────────
+
+    public borrow(amount: number): boolean {
+        if (!this.unlockedPhases.has(6)) return false
+        if (amount <= 0) return false
+
+        const portfolioVal = this.calculatePortfolioValue()
+        const maxBorrow =
+            portfolioVal * RATING_LEVERAGE_RATIO[this.creditRating]
+        const available = maxBorrow - this.facility.outstandingDebt
+
+        if (amount > available) return false
+
+        this.facility.outstandingDebt += amount
+        this.cash += amount
+
+        this.emit("debtChanged", {
+            debt: this.facility.outstandingDebt,
+            borrowed: amount,
+        })
+        this.emit("moneyChanged", this.cash)
+        return true
+    }
+
+    public repay(amount: number): boolean {
+        if (amount <= 0) return false
+        if (this.facility.outstandingDebt <= 0) return false
+
+        const repayAmount = Math.min(
+            amount,
+            this.facility.outstandingDebt,
+            this.cash
+        )
+        if (repayAmount <= 0) return false
+
+        this.cash -= repayAmount
+        this.facility.outstandingDebt -= repayAmount
+
+        if (this.facility.outstandingDebt < 0.001) {
+            this.facility.outstandingDebt = 0
+        }
+
+        this.emit("debtChanged", {
+            debt: this.facility.outstandingDebt,
+            repaid: repayAmount,
+        })
+        this.emit("moneyChanged", this.cash)
+        return true
+    }
+
+    // ── Desk getters ─────────────────────────────────────────────────────
+
+    public getSecurities(): DigitalAssetSecurity[] {
+        return this.securities.filter((s) => s.status === "performing")
+    }
+
+    public getCreditRating(): CreditRating {
+        return this.creditRating
+    }
+
+    public getDebt(): number {
+        return this.facility.outstandingDebt
+    }
+
+    public getBorrowCapacity(): number {
+        const portfolioVal = this.calculatePortfolioValue()
+        return Math.max(
+            0,
+            portfolioVal * RATING_LEVERAGE_RATIO[this.creditRating] -
+                this.facility.outstandingDebt
+        )
+    }
+
+    public getDASYieldPerTick(): number {
+        let total = 0
+        const performing = this.securities.filter(
+            (s) => s.status === "performing"
+        )
+        for (const das of performing) {
+            const currentPrice = this.markets.get(das.commodityId)?.price ?? 0
+            const sameCount = performing.filter(
+                (s) => s.commodityId === das.commodityId && s.id !== das.id
+            ).length
+            const decay = Math.pow(DAS_SAME_COMMODITY_DECAY, sameCount)
+            total +=
+                DAS_BASE_YIELD *
+                das.lockedQuantity *
+                currentPrice *
+                RATING_YIELD_MULT[this.creditRating] *
+                decay
+        }
+        return total
+    }
+
+    public getInterestPerTick(): number {
+        if (this.facility.outstandingDebt <= 0) return 0
+        return (
+            this.facility.outstandingDebt *
+            RATING_INTEREST_RATE[this.creditRating]
+        )
+    }
+
+    public getTicksSinceMarginEvent(): number {
+        return this.totalTickCount - this.marginEventTick
+    }
+
+    public getRatingAtMarginEvent(): CreditRating {
+        return this.ratingAtMarginEvent
+    }
 
     public serialize(): MarketSaveData {
         const holdingsRecord: Record<string, Holding> = {}
@@ -917,6 +1408,16 @@ export class MarketEngine {
             unlockedPhases: [...this.unlockedPhases],
             limitOrders: this.limitOrders.map((o) => ({ ...o })),
             popupLevel: this.popupLevel,
+            orgChart: this.orgChart.serialize(),
+            desk: {
+                securities: this.securities.map((s) => ({ ...s })),
+                creditRating: this.creditRating,
+                facility: { ...this.facility },
+                ticksSinceLastDefault: this.ticksSinceLastDefault,
+                ticksAboveDegradeRatio: this.ticksAboveDegradeRatio,
+                marginEventTick: this.marginEventTick,
+                ratingAtMarginEvent: this.ratingAtMarginEvent,
+            },
         }
     }
 
@@ -939,6 +1440,32 @@ export class MarketEngine {
         this.unlockedPhases = new Set(data.unlockedPhases)
         this.limitOrders = data.limitOrders.map((o) => ({ ...o }))
         this.popupLevel = data.popupLevel
+
+        // Restore org chart if present
+        if (data.orgChart) {
+            this.orgChart.deserialize(data.orgChart)
+        }
+
+        // Restore Phase 6: Structured Products Desk
+        if (data.desk) {
+            this.securities = data.desk.securities.map((s) => ({ ...s }))
+            this.creditRating = data.desk.creditRating ?? "C"
+            this.facility = { ...data.desk.facility }
+            this.ticksSinceLastDefault = data.desk.ticksSinceLastDefault ?? 999
+            this.ticksAboveDegradeRatio = data.desk.ticksAboveDegradeRatio ?? 0
+            this.marginEventTick = data.desk.marginEventTick ?? -999
+            this.ratingAtMarginEvent = data.desk.ratingAtMarginEvent ?? "C"
+            // Restore DAS ID counter
+            this.dasIdCounter = this.securities.length
+        } else {
+            // Clean slate (legacy save or first load)
+            this.securities = []
+            this.creditRating = "C"
+            this.facility = { outstandingDebt: 0, totalInterestPaid: 0 }
+            this.ticksSinceLastDefault = 999
+            this.ticksAboveDegradeRatio = 0
+            this.dasIdCounter = 0
+        }
 
         this.emit("moneyChanged", this.cash)
         this.emit("portfolioChanged")
@@ -969,18 +1496,22 @@ export class MarketEngine {
         this.ticksSinceEvent = 0
         this.nextEventTicks = this.rng.nextInt(EVENT_MIN_TICKS, EVENT_MAX_TICKS)
 
-        // Reset phases
         this.unlockedPhases = new Set(startingPhases)
-
-        // Reset commodities
         this.unlockedCommodities.clear()
         this.initUnlockedCommodities()
-
-        // Reset markets to base prices
         this.initMarkets()
-
-        // Reset cooldowns
         this.influenceCooldowns.clear()
+        this.orgChart.reset()
+
+        // Reset Phase 6: Structured Products Desk
+        this.securities = []
+        this.creditRating = "C"
+        this.facility = { outstandingDebt: 0, totalInterestPaid: 0 }
+        this.ticksSinceLastDefault = 999
+        this.ticksAboveDegradeRatio = 0
+        this.dasIdCounter = 0
+        this.marginEventTick = -999
+        this.ratingAtMarginEvent = "C"
 
         this.emit("moneyChanged", this.cash)
         this.emit("portfolioChanged")
@@ -1008,6 +1539,90 @@ export class MarketEngine {
     public static getInfluences(): InfluenceDef[] {
         return INFLUENCES
     }
+
+    // -----------------------------------------------------------------------
+    // Offline time catchup
+    // -----------------------------------------------------------------------
+
+    public offlineCatchup(elapsedMs: number): OfflineSummary {
+        const maxMs = 48 * 60 * 60 * 1000 // cap at 48 hours
+        const clampedMs = Math.min(elapsedMs, maxMs)
+        const ticks = Math.floor(clampedMs / TICK_INTERVAL_MS)
+
+        const commoditiesProduced: Record<string, number> = {}
+        let salariesPaid = 0
+        let employeesFired = 0
+
+        // ── Simplified factory production (no bonusProvider, 80% output) ──
+        if (this.unlockedPhases.has(2)) {
+            for (const fDef of FACTORIES) {
+                const count = this.factories.get(fDef.id) ?? 0
+                if (count === 0) continue
+
+                const effectiveCycle = fDef.ticksPerCycle
+                const cycleCount = Math.floor(ticks / effectiveCycle)
+                if (cycleCount === 0) continue
+
+                // Use average output, apply 80% efficiency, no bonuses
+                const avgOutput = (fDef.minOutput + fDef.maxOutput) / 2
+                const totalProduced = Math.floor(
+                    cycleCount * avgOutput * 0.8 * count
+                )
+
+                if (totalProduced > 0) {
+                    this.addToHoldings(fDef.produces, totalProduced, 0)
+                    commoditiesProduced[fDef.produces] =
+                        (commoditiesProduced[fDef.produces] ?? 0) +
+                        totalProduced
+                }
+            }
+        }
+
+        // ── Salary drain (full rate, no org chart bonuses) ──
+        if (
+            this.unlockedPhases.has(5) &&
+            this.orgChart.getEmployeeCount() > 0
+        ) {
+            const totalSalaryPerTick = this.orgChart.getTotalSalary()
+            const totalSalary = totalSalaryPerTick * ticks
+            salariesPaid = totalSalary
+            this.cash -= totalSalary
+
+            // Graceful payroll shedding: fire most expensive while cash < 0
+            while (this.cash < 0 && this.orgChart.getEmployeeCount() > 0) {
+                const fired = this.orgChart.fireMostExpensive()
+                if (fired) {
+                    employeesFired++
+                } else {
+                    break
+                }
+            }
+        }
+
+        if (Object.keys(commoditiesProduced).length > 0 || salariesPaid > 0) {
+            this.emit("portfolioChanged")
+            this.emit("moneyChanged", this.cash)
+            if (employeesFired > 0) {
+                this.emit("orgChartChanged")
+            }
+        }
+
+        return {
+            ticks,
+            elapsedMs: clampedMs,
+            commoditiesProduced,
+            salariesPaid,
+            employeesFired,
+        }
+    }
+}
+
+export interface OfflineSummary {
+    ticks: number
+    elapsedMs: number
+    commoditiesProduced: Record<string, number>
+    salariesPaid: number
+    employeesFired: number
 }
 
 let gameInstance: MarketEngine | null = null

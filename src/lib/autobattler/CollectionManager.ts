@@ -1,5 +1,8 @@
 import { emitAppEvent } from "../events"
-import type { AutobattlerSaveData, AutobattlerUnitEntry } from "../progression/types"
+import type {
+    AutobattlerSaveData,
+    AutobattlerUnitEntry,
+} from "../progression/types"
 import type { FactionId } from "./types"
 import { ALL_UNITS, getUnitsForFaction } from "./units"
 
@@ -15,7 +18,12 @@ export function getCollectionManager(): CollectionManager {
     return instance
 }
 
-const FACTIONS: FactionId[] = ["quickdraw", "deputies", "clockwork", "prospectors"]
+const FACTIONS: FactionId[] = [
+    "quickdraw",
+    "deputies",
+    "clockwork",
+    "prospectors",
+]
 
 export class CollectionManager {
     private collection: Map<string, number> = new Map() // unitId -> count
@@ -26,7 +34,8 @@ export class CollectionManager {
     private unlockedFactions: Set<string> = new Set()
     private spiralProgress: Map<string, boolean> = new Map()
     private onDirty: (() => void) | null = null
-    private eventListeners: Map<CollectionEventType, CollectionCallback[]> = new Map()
+    private eventListeners: Map<CollectionEventType, CollectionCallback[]> =
+        new Map()
 
     // ── Events ───────────────────────────────────────────────────────────────
 
@@ -57,15 +66,16 @@ export class CollectionManager {
             this.emit("unitUnlocked", { unitId })
             emitAppEvent("autobattler:unit-unlocked", { unitId })
 
-            // Check if this completes a faction
             const unit = ALL_UNITS.find((u) => u.id === unitId)
             if (unit && unit.faction !== "drifters") {
                 this.unlockedFactions.add(unit.faction)
                 if (this.isFactionComplete(unit.faction as FactionId)) {
                     this.spiralProgress.set(unit.faction, true)
                     this.emit("factionComplete", { faction: unit.faction })
+                    emitAppEvent("autobattler:faction-complete", {
+                        faction: unit.faction,
+                    })
 
-                    // Check full spiral
                     if (this.isSpiralComplete()) {
                         this.emit("spiralComplete")
                         emitAppEvent("autobattler:spiral-complete")
@@ -112,7 +122,7 @@ export class CollectionManager {
 
     // ── Run tracking ─────────────────────────────────────────────────────────
 
-    public recordRunComplete(won: boolean): void {
+    public recordRunComplete(won: boolean, majorityFaction?: string): void {
         this.completedRuns++
         if (won) {
             this.wonRuns++
@@ -123,7 +133,7 @@ export class CollectionManager {
         } else {
             this.currentStreak = 0
         }
-        emitAppEvent("autobattler:run-complete", { won })
+        emitAppEvent("autobattler:run-complete", { won, majorityFaction })
         this.onDirty?.()
     }
 

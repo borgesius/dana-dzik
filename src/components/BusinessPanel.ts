@@ -4,8 +4,10 @@ import {
     type MarketEngine,
 } from "../lib/marketGame/MarketEngine"
 import { ChartSection } from "./businessPanel/ChartSection"
+import { EmployeesSection } from "./businessPanel/EmployeesSection"
 import { FactoriesSection } from "./businessPanel/FactoriesSection"
 import { InfluenceSection } from "./businessPanel/InfluenceSection"
+import { PortfolioMgmtSection } from "./businessPanel/PortfolioMgmtSection"
 import { PortfolioSection } from "./businessPanel/PortfolioSection"
 import { PrestigeSection } from "./businessPanel/PrestigeSection"
 import { TradeControls } from "./businessPanel/TradeControls"
@@ -24,6 +26,8 @@ export class BusinessPanel {
     private upgrades: UpgradesSection
     private influence: InfluenceSection
     private prestige: PrestigeSection
+    private employees: EmployeesSection
+    private portfolioMgmt: PortfolioMgmtSection
 
     constructor() {
         this.game = getMarketGame()
@@ -46,6 +50,12 @@ export class BusinessPanel {
             (type) => this.playSound(type)
         )
         this.prestige = new PrestigeSection(this.game, (type) =>
+            this.playSound(type)
+        )
+        this.employees = new EmployeesSection(this.game, (type) =>
+            this.playSound(type)
+        )
+        this.portfolioMgmt = new PortfolioMgmtSection(this.game, (type) =>
             this.playSound(type)
         )
         this.element = this.createElement()
@@ -97,6 +107,8 @@ export class BusinessPanel {
         rightCol.appendChild(this.factories.getElement())
         rightCol.appendChild(this.upgrades.getElement())
         rightCol.appendChild(this.influence.getElement())
+        rightCol.appendChild(this.employees.getElement())
+        rightCol.appendChild(this.portfolioMgmt.getElement())
         rightCol.appendChild(this.prestige.getElement())
         content.appendChild(rightCol)
 
@@ -111,6 +123,8 @@ export class BusinessPanel {
             this.chart.renderChart()
             this.portfolio.render()
             this.tradeControls.render()
+            this.employees.render()
+            this.portfolioMgmt.render()
         })
         this.game.on("moneyChanged", () => {
             if (!this.isExpanded) return
@@ -180,6 +194,8 @@ export class BusinessPanel {
         this.factories.render()
         this.upgrades.render()
         this.influence.render()
+        this.employees.render()
+        this.portfolioMgmt.render()
         this.prestige.render()
     }
 
@@ -187,6 +203,8 @@ export class BusinessPanel {
         this.factories.updateVisibility()
         this.upgrades.updateVisibility()
         this.influence.updateVisibility()
+        this.employees.updateVisibility()
+        this.portfolioMgmt.updateVisibility()
         this.prestige.updateVisibility()
     }
 

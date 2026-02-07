@@ -7,7 +7,8 @@ const COST_PER_REDIS_COMMAND = 0.000002
 const COST_PER_BYTE = 0.0004 / (1024 * 1024)
 
 export const BIG_SPENDER_THRESHOLD = 0.001
-export const WHALE_THRESHOLD = 0.0025
+export const WHALE_THRESHOLD = 0.002
+export const LEVIATHAN_THRESHOLD = 0.003
 
 interface ApiCostEntry {
     redisCommands: number
@@ -62,12 +63,19 @@ export class SessionCostTracker {
     private listeners: CostUpdateCallback[] = []
     private bigSpenderThreshold: number
     private whaleThreshold: number
+    private leviathanThreshold: number
     private bigSpenderFired = false
     private whaleFired = false
+    private leviathanFired = false
 
-    constructor(bigSpenderThreshold: number, whaleThreshold: number) {
+    constructor(
+        bigSpenderThreshold: number,
+        whaleThreshold: number,
+        leviathanThreshold: number
+    ) {
         this.bigSpenderThreshold = bigSpenderThreshold
         this.whaleThreshold = whaleThreshold
+        this.leviathanThreshold = leviathanThreshold
 
         try {
             this.isSampled = isClientSampled(getVisitorId())
@@ -271,6 +279,14 @@ export class SessionCostTracker {
             this.whaleFired = true
             emitAppEvent("session-cost:whale")
         }
+
+        if (
+            !this.leviathanFired &&
+            breakdown.totalCost >= this.leviathanThreshold
+        ) {
+            this.leviathanFired = true
+            emitAppEvent("session-cost:leviathan")
+        }
     }
 }
 
@@ -278,10 +294,15 @@ let instance: SessionCostTracker | null = null
 
 export function initSessionCostTracker(
     bigSpenderThreshold: number,
-    whaleThreshold: number
+    whaleThreshold: number,
+    leviathanThreshold: number
 ): SessionCostTracker {
     if (!instance) {
-        instance = new SessionCostTracker(bigSpenderThreshold, whaleThreshold)
+        instance = new SessionCostTracker(
+            bigSpenderThreshold,
+            whaleThreshold,
+            leviathanThreshold
+        )
     }
     return instance
 }

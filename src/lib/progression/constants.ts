@@ -66,4 +66,25 @@ export const XP_REWARDS = {
 
     // Achievement (base; tiered achievements multiply this)
     achievementEarned: 10,
+
+    // Autobattler
+    autobattlerRun: 15,
+    autobattlerWin: 40,
+    autobattlerCollectionMilestone: 50,
+    spiralProgress: 100,
+
+    // Prestige
+    prestige: 100,
+
+    // Career
+    careerSwitch: 30,
 } as const
+
+/**
+ * Scaling XP for tiered achievements. Higher tiers grant more XP.
+ * Non-tiered achievements return the base `achievementEarned` value.
+ */
+export function getAchievementXP(tier?: number): number {
+    if (!tier) return XP_REWARDS.achievementEarned
+    return [0, 10, 25, 50, 100, 250][tier] ?? XP_REWARDS.achievementEarned
+}
