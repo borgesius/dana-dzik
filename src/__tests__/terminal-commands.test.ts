@@ -6,7 +6,8 @@ import {
     getPrompt,
     getSLFrames,
 } from "../lib/terminal/commands"
-import { createFileSystem, type FileSystem } from "../lib/terminal/filesystem"
+import type { FileSystem } from "../lib/terminal/filesystem"
+import { createFileSystem } from "../lib/terminal/filesystemBuilder"
 
 describe("Terminal Commands", () => {
     let fs: FileSystem

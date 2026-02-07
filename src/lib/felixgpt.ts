@@ -1,3 +1,5 @@
+import { emitAppEvent } from "./events"
+
 export const MEOW_RESPONSES = [
     "Meow!",
     "Mrrrow?",
@@ -44,7 +46,7 @@ export function initFelixGPT(): void {
         addMessage(messages, text, false)
         input.value = ""
 
-        document.dispatchEvent(new CustomEvent("felix:message"))
+        emitAppEvent("felix:message")
 
         const thinkingTime = 500 + Math.random() * 1000
         setTimeout(() => {

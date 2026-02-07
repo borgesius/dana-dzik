@@ -1,7 +1,7 @@
-import { POPUP_CONFIG } from "../../config"
+import { POPUP_CONFIG } from "../../config/popup"
 import { isCalmMode } from "../../lib/calmMode"
 import { formatMoney } from "../../lib/formatMoney"
-import { getMarketGame } from "../../lib/marketGame"
+import { getMarketGame } from "../../lib/marketGame/MarketEngine"
 import {
     BONUS_POPUP_CONTENTS,
     POPUP_CONTENTS,

@@ -3,7 +3,11 @@
  */
 import { beforeEach, describe, expect, it, vi } from "vitest"
 
-import { ROUTABLE_WINDOWS, type RoutableWindow, ROUTE_MAP } from "../config"
+import {
+    ROUTABLE_WINDOWS,
+    type RoutableWindow,
+    ROUTE_MAP,
+} from "../config/routing"
 import { Router } from "../lib/router"
 
 describe("Router Configuration", () => {
@@ -136,7 +140,7 @@ describe("Router Class", () => {
 
         it("does not update URL for non-routable windows", () => {
             router = new Router(() => {})
-            router.updateUrl("some-popup")
+            router.updateUrl("some-popup" as never)
             expect(pushStateSpy).not.toHaveBeenCalled()
         })
     })

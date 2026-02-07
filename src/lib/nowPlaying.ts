@@ -29,6 +29,7 @@ async function fetchTopTracks(container: HTMLElement): Promise<void> {
             return
         }
 
+        // SAFETY: response shape controlled by our /api/lastfm endpoint
         const result = (await response.json()) as LastFmApiResponse
 
         if (!result.ok || !result.data?.tracks.length) {

@@ -1,6 +1,7 @@
-import { ACHIEVEMENT_MAP } from "../lib/achievements"
 import type { AchievementManager } from "../lib/achievements/AchievementManager"
+import { ACHIEVEMENT_MAP } from "../lib/achievements/definitions"
 import type { AchievementId } from "../lib/achievements/types"
+import { emitAppEvent } from "../lib/events"
 import { getLocaleManager } from "../lib/localeManager"
 
 const TOAST_DURATION_MS = 6000
@@ -41,11 +42,7 @@ export class AchievementToast {
         `
 
         toast.addEventListener("click", () => {
-            document.dispatchEvent(
-                new CustomEvent("terminal:open-window", {
-                    detail: { windowId: "achievements" },
-                })
-            )
+            emitAppEvent("terminal:open-window", { windowId: "achievements" })
             toast.classList.remove("achievement-toast-visible")
             toast.classList.add("achievement-toast-exit")
             setTimeout(() => {

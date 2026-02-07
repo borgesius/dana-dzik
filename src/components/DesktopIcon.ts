@@ -1,3 +1,4 @@
+import type { RoutableWindow } from "../config/routing"
 import { getThemeManager } from "../lib/themeManager"
 
 export interface IconConfig {
@@ -5,19 +6,22 @@ export interface IconConfig {
     label: string
     icon: string
     action: "window" | "link" | "none"
-    windowId?: string
+    windowId?: RoutableWindow
     url?: string
 }
 
 export class DesktopIcon {
     private element: HTMLElement
     private config: IconConfig
-    private onOpen: (windowId: string) => void
+    private onOpen: (windowId: RoutableWindow) => void
     private clickCount = 0
     private clickTimer: number | null = null
     private labelEl: HTMLElement | null = null
 
-    constructor(config: IconConfig, onOpen: (windowId: string) => void) {
+    constructor(
+        config: IconConfig,
+        onOpen: (windowId: RoutableWindow) => void
+    ) {
         this.config = config
         this.onOpen = onOpen
         this.element = this.createElement()

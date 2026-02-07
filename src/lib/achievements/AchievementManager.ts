@@ -3,6 +3,15 @@ import type { AchievementId, AchievementSaveData, CounterKey } from "./types"
 
 type AchievementListener = (id: AchievementId) => void
 
+let instance: AchievementManager | null = null
+
+export function getAchievementManager(): AchievementManager {
+    if (!instance) {
+        instance = new AchievementManager()
+    }
+    return instance
+}
+
 export class AchievementManager {
     private earned: Map<AchievementId, number> = new Map()
     private counters: Map<string, number> = new Map()

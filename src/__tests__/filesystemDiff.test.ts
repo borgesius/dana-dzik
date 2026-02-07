@@ -5,15 +5,14 @@ import { describe, expect, it } from "vitest"
 
 import {
     createFile,
-    createFileSystem,
     deleteFile,
-    diffFilesystem,
     type FileSystem,
     getFileContent,
-    patchFilesystem,
     renameFile,
     writeFile,
 } from "../lib/terminal/filesystem"
+import { createFileSystem } from "../lib/terminal/filesystemBuilder"
+import { diffFilesystem, patchFilesystem } from "../lib/terminal/filesystemDiff"
 
 const HACKTERM_README = "3:\\Programme\\HACKTERM\\readme.txt"
 const HACKTERM_DIR = "3:\\Programme\\HACKTERM"

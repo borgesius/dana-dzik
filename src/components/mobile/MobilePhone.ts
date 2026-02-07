@@ -1,3 +1,4 @@
+import type { RoutableWindow } from "../../config/routing"
 import { type ColorScheme, getThemeManager } from "../../lib/themeManager"
 import { MobileAppView } from "./MobileAppView"
 import { MobileHomeScreen } from "./MobileHomeScreen"
@@ -15,7 +16,7 @@ export class MobilePhone {
     private appView: MobileAppView
     private state: PhoneState = "lock"
     private clockInterval: number | null = null
-    private appOpenCallback: ((windowId: string) => void) | null = null
+    private appOpenCallback: ((windowId: RoutableWindow) => void) | null = null
 
     constructor(container: HTMLElement) {
         this.container = container
@@ -160,7 +161,7 @@ export class MobilePhone {
         this.lockScreen.hide()
     }
 
-    public openApp(windowId: string): void {
+    public openApp(windowId: RoutableWindow): void {
         this.state = "app"
         this.appView.show(windowId)
         if (this.appOpenCallback) {
@@ -173,7 +174,7 @@ export class MobilePhone {
         this.appView.hide()
     }
 
-    public onAppOpen(callback: (windowId: string) => void): void {
+    public onAppOpen(callback: (windowId: RoutableWindow) => void): void {
         this.appOpenCallback = callback
     }
 

@@ -1,3 +1,5 @@
+import type { RoutableWindow } from "../config/routing"
+import { emitAppEvent } from "../lib/events"
 import {
     type CommandContext,
     executeCommand,
@@ -6,11 +8,8 @@ import {
     getSLFrames,
 } from "../lib/terminal/commands"
 import { Editor } from "../lib/terminal/editor"
-import {
-    changeDirectory,
-    type FileSystem,
-    getSharedFilesystem,
-} from "../lib/terminal/filesystem"
+import { changeDirectory, type FileSystem } from "../lib/terminal/filesystem"
+import { getSharedFilesystem } from "../lib/terminal/filesystemBuilder"
 
 let pendingInit: { cwd?: string; command?: string } | null = null
 
@@ -31,7 +30,7 @@ function consumeTerminalInit(): {
 }
 
 export interface TerminalCallbacks {
-    openWindow: (windowId: string) => void
+    openWindow: (windowId: RoutableWindow) => void
     closeTerminal: () => void
 }
 
@@ -261,11 +260,10 @@ export class Terminal {
 
         const result = await executeCommand(input, ctx)
 
-        document.dispatchEvent(
-            new CustomEvent("terminal:command", {
-                detail: { command: input.trim().split(/\s+/)[0], raw: input },
-            })
-        )
+        emitAppEvent("terminal:command", {
+            command: input.trim().split(/\s+/)[0],
+            raw: input,
+        })
 
         if (result.action === "clear") {
             this.clearOutput()

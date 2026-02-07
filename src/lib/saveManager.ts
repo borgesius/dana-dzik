@@ -1,5 +1,5 @@
 import type { AchievementSaveData } from "./achievements/types"
-import type { MarketSaveData } from "./marketGame"
+import type { MarketSaveData } from "./marketGame/types"
 
 const SAVE_KEY = "save"
 const SAVE_VERSION = 2
@@ -165,6 +165,7 @@ class SaveManagerImpl {
         }
 
         try {
+            // SAFETY: our own serialized data, validated by spreading onto createEmptySaveData() defaults below
             const parsed = JSON.parse(raw) as SaveData
             const empty = createEmptySaveData()
             const data: SaveData = {

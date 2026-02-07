@@ -1,14 +1,16 @@
+import type { RoutableWindow } from "../../config/routing"
+import { emitAppEvent } from "../events"
+import { EXERCISES } from "../welt/exercises"
 import {
     compileWeltProgram,
     getInitialMemory,
     runGrundProgram,
     runWeltProgram,
     WeltError,
-} from "../welt"
-import { EXERCISES } from "../welt/exercises"
+} from "../welt/runner"
 import { runAllTests } from "../welt/testRunner"
 import type { WeltValue } from "../welt/types"
-import { SYS_MEMORY } from "./filesystem"
+import { SYS_MEMORY } from "./content/systemFiles"
 import {
     buildTree,
     changeDirectory,
@@ -26,7 +28,7 @@ import {
 
 export interface CommandContext {
     fs: FileSystem
-    openWindow: (windowId: string) => void
+    openWindow: (windowId: RoutableWindow) => void
     closeTerminal: () => void
     clearOutput: () => void
     print: (text: string, className?: string) => void
@@ -198,7 +200,10 @@ const COMMANDS: Record<string, CommandHandler> = {
         }
 
         const filename = args.join(" ")
-        const windowId = getExecutableWindowId(ctx.fs, filename)
+        const windowId = getExecutableWindowId(
+            ctx.fs,
+            filename
+        ) as RoutableWindow | null
 
         if (!windowId) {
             return {
@@ -336,7 +341,7 @@ async function runWeltCommand(
             initialMemory
         )
         if (typeof document !== "undefined") {
-            document.dispatchEvent(new CustomEvent("welt:completed"))
+            emitAppEvent("welt:completed")
         }
         return { output: "" }
     } catch (err) {
@@ -345,17 +350,9 @@ async function runWeltCommand(
             const msg = err.message
             if (typeof document !== "undefined") {
                 if (msg.includes("OVERHEAT")) {
-                    document.dispatchEvent(
-                        new CustomEvent("welt:error", {
-                            detail: { type: "thermal" },
-                        })
-                    )
+                    emitAppEvent("welt:error", { type: "thermal" })
                 } else if (msg.includes("DIVISION BY ZERO")) {
-                    document.dispatchEvent(
-                        new CustomEvent("welt:error", {
-                            detail: { type: "divide-by-zero" },
-                        })
-                    )
+                    emitAppEvent("welt:error", { type: "divide-by-zero" })
                 }
             }
             return {
@@ -379,7 +376,7 @@ function compileWeltCommand(
         const output = compileWeltProgram(source, filename)
         ctx.print(output)
         if (typeof document !== "undefined") {
-            document.dispatchEvent(new CustomEvent("grund:compiled"))
+            emitAppEvent("grund:compiled")
         }
         return { output: "" }
     } catch (err) {
@@ -412,7 +409,7 @@ async function runGrundCommand(
             initialMemory
         )
         if (typeof document !== "undefined") {
-            document.dispatchEvent(new CustomEvent("grund:executed"))
+            emitAppEvent("grund:executed")
         }
         return { output: "" }
     } catch (err) {
@@ -421,17 +418,9 @@ async function runGrundCommand(
             const msg = err.message
             if (typeof document !== "undefined") {
                 if (msg.includes("OVERHEAT")) {
-                    document.dispatchEvent(
-                        new CustomEvent("welt:error", {
-                            detail: { type: "thermal" },
-                        })
-                    )
+                    emitAppEvent("welt:error", { type: "thermal" })
                 } else if (msg.includes("DIVISION BY ZERO")) {
-                    document.dispatchEvent(
-                        new CustomEvent("welt:error", {
-                            detail: { type: "divide-by-zero" },
-                        })
-                    )
+                    emitAppEvent("welt:error", { type: "divide-by-zero" })
                 }
             }
             return {
@@ -515,21 +504,16 @@ async function handleWelttest(ctx: CommandContext): Promise<CommandResult> {
     const passedCount = result.results.filter((r) => r.passed).length
 
     if (typeof document !== "undefined") {
-        document.dispatchEvent(
-            new CustomEvent("welt:exercises-tested", {
-                detail: { passed: passedCount, total: result.results.length },
-            })
-        )
+        emitAppEvent("welt:exercises-tested", {
+            passed: passedCount,
+            total: result.results.length,
+        })
 
         for (const r of result.results) {
             if (r.passed) {
                 const num = parseInt(r.name.replace("exercise", ""), 10)
                 if (!isNaN(num)) {
-                    document.dispatchEvent(
-                        new CustomEvent("welt:exercise-passed", {
-                            detail: { exercise: num },
-                        })
-                    )
+                    emitAppEvent("welt:exercise-passed", { exercise: num })
                 }
             }
         }
@@ -543,7 +527,7 @@ async function handleWelttest(ctx: CommandContext): Promise<CommandResult> {
         ctx.print("Die Welt als Wille und Vorstellung.", "success")
         ctx.print("You have mastered the WELT language.", "success")
         if (typeof document !== "undefined") {
-            document.dispatchEvent(new CustomEvent("welt:all-exercises-passed"))
+            emitAppEvent("welt:all-exercises-passed")
         }
     } else {
         ctx.print(`${passedCount}/${result.results.length} exercises passed.`)
@@ -623,7 +607,10 @@ function tryExecuteFile(
         }
     }
 
-    const windowId = getExecutableWindowId(ctx.fs, filename)
+    const windowId = getExecutableWindowId(
+        ctx.fs,
+        filename
+    ) as RoutableWindow | null
     if (windowId) {
         ctx.openWindow(windowId)
         return {

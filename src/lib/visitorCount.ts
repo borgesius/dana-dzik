@@ -19,6 +19,7 @@ async function fetchAndDisplayCount(): Promise<void> {
             return
         }
 
+        // SAFETY: response shape controlled by our /api/pageview endpoint
         const result = (await response.json()) as VisitorCountResponse
 
         if (result.ok && result.count > 0) {

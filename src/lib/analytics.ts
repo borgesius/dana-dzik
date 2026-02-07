@@ -1,4 +1,6 @@
-import { ANALYTICS_CONFIG } from "../config"
+import { ANALYTICS_CONFIG } from "../config/analytics"
+import type { RoutableWindow } from "../config/routing"
+import { emitAppEvent } from "./events"
 
 function isBot(): boolean {
     const ua = navigator.userAgent.toLowerCase()
@@ -150,11 +152,7 @@ async function sendEvent(event: AnalyticsEvent): Promise<void> {
     const visitorId = getVisitorId()
 
     if (!isCriticalEvent(event.type)) {
-        document.dispatchEvent(
-            new CustomEvent("analytics:intent", {
-                detail: { type: event.type },
-            })
-        )
+        emitAppEvent("analytics:intent", { type: event.type })
         if (!isClientSampled(visitorId)) return
         if (!consumeSessionBudget()) return
     }
@@ -182,7 +180,7 @@ export function trackPageview(): void {
 
 const FUNNEL_PREFIX = "funnel_"
 
-export function trackWindowOpen(windowId: string): void {
+export function trackWindowOpen(windowId: RoutableWindow): void {
     const key = `${WINDOW_TRACKED_PREFIX}${windowId}`
     if (!sessionStorage.getItem(key)) {
         sessionStorage.setItem(key, "true")
