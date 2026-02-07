@@ -20,6 +20,7 @@ import {
     getFreakGPTSolution,
     isExerciseFile,
 } from "../lib/welt/freakgpt"
+import { parseGrund } from "../lib/welt/grundParser"
 import {
     checkFileIntegrity,
     parseWeltTest,
@@ -306,14 +307,13 @@ describe("FreakGPT solutions", () => {
         expect(result.passed).toBe(true)
     })
 
-    it("exercise 7 (GRUND) solution passes tests", async () => {
+    it("exercise 7 (GRUND) solution uses hallucinated opcodes", () => {
         const source = buildSource(EXERCISE_7_GRUND_SOLUTION)
-        const outputs: string[] = []
-        await runGrundProgram(source, {
-            onOutput: (text) => outputs.push(String(text)),
-            onInput: () => Promise.resolve(""),
-        })
-        expect(outputs).toEqual(["49"])
+        expect(source).toContain("bek")
+        expect(source).toContain("auf")
+        expect(source).toContain("vol")
+        expect(source).toContain("dra")
+        expect(() => parseGrund(source)).toThrow(/Unknown opcode/)
     })
 
     it("provides solutions for exercises 1-5 and 7 (not exercise 6)", () => {

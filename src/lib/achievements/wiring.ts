@@ -324,9 +324,6 @@ function wireWeltEvents(mgr: AchievementManager): void {
             case "thermal":
                 mgr.earn("thermal-protection")
                 break
-            case "divide-by-zero":
-                mgr.earn("divide-by-zero")
-                break
             case "suffering":
                 mgr.earn("suffering")
                 break
