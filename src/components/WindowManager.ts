@@ -101,7 +101,7 @@ const WINDOW_CONFIGS: Record<RoutableWindow, WindowConfig> = {
     },
     terminal: {
         id: "terminal",
-        title: "C:\\HACKTERM.EXE",
+        title: "3:\\HACKTERM.EXE",
         icon: icon("terminal"),
         width: 600,
         height: 400,
@@ -116,6 +116,15 @@ const WINDOW_CONFIGS: Record<RoutableWindow, WindowConfig> = {
         height: 400,
         style: "win95",
         contentType: "explorer",
+    },
+    achievements: {
+        id: "achievements",
+        title: "Achievements",
+        icon: icon("achievements"),
+        width: 550,
+        height: 500,
+        style: "winxp",
+        contentType: "achievements",
     },
 }
 

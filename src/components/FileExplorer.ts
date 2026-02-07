@@ -1,9 +1,9 @@
 import {
-    createFileSystem,
     type FileSystem,
     formatPath,
     type FSNode,
     getNode,
+    getSharedFilesystem,
     resolvePath,
 } from "../lib/terminal/filesystem"
 
@@ -17,7 +17,7 @@ export class FileExplorer {
 
     constructor(container: HTMLElement, initialPath?: string) {
         this.container = container
-        this.fs = createFileSystem()
+        this.fs = getSharedFilesystem()
         this.container.innerHTML = ""
         this.container.className = "explorer-container"
 

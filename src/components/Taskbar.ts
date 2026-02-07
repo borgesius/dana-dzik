@@ -1,4 +1,5 @@
 import { getBuildInfo } from "../lib/buildInfo"
+import { saveManager } from "../lib/saveManager"
 import { getThemeManager } from "../lib/themeManager"
 import type { WindowManager } from "./WindowManager"
 
@@ -169,50 +170,39 @@ export class Taskbar {
         left.className = "start-menu-left"
         const leftItems = [
             {
-                icon: "🌐",
-                text: pick([
-                    "Internet Exploder",
-                    "Netscape Navigator 7.0 (IE Mode)",
-                    "The Web.exe",
-                ]),
+                icon: "📁",
+                text: "File Explorer",
+                windowId: "explorer",
             },
             {
-                icon: "📧",
-                text: pick([
-                    "Outlook Distress",
-                    "Microsoft Outcast Express",
-                    "Mail (broken)",
-                ]),
+                icon: "💻",
+                text: "Terminal",
+                windowId: "terminal",
             },
             {
-                icon: "🎵",
-                text: pick([
-                    "Windows Media Destroyer",
-                    "RealPlayer (fake)",
-                    "Winamp 2.91 (v5.8)",
-                ]),
-            },
-            {
-                icon: "💬",
-                text: pick([
-                    "MSN Messenger (AIM)",
-                    "ICQ/AIM/MSN/Yahoo (none)",
-                    "Chat.dll",
-                ]),
+                icon: "🏆",
+                text: "Achievements",
+                windowId: "achievements",
             },
             {
                 icon: "🎮",
-                text: pick([
-                    "3D Pinball (2D)",
-                    "Space Cadet Pinball (broken)",
-                    "Minesweeper (pinball mode)",
-                ]),
+                text: "Pinball",
+                windowId: "pinball",
+            },
+            {
+                icon: "😺",
+                text: "FelixGPT",
+                windowId: "felixgpt",
             },
         ]
-        leftItems.forEach(({ icon, text }) => {
+        leftItems.forEach(({ icon, text, windowId }) => {
             const item = document.createElement("div")
             item.className = "start-menu-item"
             item.innerHTML = `<span style="font-size: 20px">${icon}</span><span>${text}</span>`
+            item.addEventListener("click", () => {
+                this.windowManager.openWindow(windowId)
+                this.closeStartMenu()
+            })
             left.appendChild(item)
         })
         body.appendChild(left)
@@ -220,41 +210,20 @@ export class Taskbar {
         const right = document.createElement("div")
         right.className = "start-menu-right"
         const rightItems = [
-            pick([
-                "My Documents",
-                "Your Documents",
-                "Someone's Documents",
-                "C:\\DOCS~1",
-            ]),
-            pick([
-                "My Pictures",
-                "My Pictures (empty)",
-                "Pictures (missing)",
-                "*.jpg",
-            ]),
-            pick([
-                "My Music",
-                "My Music (silent)",
-                "Audio Files (corrupt)",
-                "Sounds.wav",
-            ]),
-            pick([
-                "My Computer",
-                "This Computer",
-                "A Computer",
-                "Computer (probably)",
-            ]),
-            pick([
-                "Control Panel",
-                "Control Pannel",
-                "Settings.cpl",
-                "System32 (friendly mode)",
-            ]),
+            { text: "About", windowId: "about" },
+            { text: "Projects", windowId: "projects" },
+            { text: "Resume", windowId: "resume" },
+            { text: "Links", windowId: "links" },
+            { text: "Guestbook", windowId: "guestbook" },
         ]
-        rightItems.forEach((text) => {
+        rightItems.forEach(({ text, windowId }) => {
             const item = document.createElement("div")
             item.className = "start-menu-item"
             item.innerHTML = `<span>${text}</span>`
+            item.addEventListener("click", () => {
+                this.windowManager.openWindow(windowId)
+                this.closeStartMenu()
+            })
             right.appendChild(item)
         })
         body.appendChild(right)
@@ -278,17 +247,65 @@ export class Taskbar {
 
         const buttons = document.createElement("div")
         buttons.className = "start-menu-footer-buttons"
-        const logOff = document.createElement("button")
-        logOff.innerHTML = "🚪 Log Off"
-        const shutdown = document.createElement("button")
-        shutdown.innerHTML = "⏻ Shut Down"
-        buttons.appendChild(logOff)
-        buttons.appendChild(shutdown)
+        const resetBtn = document.createElement("button")
+        resetBtn.innerHTML = "🔄 Reset"
+        resetBtn.title = "Erase all saved progress"
+        resetBtn.addEventListener("click", () => {
+            this.closeStartMenu()
+            this.confirmReset()
+        })
+        buttons.appendChild(resetBtn)
         footer.appendChild(buttons)
 
         menu.appendChild(footer)
 
         return menu
+    }
+
+    private confirmReset(): void {
+        const overlay = document.createElement("div")
+        overlay.className = "reset-dialog-overlay"
+
+        const dialog = document.createElement("div")
+        dialog.className = "reset-dialog"
+
+        const title = document.createElement("div")
+        title.className = "reset-dialog-title"
+        title.textContent = "⚠️ Reset All Data"
+        dialog.appendChild(title)
+
+        const message = document.createElement("div")
+        message.className = "reset-dialog-message"
+        message.textContent =
+            "This will permanently erase all progress, achievements, market game state, filesystem edits, and preferences. This cannot be undone."
+        dialog.appendChild(message)
+
+        const buttonRow = document.createElement("div")
+        buttonRow.className = "reset-dialog-buttons"
+
+        const cancelBtn = document.createElement("button")
+        cancelBtn.className = "reset-dialog-cancel"
+        cancelBtn.textContent = "Cancel"
+        cancelBtn.addEventListener("click", () => overlay.remove())
+
+        const confirmBtn = document.createElement("button")
+        confirmBtn.className = "reset-dialog-confirm"
+        confirmBtn.textContent = "Erase Everything"
+        confirmBtn.addEventListener("click", () => {
+            overlay.remove()
+            saveManager.reset()
+        })
+
+        buttonRow.appendChild(cancelBtn)
+        buttonRow.appendChild(confirmBtn)
+        dialog.appendChild(buttonRow)
+
+        overlay.appendChild(dialog)
+        overlay.addEventListener("click", (e) => {
+            if (e.target === overlay) overlay.remove()
+        })
+
+        document.body.appendChild(overlay)
     }
 
     private toggleStartMenu(): void {

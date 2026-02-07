@@ -136,10 +136,26 @@ export class Toolbars {
         spacer.style.flex = "1"
         toolbar.appendChild(spacer)
 
+        toolbar.appendChild(this.createAchievementsButton())
         toolbar.appendChild(this.createLanguageToggle())
         toolbar.appendChild(this.createColorSchemeToggle())
 
         return toolbar
+    }
+
+    private createAchievementsButton(): HTMLElement {
+        const btn = document.createElement("button")
+        btn.className = "toolbar-button achievements-button"
+        btn.textContent = "🏆"
+        btn.title = "Achievements"
+        btn.addEventListener("click", () => {
+            document.dispatchEvent(
+                new CustomEvent("terminal:open-window", {
+                    detail: { windowId: "achievements" },
+                })
+            )
+        })
+        return btn
     }
 
     private createLanguageToggle(): HTMLElement {

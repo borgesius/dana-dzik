@@ -22,6 +22,7 @@ import {
     type LimitOrder,
     MARKET_EVENTS,
     type MarketEventDef,
+    type MarketSaveData,
     type MarketState,
     MEAN_REVERSION_STRENGTH,
     PHASE_THRESHOLDS,
@@ -866,6 +867,59 @@ export class MarketEngine {
             upcomingEvent: this.upcomingEvent,
             popupLevel: this.popupLevel,
         }
+    }
+
+    // -----------------------------------------------------------------------
+    // Save / Load
+    // -----------------------------------------------------------------------
+
+    public serialize(): MarketSaveData {
+        const holdingsRecord: Record<string, Holding> = {}
+        for (const [k, v] of this.holdings) {
+            holdingsRecord[k] = { ...v }
+        }
+
+        const factoriesRecord: Record<string, number> = {}
+        for (const [k, v] of this.factories) {
+            factoriesRecord[k] = v
+        }
+
+        return {
+            cash: this.cash,
+            lifetimeEarnings: this.lifetimeEarnings,
+            holdings: holdingsRecord,
+            factories: factoriesRecord,
+            ownedUpgrades: [...this.ownedUpgrades],
+            unlockedCommodities: [...this.unlockedCommodities],
+            unlockedPhases: [...this.unlockedPhases],
+            limitOrders: this.limitOrders.map((o) => ({ ...o })),
+            popupLevel: this.popupLevel,
+        }
+    }
+
+    public loadState(data: MarketSaveData): void {
+        this.cash = data.cash
+        this.lifetimeEarnings = data.lifetimeEarnings
+
+        this.holdings.clear()
+        for (const [k, v] of Object.entries(data.holdings)) {
+            this.holdings.set(k as CommodityId, { ...v })
+        }
+
+        this.factories.clear()
+        for (const [k, v] of Object.entries(data.factories)) {
+            this.factories.set(k as FactoryId, v)
+        }
+
+        this.ownedUpgrades = new Set(data.ownedUpgrades)
+        this.unlockedCommodities = new Set(data.unlockedCommodities)
+        this.unlockedPhases = new Set(data.unlockedPhases)
+        this.limitOrders = data.limitOrders.map((o) => ({ ...o }))
+        this.popupLevel = data.popupLevel
+
+        this.emit("moneyChanged", this.cash)
+        this.emit("portfolioChanged")
+        this.emit("stateChanged")
     }
 
     // -----------------------------------------------------------------------

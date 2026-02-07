@@ -1,4 +1,8 @@
-import { runWeltProgram, WeltError } from "../welt"
+import { getInitialMemory, runWeltProgram, WeltError } from "../welt"
+import { EXERCISES } from "../welt/exercises"
+import { runAllTests } from "../welt/testRunner"
+import type { WeltValue } from "../welt/types"
+import { SYS_MEMORY } from "./filesystem"
 import {
     buildTree,
     changeDirectory,
@@ -8,7 +12,10 @@ import {
     getCurrentNode,
     getExecutableWindowId,
     getFileContent,
+    getNode,
+    getNodeAtPath,
     listDirectory,
+    resolvePath,
 } from "./filesystem"
 
 export interface CommandContext {
@@ -205,11 +212,23 @@ const COMMANDS: Record<string, CommandHandler> = {
         }
 
         const filename = args.join(" ")
+
+        const resolved = resolvePath(ctx.fs, filename)
+        if (resolved) {
+            const node = getNode(ctx.fs, resolved)
+            if (node?.readonly) {
+                return {
+                    output: `Access denied: ${filename} is read-only`,
+                    className: "error",
+                }
+            }
+        }
+
         ctx.startEditor(filename)
         return { output: "" }
     },
 
-    welt: (args, ctx): CommandResult | Promise<CommandResult> => {
+    welt: async (args, ctx): Promise<CommandResult> => {
         if (args.length === 0) {
             return { output: "Usage: welt <filename>", className: "error" }
         }
@@ -225,7 +244,16 @@ const COMMANDS: Record<string, CommandHandler> = {
             return { output: `Empty file: ${filename}`, className: "error" }
         }
 
-        return runWeltCommand(result.content, ctx)
+        const memoryNode = getNodeAtPath(ctx.fs, "3:\\DAS\\memory.welt")
+        const memoryContent = memoryNode?.content ?? ""
+        let initialMemory
+        try {
+            initialMemory = await getInitialMemory(memoryContent)
+        } catch {
+            initialMemory = undefined
+        }
+
+        return runWeltCommand(result.content, ctx, initialMemory)
     },
 
     clear: (): CommandResult => ({ action: "clear" }),
@@ -236,7 +264,7 @@ const COMMANDS: Record<string, CommandHandler> = {
         output: `DANA\\Guest
 
 User: Guest
-Home: C:\\Users\\Dana
+Home: 3:\\Users\\Dana
 Terminal: HACKTERM v1.0`,
     }),
 
@@ -247,19 +275,43 @@ Terminal: HACKTERM v1.0`,
 
 async function runWeltCommand(
     source: string,
-    ctx: CommandContext
+    ctx: CommandContext,
+    initialMemory?: WeltValue[]
 ): Promise<CommandResult> {
     try {
-        await runWeltProgram(source, {
-            onOutput: (text) => ctx.print(text),
-            onInput: () => ctx.requestInput(),
-        })
+        await runWeltProgram(
+            source,
+            {
+                onOutput: (text) => ctx.print(text),
+                onInput: () => ctx.requestInput(),
+            },
+            initialMemory
+        )
+        if (typeof document !== "undefined") {
+            document.dispatchEvent(new CustomEvent("welt:completed"))
+        }
         return { output: "" }
     } catch (err) {
         if (err instanceof WeltError) {
             const lineInfo = err.line > 0 ? ` (line ${err.line})` : ""
+            const msg = err.message
+            if (typeof document !== "undefined") {
+                if (msg.includes("OVERHEAT")) {
+                    document.dispatchEvent(
+                        new CustomEvent("welt:error", {
+                            detail: { type: "thermal" },
+                        })
+                    )
+                } else if (msg.includes("DIVISION BY ZERO")) {
+                    document.dispatchEvent(
+                        new CustomEvent("welt:error", {
+                            detail: { type: "divide-by-zero" },
+                        })
+                    )
+                }
+            }
             return {
-                output: `WELT ERROR${lineInfo}: ${err.message}`,
+                output: `WELT ERROR${lineInfo}: ${msg}`,
                 className: "error",
             }
         }
@@ -268,6 +320,134 @@ async function runWeltCommand(
             className: "error",
         }
     }
+}
+
+type HandlerFn = (ctx: CommandContext) => Promise<CommandResult>
+
+const HANDLERS: Record<string, HandlerFn> = {
+    welttest: handleWelttest,
+    reset: handleReset,
+}
+
+async function handleWelttest(ctx: CommandContext): Promise<CommandResult> {
+    ctx.print("WELT Test Runner v1.0")
+    ctx.print("=====================")
+    ctx.print("")
+
+    const currentNode = getCurrentNode(ctx.fs)
+    if (!currentNode?.children) {
+        return { output: "No files in current directory.", className: "error" }
+    }
+
+    const exerciseSources: Record<string, string> = {}
+    const welttestSources: Record<string, string> = {}
+
+    for (const [name, node] of Object.entries(currentNode.children)) {
+        if (name.endsWith(".welt") && node.content !== undefined) {
+            exerciseSources[name] = node.content
+        }
+        if (name.endsWith(".welttest") && node.content !== undefined) {
+            welttestSources[name] = node.content
+        }
+    }
+
+    const memoryNode = getNodeAtPath(ctx.fs, "3:\\DAS\\memory.welt")
+    const memoryContent = memoryNode?.content ?? ""
+
+    const result = await runAllTests(
+        exerciseSources,
+        welttestSources,
+        memoryContent
+    )
+
+    if (result.tampered.length > 0) {
+        ctx.print("INTEGRITY CHECK FAILED", "error")
+        ctx.print("")
+        for (const file of result.tampered) {
+            ctx.print(`  TAMPERED: ${file}`, "error")
+        }
+        ctx.print("")
+        ctx.print("Test files must not be modified.", "error")
+        ctx.print("Run reset.exe to restore originals.")
+        return { output: "" }
+    }
+
+    for (const r of result.results) {
+        if (r.passed) {
+            ctx.print(`  PASS  ${r.name}`, "success")
+        } else {
+            ctx.print(`  FAIL  ${r.name}: ${r.error ?? "unknown"}`, "error")
+        }
+    }
+
+    ctx.print("")
+
+    const passedCount = result.results.filter((r) => r.passed).length
+
+    if (typeof document !== "undefined") {
+        document.dispatchEvent(
+            new CustomEvent("welt:exercises-tested", {
+                detail: { passed: passedCount, total: result.results.length },
+            })
+        )
+    }
+
+    if (result.allPassed) {
+        ctx.print("=====================", "success")
+        ctx.print("  ALL TESTS PASSED", "success")
+        ctx.print("=====================", "success")
+        ctx.print("")
+        ctx.print("Die Welt als Wille und Vorstellung.", "success")
+        ctx.print("You have mastered the WELT language.", "success")
+        if (typeof document !== "undefined") {
+            document.dispatchEvent(new CustomEvent("welt:all-exercises-passed"))
+        }
+    } else {
+        ctx.print(`${passedCount}/${result.results.length} exercises passed.`)
+    }
+
+    return { output: "" }
+}
+
+function handleReset(ctx: CommandContext): Promise<CommandResult> {
+    ctx.print("Resetting exercises...")
+    ctx.print("")
+
+    const currentNode = getCurrentNode(ctx.fs)
+    if (!currentNode?.children) {
+        return Promise.resolve({
+            output: "No files in current directory.",
+            className: "error",
+        })
+    }
+
+    for (const exercise of EXERCISES) {
+        const weltName = `${exercise.name}.welt`
+        const testName = `${exercise.name}.welttest`
+
+        if (currentNode.children[weltName]) {
+            currentNode.children[weltName].content = exercise.stub
+            if (exercise.locked) {
+                currentNode.children[weltName].readonly = true
+            }
+            ctx.print(`  Restored ${weltName}`)
+        }
+
+        if (currentNode.children[testName]) {
+            currentNode.children[testName].content = exercise.test
+            ctx.print(`  Restored ${testName}`)
+        }
+    }
+
+    const memoryNode = getNodeAtPath(ctx.fs, "3:\\DAS\\memory.welt")
+    if (memoryNode) {
+        memoryNode.content = SYS_MEMORY
+        ctx.print("  Restored memory.welt")
+    }
+
+    ctx.print("")
+    ctx.print("All exercises and system files restored.", "success")
+    return Promise.resolve({ output: "" })
 }
 
 function getTypeLabel(type: FileType): string {
@@ -286,7 +466,18 @@ function getTypeLabel(type: FileType): string {
 function tryExecuteFile(
     filename: string,
     ctx: CommandContext
-): CommandResult | null {
+): CommandResult | Promise<CommandResult> | null {
+    const resolved = resolvePath(ctx.fs, filename)
+    if (resolved) {
+        const node = getNode(ctx.fs, resolved)
+        if (node?.handler) {
+            const handler = HANDLERS[node.handler]
+            if (handler) {
+                return handler(ctx)
+            }
+        }
+    }
+
     const windowId = getExecutableWindowId(ctx.fs, filename)
     if (windowId) {
         ctx.openWindow(windowId)

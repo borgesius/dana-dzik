@@ -245,3 +245,69 @@
 .start-menu-footer button:hover {
     background: linear-gradient(to bottom, #ffffff, #e0e0e0);
 }
+
+/* Reset confirmation dialog */
+
+.reset-dialog-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgb(0 0 0 / 50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100000;
+}
+
+.reset-dialog {
+    background: var(--win-bg, #c0c0c0);
+    border: 2px outset var(--win-border-light, #dfdfdf);
+    padding: 0;
+    min-width: 340px;
+    max-width: 420px;
+    box-shadow: 4px 4px 0 rgb(0 0 0 / 40%);
+    font-family: var(--font-family, "MS Sans Serif", "Segoe UI", sans-serif);
+}
+
+.reset-dialog-title {
+    background: var(--titlebar-active-bg, linear-gradient(to right, #000080, #1084d0));
+    color: var(--titlebar-active-text, #ffffff);
+    padding: 4px 8px;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.reset-dialog-message {
+    padding: 16px 16px 12px;
+    font-size: 12px;
+    line-height: 1.5;
+    color: var(--text-color, #000000);
+}
+
+.reset-dialog-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    padding: 0 16px 16px;
+}
+
+.reset-dialog-buttons button {
+    padding: 4px 16px;
+    font-size: 12px;
+    border: 2px outset var(--win-border-light, #dfdfdf);
+    background: var(--win-bg, #c0c0c0);
+    cursor: pointer;
+    min-width: 80px;
+}
+
+.reset-dialog-buttons button:hover {
+    background: var(--button-hover-bg, #d4d0c8);
+}
+
+.reset-dialog-buttons button:active {
+    border-style: inset;
+}
+
+.reset-dialog-confirm {
+    color: #cc0000;
+    font-weight: 700;
+}

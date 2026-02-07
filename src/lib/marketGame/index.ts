@@ -16,6 +16,7 @@ export type {
     InfluenceId,
     LimitOrder,
     MarketEventDef,
+    MarketSaveData,
     MarketState,
     TradeResult,
     TrendDirection,
@@ -26,6 +27,8 @@ export type {
 export {
     BULK_ORDER_QUANTITY,
     COMMODITIES,
+    CORNER_MARKET_FLOAT,
+    CORNER_MARKET_THRESHOLD,
     FACTORIES,
     FACTORY_COST_SCALING,
     INFLUENCES,
