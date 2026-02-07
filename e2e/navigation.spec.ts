@@ -135,9 +135,7 @@ test.describe("Desktop Navigation", () => {
             timeout: 10000,
         })
 
-        const ventureBtn = page.locator(
-            '.venture-btn:has-text("MAKE $$$ FAST")'
-        )
+        const ventureBtn = page.locator(".venture-btn").first()
         await expect(ventureBtn).toBeVisible({ timeout: 5000 })
         await ventureBtn.click()
 

@@ -1,0 +1,623 @@
+{
+  "loading": {
+    "pleaseWait": "请稍候...",
+    "loading": "加载中...",
+    "das": "DAS"
+  },
+  "boot": {
+    "bios": {
+      "v1": "Fatitech BIOS v4.51 (C) 1997 Fatitech Industries",
+      "v2": "Fatitech BIOS v-3.7 (C) 1997-2003-1991",
+      "v3": "Fatitech BIOS vNaN (C) 19??",
+      "v4": "Fatitech BIOS v0.0.1 BETA (UNLICENSED)",
+      "v5": "Fatitech BIOS v∞.0.1 (C) Dr. T. Pferd"
+    },
+    "cpu": {
+      "c1": "Fatitech QX-97 Quaternary Core @ 4.51MHz",
+      "c2": "Fatitech QX-97 @ probably (quaternary mode)",
+      "c3": "DAS-8 Q4 Core @ -200MHz (estimated)",
+      "c4": "Fatitech QX-97 Quaternary @ fast",
+      "c5": "Generic q86 @ 0.5MHz (fourfold root)"
+    },
+    "ram": {
+      "r1": "8 DING registers OK (256 qbytes each)",
+      "r2": "2296 qbytes (quaternary verified)",
+      "r3": "????K qbytes detected",
+      "r4": "8 banks, 2296 qbytes free",
+      "r5": "enough (quaternary mode)"
+    },
+    "hdd": {
+      "h1": "IDE Primary: C:\\ (WELT filesystem)",
+      "h2": "ATA-33: Fatitech Industries (S/N: ????????)",
+      "h3": "HDD: C:\\WINDOWS\\system32 (7 files)",
+      "h4": "SCSI-0: 120MB (formatted as 2TB)",
+      "h5": "3.5\" Floppy (quaternary formatted)"
+    },
+    "warnings": {
+      "w1": "WELT THERMAL: 保护电路已启动 (1818 次迭代)",
+      "w2": "警告：系统使用年限已超出预期运行寿命",
+      "w3": "QUATERNARY OVERFLOW: 进位标志未清除",
+      "w4": "注意：DING 7 仍被 DING 7 占用",
+      "w5": "CMOS CHECKSUM: 差不多",
+      "w6": "警告：VORSTELLUNG 缓冲区未刷新",
+      "w7": "IRQ CONFLICT: IRQ 5 已经是 IRQ 5",
+      "w8": "键盘错误：未检测到键盘"
+    },
+    "responses": {
+      "r1": "继续中...",
+      "r2": "忽略中...",
+      "r3": "已确认...",
+      "r4": "确定...",
+      "r5": "VERNEINUNG..."
+    },
+    "bootPaths": {
+      "b1": "正在执行 C:\\WINDOWS\\system32\\boot.welt...",
+      "b2": "正在加载 C:\\WINDOWS\\system32\\config.welt...",
+      "b3": "ERWACHE... 正在从 boot.welt 启动...",
+      "b4": "按照 boot.welt 说的启动...",
+      "b5": "正在从 C:\\WINDOWS\\system32\\... 启动"
+    },
+    "loadingTexts": {
+      "set1": {
+        "l1": "正在初始化 VORSTELLUNG 缓冲区...",
+        "l2": "正在校准 DING 寄存器...",
+        "l3": "就绪（大概）"
+      },
+      "set2": {
+        "l1": "正在加载 WELT 模块...",
+        "l2": "正在重建网格...",
+        "l3": "VERNEINUNG"
+      },
+      "set3": {
+        "l1": "正在整理四进制内存...",
+        "l2": "正在预热 CRT 显示器...",
+        "l3": "就绪"
+      },
+      "set4": {
+        "l1": "正在挂载 C:\\...",
+        "l2": "正在卸载 C:\\...",
+        "l3": "正在重新挂载 C:\\..."
+      },
+      "set5": {
+        "l1": "加载中...",
+        "l2": "启动中...",
+        "l3": "内核正常"
+      }
+    },
+    "moduleResults": {
+      "m1": "正常",
+      "m2": "正常（大概）",
+      "m3": "正常（已忽略错误）",
+      "m4": "正常（第二次尝试成功）"
+    },
+    "detectingHardware": "正在检测硬件...",
+    "cpuLabel": "CPU:",
+    "ramLabel": "RAM:",
+    "hddLabel": "HDD:",
+    "loadingModules": "正在加载系统模块...",
+    "loadLabel": "加载:",
+    "dasLoading": "DAS 加载中..."
+  },
+  "common": {
+    "ok": "确定",
+    "cancel": "取消",
+    "close": "关闭",
+    "save": "保存",
+    "quit": "退出",
+    "yes": "是",
+    "no": "否",
+    "error": "错误",
+    "success": "成功"
+  },
+  "toolbar": {
+    "weatherLoading": "☀️ 加载中...",
+    "qaLoading": "🔬 QA: 加载中...",
+    "qaFallback1": "🔬 QA: ¯\\_(ツ)_/¯",
+    "qaFallback2": "🔬 测试: ?",
+    "qaFallback3": "🔬 QA: 不可用",
+    "colorScheme": "配色: {{scheme}}",
+    "language": "语言: {{language}}",
+    "hqOpen": "📊 总部 ▲",
+    "hqClosed": "📊 总部 ▼",
+    "github": "🐙 GitHub",
+    "unlockAt": "终身收益达到 ${{threshold}} 后解锁",
+    "makeMoney": "快速赚钱",
+    "tooltipWithOdds": "{{tagline}}\n成本: ${{cost}} | 奖金: ${{payout}} | {{successRate}}% 成功率",
+    "tooltipWithoutOdds": "{{tagline}}\n成本: ${{cost}} | 奖金: ${{payout}}",
+    "locked": "🔒 ${{threshold}}"
+  },
+  "qa": {
+    "performance": "性能",
+    "accessibility": "可访问性",
+    "bestPractices": "最佳实践",
+    "seo": "SEO",
+    "noScores": "无可用分数",
+    "lighthouseReport": "Lighthouse 报告",
+    "passing": "通过",
+    "failing": "失败",
+    "clickFullReport": "点击查看完整报告",
+    "e2eTests": "端到端测试 (Playwright)",
+    "status": "状态",
+    "allTestsPassing": "所有测试通过",
+    "testsFailing": "测试失败",
+    "chromiumLatest": "Chromium · 主分支最新版",
+    "statements": "语句",
+    "branches": "分支",
+    "functions": "函数",
+    "lines": "行数",
+    "noMetrics": "无可用指标",
+    "testCoverage": "测试覆盖率",
+    "v8Provider": "v8 提供程序",
+    "clickCIDetails": "点击查看 CI 运行详情"
+  },
+  "window": {
+    "minimize": "最小化窗口",
+    "maximize": "最大化窗口",
+    "close": "关闭窗口"
+  },
+  "taskbar": {
+    "userName": "Dana",
+    "userAlt": "用户",
+    "logOff": "注销",
+    "shutDown": "关机",
+    "changelog": "更新日志"
+  },
+  "startMenu": {
+    "programs": {
+      "browser1": "Internet Exploder",
+      "browser2": "Netscape Navigator 7.0 (IE 模式)",
+      "browser3": "The Web.exe",
+      "email1": "Outlook Distress",
+      "email2": "Microsoft Outcast Express",
+      "email3": "邮件（已损坏）",
+      "media1": "Windows Media Destroyer",
+      "media2": "RealPlayer（假的）",
+      "media3": "Winamp 2.91 (v5.8)",
+      "chat1": "MSN Messenger (AIM)",
+      "chat2": "ICQ/AIM/MSN/Yahoo（无）",
+      "chat3": "Chat.dll",
+      "game1": "3D 弹球（2D）",
+      "game2": "太空军校生弹球（已损坏）",
+      "game3": "扫雷（弹球模式）"
+    },
+    "folders": {
+      "docs1": "我的文档",
+      "docs2": "你的文档",
+      "docs3": "某人的文档",
+      "docs4": "C:\\DOCS~1",
+      "pics1": "我的图片",
+      "pics2": "我的图片（空）",
+      "pics3": "图片（丢失）",
+      "pics4": "*.jpg",
+      "music1": "我的音乐",
+      "music2": "我的音乐（无声）",
+      "music3": "音频文件（损坏）",
+      "music4": "Sounds.wav",
+      "computer1": "我的电脑",
+      "computer2": "这台电脑",
+      "computer3": "一台电脑",
+      "computer4": "电脑（大概）",
+      "control1": "控制面板",
+      "control2": "控制面版",
+      "control3": "Settings.cpl",
+      "control4": "System32（友好模式）"
+    }
+  },
+  "windowManager": {
+    "welcomeTitle": "欢迎来到 Dana 的桌面",
+    "aboutTitle": "about_me.doc",
+    "projectsTitle": "cool_projects.zip",
+    "resumeTitle": "resume.pdf",
+    "linksTitle": "书签",
+    "guestbookTitle": "guestbook.exe",
+    "felixgptTitle": "FelixGPT",
+    "statsTitle": "网站统计",
+    "pinballTitle": "Pinball.exe",
+    "terminalTitle": "C:\\HACKTERM.EXE",
+    "explorerTitle": "文件资源管理器"
+  },
+  "fileExplorer": {
+    "up": "向上",
+    "fileFolder": "文件夹",
+    "application": "应用程序",
+    "shortcut": "快捷方式",
+    "file": "文件",
+    "edit": "编辑",
+    "viewSource": "查看源代码",
+    "open": "打开",
+    "view": "查看"
+  },
+  "terminal": {
+    "header": "HACKTERM v1.0 - 检测到未授权访问",
+    "helpPrompt": "输入 'help' 查看可用命令。",
+    "prompt": "? "
+  },
+  "terminalCommands": {
+    "availableCommands": "可用命令：",
+    "navigation": "导航：",
+    "files": "文件：",
+    "programs": "程序：",
+    "utilities": "实用工具：",
+    "tip": "提示：",
+    "usageCat": "用法：cat [-n] <文件名>",
+    "binaryFile": "[二进制文件 - 使用 'open {{filename}}' 运行]",
+    "emptyFile": "[空文件]",
+    "usageOpen": "用法：open <文件名>",
+    "cannotOpen": "无法打开：{{filename}}",
+    "opening": "[正在打开 {{filename}}...]",
+    "usageEdit": "用法：edit <文件名>",
+    "emptyFileEdit": "空文件：{{filename}}",
+    "whoamiOutput": "DANA\\Guest\n\n用户：Guest\n主目录：C:\\Users\\Dana\n终端：HACKTERM v1.0",
+    "systemFault": "系统故障：{{message}}",
+    "notRecognized": "'{{command}}' 不是内部或外部命令，\n也不是可运行的程序或批处理文件。",
+    "directoryOf": " {{path}} 的目录",
+    "launching": "[正在启动 {{filename}}...]",
+    "dir": "<DIR> ",
+    "exe": "<EXE> ",
+    "lnk": "<LNK> "
+  },
+  "terminalEditor": {
+    "shortcuts": "^S 保存  ^Q 退出",
+    "title": "编辑 - {{filename}}{{dirtyMarker}}",
+    "position": "行 {{line}}，列 {{col}}"
+  },
+  "businessPanel": {
+    "title": "商业总部",
+    "close": "×",
+    "improvements": "改进项目",
+    "transactions": "交易记录",
+    "balance": "💰 余额",
+    "revenue": "收益",
+    "success": "成功",
+    "streak": "连胜",
+    "bestWin": "最佳收益",
+    "acquired": "已获得",
+    "noTransactions": "暂无交易记录"
+  },
+  "businessGame": {
+    "ventures": {
+      "makeMoney": {
+        "name": "快速赚钱",
+        "tagline": "点击这里开始赚钱！"
+      },
+      "emailForward": {
+        "name": "邮件转发",
+        "tagline": "转发给朋友，赚取佣金！"
+      },
+      "punchMonkey": {
+        "name": "互动广告",
+        "tagline": "打猴子就能赢！"
+      },
+      "ringtones": {
+        "name": "高级铃声",
+        "tagline": "下载专属铃声！"
+      },
+      "workHome": {
+        "name": "居家商业套装",
+        "tagline": "在家工作装信封！"
+      },
+      "screensaver": {
+        "name": "桌面套件",
+        "tagline": "免费屏保和光标！"
+      },
+      "nigerianPrince": {
+        "name": "国际合作",
+        "tagline": "协助资金转移，获得 20% 回报！"
+      },
+      "vacation": {
+        "name": "度假所有权",
+        "tagline": "独家分时度假机会！"
+      },
+      "stockTips": {
+        "name": "内幕市场贴士",
+        "tagline": "每日送达热门股票建议！"
+      },
+      "mlm": {
+        "name": "多层次营销",
+        "tagline": "立即建立你的下线！"
+      },
+      "downloadRam": {
+        "name": "系统优化",
+        "tagline": "立即下载更多内存！"
+      },
+      "y2k": {
+        "name": "Y2K 准备套装",
+        "tagline": "为千禧年做好准备！"
+      },
+      "winner": {
+        "name": "恭喜你！！！",
+        "tagline": "您是第 1,000,000 位访客！"
+      },
+      "dotcomIpo": {
+        "name": "互联网公司 IPO",
+        "tagline": "抢占先机！"
+      }
+    },
+    "upgrades": {
+      "ergonomicKeyboard": {
+        "name": "人体工学键盘",
+        "description": "基础点击收益 $0.02"
+      },
+      "salesTraining": {
+        "name": "销售培训",
+        "description": "所有项目风险 -5%"
+      },
+      "luckyTie": {
+        "name": "幸运领带",
+        "description": "连胜奖励 +15%"
+      },
+      "marketResearch": {
+        "name": "市场调研",
+        "description": "悬停时显示精确成功率"
+      },
+      "fastInternet": {
+        "name": "56k 调制解调器",
+        "description": "邮件转发收益 +$0.50"
+      },
+      "touchscreen": {
+        "name": "触摸屏显示器",
+        "description": "互动广告收益 +$2.00"
+      },
+      "cellPhone": {
+        "name": "诺基亚 3310",
+        "description": "高级铃声冷却时间 -3秒"
+      },
+      "calculator": {
+        "name": "商务计算器",
+        "description": "居家工作收益 +50%"
+      },
+      "advancedTraining": {
+        "name": "高级培训",
+        "description": "所有项目风险 -10%"
+      },
+      "motivationalPoster": {
+        "name": "励志海报",
+        "description": "连胜奖励 +25%"
+      },
+      "networkingEvent": {
+        "name": "社交活动",
+        "description": "国际合作收益 +$150"
+      },
+      "executiveDesk": {
+        "name": "高管办公桌",
+        "description": "基础点击收益 $0.05"
+      },
+      "pentiumIII": {
+        "name": "奔腾 III",
+        "description": "系统优化收益 +$100"
+      },
+      "leatherBriefcase": {
+        "name": "真皮公文包",
+        "description": "所有项目风险 -15%"
+      },
+      "goldenWatch": {
+        "name": "金表",
+        "description": "连胜奖励 +40%"
+      },
+      "franchiseRights": {
+        "name": "特许经营权",
+        "description": "多层次营销收益 +100%"
+      },
+      "cornerOffice": {
+        "name": "角落办公室",
+        "description": "被动收益 +$0.25/秒"
+      },
+      "stockPortfolio": {
+        "name": "股票投资组合",
+        "description": "被动收益 +$1.00/秒"
+      },
+      "realEstate": {
+        "name": "房地产",
+        "description": "被动收益 +$5.00/秒"
+      },
+      "ventureCapital": {
+        "name": "风险投资",
+        "description": "被动收益 +$25/秒"
+      }
+    }
+  },
+  "welcome": {
+    "title": "★☆★ 欢迎来到 DANA 的主页 ★☆★",
+    "visitorCount": "你是第",
+    "signGuestbook": "别忘了在留言本上签名！",
+    "altWelcome": "欢迎",
+    "taglineDesktop": "欢迎来到我的网站！随意双击桌面上的图标进行探索。",
+    "taglineMobile": "欢迎来到我的网站！随意点击图标进行探索。",
+    "ctaGuestbook": "📖 在我的留言本上签名！",
+    "underConstruction": "🚧 建设中 🚧",
+    "footer": "最后更新：2026 年 2 月 | 用 ❤️ 制作"
+  },
+  "about": {
+    "title": "📝 关于我",
+    "altDana": "Dana",
+    "altFelix": "Felix",
+    "felixName": "Felix Ramon Vanderbilt 🐱",
+    "hello": "你好！",
+    "bio": "嗨，我叫 <strong>Dana</strong>。我是一名住在旧金山的软件工程师。",
+    "interests": "兴趣爱好：",
+    "interestsList": "🏃 跑步 • 🚴 骑行 • 💻 技术 • 📚 文学 • 🤔 哲学",
+    "cat": "猫咪：",
+    "catName": "🐱 <strong>Felix Ramon Vanderbilt</strong>",
+    "recentlyPlayed": "最近播放（三个月）：",
+    "loading": "加载中...",
+    "emailMe": "📧 给我发邮件！"
+  },
+  "projects": {
+    "title": "📦 项目",
+    "thisWebsite": "🌐 这个网站",
+    "description": "你正在看的就是！",
+    "stack": "技术栈：",
+    "viewSource": "📦 在 GitHub 上查看源代码"
+  },
+  "resume": {
+    "name": "Dana Dzik",
+    "experience": "工作经历",
+    "title": "高级软件工程师",
+    "company": "Volley · 加利福尼亚州旧金山",
+    "dates": "2021 – 至今",
+    "education": "教育背景",
+    "school": "芝加哥大学",
+    "degree": "数学与哲学荣誉学士学位",
+    "location": "伊利诺伊州芝加哥"
+  },
+  "links": {
+    "title": "🔗 链接"
+  },
+  "guestbook": {
+    "title": "📖 留言本",
+    "signButton": "✍️ 在留言本上签名！",
+    "loadingEntries": "加载留言中...",
+    "couldNotLoad": "无法加载留言",
+    "noEntries": "还没有留言。成为第一个签名的人！",
+    "noMessage": "（无消息）"
+  },
+  "felixgpt": {
+    "title": "🐱 FelixGPT",
+    "status": "在线 • 准备就绪",
+    "greeting": "喵！我是 FelixGPT，你的猫咪 AI 助手。有什么问题尽管问我！",
+    "placeholder": "输入消息...",
+    "send": "发送"
+  },
+  "stats": {
+    "title": "📊 网站统计",
+    "subtitle": "实时分析",
+    "loading": "加载分析数据中...",
+    "totalViews": "总浏览量",
+    "windowOpens": "窗口打开次数",
+    "viewHeatmap": "🔥 查看热图",
+    "conversionFunnel": "📈 转化漏斗",
+    "abTest": "🧪 A/B 测试：启动屏幕照片",
+    "abQuestion": "哪张照片更吸引人？",
+    "performance": "⚡ 性能",
+    "couldNotLoad": "无法加载统计数据",
+    "couldNotLoadAnalytics": "无法加载分析数据",
+    "noABData": "暂无 A/B 测试数据"
+  },
+  "popups": {
+    "winner1": {
+      "title": "恭喜你！！！",
+      "headline": "🎉 您是第 1,000,000 位访客！🎉",
+      "body": "点击确定领取免费 iPod Nano！",
+      "btn1": "确定！！！",
+      "btn2": "稍后领取"
+    },
+    "winner2": {
+      "title": "你赢了！！！",
+      "headline": "🎉 检测到访客 #0x0F4240！🎉",
+      "body": "您已被选中！",
+      "btn1": "领取奖品",
+      "btn2": "稍后"
+    },
+    "error1": {
+      "title": "系统错误",
+      "headline": "💾 下载更多内存 💾",
+      "body": "您的计算机内存不足（剩余 -3KB）。",
+      "btn1": "下载内存",
+      "btn2": "取消"
+    },
+    "ad1": {
+      "title": "本地单身人士",
+      "headline": "😍 您附近的性感单身人士 😍",
+      "body": "距离仅 3 英里！",
+      "btn1": "见见他们",
+      "btn2": "不用了"
+    },
+    "ad2": {
+      "title": "加速您的电脑",
+      "headline": "🚀 您的电脑速度慢了 340% 🚀",
+      "body": "下载 PCSpeedUp.scr 来修复！",
+      "btn1": "加速",
+      "btn2": "保持慢速"
+    },
+    "bonus1": {
+      "title": "特别优惠！",
+      "headline": "🎁 领取您的商业奖励！🎁",
+      "body": "您已被选中享受特别促销优惠！",
+      "btn1": "立即领取！",
+      "btn2": "不用了"
+    },
+    "bonus2": {
+      "title": "调查完成！",
+      "headline": "📋 感谢您的反馈！📋",
+      "body": "作为感谢，这里有一份现金奖励！",
+      "btn1": "领取奖励",
+      "btn2": "拒绝"
+    },
+    "bonus3": {
+      "title": "幸运赢家！",
+      "headline": "🍀 您赢得了奖品！🍀",
+      "body": "点击下方将资金添加到您的账户！",
+      "btn1": "添加到账户",
+      "btn2": "稍后再说"
+    }
+  },
+  "widgets": {
+    "winamp": {
+      "title": "WINAMP",
+      "stopped": "已停止",
+      "playing": "播放中",
+      "paused": "已暂停",
+      "time": "--/--",
+      "clickToStart": "点击开始播放...",
+      "previous": "上一首",
+      "play": "播放",
+      "pause": "暂停",
+      "stop": "停止",
+      "next": "下一首",
+      "minimize": "最小化"
+    },
+    "lastfm": {
+      "title": "🎧 最近播放（三个月）",
+      "loading": "加载中...",
+      "apiNotAvailable": "API 不可用",
+      "noData": "无数据",
+      "offline": "离线",
+      "couldNotLoad": "无法加载"
+    },
+    "strava": {
+      "title": "🏃 Strava",
+      "loading": "加载活动中...",
+      "unavailable": "Strava 不可用",
+      "noActivities": "无近期活动",
+      "bestRun": "🏃 最佳跑步（三个月）",
+      "bestRide": "🚴 最佳骑行（三个月）",
+      "longestRide": "🚴 最长骑行（三个月）"
+    }
+  },
+  "mobile": {
+    "carrier": "Pferd"
+  },
+  "themeLabels": {
+    "win95": {
+      "startButton": "开始",
+      "startMenuTitle": "程序",
+      "searchPlaceholder": "询问 Jeeves",
+      "fileManager": "资源管理器"
+    },
+    "macClassic": {
+      "startMenuTitle": "苹果菜单",
+      "searchPlaceholder": "Sherlock",
+      "fileManager": "访达",
+      "aboutMe": "关于我",
+      "projects": "项目",
+      "resume": "简历",
+      "bookmarks": "书签",
+      "guestBook": "留言本",
+      "felixgpt": "FelixGPT",
+      "siteStats": "网站统计",
+      "crystalQuest": "Crystal Quest",
+      "terminal": "终端"
+    },
+    "apple2": {
+      "startButton": "]",
+      "startMenuTitle": "CATALOG",
+      "searchPlaceholder": "SEARCH:",
+      "fileManager": "CATALOG"
+    },
+    "c64": {
+      "startButton": "RUN",
+      "startMenuTitle": "LOAD",
+      "fileManager": "DIRECTORY"
+    }
+  }
+}

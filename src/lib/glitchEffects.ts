@@ -1,3 +1,4 @@
+import { getLocaleManager, type LocaleId } from "./localeManager"
 import { getThemeManager } from "./themeManager"
 
 type GlitchType =
@@ -32,13 +33,22 @@ const THEME_GLITCH_CONFIG = {
     transitionEffectDuration: 100,
 }
 
+const LOCALE_GLITCH_CONFIG = {
+    flashMinInterval: 40000,
+    flashMaxInterval: 120000,
+    flashDuration: { min: 300, max: 700 },
+    transitionEffectDuration: 150,
+}
+
 export class GlitchManager {
     private overlay: HTMLDivElement | null = null
+    private localeRestoreTimeout: number | null = null
 
     constructor() {
         this.createOverlay()
         this.scheduleNextGlitch()
         this.scheduleNextThemeGlitch()
+        this.scheduleNextLocaleGlitch()
     }
 
     private createOverlay(): void {
@@ -70,6 +80,19 @@ export class GlitchManager {
         window.setTimeout(() => {
             this.triggerThemeGlitch()
             this.scheduleNextThemeGlitch()
+        }, delay)
+    }
+
+    private scheduleNextLocaleGlitch(): void {
+        const delay =
+            LOCALE_GLITCH_CONFIG.flashMinInterval +
+            Math.random() *
+                (LOCALE_GLITCH_CONFIG.flashMaxInterval -
+                    LOCALE_GLITCH_CONFIG.flashMinInterval)
+
+        window.setTimeout(() => {
+            this.triggerLocaleGlitch()
+            this.scheduleNextLocaleGlitch()
         }, delay)
     }
 
@@ -139,6 +162,64 @@ export class GlitchManager {
                 targetTheme as "win95" | "mac-classic" | "apple2" | "c64"
             )
         }, 300)
+    }
+
+    private triggerLocaleGlitch(): void {
+        const lm = getLocaleManager()
+        const currentLocale = lm.getCurrentLocale()
+        const allLocales = lm.getLocaleIds()
+        const otherLocales = allLocales.filter((l) => l !== currentLocale)
+        const targetLocale =
+            otherLocales[Math.floor(Math.random() * otherLocales.length)]
+
+        this.performMomentaryLocaleFlash(targetLocale, currentLocale)
+    }
+
+    private performMomentaryLocaleFlash(
+        targetLocale: LocaleId,
+        originalLocale: LocaleId
+    ): void {
+        const lm = getLocaleManager()
+        const flashDuration =
+            LOCALE_GLITCH_CONFIG.flashDuration.min +
+            Math.random() *
+                (LOCALE_GLITCH_CONFIG.flashDuration.max -
+                    LOCALE_GLITCH_CONFIG.flashDuration.min)
+
+        this.applyGlitch(
+            this.generateGlitchEvent(
+                "noise",
+                0.6,
+                LOCALE_GLITCH_CONFIG.transitionEffectDuration
+            )
+        )
+        this.applyGlitch(
+            this.generateGlitchEvent(
+                "shift",
+                0.5,
+                LOCALE_GLITCH_CONFIG.transitionEffectDuration
+            )
+        )
+
+        setTimeout(() => {
+            void lm.setLocale(targetLocale)
+
+            if (this.localeRestoreTimeout) {
+                clearTimeout(this.localeRestoreTimeout)
+            }
+
+            this.localeRestoreTimeout = window.setTimeout(() => {
+                this.applyGlitch(
+                    this.generateGlitchEvent(
+                        "colorSplit",
+                        0.4,
+                        LOCALE_GLITCH_CONFIG.transitionEffectDuration
+                    )
+                )
+                void lm.setLocale(originalLocale)
+                this.localeRestoreTimeout = null
+            }, flashDuration)
+        }, LOCALE_GLITCH_CONFIG.transitionEffectDuration)
     }
 
     private triggerGlitch(): void {

@@ -1,0 +1,623 @@
+{
+  "loading": {
+    "pleaseWait": "Por favor, aguarde...",
+    "loading": "Carregando...",
+    "das": "DAS"
+  },
+  "boot": {
+    "bios": {
+      "v1": "Fatitech BIOS v4.51 (C) 1997 Fatitech Industries",
+      "v2": "Fatitech BIOS v-3.7 (C) 1997-2003-1991",
+      "v3": "Fatitech BIOS vNaN (C) 19??",
+      "v4": "Fatitech BIOS v0.0.1 BETA (SEM LICENÇA)",
+      "v5": "Fatitech BIOS v∞.0.1 (C) Dr. T. Pferd"
+    },
+    "cpu": {
+      "c1": "Fatitech QX-97 Núcleo Quaternário @ 4.51MHz",
+      "c2": "Fatitech QX-97 @ provavelmente (modo quaternário)",
+      "c3": "DAS-8 Q4 Core @ -200MHz (estimado)",
+      "c4": "Fatitech QX-97 Quaternário @ rápido",
+      "c5": "q86 genérico @ 0.5MHz (raiz quádrupla)"
+    },
+    "ram": {
+      "r1": "8 registradores DING OK (256 qbytes cada)",
+      "r2": "2296 qbytes (quaternário verificado)",
+      "r3": "????K qbytes detectados",
+      "r4": "8 bancos, 2296 qbytes livres",
+      "r5": "suficiente (modo quaternário)"
+    },
+    "hdd": {
+      "h1": "IDE Primário: C:\\ (sistema de arquivos WELT)",
+      "h2": "ATA-33: Fatitech Industries (S/N: ????????)",
+      "h3": "HDD: C:\\WINDOWS\\system32 (7 arquivos)",
+      "h4": "SCSI-0: 120MB (formatado como 2TB)",
+      "h5": "Disquete 3.5\" (formatado quaternário)"
+    },
+    "warnings": {
+      "w1": "WELT TÉRMICO: Circuito de proteção ativado (1818 iterações)",
+      "w2": "AVISO: Idade do sistema excede tempo de vida operacional esperado",
+      "w3": "OVERFLOW QUATERNÁRIO: Flag de carry não limpa",
+      "w4": "AVISO: DING 7 ainda ocupado por DING 7",
+      "w5": "CHECKSUM CMOS: perto o suficiente",
+      "w6": "AVISO: buffer VORSTELLUNG não liberado",
+      "w7": "CONFLITO IRQ: IRQ 5 já é IRQ 5",
+      "w8": "ERRO DE TECLADO: teclado não encontrado"
+    },
+    "responses": {
+      "r1": "PROSSEGUINDO...",
+      "r2": "IGNORANDO...",
+      "r3": "RECONHECIDO...",
+      "r4": "OK...",
+      "r5": "VERNEINUNG..."
+    },
+    "bootPaths": {
+      "b1": "Executando C:\\WINDOWS\\system32\\boot.welt...",
+      "b2": "Carregando C:\\WINDOWS\\system32\\config.welt...",
+      "b3": "ERWACHE... inicializando de boot.welt...",
+      "b4": "Inicializando do que boot.welt disser...",
+      "b5": "Inicializando de C:\\WINDOWS\\system32\\..."
+    },
+    "loadingTexts": {
+      "set1": {
+        "l1": "Inicializando buffer VORSTELLUNG...",
+        "l2": "Calibrando registradores DING...",
+        "l3": "Pronto (provavelmente)"
+      },
+      "set2": {
+        "l1": "Carregando módulos WELT...",
+        "l2": "Reticulando splines...",
+        "l3": "VERNEINUNG"
+      },
+      "set3": {
+        "l1": "Desfragmentando memória quaternária...",
+        "l2": "Aquecendo CRT...",
+        "l3": "Pronto"
+      },
+      "set4": {
+        "l1": "Montando C:\\...",
+        "l2": "Desmontando C:\\...",
+        "l3": "Remontando C:\\..."
+      },
+      "set5": {
+        "l1": "Carregando...",
+        "l2": "Iniciando...",
+        "l3": "KERNEL OK"
+      }
+    },
+    "moduleResults": {
+      "m1": "OK",
+      "m2": "OK (provavelmente)",
+      "m3": "OK (erros ignorados)",
+      "m4": "OK (na segunda tentativa)"
+    },
+    "detectingHardware": "Detectando hardware...",
+    "cpuLabel": "CPU:",
+    "ramLabel": "RAM:",
+    "hddLabel": "HDD:",
+    "loadingModules": "Carregando módulos do sistema...",
+    "loadLabel": "CARREG:",
+    "dasLoading": "DAS carregando..."
+  },
+  "common": {
+    "ok": "OK",
+    "cancel": "Cancelar",
+    "close": "Fechar",
+    "save": "Salvar",
+    "quit": "Sair",
+    "yes": "Sim",
+    "no": "Não",
+    "error": "Erro",
+    "success": "Sucesso"
+  },
+  "toolbar": {
+    "weatherLoading": "☀️ Carregando...",
+    "qaLoading": "🔬 QA: Carregando...",
+    "qaFallback1": "🔬 QA: ¯\\_(ツ)_/¯",
+    "qaFallback2": "🔬 Testes: ?",
+    "qaFallback3": "🔬 QA: N/D",
+    "colorScheme": "Cor: {{scheme}}",
+    "language": "Idioma: {{language}}",
+    "hqOpen": "📊 HQ ▲",
+    "hqClosed": "📊 HQ ▼",
+    "github": "🐙 GitHub",
+    "unlockAt": "Desbloquear em ${{threshold}} de ganhos totais",
+    "makeMoney": "GANHE $$$ RÁPIDO",
+    "tooltipWithOdds": "{{tagline}}\nCusto: ${{cost}} | Ganho: ${{payout}} | {{successRate}}% de sucesso",
+    "tooltipWithoutOdds": "{{tagline}}\nCusto: ${{cost}} | Ganho: ${{payout}}",
+    "locked": "🔒 ${{threshold}}"
+  },
+  "qa": {
+    "performance": "Desempenho",
+    "accessibility": "Acessibilidade",
+    "bestPractices": "Melhores Práticas",
+    "seo": "SEO",
+    "noScores": "Nenhuma pontuação disponível",
+    "lighthouseReport": "Relatório Lighthouse",
+    "passing": "Aprovado",
+    "failing": "Reprovado",
+    "clickFullReport": "Clique para relatório completo",
+    "e2eTests": "Testes E2E (Playwright)",
+    "status": "Status",
+    "allTestsPassing": "Todos os testes aprovados",
+    "testsFailing": "Testes falhando",
+    "chromiumLatest": "Chromium · Último no main",
+    "statements": "Declarações",
+    "branches": "Ramificações",
+    "functions": "Funções",
+    "lines": "Linhas",
+    "noMetrics": "Nenhuma métrica disponível",
+    "testCoverage": "Cobertura de Testes",
+    "v8Provider": "provedor v8",
+    "clickCIDetails": "Clique para detalhes da execução CI"
+  },
+  "window": {
+    "minimize": "Minimizar janela",
+    "maximize": "Maximizar janela",
+    "close": "Fechar janela"
+  },
+  "taskbar": {
+    "userName": "Dana",
+    "userAlt": "Usuário",
+    "logOff": "Sair",
+    "shutDown": "Desligar",
+    "changelog": "changelog"
+  },
+  "startMenu": {
+    "programs": {
+      "browser1": "Internet Exploder",
+      "browser2": "Netscape Navigator 7.0 (Modo IE)",
+      "browser3": "The Web.exe",
+      "email1": "Outlook Distress",
+      "email2": "Microsoft Outcast Express",
+      "email3": "Mail (quebrado)",
+      "media1": "Windows Media Destroyer",
+      "media2": "RealPlayer (falso)",
+      "media3": "Winamp 2.91 (v5.8)",
+      "chat1": "MSN Messenger (AIM)",
+      "chat2": "ICQ/AIM/MSN/Yahoo (nenhum)",
+      "chat3": "Chat.dll",
+      "game1": "Pinball 3D (2D)",
+      "game2": "Space Cadet Pinball (quebrado)",
+      "game3": "Campo Minado (modo pinball)"
+    },
+    "folders": {
+      "docs1": "Meus Documentos",
+      "docs2": "Seus Documentos",
+      "docs3": "Documentos de Alguém",
+      "docs4": "C:\\DOCS~1",
+      "pics1": "Minhas Imagens",
+      "pics2": "Minhas Imagens (vazio)",
+      "pics3": "Imagens (ausente)",
+      "pics4": "*.jpg",
+      "music1": "Minhas Músicas",
+      "music2": "Minhas Músicas (silencioso)",
+      "music3": "Arquivos de Áudio (corrompido)",
+      "music4": "Sounds.wav",
+      "computer1": "Meu Computador",
+      "computer2": "Este Computador",
+      "computer3": "Um Computador",
+      "computer4": "Computador (provavelmente)",
+      "control1": "Painel de Controle",
+      "control2": "Painel de Controle",
+      "control3": "Settings.cpl",
+      "control4": "System32 (modo amigável)"
+    }
+  },
+  "windowManager": {
+    "welcomeTitle": "Bem-vindo à Área de Trabalho de Dana",
+    "aboutTitle": "sobre_mim.doc",
+    "projectsTitle": "projetos_legais.zip",
+    "resumeTitle": "curriculo.pdf",
+    "linksTitle": "Favoritos",
+    "guestbookTitle": "livro_de_visitas.exe",
+    "felixgptTitle": "FelixGPT",
+    "statsTitle": "Estatísticas do Site",
+    "pinballTitle": "Pinball.exe",
+    "terminalTitle": "C:\\HACKTERM.EXE",
+    "explorerTitle": "Explorador de Arquivos"
+  },
+  "fileExplorer": {
+    "up": "Cima",
+    "fileFolder": "Pasta de Arquivos",
+    "application": "Aplicativo",
+    "shortcut": "Atalho",
+    "file": "Arquivo",
+    "edit": "Editar",
+    "viewSource": "Ver código-fonte",
+    "open": "Abrir",
+    "view": "Ver"
+  },
+  "terminal": {
+    "header": "HACKTERM v1.0 - ACESSO NÃO AUTORIZADO DETECTADO",
+    "helpPrompt": "Digite 'help' para comandos disponíveis.",
+    "prompt": "? "
+  },
+  "terminalCommands": {
+    "availableCommands": "Comandos disponíveis:",
+    "navigation": "Navegação:",
+    "files": "Arquivos:",
+    "programs": "Programas:",
+    "utilities": "Utilitários:",
+    "tip": "Dica:",
+    "usageCat": "Uso: cat [-n] <nome_do_arquivo>",
+    "binaryFile": "[Arquivo binário - use 'open {{filename}}' para executar]",
+    "emptyFile": "[Arquivo vazio]",
+    "usageOpen": "Uso: open <nome_do_arquivo>",
+    "cannotOpen": "Não é possível abrir: {{filename}}",
+    "opening": "[Abrindo {{filename}}...]",
+    "usageEdit": "Uso: edit <nome_do_arquivo>",
+    "emptyFileEdit": "Arquivo vazio: {{filename}}",
+    "whoamiOutput": "DANA\\Convidado\n\nUsuário: Convidado\nHome: C:\\Users\\Dana\nTerminal: HACKTERM v1.0",
+    "systemFault": "FALHA DO SISTEMA: {{message}}",
+    "notRecognized": "'{{command}}' não é reconhecido como um comando interno ou externo,\nprograma operável ou arquivo em lote.",
+    "directoryOf": " Diretório de {{path}}",
+    "launching": "[Iniciando {{filename}}...]",
+    "dir": "<DIR> ",
+    "exe": "<EXE> ",
+    "lnk": "<LNK> "
+  },
+  "terminalEditor": {
+    "shortcuts": "^S Salvar  ^Q Sair",
+    "title": "EDIT - {{filename}}{{dirtyMarker}}",
+    "position": "Ln {{line}}, Col {{col}}"
+  },
+  "businessPanel": {
+    "title": "SEDE DOS NEGÓCIOS",
+    "close": "×",
+    "improvements": "MELHORIAS",
+    "transactions": "TRANSAÇÕES",
+    "balance": "💰 Saldo",
+    "revenue": "Receita",
+    "success": "Sucesso",
+    "streak": "Sequência",
+    "bestWin": "Melhor Vitória",
+    "acquired": "ADQUIRIDO",
+    "noTransactions": "Ainda sem transações"
+  },
+  "businessGame": {
+    "ventures": {
+      "makeMoney": {
+        "name": "GANHE $$$ RÁPIDO",
+        "tagline": "Clique aqui para começar a ganhar!"
+      },
+      "emailForward": {
+        "name": "Encaminhamento de Email",
+        "tagline": "Encaminhe para amigos, ganhe comissões!"
+      },
+      "punchMonkey": {
+        "name": "Anúncio Interativo",
+        "tagline": "Acerte o macaco para ganhar!"
+      },
+      "ringtones": {
+        "name": "Toques Premium",
+        "tagline": "Baixe toques exclusivos!"
+      },
+      "workHome": {
+        "name": "Kit de Negócios em Casa",
+        "tagline": "Trabalhe em casa enchendo envelopes!"
+      },
+      "screensaver": {
+        "name": "Pacote Desktop",
+        "tagline": "Protetores de tela e cursores grátis!"
+      },
+      "nigerianPrince": {
+        "name": "Parceria Internacional",
+        "tagline": "Ajude a transferir fundos, fique com 20%!"
+      },
+      "vacation": {
+        "name": "Propriedade de Férias",
+        "tagline": "Oportunidade exclusiva de timeshare!"
+      },
+      "stockTips": {
+        "name": "Dicas Privilegiadas de Mercado",
+        "tagline": "Dicas quentes de ações diariamente!"
+      },
+      "mlm": {
+        "name": "Marketing Multinível",
+        "tagline": "Construa sua rede hoje!"
+      },
+      "downloadRam": {
+        "name": "Otimização de Sistema",
+        "tagline": "Baixe mais RAM instantaneamente!"
+      },
+      "y2k": {
+        "name": "Kit de Preparação Y2K",
+        "tagline": "Esteja pronto para o milênio!"
+      },
+      "winner": {
+        "name": "PARABÉNS!!!",
+        "tagline": "Você é o visitante 1.000.000!"
+      },
+      "dotcomIpo": {
+        "name": "IPO Ponto Com",
+        "tagline": "Entre no começo!"
+      }
+    },
+    "upgrades": {
+      "ergonomicKeyboard": {
+        "name": "Teclado Ergonômico",
+        "description": "Clique base rende $0.02"
+      },
+      "salesTraining": {
+        "name": "Treinamento de Vendas",
+        "description": "Todos os empreendimentos -5% de risco"
+      },
+      "luckyTie": {
+        "name": "Gravata da Sorte",
+        "description": "Bônus de sequência +15%"
+      },
+      "marketResearch": {
+        "name": "Pesquisa de Mercado",
+        "description": "Veja % exato de sucesso ao passar o mouse"
+      },
+      "fastInternet": {
+        "name": "Modem 56k",
+        "description": "Encaminhamento de Email paga +$0.50"
+      },
+      "touchscreen": {
+        "name": "Monitor Touchscreen",
+        "description": "Anúncio Interativo paga +$2.00"
+      },
+      "cellPhone": {
+        "name": "Nokia 3310",
+        "description": "Toques Premium espera -3s"
+      },
+      "calculator": {
+        "name": "Calculadora de Negócios",
+        "description": "Trabalhar em Casa +50% pagamento"
+      },
+      "advancedTraining": {
+        "name": "Treinamento Avançado",
+        "description": "Todos os empreendimentos -10% de risco"
+      },
+      "motivationalPoster": {
+        "name": "Pôster Motivacional",
+        "description": "Bônus de sequência +25%"
+      },
+      "networkingEvent": {
+        "name": "Evento de Networking",
+        "description": "Parceria Internacional +$150"
+      },
+      "executiveDesk": {
+        "name": "Mesa Executiva",
+        "description": "Clique base rende $0.05"
+      },
+      "pentiumIII": {
+        "name": "Pentium III",
+        "description": "Otimização de Sistema paga +$100"
+      },
+      "leatherBriefcase": {
+        "name": "Pasta de Couro",
+        "description": "Todos os empreendimentos -15% de risco"
+      },
+      "goldenWatch": {
+        "name": "Relógio Dourado",
+        "description": "Bônus de sequência +40%"
+      },
+      "franchiseRights": {
+        "name": "Direitos de Franquia",
+        "description": "MLM pagamento +100%"
+      },
+      "cornerOffice": {
+        "name": "Escritório de Canto",
+        "description": "Passivo +$0.25/seg"
+      },
+      "stockPortfolio": {
+        "name": "Portfólio de Ações",
+        "description": "Passivo +$1.00/seg"
+      },
+      "realEstate": {
+        "name": "Imóveis",
+        "description": "Passivo +$5.00/seg"
+      },
+      "ventureCapital": {
+        "name": "Capital de Risco",
+        "description": "Passivo +$25/seg"
+      }
+    }
+  },
+  "welcome": {
+    "title": "★☆★ BEM-VINDO À PÁGINA INICIAL DE DANA ★☆★",
+    "visitorCount": "Você é o visitante #",
+    "signGuestbook": "Não esqueça de assinar o livro de visitas!",
+    "altWelcome": "Bem-vindo",
+    "taglineDesktop": "Bem-vindo ao meu site! Sinta-se à vontade para explorar clicando duas vezes nos ícones da área de trabalho.",
+    "taglineMobile": "Bem-vindo ao meu site! Sinta-se à vontade para explorar tocando nos ícones.",
+    "ctaGuestbook": "📖 Assine meu livro de visitas!",
+    "underConstruction": "🚧 EM CONSTRUÇÃO 🚧",
+    "footer": "Última atualização: Fevereiro de 2026 | Feito com ❤️"
+  },
+  "about": {
+    "title": "📝 Sobre Mim",
+    "altDana": "Dana",
+    "altFelix": "Felix",
+    "felixName": "Felix Ramon Vanderbilt 🐱",
+    "hello": "Olá!",
+    "bio": "Oi, meu nome é <strong>Dana</strong>. Sou engenheiro de software e moro em São Francisco.",
+    "interests": "Interesses:",
+    "interestsList": "🏃 Corrida • 🚴 Ciclismo • 💻 Tecnologia • 📚 Literatura • 🤔 Filosofia",
+    "cat": "Gato:",
+    "catName": "🐱 <strong>Felix Ramon Vanderbilt</strong>",
+    "recentlyPlayed": "Tocado Recentemente (3 meses):",
+    "loading": "Carregando...",
+    "emailMe": "📧 Me envie um email!"
+  },
+  "projects": {
+    "title": "📦 Projetos",
+    "thisWebsite": "🌐 Este Site",
+    "description": "Você está olhando para ele!",
+    "stack": "Stack:",
+    "viewSource": "📦 Ver Código no GitHub"
+  },
+  "resume": {
+    "name": "Dana Dzik",
+    "experience": "Experiência",
+    "title": "Engenheiro de Software Sênior",
+    "company": "Volley · São Francisco, CA",
+    "dates": "2021 – Presente",
+    "education": "Educação",
+    "school": "Universidade de Chicago",
+    "degree": "B.A. com Honras em Matemática e Filosofia",
+    "location": "Chicago, IL"
+  },
+  "links": {
+    "title": "🔗 Links"
+  },
+  "guestbook": {
+    "title": "📖 Livro de Visitas",
+    "signButton": "✍️ Assinar o Livro de Visitas!",
+    "loadingEntries": "Carregando entradas...",
+    "couldNotLoad": "Não foi possível carregar as entradas",
+    "noEntries": "Nenhuma entrada ainda. Seja o primeiro a assinar!",
+    "noMessage": "(sem mensagem)"
+  },
+  "felixgpt": {
+    "title": "🐱 FelixGPT",
+    "status": "Online • Pronto para ajudar",
+    "greeting": "Miau! Sou o FelixGPT, seu assistente de IA felino. Pergunte-me qualquer coisa!",
+    "placeholder": "Digite uma mensagem...",
+    "send": "Enviar"
+  },
+  "stats": {
+    "title": "📊 Estatísticas do Site",
+    "subtitle": "Análises em tempo real",
+    "loading": "Carregando análises...",
+    "totalViews": "Visualizações Totais",
+    "windowOpens": "Aberturas de Janela",
+    "viewHeatmap": "🔥 Ver Mapa de Calor",
+    "conversionFunnel": "📈 Funil de Conversão",
+    "abTest": "🧪 Teste A/B: Foto da Tela de Boot",
+    "abQuestion": "Qual foto obtém mais engajamento?",
+    "performance": "⚡ Desempenho",
+    "couldNotLoad": "Não foi possível carregar estatísticas",
+    "couldNotLoadAnalytics": "Não foi possível carregar análises",
+    "noABData": "Ainda sem dados de teste A/B"
+  },
+  "popups": {
+    "winner1": {
+      "title": "Parabéns!!!",
+      "headline": "🎉 VOCÊ É O VISITANTE 1.000.000! 🎉",
+      "body": "Clique em OK para reivindicar seu iPod Nano GRÁTIS!",
+      "btn1": "OK!!!",
+      "btn2": "Reivindicar Depois"
+    },
+    "winner2": {
+      "title": "Você Ganhou!!!",
+      "headline": "🎉 VISITANTE #0x0F4240 DETECTADO! 🎉",
+      "body": "Você foi selecionado!",
+      "btn1": "Reivindicar Prêmio",
+      "btn2": "Depois"
+    },
+    "error1": {
+      "title": "Erro de Sistema",
+      "headline": "💾 BAIXE MAIS RAM 💾",
+      "body": "Seu computador está com pouca memória (-3KB livres).",
+      "btn1": "Baixar RAM",
+      "btn2": "Cancelar"
+    },
+    "ad1": {
+      "title": "Solteiros Locais",
+      "headline": "😍 SOLTEIROS QUENTES NA SUA ÁREA 😍",
+      "body": "Apenas 5 km de distância!",
+      "btn1": "Conhecê-los",
+      "btn2": "Não, Obrigado"
+    },
+    "ad2": {
+      "title": "Acelere o PC",
+      "headline": "🚀 SEU PC ESTÁ 340% MAIS LENTO 🚀",
+      "body": "Baixe PCSpeedUp.scr para corrigir!",
+      "btn1": "Acelerar",
+      "btn2": "Ficar Lento"
+    },
+    "bonus1": {
+      "title": "Oferta Especial!",
+      "headline": "🎁 REIVINDIQUE SEU BÔNUS DE NEGÓCIOS! 🎁",
+      "body": "Você foi selecionado para uma oferta promocional especial!",
+      "btn1": "REIVINDICAR AGORA!",
+      "btn2": "Não, Obrigado"
+    },
+    "bonus2": {
+      "title": "Pesquisa Completa!",
+      "headline": "📋 OBRIGADO PELO SEU FEEDBACK! 📋",
+      "body": "Como agradecimento, aqui está uma recompensa em dinheiro!",
+      "btn1": "Coletar Recompensa",
+      "btn2": "Recusar"
+    },
+    "bonus3": {
+      "title": "Vencedor da Sorte!",
+      "headline": "🍀 VOCÊ GANHOU UM PRÊMIO! 🍀",
+      "body": "Clique abaixo para adicionar fundos à sua conta!",
+      "btn1": "Adicionar à Conta",
+      "btn2": "Talvez Depois"
+    }
+  },
+  "widgets": {
+    "winamp": {
+      "title": "WINAMP",
+      "stopped": "PARADO",
+      "playing": "TOCANDO",
+      "paused": "PAUSADO",
+      "time": "--/--",
+      "clickToStart": "Clique para iniciar reprodução...",
+      "previous": "Anterior",
+      "play": "Reproduzir",
+      "pause": "Pausar",
+      "stop": "Parar",
+      "next": "Próximo",
+      "minimize": "Minimizar"
+    },
+    "lastfm": {
+      "title": "🎧 Tocado Recentemente (3 meses)",
+      "loading": "Carregando...",
+      "apiNotAvailable": "API não disponível",
+      "noData": "Sem dados",
+      "offline": "Offline",
+      "couldNotLoad": "Não foi possível carregar"
+    },
+    "strava": {
+      "title": "🏃 Strava",
+      "loading": "Carregando atividades...",
+      "unavailable": "Strava indisponível",
+      "noActivities": "Nenhuma atividade recente",
+      "bestRun": "🏃 Melhor Corrida (3 meses)",
+      "bestRide": "🚴 Melhor Pedalada (3 meses)",
+      "longestRide": "🚴 Pedalada Mais Longa (3 meses)"
+    }
+  },
+  "mobile": {
+    "carrier": "Pferd"
+  },
+  "themeLabels": {
+    "win95": {
+      "startButton": "Iniciar",
+      "startMenuTitle": "Programas",
+      "searchPlaceholder": "Pergunte ao Jeeves",
+      "fileManager": "Explorador"
+    },
+    "macClassic": {
+      "startMenuTitle": "Menu Apple",
+      "searchPlaceholder": "Sherlock",
+      "fileManager": "Finder",
+      "aboutMe": "Sobre Mim",
+      "projects": "Projetos",
+      "resume": "Currículo",
+      "bookmarks": "Favoritos",
+      "guestBook": "Livro de Visitas",
+      "felixgpt": "FelixGPT",
+      "siteStats": "Estatísticas do Site",
+      "crystalQuest": "Crystal Quest",
+      "terminal": "Terminal"
+    },
+    "apple2": {
+      "startButton": "]",
+      "startMenuTitle": "CATÁLOGO",
+      "searchPlaceholder": "BUSCAR:",
+      "fileManager": "CATÁLOGO"
+    },
+    "c64": {
+      "startButton": "RUN",
+      "startMenuTitle": "LOAD",
+      "fileManager": "DIRETÓRIO"
+    }
+  }
+}
