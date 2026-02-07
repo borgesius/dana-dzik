@@ -1,3 +1,10 @@
+# [1.35.0](https://github.com/borgesius/dana-dzik/compare/v1.34.0...v1.35.0) (2026-02-07)
+
+
+### Features
+
+* **toolbar game:** expand toolbar game ([#31](https://github.com/borgesius/dana-dzik/issues/31)) ([8f4e00f](https://github.com/borgesius/dana-dzik/commit/8f4e00f252a110373cc58432f02fe135a6d32669))
+
 # [1.34.0](https://github.com/borgesius/dana-dzik/compare/v1.33.0...v1.34.0) (2026-02-07)
 
 
