@@ -56,6 +56,8 @@ export type AchievementId =
     | "high-roller"
     | "target-practice"
     | "bounty-hunter"
+    | "welt-beginner"
+    | "welt-intermediate"
     | "welt-master"
     // Hidden
     | "thermal-protection"

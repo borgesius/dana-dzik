@@ -7,7 +7,7 @@ export interface ExerciseDefinition {
     locked?: boolean
 }
 
-export const EXERCISE_6_SOURCE = `; Exercise 6: Za Warudo
+export const EXERCISE_6_SOURCE = `; Exercise 6: Die Welt
 ;
 ; This program cannot be modified.
 ; Make it output the correct values.
@@ -96,7 +96,7 @@ ERWARTE "146"`,
     {
         name: "exercise6",
         stub: EXERCISE_6_SOURCE,
-        test: `; Exercise 6: Za Warudo
+        test: `; Exercise 6: Die Welt
 ERWARTE "42"`,
         locked: true,
     },

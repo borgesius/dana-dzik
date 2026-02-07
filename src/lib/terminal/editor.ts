@@ -4,6 +4,17 @@ import {
     type ValidationResult,
 } from "../systemFileValidator"
 import {
+    EXERCISE_4_BREAK_AFTER,
+    EXERCISE_5_SCHOPENHAUER_ESSAY,
+    getFreakGPTSolution,
+    glitchLine,
+    isExerciseFile,
+    LINE_DELAY_MS,
+    NETWORK_ERROR_DELAY_MS,
+    NETWORK_ERRORS,
+    NETWORK_RETRY_DELAY_MS,
+} from "../welt/freakgpt"
+import {
     createFile,
     type FileSystem,
     formatPath,
@@ -56,6 +67,8 @@ export class Editor {
     private isNewFile = false
     private originalContent = ""
     private confirmingQuit = false
+    private freakGenerating = false
+    private destroyed = false
 
     private containerEl!: HTMLElement
     private headerEl!: HTMLElement
@@ -63,6 +76,7 @@ export class Editor {
     private textareaEl!: HTMLTextAreaElement
     private statusLeftEl!: HTMLElement
     private statusMsgEl!: HTMLElement
+    private freakBtnEl: HTMLButtonElement | null = null
     private statusTimerId: ReturnType<typeof setTimeout> | null = null
     private keydownHandler: ((e: KeyboardEvent) => void) | null = null
 
@@ -127,6 +141,17 @@ export class Editor {
         this.textareaEl.wrap = "off"
         bodyEl.appendChild(this.textareaEl)
 
+        if (isExerciseFile(this.filename)) {
+            this.freakBtnEl = document.createElement("button")
+            this.freakBtnEl.className = "editor-freakgpt-btn"
+            this.freakBtnEl.textContent = "\u{1F525} FreakGPT"
+            this.freakBtnEl.title = "the gpt that gets a little freaky"
+            this.freakBtnEl.addEventListener("click", () => {
+                void this.runFreakGPT()
+            })
+            bodyEl.appendChild(this.freakBtnEl)
+        }
+
         this.containerEl.appendChild(bodyEl)
 
         const statusEl = document.createElement("div")
@@ -184,6 +209,10 @@ export class Editor {
         })
 
         this.keydownHandler = (e: KeyboardEvent): void => {
+            if (this.freakGenerating) {
+                e.preventDefault()
+                return
+            }
             if (e.ctrlKey && e.key === "s") {
                 e.preventDefault()
                 this.save()
@@ -284,6 +313,146 @@ export class Editor {
             this.statusMsgEl.className = "editor-status-msg"
             this.statusTimerId = null
         }, STATUS_MESSAGE_DURATION_MS)
+    }
+
+    private sleep(ms: number): Promise<void> {
+        return new Promise((resolve) => setTimeout(resolve, ms))
+    }
+
+    private appendLine(line: string): void {
+        const current = this.textareaEl.value
+        this.textareaEl.value = current
+            ? `${current}\n${line}`
+            : line
+        this.updateGutter()
+        this.updateHeader()
+        this.textareaEl.scrollTop = this.textareaEl.scrollHeight
+    }
+
+    private async runFreakGPT(): Promise<void> {
+        if (this.freakGenerating) return
+
+        const solution = getFreakGPTSolution(this.filename)
+        if (!solution) return
+
+        this.freakGenerating = true
+        this.textareaEl.readOnly = true
+        if (this.freakBtnEl) {
+            this.freakBtnEl.disabled = true
+            this.freakBtnEl.textContent = "\u{1F525} Generating..."
+        }
+
+        this.textareaEl.value = ""
+        this.updateGutter()
+        this.updateHeader()
+
+        this.showStatusMessage(
+            "\u{1F525} FreakGPT: Hey there, gorgeous. \u{1F60F}",
+            "info"
+        )
+        await this.sleep(500)
+
+        if (this.filename === "exercise4.welt") {
+            await this.typeExercise4(solution)
+        } else if (this.filename === "exercise5.welt") {
+            await this.typeExercise5(solution)
+        } else {
+            await this.typeLines(solution)
+        }
+
+        if (this.destroyed) return
+
+        this.freakGenerating = false
+        this.textareaEl.readOnly = false
+        if (this.freakBtnEl) {
+            this.freakBtnEl.textContent = "\u{1F525} FreakGPT"
+            this.freakBtnEl.disabled = false
+        }
+        this.showStatusMessage(
+            "\u{1F525} FreakGPT: All done, hot stuff. \u{1F618}",
+            "info"
+        )
+        this.textareaEl.focus()
+    }
+
+    private async typeLines(lines: string[]): Promise<void> {
+        for (const line of lines) {
+            if (this.destroyed) return
+            this.appendLine(line)
+            await this.sleep(LINE_DELAY_MS)
+        }
+    }
+
+    private async typeExercise4(solution: string[]): Promise<void> {
+        for (let i = 0; i < EXERCISE_4_BREAK_AFTER && i < solution.length; i++) {
+            if (this.destroyed) return
+            this.appendLine(solution[i])
+            await this.sleep(LINE_DELAY_MS)
+        }
+
+        await this.sleep(NETWORK_ERROR_DELAY_MS)
+
+        for (const errMsg of NETWORK_ERRORS) {
+            if (this.destroyed) return
+            this.showStatusMessage(errMsg, "warning")
+            await this.sleep(NETWORK_RETRY_DELAY_MS)
+        }
+
+        for (let i = EXERCISE_4_BREAK_AFTER; i < solution.length; i++) {
+            if (this.destroyed) return
+            this.appendLine(solution[i])
+            await this.sleep(LINE_DELAY_MS)
+        }
+    }
+
+    private async typeExercise5(solution: string[]): Promise<void> {
+        const essayStart = solution.indexOf(EXERCISE_5_SCHOPENHAUER_ESSAY[0])
+        const essayEnd = essayStart >= 0
+            ? essayStart + EXERCISE_5_SCHOPENHAUER_ESSAY.length
+            : -1
+
+        for (let i = 0; i < solution.length; i++) {
+            if (this.destroyed) return
+
+            if (i === essayStart) {
+                this.showStatusMessage(
+                    "\u{1F525} FreakGPT: Adding some context... \u{1F914}",
+                    "info"
+                )
+                await this.sleep(500)
+            }
+
+            if (i >= essayStart && i < essayEnd) {
+                const essayIdx = i - essayStart
+                const prevLine = essayIdx > 0
+                    ? EXERCISE_5_SCHOPENHAUER_ESSAY[essayIdx - 1]
+                    : ""
+                const displayLines = glitchLine(
+                    solution[i],
+                    essayIdx,
+                    prevLine
+                )
+
+                for (let d = 0; d < displayLines.length; d++) {
+                    if (this.destroyed) return
+                    if (d < displayLines.length - 1) {
+                        this.appendLine(displayLines[d])
+                        await this.sleep(LINE_DELAY_MS)
+                        await this.sleep(80)
+                        const lines = this.textareaEl.value.split("\n")
+                        lines.pop()
+                        this.textareaEl.value = lines.join("\n")
+                        this.updateGutter()
+                    }
+                    this.appendLine(displayLines[displayLines.length - 1])
+                    await this.sleep(LINE_DELAY_MS)
+                    break
+                }
+            } else {
+                this.appendLine(solution[i])
+                await this.sleep(LINE_DELAY_MS)
+            }
+        }
     }
 
     private save(): void {
@@ -391,6 +560,8 @@ export class Editor {
     }
 
     public destroy(): void {
+        this.destroyed = true
+
         if (this.statusTimerId !== null) {
             clearTimeout(this.statusTimerId)
         }

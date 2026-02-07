@@ -208,6 +208,18 @@ export const ACHIEVEMENTS: AchievementDef[] = [
         hidden: false,
     },
     {
+        id: "welt-beginner",
+        category: "terminal",
+        icon: "📝",
+        hidden: false,
+    },
+    {
+        id: "welt-intermediate",
+        category: "terminal",
+        icon: "🧩",
+        hidden: false,
+    },
+    {
         id: "welt-master",
         category: "terminal",
         icon: "🌍",

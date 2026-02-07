@@ -557,6 +557,8 @@
     "high-roller": { "name": "Apostador", "description": "Marque 5,000 pontos no pinball." },
     "target-practice": { "name": "Tiro ao Alvo", "description": "Acerte todos os 4 alvos em uma única partida." },
     "bounty-hunter": { "name": "Caçador de Recompensas", "description": "Marque 10,000 pontos no pinball." },
+    "welt-beginner": { "name": "Hello World", "description": "Passe no seu primeiro exercício WELT." },
+    "welt-intermediate": { "name": "Vorstellung", "description": "Passe em 3 exercícios WELT." },
     "welt-master": { "name": "Za Warudo", "description": "Passe em todos os exercícios WELT." },
     "thermal-protection": { "name": "Proteção Térmica", "description": "Acione a proteção térmica do WELT." },
     "suffering": { "name": "Toda Vida É Sofrimento", "description": "Alcance a iluminação." },

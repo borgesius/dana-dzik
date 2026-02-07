@@ -557,6 +557,8 @@
     "high-roller": { "name": "Hoher Einsatz", "description": "Erziele 5,000 Punkte beim Flipper." },
     "target-practice": { "name": "Zielübung", "description": "Triff alle 4 Ziele in einem einzigen Spiel." },
     "bounty-hunter": { "name": "Kopfgeldjäger", "description": "Erziele 10,000 Punkte beim Flipper." },
+    "welt-beginner": { "name": "Hello World", "description": "Bestehe deine erste WELT-Übung." },
+    "welt-intermediate": { "name": "Vorstellung", "description": "Bestehe 3 WELT-Übungen." },
     "welt-master": { "name": "Za Warudo", "description": "Bestehe alle WELT-Übungen." },
     "thermal-protection": { "name": "Thermoschutz", "description": "Löse den WELT-Thermoschutz aus." },
     "suffering": { "name": "Alles Leben Ist Leiden", "description": "Werde erleuchtet." },

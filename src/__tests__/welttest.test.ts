@@ -8,6 +8,13 @@ import {
     EXERCISES,
 } from "../lib/welt/exercises"
 import {
+    EXERCISE_4_SOLUTION_LINES,
+    EXERCISE_5_SCHOPENHAUER_ESSAY,
+    FREAKGPT_SOLUTIONS,
+    getFreakGPTSolution,
+    isExerciseFile,
+} from "../lib/welt/freakgpt"
+import {
     checkFileIntegrity,
     parseWeltTest,
     runAllTests,
@@ -180,7 +187,7 @@ VERNEINUNG`
         expect(result.passed).toBe(true)
     })
 
-    it("exercise 6: Za Warudo (trick - needs modified memory)", async () => {
+    it("exercise 6: Die Welt (trick - needs modified memory)", async () => {
         const customMemory = SYS_MEMORY.replace(
             "DING 0 = 0\nDING 1 = 0",
             "DING 0 = 20\nDING 1 = 21"
@@ -238,6 +245,85 @@ describe("runAllTests", () => {
         expect(result.allPassed).toBe(false)
         expect(result.tampered).toHaveLength(0)
         expect(result.results.length).toBe(6)
+    })
+})
+
+describe("FreakGPT solutions", () => {
+    function buildSource(lines: string[]): string {
+        return lines.join("\n")
+    }
+
+    function buildExercise5FullSource(): string {
+        const solutionLines = FREAKGPT_SOLUTIONS["exercise5.welt"]
+        const insertIdx = solutionLines.indexOf("VERNEINUNG")
+        return [
+            ...solutionLines.slice(0, insertIdx),
+            ...EXERCISE_5_SCHOPENHAUER_ESSAY,
+            ...solutionLines.slice(insertIdx),
+        ].join("\n")
+    }
+
+    it("exercise 1 solution passes tests", async () => {
+        const source = buildSource(FREAKGPT_SOLUTIONS["exercise1.welt"])
+        const result = await runExercise(source, EXERCISES[0].test)
+        expect(result.passed).toBe(true)
+    })
+
+    it("exercise 2 solution passes tests", async () => {
+        const source = buildSource(FREAKGPT_SOLUTIONS["exercise2.welt"])
+        const result = await runExercise(source, EXERCISES[1].test)
+        expect(result.passed).toBe(true)
+    })
+
+    it("exercise 3 solution passes tests", async () => {
+        const source = buildSource(FREAKGPT_SOLUTIONS["exercise3.welt"])
+        const result = await runExercise(source, EXERCISES[2].test)
+        expect(result.passed).toBe(true)
+    })
+
+    it("exercise 4 solution (with network error lines) passes tests", async () => {
+        const source = buildSource(EXERCISE_4_SOLUTION_LINES)
+        const result = await runExercise(source, EXERCISES[3].test)
+        expect(result.passed).toBe(true)
+    })
+
+    it("exercise 5 solution (with Schopenhauer essay) passes tests", async () => {
+        const source = buildExercise5FullSource()
+        const result = await runExercise(source, EXERCISES[4].test)
+        expect(result.passed).toBe(true)
+    })
+
+    it("provides solutions for exercises 1-5 (not exercise 6)", () => {
+        expect(FREAKGPT_SOLUTIONS["exercise1.welt"]).toBeDefined()
+        expect(FREAKGPT_SOLUTIONS["exercise2.welt"]).toBeDefined()
+        expect(FREAKGPT_SOLUTIONS["exercise3.welt"]).toBeDefined()
+        expect(FREAKGPT_SOLUTIONS["exercise5.welt"]).toBeDefined()
+        expect(EXERCISE_4_SOLUTION_LINES).toBeDefined()
+        expect(FREAKGPT_SOLUTIONS["exercise6.welt"]).toBeUndefined()
+    })
+
+    it("getFreakGPTSolution returns lines for exercises 1-5", () => {
+        expect(getFreakGPTSolution("exercise1.welt")).toBeDefined()
+        expect(getFreakGPTSolution("exercise4.welt")).toEqual(
+            EXERCISE_4_SOLUTION_LINES
+        )
+        expect(getFreakGPTSolution("exercise6.welt")).toBeNull()
+        expect(getFreakGPTSolution("notafile.welt")).toBeNull()
+    })
+
+    it("getFreakGPTSolution for exercise 5 includes essay", () => {
+        const lines = getFreakGPTSolution("exercise5.welt")!
+        expect(lines).toBeDefined()
+        expect(lines.join("\n")).toContain("NIETZSCHE")
+        expect(lines.join("\n")).toContain("VERNEINUNG")
+    })
+
+    it("isExerciseFile identifies exercise files correctly", () => {
+        expect(isExerciseFile("exercise1.welt")).toBe(true)
+        expect(isExerciseFile("exercise5.welt")).toBe(true)
+        expect(isExerciseFile("exercise6.welt")).toBe(false)
+        expect(isExerciseFile("exercise0.welt")).toBe(false)
+        expect(isExerciseFile("readme.txt")).toBe(false)
     })
 })
 

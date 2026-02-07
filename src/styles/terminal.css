@@ -208,6 +208,7 @@
     display: flex;
     overflow: hidden;
     min-height: 0;
+    position: relative;
 }
 
 .editor-gutter {
@@ -261,6 +262,37 @@
 
 .editor-textarea::-webkit-scrollbar-thumb:hover {
     background: #00cc33;
+}
+
+.editor-freakgpt-btn {
+    position: absolute;
+    right: 24px;
+    top: 12px;
+    padding: 6px 14px;
+    font-family: var(--theme-font-mono);
+    font-size: 12px;
+    background: var(--theme-terminal-input-bg);
+    color: var(--theme-terminal-text);
+    border: 1px solid var(--theme-terminal-input-border);
+    cursor: pointer;
+    z-index: 10;
+    transition:
+        border-color 0.2s,
+        box-shadow 0.2s,
+        opacity 0.2s;
+    text-shadow: 0 0 5px var(--theme-terminal-glow);
+}
+
+.editor-freakgpt-btn:hover:not(:disabled) {
+    border-color: var(--theme-terminal-text);
+    box-shadow:
+        0 0 8px var(--theme-terminal-glow),
+        inset 0 0 8px rgb(0 255 0 / 10%);
+}
+
+.editor-freakgpt-btn:disabled {
+    opacity: 0.5;
+    cursor: default;
 }
 
 .editor-status {

@@ -557,6 +557,8 @@
     "high-roller": { "name": "豪赌客", "description": "在弹球游戏中得到5,000分。" },
     "target-practice": { "name": "打靶练习", "description": "在一局游戏中击中全部4个目标。" },
     "bounty-hunter": { "name": "赏金猎人", "description": "在弹球游戏中得到10,000分。" },
+    "welt-beginner": { "name": "Hello World", "description": "通过第一个 WELT 练习。" },
+    "welt-intermediate": { "name": "Vorstellung", "description": "通过 3 个 WELT 练习。" },
     "welt-master": { "name": "砸瓦鲁多", "description": "通过所有 WELT 练习。" },
     "thermal-protection": { "name": "热保护", "description": "触发 WELT 热保护机制。" },
     "suffering": { "name": "人生皆苦", "description": "获得开悟。" },

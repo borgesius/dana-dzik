@@ -382,6 +382,16 @@ async function handleWelttest(ctx: CommandContext): Promise<CommandResult> {
 
     ctx.print("")
 
+    const passedCount = result.results.filter((r) => r.passed).length
+
+    if (typeof document !== "undefined") {
+        document.dispatchEvent(
+            new CustomEvent("welt:exercises-tested", {
+                detail: { passed: passedCount, total: result.results.length },
+            })
+        )
+    }
+
     if (result.allPassed) {
         ctx.print("=====================", "success")
         ctx.print("  ALL TESTS PASSED", "success")
@@ -393,9 +403,7 @@ async function handleWelttest(ctx: CommandContext): Promise<CommandResult> {
             document.dispatchEvent(new CustomEvent("welt:all-exercises-passed"))
         }
     } else {
-        const passed = result.results.filter((r) => r.passed).length
-        const total = result.results.length
-        ctx.print(`${passed}/${total} exercises passed.`)
+        ctx.print(`${passedCount}/${result.results.length} exercises passed.`)
     }
 
     return { output: "" }

@@ -557,6 +557,8 @@
     "high-roller": { "name": "Grande Scommettitore", "description": "Segna 5,000 punti a flipper." },
     "target-practice": { "name": "Tiro a Segno", "description": "Colpisci tutti e 4 i bersagli in una singola partita." },
     "bounty-hunter": { "name": "Cacciatore di Taglie", "description": "Segna 10,000 punti a flipper." },
+    "welt-beginner": { "name": "Hello World", "description": "Supera il tuo primo esercizio WELT." },
+    "welt-intermediate": { "name": "Vorstellung", "description": "Supera 3 esercizi WELT." },
     "welt-master": { "name": "Za Warudo", "description": "Supera tutti gli esercizi WELT." },
     "thermal-protection": { "name": "Protezione Termica", "description": "Attiva la protezione termica di WELT." },
     "suffering": { "name": "Tutta la Vita È Sofferenza", "description": "Raggiungi l'illuminazione." },

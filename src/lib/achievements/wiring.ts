@@ -291,6 +291,13 @@ function wireWeltEvents(mgr: AchievementManager): void {
         mgr.earn("programmer")
     })
 
+    document.addEventListener("welt:exercises-tested", ((
+        e: CustomEvent<{ passed: number }>
+    ) => {
+        if (e.detail.passed >= 1) mgr.earn("welt-beginner")
+        if (e.detail.passed >= 3) mgr.earn("welt-intermediate")
+    }) as EventListener)
+
     document.addEventListener("welt:all-exercises-passed", () => {
         mgr.earn("welt-master")
     })

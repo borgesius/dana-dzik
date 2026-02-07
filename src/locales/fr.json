@@ -557,6 +557,8 @@
     "high-roller": { "name": "Flambeur", "description": "Marquez 5,000 points au flipper." },
     "target-practice": { "name": "Tir sur Cible", "description": "Touchez les 4 cibles en une seule partie." },
     "bounty-hunter": { "name": "Chasseur de Primes", "description": "Marquez 10,000 points au flipper." },
+    "welt-beginner": { "name": "Hello World", "description": "Réussir votre premier exercice WELT." },
+    "welt-intermediate": { "name": "Vorstellung", "description": "Réussir 3 exercices WELT." },
     "welt-master": { "name": "Za Warudo", "description": "Réussir tous les exercices WELT." },
     "thermal-protection": { "name": "Protection Thermique", "description": "Déclenchez la protection thermique de WELT." },
     "suffering": { "name": "Toute Vie Est Souffrance", "description": "Atteignez l'illumination." },
