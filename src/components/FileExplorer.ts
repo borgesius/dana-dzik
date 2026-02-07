@@ -129,6 +129,11 @@ export class FileExplorer {
             return
         }
 
+        if (node.handler) {
+            this.openTerminalWith(node.name)
+            return
+        }
+
         if (node.name.endsWith(".welt")) {
             this.openTerminalWith(`edit ${node.name}`)
             return
@@ -149,44 +154,67 @@ export class FileExplorer {
         menu.style.left = `${e.clientX}px`
         menu.style.top = `${e.clientY}px`
 
-        if (node.name.endsWith(".welt")) {
-            const editItem = this.createMenuItem("Edit", () => {
-                this.openTerminalWith(`edit ${node.name}`)
-            })
-            menu.appendChild(editItem)
+        const isWelt = node.name.endsWith(".welt")
 
-            const runItem = this.createMenuItem("Run with WELT", () => {
-                this.openTerminalWith(`welt ${node.name}`)
-            })
-            menu.appendChild(runItem)
-
-            const viewItem = this.createMenuItem("View source", () => {
-                this.openTerminalWith(`cat ${node.name}`)
-            })
-            menu.appendChild(viewItem)
-        } else if (node.type === "directory") {
-            const openItem = this.createMenuItem("Open", () => {
-                this.currentPath = [...this.currentPath, node.name]
-                this.render()
-            })
-            menu.appendChild(openItem)
-        } else if (node.windowId) {
-            const openItem = this.createMenuItem("Open", () => {
-                emitAppEvent("terminal:open-window", {
-                    windowId: node.windowId as RoutableWindow,
+        if (node.type === "directory") {
+            menu.appendChild(
+                this.createMenuItem("Open", () => {
+                    this.currentPath = [...this.currentPath, node.name]
+                    this.render()
                 })
-            })
-            menu.appendChild(openItem)
-        } else if (node.content) {
-            const editItem = this.createMenuItem("Edit", () => {
-                this.openTerminalWith(`edit ${node.name}`)
-            })
-            menu.appendChild(editItem)
+            )
+        }
 
-            const viewItem = this.createMenuItem("View", () => {
-                this.openTerminalWith(`cat ${node.name}`)
-            })
-            menu.appendChild(viewItem)
+        if (node.windowId) {
+            menu.appendChild(
+                this.createMenuItem("Open", () => {
+                    emitAppEvent("terminal:open-window", {
+                        windowId: node.windowId as RoutableWindow,
+                    })
+                })
+            )
+        }
+
+        if (node.handler) {
+            menu.appendChild(
+                this.createMenuItem("Run", () => {
+                    this.openTerminalWith(node.name)
+                })
+            )
+        }
+
+        if (isWelt) {
+            menu.appendChild(
+                this.createMenuItem("Edit", () => {
+                    this.openTerminalWith(`edit ${node.name}`)
+                })
+            )
+            menu.appendChild(
+                this.createMenuItem("Run with WELT", () => {
+                    this.openTerminalWith(`welt ${node.name}`)
+                })
+            )
+            menu.appendChild(
+                this.createMenuItem("View source", () => {
+                    this.openTerminalWith(`cat ${node.name}`)
+                })
+            )
+        }
+
+        if (node.content && !isWelt && !node.readonly) {
+            menu.appendChild(
+                this.createMenuItem("Edit", () => {
+                    this.openTerminalWith(`edit ${node.name}`)
+                })
+            )
+        }
+
+        if (node.content && !isWelt) {
+            menu.appendChild(
+                this.createMenuItem("View", () => {
+                    this.openTerminalWith(`cat ${node.name}`)
+                })
+            )
         }
 
         document.body.appendChild(menu)

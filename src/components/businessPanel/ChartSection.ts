@@ -1,4 +1,6 @@
 import { ChartRenderer } from "../../lib/marketGame/ChartRenderer"
+import { formatMoney } from "../../lib/formatMoney"
+import { getLocaleManager } from "../../lib/localeManager"
 import type { MarketEngine } from "../../lib/marketGame/MarketEngine"
 import { COMMODITIES, type CommodityId } from "../../lib/marketGame/types"
 
@@ -35,12 +37,19 @@ export class ChartSection {
         tabs.className = "commodity-tabs"
 
         const unlocked = this.game.getUnlockedCommodities()
+        const lm = getLocaleManager()
         for (const c of COMMODITIES) {
+            const isUnlocked = unlocked.includes(c.id)
             const tab = document.createElement("button")
-            tab.className = `commodity-tab${c.id === this.selectedCommodity ? " active" : ""}${!unlocked.includes(c.id) ? " locked" : ""}`
+            tab.className = `commodity-tab${c.id === this.selectedCommodity ? " active" : ""}${!isUnlocked ? " locked" : ""}`
             tab.textContent = c.id
             tab.dataset.commodityId = c.id
-            tab.disabled = !unlocked.includes(c.id)
+            tab.disabled = !isUnlocked
+            if (!isUnlocked && c.unlockThreshold > 0) {
+                tab.title = lm.t("commodityExchange.ui.unlockAt", {
+                    threshold: formatMoney(c.unlockThreshold),
+                })
+            }
             tab.addEventListener("click", () => {
                 this.selectedCommodity = c.id
                 this.updateTabSelection()
@@ -69,11 +78,24 @@ export class ChartSection {
     public updateTabSelection(): void {
         const tabs = this.element.querySelectorAll(".commodity-tab")
         const unlocked = this.game.getUnlockedCommodities()
+        const lm = getLocaleManager()
         tabs.forEach((tab) => {
             const id = (tab as HTMLElement).dataset.commodityId as CommodityId
+            const isUnlocked = unlocked.includes(id)
             tab.classList.toggle("active", id === this.selectedCommodity)
-            tab.classList.toggle("locked", !unlocked.includes(id))
-            ;(tab as HTMLButtonElement).disabled = !unlocked.includes(id)
+            tab.classList.toggle("locked", !isUnlocked)
+            ;(tab as HTMLButtonElement).disabled = !isUnlocked
+
+            // Update tooltip for locked tabs
+            const def = COMMODITIES.find((c) => c.id === id)
+            if (!isUnlocked && def && def.unlockThreshold > 0) {
+                ;(tab as HTMLElement).title = lm.t(
+                    "commodityExchange.ui.unlockAt",
+                    { threshold: formatMoney(def.unlockThreshold) }
+                )
+            } else {
+                ;(tab as HTMLElement).title = ""
+            }
         })
     }
 

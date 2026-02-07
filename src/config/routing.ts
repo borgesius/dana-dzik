@@ -12,6 +12,8 @@ export const ROUTABLE_WINDOWS = [
     "explorer",
     "achievements",
     "autobattler",
+    "customize",
+    "career-tree",
 ] as const
 
 export type RoutableWindow = (typeof ROUTABLE_WINDOWS)[number]
@@ -28,5 +30,7 @@ export const ROUTE_MAP: Record<string, RoutableWindow> = {
     "/pinball": "pinball",
     "/terminal": "terminal",
     "/achievements": "achievements",
-    "/autobattler": "autobattler",
+    "/hacking": "autobattler",
+    "/customize": "customize",
+    "/career": "career-tree",
 }

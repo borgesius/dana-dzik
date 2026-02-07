@@ -21,16 +21,16 @@ export type AchievementId =
     | "going-concern"
     | "dot-com-darling"
     | "irrational-exuberance"
-    | "buy-the-dip"
-    | "sell-the-top"
-    | "diversified"
+    | "fire-sale"
+    | "first-out-the-door"
+    | "who-are-we-selling-to"
     // Production
     | "factory-floor"
     | "industrialist"
     | "assembly-line"
-    | "fully-automated"
-    | "market-maker"
-    | "cornered"
+    | "wasnt-brains"
+    | "speak-to-a-retriever"
+    | "could-be-wrong"
     // Milestones
     | "phase-2"
     | "phase-3"
@@ -85,6 +85,7 @@ export type AchievementId =
     | "y2k-survivor"
     | "big-spender"
     | "whale"
+    | "leviathan"
     | "qa-inspector"
     // Autobattler
     | "first-draft"
@@ -94,15 +95,55 @@ export type AchievementId =
     | "no-drifters"
     | "triple-threat"
     // Prestige
-    | "bubble-popper"
-    | "serial-popper"
+    | "ive-been-wrong"
+    | "doesnt-matter-what-floor"
     | "hindsight-shopper"
-    | "hindsight-hoarder"
+    | "tell-them-theyll-be-ok"
     // Career
     | "career-starter"
     | "career-switcher"
     | "skill-tree-novice"
     | "skill-tree-master"
+    // HR / Phase 5
+    | "that-ones-a-person"
+    | "we-make-nothing"
+    | "you-dont-get-to-choose"
+    | "reorg"
+    // Autobattler (faction complete)
+    | "syndicate-complete"
+    | "deputies-complete"
+    | "collective-complete"
+    | "prospectors-complete"
+    // Cross-system (hidden)
+    | "vertical-integration"
+    | "exit-interview"
+    // Autobattler (tiered - Wrangler)
+    | "greenhorn"
+    | "deputy"
+    | "sheriff"
+    | "marshal"
+    // Milestones (tiered - Rank)
+    | "level-5"
+    | "level-10"
+    | "level-20"
+    | "level-35"
+    | "level-50"
+    // Milestones (tiered - Phases extension)
+    | "phase-5"
+    | "phase-6"
+    // Phase 6: Structured Products Desk (Margin Call quotes)
+    | "its-just-money"
+    | "be-first"
+    | "just-silence"
+    | "music-stops"
+    | "it-goes-quickly"
+    | "rainy-day"
+    // Standalone new
+    | "win-streak"
+    | "serial-pivoter"
+    | "overqualified"
+    | "executive-material"
+    | "pieces-of-paper"
     // Cross-system
     | "renaissance"
     | "full-stack"
@@ -113,12 +154,15 @@ export type TieredGroup =
     | "arcade"
     | "industrialist"
     | "phases"
+    | "wrangler"
+    | "rank"
 
 export interface AchievementDef {
     id: AchievementId
     category: AchievementCategory
     icon: string
     hidden: boolean
+    desktopOnly?: boolean
     tieredGroup?: TieredGroup
     tier?: number // 1-based tier within the group
 }

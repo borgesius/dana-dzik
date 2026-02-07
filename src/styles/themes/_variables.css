@@ -184,4 +184,12 @@
     /* === Weather === */
     --theme-weather-bg: #87ceeb;
     --theme-weather-border: #4682b4;
+
+    /* === Semantic Colors === */
+    --theme-color-success: #228b22;
+    --theme-color-danger: #cc0000;
+    --theme-color-warning: #d4a017;
+
+    /* === Terminal Semantic === */
+    --theme-terminal-success: #41ff41;
 }

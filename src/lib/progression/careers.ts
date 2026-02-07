@@ -14,6 +14,7 @@ export type BonusType =
     | "grundBonus"
     | "pinballBonus"
     | "hindsightRate"
+    | "switchPenaltyReduction"
 
 export interface CareerNodeDef {
     id: string
@@ -30,7 +31,6 @@ export interface CareerNodeDef {
 }
 
 // ── Engineering Branch ───────────────────────────────────────────────────────
-// Starts with Dana's real title, then escalates into Silicon Valley absurdity.
 
 const ENGINEERING_NODES: CareerNodeDef[] = [
     {
@@ -60,7 +60,7 @@ const ENGINEERING_NODES: CareerNodeDef[] = [
             "Introduced a microservice for each CRUD operation, improving team headcount justification by 300%",
             "Authored 14-page RFC for renaming a boolean, later self approved unanimously",
         ],
-        bonusLabel: "+10% autobattler Clockwork stats",
+        bonusLabel: "+10% hacking Clockwork stats",
         branch: "engineering",
         tier: 2,
         prerequisites: ["eng-senior"],
@@ -82,7 +82,7 @@ const ENGINEERING_NODES: CareerNodeDef[] = [
         tier: 3,
         prerequisites: ["eng-staff"],
         bonusType: "weltBonus",
-        bonusValue: 1.0,
+        bonusValue: 0.25,
     },
     {
         id: "eng-distinguished",
@@ -94,12 +94,29 @@ const ENGINEERING_NODES: CareerNodeDef[] = [
             "Maintained a 1:1 ratio of Slack messages to lines of code shipped",
             "Awarded 'Most Distinguished' three years running by the committee I chair",
         ],
-        bonusLabel: "+15% autobattler unit HP",
+        bonusLabel: "+15% hacking unit HP",
         branch: "engineering",
         tier: 4,
         prerequisites: ["eng-principal"],
         bonusType: "autobattlerHP",
         bonusValue: 0.15,
+    },
+    {
+        id: "eng-fellow",
+        name: "Fellow of Applied Overthinking",
+        company: "Institute for Recursive Contemplation · Distributed",
+        dateRange: "2030 – ∞",
+        bullets: [
+            "Thought about thinking about code for two calendar years before writing any",
+            "Published a monograph on why the previous monograph was wrong",
+            "Mentored other Fellows in the art of productive procrastination",
+        ],
+        bonusLabel: "+10% GRUND compilation tolerance",
+        branch: "engineering",
+        tier: 5,
+        prerequisites: ["eng-distinguished"],
+        bonusType: "grundBonus",
+        bonusValue: 0.1,
     },
 ]
 
@@ -175,6 +192,23 @@ const TRADING_NODES: CareerNodeDef[] = [
         bonusType: "hindsightRate",
         bonusValue: 0.2,
     },
+    {
+        id: "trade-partner",
+        name: "Senior Partner, Infinite Leverage",
+        company: "Leverage Squared Capital · Offshore",
+        dateRange: "2029 – ∞",
+        bullets: [
+            "Leveraged the leverage to leverage additional leverage",
+            "Achieved infinite returns by dividing by zero and calling it 'alpha'",
+            "Personally guaranteed nothing, contractually or otherwise",
+        ],
+        bonusLabel: "+25% Hindsight rate",
+        branch: "trading",
+        tier: 5,
+        prerequisites: ["trade-md"],
+        bonusType: "hindsightRate",
+        bonusValue: 0.25,
+    },
 ]
 
 // ── Growth / Marketing Branch ────────────────────────────────────────────────
@@ -225,7 +259,7 @@ const GROWTH_NODES: CareerNodeDef[] = [
             "Shipped a 'we miss you' email campaign that sent 3 emails per day",
             "Introduced gamification to the onboarding flow; no one has finished onboarding since",
         ],
-        bonusLabel: "+15% autobattler Quickdraw stats",
+        bonusLabel: "+15% hacking Quickdraw stats",
         branch: "growth",
         tier: 3,
         prerequisites: ["growth-head"],
@@ -248,6 +282,23 @@ const GROWTH_NODES: CareerNodeDef[] = [
         prerequisites: ["growth-vp"],
         bonusType: "xpRate",
         bonusValue: 0.25,
+    },
+    {
+        id: "growth-cvo",
+        name: "Chief Virality Officer",
+        company: "Contagion Media Holdings · Going Viral",
+        dateRange: "2029 – ∞",
+        bullets: [
+            "Made a product go viral by removing all features except the share button",
+            "Wrote a thread about writing threads that became the most-threaded thread",
+            "Personally responsible for the phrase 'engagement-driven engagement'",
+        ],
+        bonusLabel: "+15% hacking unit HP",
+        branch: "growth",
+        tier: 5,
+        prerequisites: ["growth-cmo"],
+        bonusType: "autobattlerHP",
+        bonusValue: 0.15,
     },
 ]
 
@@ -323,6 +374,23 @@ const EXECUTIVE_NODES: CareerNodeDef[] = [
         bonusType: "factoryOutput",
         bonusValue: 0.2,
     },
+    {
+        id: "exec-chairman",
+        name: "Executive Chairman (Non-Executive)",
+        company: "Board of Boards LLC · Abstracted",
+        dateRange: "2030 – ∞",
+        bullets: [
+            "Chairs a board that oversees other boards that oversee advisory councils",
+            "Title contains both 'Executive' and 'Non-Executive'; no one has questioned this",
+            "Compensation package includes a compensation package review committee",
+        ],
+        bonusLabel: "+10% factory output",
+        branch: "executive",
+        tier: 5,
+        prerequisites: ["exec-ceo"],
+        bonusType: "factoryOutput",
+        bonusValue: 0.1,
+    },
 ]
 
 // ── Education Sub-tree (shared) ──────────────────────────────────────────────
@@ -359,6 +427,39 @@ const EDUCATION_NODES: CareerNodeDef[] = [
         prerequisites: ["edu-undergrad"],
         bonusType: "hindsightRate",
         bonusValue: 0.05,
+    },
+    {
+        id: "edu-grad-cert",
+        name: "Graduate Certificate in Applied Disruption",
+        company: "Stanford Online · Technically Enrolled",
+        dateRange: "2019",
+        bullets: [
+            "Completed a certificate program about completing certificate programs",
+            "Final project was a pitch deck for a pitch deck generator",
+        ],
+        bonusLabel: "Career switch penalty reduced 10%",
+        branch: "education",
+        tier: 3,
+        prerequisites: ["edu-honors"],
+        bonusType: "switchPenaltyReduction",
+        bonusValue: 0.1,
+    },
+    {
+        id: "edu-phd",
+        name: "Ph.D. in Speculative Systems",
+        company: "University of Nowhere · Defended Remotely",
+        dateRange: "2020 – 2024",
+        bullets: [
+            "Dissertation titled 'On the Impossibility of Finishing Dissertations'",
+            "Advisor described work as 'technically a contribution'",
+            "Teaching evaluations described as 'present'",
+        ],
+        bonusLabel: "+10% XP from all sources",
+        branch: "education",
+        tier: 4,
+        prerequisites: ["edu-grad-cert"],
+        bonusType: "xpRate",
+        bonusValue: 0.1,
     },
 ]
 
@@ -419,3 +520,62 @@ export const DORMANT_MULTIPLIER = 0.5
 
 /** Level penalty when switching careers */
 export const CAREER_SWITCH_LEVEL_PENALTY = 0.1 // lose 10% of levels
+
+// ── Mastery system (repeatable skill point sink) ────────────────────────────
+
+export interface MasteryDef {
+    id: string
+    name: string
+    description: string
+    bonusType: BonusType
+    bonusPerRank: number
+    /** Max ranks (0 = unlimited) */
+    maxRanks: number
+}
+
+export const MASTERY_DEFS: MasteryDef[] = [
+    {
+        id: "mastery-factory",
+        name: "Operational Excellence",
+        description: "+2% factory output per rank",
+        bonusType: "factoryOutput",
+        bonusPerRank: 0.02,
+        maxRanks: 0,
+    },
+    {
+        id: "mastery-trade",
+        name: "Market Acumen",
+        description: "+2% trade profit per rank",
+        bonusType: "tradeProfit",
+        bonusPerRank: 0.02,
+        maxRanks: 0,
+    },
+    {
+        id: "mastery-atk",
+        name: "Combat Training",
+        description: "+1 ATK to hacking units per rank (max 10)",
+        bonusType: "autobattlerATK",
+        bonusPerRank: 1,
+        maxRanks: 10,
+    },
+    {
+        id: "mastery-hindsight",
+        name: "Executive Presence",
+        description: "+5% Hindsight earned per rank",
+        bonusType: "hindsightRate",
+        bonusPerRank: 0.05,
+        maxRanks: 0,
+    },
+    {
+        id: "mastery-xp",
+        name: "Lifelong Learner",
+        description: "+2% XP from all sources per rank",
+        bonusType: "xpRate",
+        bonusPerRank: 0.02,
+        maxRanks: 0,
+    },
+]
+
+export const MASTERY_MAP: ReadonlyMap<string, MasteryDef> = new Map(
+    MASTERY_DEFS.map((m) => [m.id, m])
+)

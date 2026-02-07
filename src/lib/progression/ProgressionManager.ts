@@ -43,7 +43,6 @@ export class ProgressionManager {
     public addXP(amount: number): void {
         if (amount <= 0) return
 
-        // Apply XP rate bonus from career tree
         const xpBonus = this.xpBonusProvider?.() ?? 0
         const effective = xpBonus > 0 ? Math.ceil(amount * (1 + xpBonus)) : amount
 

@@ -1,11 +1,14 @@
 import type { RoutableWindow } from "../../config/routing"
 import { getAchievementManager } from "../achievements/AchievementManager"
-import { onAppEvent } from "../events"
+import { ACHIEVEMENT_MAP } from "../achievements/definitions"
+import { getCollectionManager } from "../autobattler/CollectionManager"
+import { emitAppEvent, onAppEvent } from "../events"
 import { getLocaleManager } from "../localeManager"
 import { getMarketGame } from "../marketGame/MarketEngine"
+import { getPrestigeManager } from "../prestige/PrestigeManager"
 import { getThemeManager } from "../themeManager"
 import { getCareerManager } from "./CareerManager"
-import { XP_REWARDS } from "./constants"
+import { XP_REWARDS, getAchievementXP } from "./constants"
 import type { ProgressionManager } from "./ProgressionManager"
 
 export function wireProgression(
@@ -18,12 +21,19 @@ export function wireProgression(
     wireExploration(mgr, windowOpenCallback)
     wireSocial(mgr)
     wireAchievements(mgr)
+    wireAutobattler(mgr)
+    wirePrestigeXP(mgr)
+    wireCareerXP(mgr)
     wireCrossSystemHooks()
+    wirePhase5Unlock(mgr)
+    wirePhase6Unlock(mgr)
 }
 
 function wireAchievements(mgr: ProgressionManager): void {
-    getAchievementManager().onEarned(() => {
-        mgr.addXP(XP_REWARDS.achievementEarned)
+    getAchievementManager().onEarned((id) => {
+        const def = ACHIEVEMENT_MAP.get(id)
+        const xp = getAchievementXP(def?.tier)
+        mgr.addXP(xp)
     })
 }
 
@@ -127,6 +137,30 @@ function wireSocial(mgr: ProgressionManager): void {
     })
 }
 
+function wireAutobattler(mgr: ProgressionManager): void {
+    onAppEvent("autobattler:run-complete", (detail) => {
+        mgr.addXP(detail.won ? XP_REWARDS.autobattlerWin : XP_REWARDS.autobattlerRun)
+    })
+    onAppEvent("autobattler:unit-unlocked", () => {
+        mgr.addXP(XP_REWARDS.autobattlerCollectionMilestone)
+    })
+    onAppEvent("autobattler:spiral-complete", () => {
+        mgr.addXP(XP_REWARDS.spiralProgress)
+    })
+}
+
+function wirePrestigeXP(mgr: ProgressionManager): void {
+    onAppEvent("prestige:triggered", () => {
+        mgr.addXP(XP_REWARDS.prestige)
+    })
+}
+
+function wireCareerXP(mgr: ProgressionManager): void {
+    onAppEvent("career:switched", () => {
+        mgr.addXP(XP_REWARDS.careerSwitch)
+    })
+}
+
 /**
  * Minor cross-system hooks that connect disparate systems:
  * - WELT/GRUND exercise completions grant commodity stocks (+ career bonuses)
@@ -164,11 +198,9 @@ function wireCrossSystemHooks(): void {
         }
     })
 
-    // Popup bonus claims -> scale by popupBonus
     onAppEvent("popup:bonus-claimed", () => {
         const popupBonus = career.getBonus("popupBonus")
         if (popupBonus > 0) {
-            // Grant an extra cash nudge proportional to the career bonus
             game.addBonus(0.05 * popupBonus)
         }
     })
@@ -178,4 +210,106 @@ function wireCrossSystemHooks(): void {
         const cashReward = detail.won ? 0.5 : 0.1
         game.addBonus(cashReward)
     })
+
+    // Scrap Dividend: 5% chance on trade to emit scrap bonus event
+    game.on("tradeExecuted", () => {
+        const prestige = getPrestigeManager()
+        if (prestige.hasScrapDividend() && Math.random() < 0.05) {
+            emitAppEvent("market:scrap-dividend", {})
+        }
+    })
+
+    // Relay MarketEngine employee events to app events
+    game.on("employeeHired", (data) => {
+        const emp = data as { type?: string }
+        emitAppEvent("market:employee-hired", { type: emp?.type ?? "" })
+    })
+    game.on("employeeFired", (data) => {
+        const emp = data as { type?: string }
+        emitAppEvent("market:employee-fired", { type: emp?.type ?? "" })
+    })
+}
+
+/**
+ * Wire Phase 5 (HR) cross-system unlock conditions:
+ * - First prestige completed
+ * - Player level 8+
+ * - 3+ autobattler run wins
+ *
+ * Also wire 3rd VP slot unlock: level 15 or 2nd prestige.
+ */
+function wirePhase5Unlock(mgr: ProgressionManager): void {
+    const game = getMarketGame()
+
+    const checkPhase5 = () => {
+        if (game.isPhaseUnlocked(5)) return
+
+        const prestige = getPrestigeManager()
+        const collection = getCollectionManager()
+
+        const hasPrestiged = prestige.getCount() >= 1
+        const hasLevel = mgr.getLevel() >= 8
+        const hasWins = collection.getWonRuns() >= 3
+
+        if (hasPrestiged && hasLevel && hasWins) {
+            game.unlockPhase(5)
+        }
+    }
+
+    const checkThirdVP = () => {
+        const orgChart = game.getOrgChart()
+        if (orgChart.isThirdVPUnlocked()) return
+
+        const prestige = getPrestigeManager()
+        const hasLevel15 = mgr.getLevel() >= 15
+        const hasPrestige2 = prestige.getCount() >= 2
+
+        if (hasLevel15 || hasPrestige2) {
+            orgChart.unlockThirdVP()
+        }
+    }
+
+    // Listen for relevant events
+    onAppEvent("prestige:triggered", () => {
+        checkPhase5()
+        checkThirdVP()
+    })
+    onAppEvent("progression:level-up", () => {
+        checkPhase5()
+        checkThirdVP()
+    })
+    onAppEvent("autobattler:run-complete", () => {
+        checkPhase5()
+    })
+
+    // Also check on init (in case conditions are already met from save data)
+    checkPhase5()
+    checkThirdVP()
+}
+
+/**
+ * Wire Phase 6 (Structured Products Desk) cross-system unlock:
+ * - Prestige count >= 3
+ * - Player level >= 15
+ */
+function wirePhase6Unlock(mgr: ProgressionManager): void {
+    const game = getMarketGame()
+
+    const checkPhase6 = () => {
+        if (game.isPhaseUnlocked(6)) return
+
+        const prestige = getPrestigeManager()
+        const hasPrestige3 = prestige.getCount() >= 3
+        const hasLevel15 = mgr.getLevel() >= 15
+
+        if (hasPrestige3 && hasLevel15) {
+            game.unlockPhase(6)
+        }
+    }
+
+    onAppEvent("prestige:triggered", checkPhase6)
+    onAppEvent("progression:level-up", checkPhase6)
+
+    // Check on init
+    checkPhase6()
 }

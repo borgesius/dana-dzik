@@ -1,6 +1,7 @@
 import { getAchievementManager } from "../achievements/AchievementManager"
 import { ACHIEVEMENTS } from "../achievements/definitions"
 import type { AchievementDef, TieredGroup } from "../achievements/types"
+import { isMobile } from "../isMobile"
 import { getLocaleManager } from "../localeManager"
 
 const TIERED_GROUP_LABELS: Record<TieredGroup, string> = {
@@ -9,6 +10,8 @@ const TIERED_GROUP_LABELS: Record<TieredGroup, string> = {
     arcade: "Arcade",
     industrialist: "Industrialist",
     phases: "Phase Progression",
+    wrangler: "Wrangler",
+    rank: "Rank",
 }
 
 function renderTierStars(
@@ -45,9 +48,16 @@ export function renderAchievementsWindow(): void {
 
     const mgr = getAchievementManager()
     const lm = getLocaleManager()
+    const mobile = isMobile()
 
-    const earned = mgr.getEarnedCount()
-    const total = mgr.getTotalCount()
+    const visibleAchievements = mobile
+        ? ACHIEVEMENTS.filter((a) => !a.desktopOnly)
+        : ACHIEVEMENTS
+
+    const earned = mobile
+        ? visibleAchievements.filter((a) => mgr.hasEarned(a.id)).length
+        : mgr.getEarnedCount()
+    const total = visibleAchievements.length
 
     const categories = [
         { key: "trading", label: "Trading" },
@@ -55,17 +65,18 @@ export function renderAchievementsWindow(): void {
         { key: "milestones", label: "Milestones" },
         { key: "exploration", label: "Exploration" },
         { key: "terminal", label: "Terminal" },
+        { key: "coding", label: "Coding" },
+        { key: "exercises", label: "Exercises" },
         { key: "social", label: "Social" },
         { key: "pinball", label: "Pinball" },
-        { key: "autobattler", label: "Autobattler" },
+        { key: "autobattler", label: "Hacking" },
         { key: "prestige", label: "Prestige" },
         { key: "career", label: "Career" },
         { key: "cross-system", label: "Cross-System" },
     ]
 
-    // Collect tiered groups for summary
     const tieredGroups = new Map<TieredGroup, AchievementDef[]>()
-    for (const def of ACHIEVEMENTS) {
+    for (const def of visibleAchievements) {
         if (def.tieredGroup) {
             if (!tieredGroups.has(def.tieredGroup)) {
                 tieredGroups.set(def.tieredGroup, [])
@@ -81,7 +92,6 @@ export function renderAchievementsWindow(): void {
         </div>
     `
 
-    // Render tier progress bars
     if (tieredGroups.size > 0) {
         html += `<div class="achievements-tiers">`
         for (const [group, defs] of tieredGroups) {
@@ -91,7 +101,7 @@ export function renderAchievementsWindow(): void {
     }
 
     for (const cat of categories) {
-        const defs = ACHIEVEMENTS.filter((a) => a.category === cat.key)
+        const defs = visibleAchievements.filter((a) => a.category === cat.key)
         if (defs.length === 0) continue
 
         html += `

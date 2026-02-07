@@ -1,13 +1,18 @@
 import { emitAppEvent } from "../events"
 import {
+    type BonusType,
     CAREER_NODE_MAP,
     CAREER_SWITCH_LEVEL_PENALTY,
     DORMANT_MULTIPLIER,
-    type BonusType,
+    MASTERY_MAP,
     skillPointsForLevel,
 } from "./careers"
 import { getProgressionManager } from "./ProgressionManager"
-import type { CareerBranch, CareerHistoryEntry, ProgressionSaveData } from "./types"
+import type {
+    CareerBranch,
+    CareerHistoryEntry,
+    ProgressionSaveData,
+} from "./types"
 
 type CareerEventType = "careerSelected" | "nodeUnlocked" | "careerSwitched"
 type CareerCallback = (data?: unknown) => void
@@ -26,6 +31,7 @@ export class CareerManager {
     private careerHistory: CareerHistoryEntry[] = []
     private unlockedNodes: Map<string, Set<string>> = new Map() // branch -> node IDs
     private educationNodes: Set<string> = new Set()
+    private masteryRanks: Map<string, number> = new Map() // masteryId -> rank count
     private onDirty: (() => void) | null = null
     private eventListeners: Map<CareerEventType, CareerCallback[]> = new Map()
 
@@ -48,10 +54,40 @@ export class CareerManager {
         this.onDirty = fn
     }
 
+    // ── Default career ──────────────────────────────────────────────────────
+
+    /**
+     * Ensure the player has a career selected. On a fresh save, this
+     * silently selects "engineering" so the resume starts with the real
+     * Senior Software Engineer entry and no selection prompt is shown.
+     */
+    public ensureDefaultCareer(): void {
+        if (this.activeCareer === null && this.careerHistory.length === 0) {
+            this.selectCareer("engineering")
+        }
+    }
+
     // ── Career selection ─────────────────────────────────────────────────────
+
+    /**
+     * Number of distinct career branches the player has held.
+     * Executive branch requires >= 2.
+     */
+    public getDistinctCareersHeld(): number {
+        const branches = new Set(this.careerHistory.map((e) => e.branch))
+        return branches.size
+    }
+
+    /** Whether the Executive branch is available (requires 2+ distinct careers). */
+    public isExecutiveUnlocked(): boolean {
+        return this.getDistinctCareersHeld() >= 2
+    }
 
     public selectCareer(branch: CareerBranch): boolean {
         if (this.activeCareer !== null) return false // Use switchCareer instead
+
+        // Executive branch gate
+        if (branch === "executive" && !this.isExecutiveUnlocked()) return false
 
         this.activeCareer = branch
         this.careerHistory.push({
@@ -74,6 +110,10 @@ export class CareerManager {
         if (this.activeCareer === null) return false
         if (this.activeCareer === newBranch) return false
 
+        // Executive branch gate
+        if (newBranch === "executive" && !this.isExecutiveUnlocked())
+            return false
+
         // End the current career
         const currentEntry = this.careerHistory.find(
             (e) => e.branch === this.activeCareer && e.endedAt === null
@@ -82,7 +122,6 @@ export class CareerManager {
             currentEntry.endedAt = Date.now()
         }
 
-        // Apply level penalty
         const progression = getProgressionManager()
         const penalty = Math.floor(
             progression.getLevel() * CAREER_SWITCH_LEVEL_PENALTY
@@ -92,7 +131,6 @@ export class CareerManager {
             // The penalty manifests as dormant skill points being less effective
         }
 
-        // Start the new career
         this.activeCareer = newBranch
         this.careerHistory.push({
             branch: newBranch,
@@ -131,6 +169,9 @@ export class CareerManager {
             count += nodes.size
         }
         count += this.educationNodes.size
+        for (const ranks of this.masteryRanks.values()) {
+            count += ranks
+        }
         return count
     }
 
@@ -143,10 +184,8 @@ export class CareerManager {
         // Must have available points
         if (this.getAvailableSkillPoints() <= 0) return false
 
-        // Check if already unlocked
         if (this.isNodeUnlocked(nodeId)) return false
 
-        // Check prerequisites
         for (const preReq of def.prerequisites) {
             if (!this.isNodeUnlocked(preReq)) return false
         }
@@ -188,18 +227,66 @@ export class CareerManager {
         return this.unlockedNodes.get(def.branch)?.has(nodeId) ?? false
     }
 
+    // ── Mastery system ─────────────────────────────────────────────────────
+
+    public canPurchaseMastery(masteryId: string): boolean {
+        const def = MASTERY_MAP.get(masteryId)
+        if (!def) return false
+        if (this.getAvailableSkillPoints() <= 0) return false
+        const current = this.masteryRanks.get(masteryId) ?? 0
+        if (def.maxRanks > 0 && current >= def.maxRanks) return false
+        return true
+    }
+
+    public purchaseMastery(masteryId: string): boolean {
+        if (!this.canPurchaseMastery(masteryId)) return false
+        const current = this.masteryRanks.get(masteryId) ?? 0
+        this.masteryRanks.set(masteryId, current + 1)
+        this.onDirty?.()
+        return true
+    }
+
+    public getMasteryRank(masteryId: string): number {
+        return this.masteryRanks.get(masteryId) ?? 0
+    }
+
+    public getTotalMasteryRanks(): number {
+        let total = 0
+        for (const r of this.masteryRanks.values()) total += r
+        return total
+    }
+
     // ── Bonus calculation ────────────────────────────────────────────────────
 
     /**
      * Get total bonus for a specific bonus type, considering dormant multiplier
      * for nodes in inactive career branches.
      */
+    /** Effective dormant multiplier, reduced by switchPenaltyReduction bonuses. */
+    public getDormantMultiplier(): number {
+        const reduction = this.getRawBonus("switchPenaltyReduction")
+        return Math.max(0.1, DORMANT_MULTIPLIER - reduction)
+    }
+
+    /** Get raw bonus total (without dormancy consideration) for a type. Used for switchPenaltyReduction. */
+    private getRawBonus(bonusType: BonusType): number {
+        let total = 0
+        for (const nodeId of this.educationNodes) {
+            const def = CAREER_NODE_MAP.get(nodeId)
+            if (def && def.bonusType === bonusType) {
+                total += def.bonusValue
+            }
+        }
+        return total
+    }
+
     public getBonus(bonusType: BonusType): number {
         let total = 0
+        const dormantMult = this.getDormantMultiplier()
 
         for (const [branch, nodes] of this.unlockedNodes) {
             const isDormant = branch !== this.activeCareer
-            const multiplier = isDormant ? DORMANT_MULTIPLIER : 1
+            const multiplier = isDormant ? dormantMult : 1
 
             for (const nodeId of nodes) {
                 const def = CAREER_NODE_MAP.get(nodeId)
@@ -214,6 +301,14 @@ export class CareerManager {
             const def = CAREER_NODE_MAP.get(nodeId)
             if (def && def.bonusType === bonusType) {
                 total += def.bonusValue
+            }
+        }
+
+        // Mastery bonuses
+        for (const [masteryId, ranks] of this.masteryRanks) {
+            const mDef = MASTERY_MAP.get(masteryId)
+            if (mDef && mDef.bonusType === bonusType) {
+                total += mDef.bonusPerRank * ranks
             }
         }
 
@@ -252,11 +347,17 @@ export class CareerManager {
             }
         }
 
+        const masteryRanks: Record<string, number> = {}
+        for (const [id, count] of this.masteryRanks) {
+            if (count > 0) masteryRanks[id] = count
+        }
+
         return {
             activeCareer: this.activeCareer,
             careerHistory: this.careerHistory,
             skillPoints,
             educationNodes: [...this.educationNodes],
+            masteryRanks,
         }
     }
 
@@ -278,5 +379,15 @@ export class CareerManager {
                 this.educationNodes.add(nodeId)
             }
         }
+
+        this.masteryRanks.clear()
+        if (data.masteryRanks) {
+            for (const [id, count] of Object.entries(data.masteryRanks)) {
+                if (count > 0) this.masteryRanks.set(id, count)
+            }
+        }
+
+        // Ensure a career is always selected (fresh saves start as engineering)
+        this.ensureDefaultCareer()
     }
 }

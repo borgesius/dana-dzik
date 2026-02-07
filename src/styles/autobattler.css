@@ -5,7 +5,7 @@
     overflow-y: auto;
     font-size: 11px;
     padding: 8px;
-    color: var(--text-color, #000000);
+    color: var(--theme-window-content-text);
 }
 
 /* ── Lobby ────────────────────────────────────────────────────────────────── */
@@ -17,7 +17,7 @@
 
 .ab-subtitle {
     font-style: italic;
-    color: var(--text-secondary, #666666);
+    color: var(--theme-text-secondary);
     margin: 0 0 12px;
 }
 
@@ -26,8 +26,9 @@
     gap: 16px;
     margin-bottom: 12px;
     padding: 6px 8px;
-    background: var(--win-bg, #c0c0c0);
-    border: 2px inset var(--win-border-light, #dfdfdf);
+    background: var(--theme-surface-primary);
+    border: 2px inset var(--theme-border-light);
+    flex-wrap: wrap;
 }
 
 .ab-stat {
@@ -58,32 +59,52 @@
     border-style: inset;
 }
 
+.ab-bonuses {
+    font-size: 10px;
+    color: var(--theme-color-success);
+    margin-bottom: 8px;
+}
+
+/* ── Collection ──────────────────────────────────────────────────────────── */
+
 .ab-collection-header h3 {
     margin: 0 0 6px;
     font-size: 12px;
 }
 
-.ab-collection-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-    gap: 6px;
+.ab-faction-group {
+    margin-bottom: 10px;
 }
 
-.ab-collection-card {
-    padding: 6px;
-    border: 1px solid var(--win-border-dark, #808080);
-    background: var(--win-bg, #c0c0c0);
+.ab-faction-label {
+    font-size: 11px;
+    font-weight: 700;
+    margin-bottom: 4px;
+    cursor: pointer;
+    user-select: none;
+}
+
+.ab-faction-label .faction-progress {
+    font-weight: 400;
     font-size: 10px;
+    color: var(--theme-text-secondary);
+    margin-left: 4px;
+}
+
+.ab-collection-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+    gap: 4px;
 }
 
 .ab-empty {
-    color: var(--text-secondary, #666666);
+    color: var(--theme-text-secondary);
     font-style: italic;
     padding: 16px;
     text-align: center;
 }
 
-/* ── Run Header ───────────────────────────────────────────────────────────── */
+/* ── Run Header ──────────────────────────────────────────────────────────── */
 
 .ab-run-header {
     display: flex;
@@ -93,51 +114,35 @@
     color: #ffffff;
     font-weight: 700;
     margin-bottom: 8px;
+    font-size: 11px;
 }
 
 /* ── Shop ─────────────────────────────────────────────────────────────────── */
 
-.ab-shop h3 {
+.ab-shop-label {
     margin: 0 0 6px;
+    font-size: 12px;
+    font-weight: 700;
 }
 
 .ab-shop-offers {
     display: flex;
-    gap: 8px;
+    gap: 6px;
     margin-bottom: 8px;
 }
 
-.ab-shop-card {
-    flex: 1;
-    padding: 8px;
-    border: 2px outset var(--win-border-light, #dfdfdf);
-    background: var(--win-bg, #c0c0c0);
-    cursor: pointer;
-    text-align: left;
-    font-size: 10px;
-}
-
-.ab-shop-card:hover:not(.sold):not(.disabled) {
-    background: var(--button-hover-bg, #d4d0c8);
-}
-
-.ab-shop-card.sold {
-    opacity: 0.4;
-    cursor: default;
-}
-
-.ab-shop-card.disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
+.ab-shop-actions {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 12px;
 }
 
 .ab-reroll-btn {
     padding: 4px 12px;
     font-size: 10px;
-    border: 2px outset var(--win-border-light, #dfdfdf);
-    background: var(--win-bg, #c0c0c0);
+    border: 2px outset var(--theme-border-light);
+    background: var(--theme-surface-primary);
     cursor: pointer;
-    margin-bottom: 12px;
 }
 
 .ab-reroll-btn:disabled {
@@ -145,73 +150,257 @@
     cursor: not-allowed;
 }
 
-/* ── Unit cards ───────────────────────────────────────────────────────────── */
+/* ── Unit Card Component ─────────────────────────────────────────────────── */
 
-.ab-card-name {
-    font-weight: 700;
-    font-size: 11px;
-}
-
-.ab-card-stats {
-    color: #cc0000;
-    font-weight: 700;
-}
-
-.ab-card-faction {
-    font-size: 9px;
-    color: var(--text-secondary, #666666);
-}
-
-.ab-card-ability {
-    font-size: 9px;
-    color: var(--text-secondary, #555555);
-    margin-top: 2px;
-    font-style: italic;
-}
-
-.ab-card-cost {
-    font-weight: 700;
-    margin-top: 4px;
-    color: #8b4513;
-}
-
-/* ── Lineup ───────────────────────────────────────────────────────────────── */
-
-.ab-lineup h3 {
-    margin: 0 0 6px;
-}
-
-.ab-lineup-grid {
-    display: flex;
-    gap: 6px;
-    flex-wrap: wrap;
-    margin-bottom: 8px;
-}
-
-.ab-unit-card {
+.uc-card {
     padding: 6px 8px;
-    border: 2px outset var(--win-border-light, #dfdfdf);
-    background: var(--win-bg, #c0c0c0);
-    min-width: 90px;
+    border: 2px outset var(--theme-border-light);
+    background: var(--theme-surface-primary);
     font-size: 10px;
     position: relative;
+    border-left: 3px solid var(--uc-faction-color, #808080);
+    min-width: 90px;
+    text-align: left;
 }
 
-.ab-sell-btn {
+.uc-card.uc-level-2 {
+    border-color: var(--uc-faction-color, #808080);
+    box-shadow: inset 0 0 0 1px #c0c0c0, inset 0 0 0 2px silver;
+}
+
+.uc-card.uc-level-3 {
+    border-color: var(--uc-faction-color, #808080);
+    box-shadow: inset 0 0 0 1px #c0c0c0, inset 0 0 0 2px #d4a017;
+}
+
+/* Shop card */
+.uc-card.uc-shop {
+    flex: 1;
+    cursor: pointer;
+}
+
+.uc-card.uc-shop:hover:not(.sold):not(.unaffordable) {
+    background: var(--theme-surface-secondary);
+}
+
+.uc-card.uc-shop.sold {
+    opacity: 0.4;
+    cursor: default;
+}
+
+.uc-card.uc-shop.unaffordable {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* Owned card */
+.uc-card.uc-owned {
+    cursor: grab;
+    transition: box-shadow 0.1s;
+}
+
+.uc-card.uc-owned:hover {
+    box-shadow: 0 0 0 2px var(--uc-faction-color, #808080);
+}
+
+.uc-card.uc-owned.dragging {
+    opacity: 0.4;
+}
+
+/* Combat card */
+.uc-card.uc-combat {
+    min-width: 80px;
+    transition: transform 0.2s, opacity 0.3s;
+}
+
+.uc-card.uc-combat.dead {
+    opacity: 0;
+    transform: scale(0.8);
+}
+
+.uc-card.uc-combat.attacking {
+    animation: uc-attack 0.3s ease-out;
+}
+
+.uc-card.uc-combat.hit {
+    animation: uc-hit 0.2s ease-out;
+}
+
+.uc-card.uc-combat.buffed {
+    animation: uc-buff 0.3s ease-out;
+}
+
+.uc-card.uc-combat.summoned,
+.uc-card.uc-combat.uc-summon-enter {
+    animation: uc-summon 0.4s ease-out;
+}
+
+/* Collection card */
+.uc-card.uc-collection {
+    font-size: 9px;
+}
+
+/* ── Card subcomponents ──────────────────────────────────────────────────── */
+
+.uc-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 4px;
+}
+
+.uc-name {
+    font-weight: 700;
+    font-size: 10px;
+    line-height: 1.2;
+}
+
+.uc-level {
+    font-size: 9px;
+    color: var(--theme-color-warning);
+    white-space: nowrap;
+}
+
+.uc-body {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 2px;
+}
+
+.uc-stats {
+    font-weight: 700;
+    color: var(--theme-text-on-surface);
+    font-size: 10px;
+}
+
+.uc-shield {
+    font-size: 9px;
+    color: var(--theme-link);
+    font-weight: 700;
+}
+
+.uc-faction {
+    font-size: 9px;
+}
+
+.uc-ability {
+    font-size: 8px;
+    color: var(--theme-text-secondary);
+    margin-top: 3px;
+    font-style: italic;
+    line-height: 1.3;
+}
+
+.uc-cost {
+    font-weight: 700;
+    margin-top: 4px;
+    color: var(--theme-text-on-surface);
+    font-size: 10px;
+}
+
+.uc-sell-btn {
     position: absolute;
     top: 2px;
     right: 2px;
     font-size: 8px;
     padding: 1px 4px;
     cursor: pointer;
-    border: 1px solid #808080;
-    background: #c0c0c0;
-    color: #cc0000;
+    border: 1px solid var(--theme-border-dark);
+    background: var(--theme-surface-primary);
+    color: var(--theme-color-danger);
+    opacity: 0;
+    transition: opacity 0.1s;
 }
 
-.ab-bench h4 {
+.uc-card.uc-owned:hover .uc-sell-btn {
+    opacity: 1;
+}
+
+.uc-slot-label {
+    position: absolute;
+    top: -1px;
+    left: 2px;
+    font-size: 8px;
+    color: var(--theme-text-secondary);
+    font-weight: 700;
+}
+
+/* Health bar */
+.uc-hp-bar {
+    height: 4px;
+    background: #333333;
+    margin-top: 3px;
+    border-radius: 1px;
+    overflow: hidden;
+}
+
+.uc-hp-fill {
+    height: 100%;
+    transition: width 0.3s ease;
+}
+
+.uc-hp-text {
+    font-size: 8px;
+    text-align: center;
+    margin-top: 1px;
+    color: var(--theme-text-secondary);
+}
+
+/* Empty slot (drop target) */
+.uc-slot-empty {
+    min-width: 90px;
+    min-height: 60px;
+    border: 2px dashed #808080;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0.5;
+}
+
+.uc-slot-empty.drag-over {
+    border-color: #d4a017;
+    background: rgb(212 160 23 / 10%);
+    opacity: 1;
+}
+
+/* ── Lineup / Bench ──────────────────────────────────────────────────────── */
+
+.ab-lineup-label {
     margin: 0 0 4px;
     font-size: 11px;
+    font-weight: 700;
+}
+
+.ab-lineup-hint {
+    font-size: 9px;
+    color: var(--theme-text-secondary);
+    font-weight: 400;
+    margin-left: 4px;
+}
+
+.ab-lineup-grid {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 8px;
+    min-height: 68px;
+    padding: 4px;
+    background: rgb(0 0 0 / 5%);
+    border: 1px solid var(--theme-border-dark);
+}
+
+.ab-bench-label {
+    font-size: 10px;
+    font-weight: 700;
+    margin: 0 0 4px;
+}
+
+.ab-bench-grid {
+    display: flex;
+    gap: 4px;
+    min-height: 40px;
+    padding: 4px;
+    margin-bottom: 8px;
 }
 
 /* ── Actions ──────────────────────────────────────────────────────────────── */
@@ -226,7 +415,7 @@
     padding: 8px 32px;
     font-size: 14px;
     font-weight: 700;
-    background: linear-gradient(135deg, #cc0000, #ff4444);
+    background: linear-gradient(135deg, var(--theme-color-danger), #ff4444);
     color: #ffffff;
     border: 2px outset #ff4444;
     cursor: pointer;
@@ -241,40 +430,136 @@
     cursor: not-allowed;
 }
 
-/* ── Combat result ────────────────────────────────────────────────────────── */
+/* ── Combat Arena ────────────────────────────────────────────────────────── */
 
-.ab-combat-result {
+.ab-combat-arena {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 8px;
+    margin-bottom: 8px;
+}
+
+.ab-arena-side {
+    display: flex;
+    gap: 4px;
+    padding: 6px;
+    border: 1px solid var(--theme-border-dark);
+    min-height: 70px;
+    align-items: flex-start;
+}
+
+.ab-arena-side.player {
+    background: rgb(34 139 34 / 5%);
+    border-color: #228b22;
+    flex-direction: row;
+}
+
+.ab-arena-side.opponent {
+    background: rgb(204 0 0 / 5%);
+    border-color: #cc0000;
+    flex-direction: row-reverse;
+}
+
+.ab-arena-label {
+    writing-mode: vertical-lr;
+    text-orientation: mixed;
+    font-size: 9px;
+    font-weight: 700;
+    color: var(--theme-text-secondary);
+    padding: 0 4px;
+}
+
+.ab-arena-vs {
     text-align: center;
-    padding: 16px;
+    font-weight: 700;
+    font-size: 12px;
+    color: var(--theme-text-secondary);
 }
 
-.ab-combat-result.victory h2 {
-    color: #228b22;
-}
-
-.ab-combat-result.defeat h2 {
-    color: #cc0000;
-}
+/* ── Combat Log (below arena) ────────────────────────────────────────────── */
 
 .ab-combat-log {
     text-align: left;
-    max-height: 150px;
+    max-height: 120px;
     overflow-y: auto;
-    background: #000000;
-    color: #00ff00;
-    padding: 8px;
+    background: var(--theme-terminal-bg);
+    color: var(--theme-terminal-text);
+    padding: 6px;
     font-family: monospace;
-    font-size: 10px;
+    font-size: 9px;
     margin: 8px 0;
-    border: 2px inset var(--win-border-dark, #808080);
+    border: 2px inset var(--theme-border-dark);
 }
 
 .ab-log-entry {
-    margin-bottom: 2px;
+    margin-bottom: 1px;
 }
+
+.ab-log-entry.death {
+    color: var(--theme-terminal-error);
+}
+
+.ab-log-entry.buff {
+    color: var(--theme-terminal-success);
+}
+
+.ab-log-entry.summon {
+    color: var(--theme-terminal-info);
+}
+
+/* ── Combat controls ─────────────────────────────────────────────────────── */
+
+.ab-combat-controls {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin: 8px 0;
+}
+
+.ab-skip-btn {
+    padding: 4px 16px;
+    font-size: 10px;
+    border: 2px outset var(--theme-border-light);
+    background: var(--theme-surface-primary);
+    cursor: pointer;
+}
+
+/* ── Combat result overlay ───────────────────────────────────────────────── */
+
+.ab-combat-result {
+    text-align: center;
+    padding: 12px;
+}
+
+.ab-combat-result h2 {
+    font-size: 16px;
+    margin: 0 0 4px;
+}
+
+.ab-combat-result.victory h2 {
+    color: var(--theme-color-success);
+}
+
+.ab-combat-result.defeat h2 {
+    color: var(--theme-color-danger);
+}
+
+.ab-combat-result.draw h2 {
+    color: var(--theme-color-warning);
+}
+
+.ab-combat-subtitle {
+    font-size: 11px;
+    color: var(--theme-text-secondary);
+    margin-bottom: 8px;
+}
+
+/* ── Rewards ─────────────────────────────────────────────────────────────── */
 
 .ab-rewards {
     margin: 8px 0;
+    text-align: left;
 }
 
 .ab-rewards h3 {
@@ -284,7 +569,10 @@
 
 .ab-reward {
     font-size: 11px;
-    padding: 2px 0;
+    padding: 3px 6px;
+    border-left: 2px solid #d4a017;
+    margin-bottom: 3px;
+    background: rgb(212 160 23 / 5%);
 }
 
 .ab-next-btn,
@@ -292,13 +580,164 @@
     padding: 8px 24px;
     font-size: 12px;
     font-weight: 700;
-    border: 2px outset var(--win-border-light, #dfdfdf);
-    background: var(--win-bg, #c0c0c0);
+    border: 2px outset var(--theme-border-light);
+    background: var(--theme-surface-primary);
+    color: var(--theme-text-on-surface);
     cursor: pointer;
     margin-top: 8px;
 }
 
 .ab-next-btn:hover,
 .ab-return-btn:hover {
-    background: var(--button-hover-bg, #d4d0c8);
+    background: var(--theme-surface-secondary);
+}
+
+/* ── Drag ghost ──────────────────────────────────────────────────────────── */
+
+.uc-drag-ghost {
+    position: fixed;
+    pointer-events: none;
+    opacity: 0.8;
+    z-index: 10000;
+    transform: rotate(2deg) scale(1.05);
+}
+
+/* ── Combat animations ───────────────────────────────────────────────────── */
+
+@keyframes uc-attack {
+    0% { transform: translateX(0); }
+    40% { transform: translateX(12px); }
+    100% { transform: translateX(0); }
+}
+
+@keyframes uc-hit {
+    0% { background-color: inherit; }
+    30% { background-color: rgb(255 0 0 / 30%); }
+    100% { background-color: inherit; }
+}
+
+@keyframes uc-buff {
+    0% { box-shadow: none; }
+    50% { box-shadow: 0 0 8px 2px rgb(34 139 34 / 50%); }
+    100% { box-shadow: none; }
+}
+
+@keyframes uc-summon {
+    0% { opacity: 0; transform: scale(0.5); }
+    100% { opacity: 1; transform: scale(1); }
+}
+
+@keyframes uc-damage-float {
+    0% { opacity: 1; transform: translateY(0); }
+    100% { opacity: 0; transform: translateY(-20px); }
+}
+
+.uc-damage-number {
+    position: absolute;
+    top: -4px;
+    right: 4px;
+    font-size: 12px;
+    font-weight: 900;
+    color: var(--theme-color-danger);
+    animation: uc-damage-float 0.6s ease-out forwards;
+    pointer-events: none;
+    z-index: 5;
+}
+
+.uc-damage-number.heal {
+    color: var(--theme-color-success);
+}
+
+/* ── Pre-run buff selection ──────────────────────────────────────────────── */
+
+.ab-prepare {
+    padding: 8px;
+}
+
+.ab-prepare h3 {
+    margin: 0 0 4px;
+    font-size: 14px;
+}
+
+.ab-prepare-hint {
+    font-size: 11px;
+    color: #888;
+    margin: 0 0 8px;
+}
+
+.ab-buff-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+    margin-bottom: 8px;
+}
+
+.ab-buff-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    padding: 6px;
+    border: 2px solid var(--theme-border-light);
+    background: var(--theme-surface-primary);
+    cursor: pointer;
+    font-size: 10px;
+    text-align: center;
+}
+
+.ab-buff-card:hover:not(.disabled) {
+    border-color: var(--theme-accent);
+}
+
+.ab-buff-card.selected {
+    border-color: var(--theme-color-success);
+    background: rgb(0 204 0 / 10%);
+}
+
+.ab-buff-card.disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.ab-buff-icon {
+    font-size: 18px;
+}
+
+.ab-buff-name {
+    font-weight: 700;
+    font-size: 11px;
+}
+
+.ab-buff-desc {
+    color: #555;
+}
+
+.ab-buff-cost {
+    font-size: 9px;
+    color: #888;
+    margin-top: 2px;
+}
+
+.ab-prepare-actions {
+    display: flex;
+    gap: 6px;
+}
+
+.ab-launch-btn,
+.ab-back-btn {
+    padding: 4px 12px;
+    cursor: pointer;
+    font-size: 11px;
+}
+
+.ab-launch-btn {
+    background: var(--theme-color-primary, #0078d4);
+    color: white;
+    border: 1px solid #005a9e;
+}
+
+.ab-back-btn {
+    background: var(--theme-surface-primary);
+    border: 1px solid var(--theme-border-dark);
+    color: var(--theme-text-on-surface);
 }

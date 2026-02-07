@@ -1,9 +1,13 @@
+import { getCosmeticManager } from "../lib/cosmetics/CosmeticManager"
+import { getCosmeticDef, type TrailConfig } from "../lib/cosmetics/definitions"
+
 interface Sparkle {
     x: number
     y: number
     size: number
     opacity: number
     color: string
+    shape: string
     vx: number
     vy: number
 }
@@ -15,7 +19,7 @@ const CURSOR_CLASSES = [
     "cursor-pointer",
 ]
 
-const SPARKLE_COLORS = [
+const DEFAULT_COLORS = [
     "#ff00ff",
     "#00ffff",
     "#ffff00",
@@ -24,6 +28,8 @@ const SPARKLE_COLORS = [
     "#ffffff",
 ]
 
+const DEFAULT_SHAPES = ["✦", "✧", "⬥"]
+
 export class CursorTrail {
     private canvas: HTMLCanvasElement
     private ctx: CanvasRenderingContext2D
@@ -31,6 +37,7 @@ export class CursorTrail {
     private cursorIndex = 0
     private cursorInterval: number | null = null
     private animationFrame: number | null = null
+    private trailConfig: TrailConfig | null = null
 
     constructor() {
         this.canvas = document.createElement("canvas")
@@ -41,9 +48,35 @@ export class CursorTrail {
 
         this.ctx = this.canvas.getContext("2d")!
 
+        this.loadTrailConfig()
         this.bindEvents()
         this.startCursorChange()
         this.animate()
+
+        // Listen for cosmetic changes
+        getCosmeticManager().onChange((type) => {
+            if (type === "cursor-trail") {
+                this.loadTrailConfig()
+            }
+        })
+    }
+
+    private loadTrailConfig(): void {
+        const activeId = getCosmeticManager().getActive("cursor-trail")
+        const def = getCosmeticDef("cursor-trail", activeId)
+        this.trailConfig = def?.trailConfig ?? null
+    }
+
+    private getColors(): string[] {
+        return this.trailConfig?.colors ?? DEFAULT_COLORS
+    }
+
+    private getShapes(): string[] {
+        return this.trailConfig?.shapes ?? DEFAULT_SHAPES
+    }
+
+    private getSizeRange(): [number, number] {
+        return this.trailConfig?.size ?? [2, 6]
     }
 
     private bindEvents(): void {
@@ -62,15 +95,18 @@ export class CursorTrail {
     }
 
     private addSparkles(x: number, y: number): void {
+        const colors = this.getColors()
+        const shapes = this.getShapes()
+        const [minSize, maxSize] = this.getSizeRange()
+
         for (let i = 0; i < 2; i++) {
             this.sparkles.push({
                 x,
                 y,
-                size: Math.random() * 4 + 2,
+                size: Math.random() * (maxSize - minSize) + minSize,
                 opacity: 1,
-                color: SPARKLE_COLORS[
-                    Math.floor(Math.random() * SPARKLE_COLORS.length)
-                ],
+                color: colors[Math.floor(Math.random() * colors.length)],
+                shape: shapes[Math.floor(Math.random() * shapes.length)],
                 vx: (Math.random() - 0.5) * 2,
                 vy: (Math.random() - 0.5) * 2 + 1,
             })
@@ -82,17 +118,20 @@ export class CursorTrail {
     }
 
     private addClickBurst(x: number, y: number): void {
+        const colors = this.getColors()
+        const shapes = this.getShapes()
+        const [minSize, maxSize] = this.getSizeRange()
+
         for (let i = 0; i < 20; i++) {
             const angle = (Math.PI * 2 * i) / 20
             const speed = Math.random() * 5 + 2
             this.sparkles.push({
                 x,
                 y,
-                size: Math.random() * 6 + 3,
+                size: Math.random() * (maxSize - minSize + 3) + minSize,
                 opacity: 1,
-                color: SPARKLE_COLORS[
-                    Math.floor(Math.random() * SPARKLE_COLORS.length)
-                ],
+                color: colors[Math.floor(Math.random() * colors.length)],
+                shape: shapes[Math.floor(Math.random() * shapes.length)],
                 vx: Math.cos(angle) * speed,
                 vy: Math.sin(angle) * speed,
             })
@@ -111,22 +150,26 @@ export class CursorTrail {
             sparkle.opacity *= 0.95
             sparkle.size *= 0.98
 
-            this.ctx.beginPath()
-            this.ctx.arc(sparkle.x, sparkle.y, sparkle.size, 0, Math.PI * 2)
-            this.ctx.fillStyle = sparkle.color
+            // Draw shape character
             this.ctx.globalAlpha = sparkle.opacity
-            this.ctx.fill()
-            this.ctx.globalAlpha = 1
+            this.ctx.font = `${Math.max(sparkle.size * 2, 8)}px sans-serif`
+            this.ctx.fillStyle = sparkle.color
+            this.ctx.textAlign = "center"
+            this.ctx.textBaseline = "middle"
+            this.ctx.fillText(sparkle.shape, sparkle.x, sparkle.y)
 
+            // Also draw a small glow circle behind
             this.ctx.beginPath()
-            this.ctx.moveTo(sparkle.x - sparkle.size, sparkle.y)
-            this.ctx.lineTo(sparkle.x + sparkle.size, sparkle.y)
-            this.ctx.moveTo(sparkle.x, sparkle.y - sparkle.size)
-            this.ctx.lineTo(sparkle.x, sparkle.y + sparkle.size)
-            this.ctx.strokeStyle = sparkle.color
-            this.ctx.globalAlpha = sparkle.opacity * 0.5
-            this.ctx.lineWidth = 1
-            this.ctx.stroke()
+            this.ctx.arc(
+                sparkle.x,
+                sparkle.y,
+                sparkle.size * 0.5,
+                0,
+                Math.PI * 2
+            )
+            this.ctx.fillStyle = sparkle.color
+            this.ctx.globalAlpha = sparkle.opacity * 0.3
+            this.ctx.fill()
             this.ctx.globalAlpha = 1
         })
 

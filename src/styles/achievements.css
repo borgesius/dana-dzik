@@ -172,7 +172,7 @@
 }
 
 .achievements-progress {
-    color: var(--text-secondary, #666666);
+    color: var(--theme-text-secondary);
     font-size: 11px;
 }
 
@@ -184,7 +184,7 @@
     font-weight: bold;
     font-size: 12px;
     text-transform: uppercase;
-    border-bottom: 1px solid var(--border-dark);
+    border-bottom: 1px solid var(--theme-border-dark);
     padding-bottom: 4px;
     margin-bottom: 8px;
 }
@@ -200,12 +200,12 @@
     align-items: flex-start;
     gap: 8px;
     padding: 6px 8px;
-    border: 1px solid var(--border-dark);
-    background: var(--window-bg);
+    border: 1px solid var(--theme-border-dark);
+    background: var(--theme-surface-primary);
 }
 
 .achievement-card.earned {
-    background: var(--button-face, #c0c0c0);
+    background: var(--theme-surface-primary);
 }
 
 .achievement-card.unearned {
@@ -234,19 +234,19 @@
 
 .achievement-card-desc {
     font-size: 10px;
-    color: var(--text-secondary, #666666);
+    color: var(--theme-text-secondary);
     margin-top: 1px;
 }
 
 .achievement-card-date {
     font-size: 9px;
-    color: var(--text-secondary, #888888);
+    color: var(--theme-text-secondary);
     margin-top: 2px;
 }
 
 .achievement-card-rarity {
     font-size: 9px;
-    color: var(--text-secondary, #888888);
+    color: var(--theme-text-secondary);
     margin-top: 1px;
 }
 
@@ -257,8 +257,8 @@
     gap: 8px;
     padding: 8px 12px;
     margin-bottom: 8px;
-    background: var(--win-bg, #c0c0c0);
-    border: 2px inset var(--win-border-light, #dfdfdf);
+    background: var(--theme-surface-primary);
+    border: 2px inset var(--theme-border-light);
 }
 
 .tier-progress {
@@ -271,7 +271,7 @@
 
 .tier-label {
     font-weight: 700;
-    color: var(--text-color, #000000);
+    color: var(--theme-text-on-surface);
     min-width: 70px;
 }
 
@@ -281,7 +281,7 @@
 }
 
 .tier-star {
-    color: var(--text-secondary, #aaaaaa);
+    color: var(--theme-text-secondary);
     font-size: 12px;
 }
 
@@ -292,7 +292,7 @@
 
 .tier-count {
     font-size: 10px;
-    color: var(--text-secondary, #666666);
+    color: var(--theme-text-secondary);
 }
 
 .achievement-tier-badge {

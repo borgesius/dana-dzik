@@ -26,6 +26,11 @@ export class MobileLockScreen {
         clock.appendChild(date)
         screen.appendChild(clock)
 
+        const hint = document.createElement("div")
+        hint.className = "ios-lock-hint"
+        hint.textContent = "this site is best experienced on a computer"
+        screen.appendChild(hint)
+
         const slideContainer = document.createElement("div")
         slideContainer.className = "ios-slide-to-unlock"
 
