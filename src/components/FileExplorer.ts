@@ -160,6 +160,11 @@ export class FileExplorer {
             })
             menu.appendChild(runItem)
 
+            const compileItem = this.createMenuItem("Compile to Grund", () => {
+                this.openTerminalWith(`welt --grund ${node.name}`)
+            })
+            menu.appendChild(compileItem)
+
             const viewItem = this.createMenuItem("View source", () => {
                 this.openTerminalWith(`cat ${node.name}`)
             })

@@ -14,6 +14,7 @@ import { SYS_MEMORY } from "./content/systemFiles"
 import {
     buildTree,
     changeDirectory,
+    createFile,
     type FileSystem,
     type FileType,
     formatPath,
@@ -24,6 +25,7 @@ import {
     getNodeAtPath,
     listDirectory,
     resolvePath,
+    writeFile,
 } from "./filesystem"
 
 export interface CommandContext {
@@ -374,7 +376,46 @@ function compileWeltCommand(
 ): CommandResult {
     try {
         const output = compileWeltProgram(source, filename)
-        ctx.print(output)
+
+        const resolved = resolvePath(ctx.fs, filename)
+        if (resolved && resolved.length > 1) {
+            const dirPath = resolved.slice(0, -1)
+            const dirPathStr = formatPath(dirPath)
+            const baseName = resolved[resolved.length - 1]
+            const outputName = baseName.replace(/\.welt$/i, ".grund")
+
+            const outputPath = [...dirPath, outputName]
+            const existing = getNode(ctx.fs, outputPath)
+            if (existing) {
+                const result = writeFile(
+                    ctx.fs,
+                    formatPath(outputPath),
+                    output
+                )
+                if (!result.success) {
+                    return {
+                        output: `Compiled but failed to save: ${result.error}`,
+                        className: "error",
+                    }
+                }
+            } else {
+                const result = createFile(
+                    ctx.fs,
+                    dirPathStr,
+                    outputName,
+                    output
+                )
+                if (!result.success) {
+                    return {
+                        output: `Compiled but failed to save: ${result.error}`,
+                        className: "error",
+                    }
+                }
+            }
+
+            ctx.print(`Compiled ${filename} → ${outputName}`)
+        }
+
         if (typeof document !== "undefined") {
             emitAppEvent("grund:compiled")
         }
