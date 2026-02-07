@@ -141,6 +141,9 @@ export class Editor {
         this.textareaEl.wrap = "off"
         bodyEl.appendChild(this.textareaEl)
 
+        const btnGroup = document.createElement("div")
+        btnGroup.className = "editor-btn-group"
+
         if (isExerciseFile(this.filename)) {
             this.freakBtnEl = document.createElement("button")
             this.freakBtnEl.className = "editor-freakgpt-btn"
@@ -149,8 +152,19 @@ export class Editor {
             this.freakBtnEl.addEventListener("click", () => {
                 void this.runFreakGPT()
             })
-            bodyEl.appendChild(this.freakBtnEl)
+            btnGroup.appendChild(this.freakBtnEl)
         }
+
+        const felixBtn = document.createElement("button")
+        felixBtn.className = "editor-felix-btn"
+        felixBtn.textContent = "\u{1F431} FelixGPT"
+        felixBtn.title = "meow"
+        felixBtn.addEventListener("click", () => {
+            this.runFelixGPT()
+        })
+        btnGroup.appendChild(felixBtn)
+
+        bodyEl.appendChild(btnGroup)
 
         this.containerEl.appendChild(bodyEl)
 
@@ -335,6 +349,10 @@ export class Editor {
 
         this.freakGenerating = true
         this.textareaEl.readOnly = true
+
+        if (typeof document !== "undefined") {
+            document.dispatchEvent(new CustomEvent("freak:used"))
+        }
         if (this.freakBtnEl) {
             this.freakBtnEl.disabled = true
             this.freakBtnEl.textContent = "\u{1F525} Generating..."
@@ -371,6 +389,54 @@ export class Editor {
             "info"
         )
         this.textareaEl.focus()
+    }
+
+    private runFelixGPT(): void {
+        if (this.freakGenerating) return
+
+        const pool = [
+            "; meow",
+            "; mrrr",
+            "; mrow",
+            "; prrrr",
+            "; mrrp",
+            "; meow meow meow",
+            "; prrrrrrr",
+            "; mew",
+            "; mrrrrow",
+            "; mrrp mrrp",
+        ]
+
+        const count = 3 + Math.floor(Math.random() * 3)
+        const lines: string[] = []
+        for (let i = 0; i < count; i++) {
+            lines.push(pool[Math.floor(Math.random() * pool.length)])
+        }
+
+        const pos = this.textareaEl.selectionStart
+        const value = this.textareaEl.value
+        const block = lines.join("\n")
+        const before = value.substring(0, pos)
+        const after = value.substring(pos)
+        const needsNewlineBefore = before.length > 0 && !before.endsWith("\n")
+        const needsNewlineAfter = after.length > 0 && !after.startsWith("\n")
+        const insert =
+            (needsNewlineBefore ? "\n" : "") +
+            block +
+            (needsNewlineAfter ? "\n" : "")
+
+        this.textareaEl.value = before + insert + after
+        this.textareaEl.selectionStart = pos + insert.length
+        this.textareaEl.selectionEnd = pos + insert.length
+
+        this.updateGutter()
+        this.updateHeader()
+        this.textareaEl.focus()
+
+        if (typeof document !== "undefined") {
+            document.dispatchEvent(new CustomEvent("felix:message"))
+            document.dispatchEvent(new CustomEvent("felix:editor"))
+        }
     }
 
     private async typeLines(lines: string[]): Promise<void> {

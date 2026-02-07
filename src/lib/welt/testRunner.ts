@@ -1,5 +1,5 @@
 import { EXERCISE_6_SOURCE, EXERCISES } from "./exercises"
-import { getInitialMemory, runWeltProgram } from "./index"
+import { getInitialMemory, runGrundProgram, runWeltProgram } from "./index"
 import type { WeltValue } from "./types"
 
 export interface TestCase {
@@ -81,7 +81,8 @@ export function checkFileIntegrity(
     const tampered: string[] = []
 
     for (const exercise of EXERCISES) {
-        const testKey = `${exercise.name}.welttest`
+        const testExt = exercise.grund ? ".grundtest" : ".welttest"
+        const testKey = `${exercise.name}${testExt}`
         const actual = welttestContents[testKey]
         if (actual !== undefined && actual !== exercise.test) {
             tampered.push(testKey)
@@ -99,9 +100,10 @@ export function checkFileIntegrity(
 
 async function runSingleTest(
     exerciseName: string,
-    weltSource: string,
+    source: string,
     testSource: string,
-    initialMemory: WeltValue[]
+    initialMemory: WeltValue[],
+    isGrund?: boolean
 ): Promise<ExerciseResult> {
     const cases = parseWeltTest(testSource)
 
@@ -113,6 +115,8 @@ async function runSingleTest(
         }
     }
 
+    const runFn = isGrund ? runGrundProgram : runWeltProgram
+
     for (let i = 0; i < cases.length; i++) {
         const tc = cases[i]
         const outputs: string[] = []
@@ -120,8 +124,8 @@ async function runSingleTest(
 
         try {
             await Promise.race([
-                runWeltProgram(
-                    weltSource,
+                runFn(
+                    source,
                     {
                         onOutput: (text) => outputs.push(String(text)),
                         onInput: () => {
@@ -208,16 +212,18 @@ export async function runAllTests(
     const results: ExerciseResult[] = []
 
     for (const exercise of EXERCISES) {
-        const weltKey = `${exercise.name}.welt`
-        const testKey = `${exercise.name}.welttest`
-        const weltSource = exerciseSources[weltKey]
+        const srcExt = exercise.grund ? ".grund" : ".welt"
+        const testExt = exercise.grund ? ".grundtest" : ".welttest"
+        const srcKey = `${exercise.name}${srcExt}`
+        const testKey = `${exercise.name}${testExt}`
+        const source = exerciseSources[srcKey]
         const testSource = welttestSources[testKey]
 
-        if (!weltSource) {
+        if (!source) {
             results.push({
                 name: exercise.name,
                 passed: false,
-                error: `Missing ${weltKey}`,
+                error: `Missing ${srcKey}`,
             })
             continue
         }
@@ -233,9 +239,10 @@ export async function runAllTests(
 
         const result = await runSingleTest(
             exercise.name,
-            weltSource,
+            source,
             testSource,
-            initialMemory
+            initialMemory,
+            exercise.grund
         )
         results.push(result)
     }

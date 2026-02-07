@@ -1,4 +1,5 @@
 import { POPUP_CONFIG } from "../../config"
+import { isCalmMode } from "../../lib/calmMode"
 import { formatMoney } from "../../lib/formatMoney"
 import { getMarketGame } from "../../lib/marketGame"
 import {
@@ -45,6 +46,18 @@ export class MobilePopupManager {
     constructor(container: HTMLElement) {
         this.container = container
         this.setupGameListener()
+
+        document.addEventListener("calm-mode:changed", ((
+            e: CustomEvent<{ enabled: boolean }>
+        ) => {
+            if (e.detail.enabled) {
+                this.endSession()
+                if (this.activePopup) {
+                    this.activePopup.remove()
+                    this.activePopup = null
+                }
+            }
+        }) as EventListener)
     }
 
     private setupGameListener(): void {
@@ -77,6 +90,7 @@ export class MobilePopupManager {
     }
 
     private startSession(durationMs: number): void {
+        if (isCalmMode()) return
         const newEndTime = Date.now() + durationMs
         if (newEndTime <= this.sessionEndTime) return
 

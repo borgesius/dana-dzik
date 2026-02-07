@@ -338,6 +338,7 @@ export const SYS_KERNEL = `; ==========================================
 ;
 ; Interrupt vector table initialization and
 ; process scheduler for quaternary core.
+; GRUND target: kernel.grund
 
 ERWACHE
 DING 0 = 0
@@ -475,6 +476,7 @@ export const SYS_BOOT = `; ==========================================
 ; DO NOT MODIFY THIS FILE.
 ; POST and system initialization routine.
 ; Changes will trigger a SYSTEM REBOOT.
+; GRUND target: boot.grund
 
 ERWACHE
 DING 0 = 0
@@ -545,6 +547,12 @@ const SYS_LOG = `DAS SYSTEM LOG
 ==================
 
 [1997-03-14 08:00:01] BOOT: POST sequence initiated
+[1997-03-14 08:00:01] GRUND: Compiling kernel.welt...
+[1997-03-14 08:00:01] GRUND: Compiling memory.welt...
+[1997-03-14 08:00:02] GRUND: Compiling display.welt...
+[1997-03-14 08:00:02] GRUND: Compiling clock.welt...
+[1997-03-14 08:00:02] GRUND: Compiling boot.welt...
+[1997-03-14 08:00:02] GRUND: 5 modules compiled (0 errors)
 [1997-03-14 08:00:02] KERNEL: Interrupt vector table loaded
 [1997-03-14 08:00:03] MEMORY: 8 banks scanned, 2296 qbytes free
 [1997-03-14 08:00:03] DISPLAY: CRT initialized at 640x480x16
@@ -565,6 +573,231 @@ const SYS_LOG = `DAS SYSTEM LOG
 [2026-??-?? ??:??:??] KERNEL: System age exceeds expected
                        operational lifetime by 10,522 days
 [2026-??-?? ??:??:??] KERNEL: Continuing anyway`
+
+const GRUND_SPEC = `================================================
+  GRUND - Assembly Notation for the DAS-8
+  WORKING DRAFT - NOT FOR DISTRIBUTION
+  Dr. T. Pferd, Fatitech Industries
+================================================
+
+STATUS: Incomplete. This document describes the
+low-level instruction notation for the DAS-8
+quaternary core. WELT programs compile to GRUND
+before execution.
+
+To compile: welt --grund <filename.welt>
+To execute: grund <filename.grund>
+
+DESIGN PRINCIPLES
+-----------------
+Each instruction is a three-character word from
+a constructed morphemic system. The first two
+characters encode the WILL (what the machine
+intends), the final character encodes the
+REPRESENTATION (how the result manifests).
+
+Schopenhauer teaches that will and representation
+are inseparable aspects of every act. So too in
+GRUND: every instruction simultaneously expresses
+an intention and a mode of appearance.
+
+Representation suffixes:
+  r = result appears in register
+  v = result is void (side effect only)
+  n = result pushed to ring (next)
+  b = result popped from ring (back)
+  k = result is carry flag
+
+INSTRUCTION TABLE (16 opcodes, 4 categories)
+---------------------------------------------
+
+Category 0 -- Perception (I/O):
+  mav rN          Output register N
+  vir rN          Input to register N
+  mak             Output carry flag state
+  pav rN, rM      Compare rN with rM, set flags
+
+Category 1 -- Taking (Data):
+  tar rN, VAL     Load value into register N
+  tir rN, rM      Indirect load (TODO: finalize)
+  tin rN          Push register to ring buffer
+  tab rN          Pop from ring buffer to register
+
+Category 2 -- Combining (Arithmetic):
+  kur rN, rM, rK  Add: rN = rM + rK
+  sur rN, rM, rK  Subtract: rN = rM - rK
+  mur rN, rM, rK  Multiply: rN = rM * rK
+  dur rN, rM, rK  Divide: rN = rM / rK
+
+Category 3 -- Reaching (Flow):
+  rav ADDR         Jump (unconditional)
+  rev ADDR         Jump if equal (after pav)
+  rgv ADDR         Jump if greater (after pav)
+  nov              Halt
+
+THE RING (Ixion's Wheel)
+------------------------
+The DAS-8 has no call stack. Instead it provides
+a 4-slot circular buffer -- the Ring.
+
+Push with tin, pop with tab. When the ring is
+full, pushing overwrites the oldest value. As
+Schopenhauer observed of Ixion's wheel: desire
+turns endlessly, and what was grasped is lost
+to what is grasped next.
+
+The WELT compiler uses the ring for temporary
+storage when register pressure exceeds 8 slots.
+
+MACHINE NOTES
+-------------
+- Only = and > comparisons are native. Other
+  comparisons (!=, <, >=, <=) are synthesized
+  from sequences of pav/rev/rgv.
+
+- No native MOD instruction. Modulo compiles to:
+    dur  tmp, a, b    ; tmp = a / b
+    mur  tmp, tmp, b  ; tmp = (a/b) * b
+    sur  dst, a, tmp  ; dst = a - (a/b)*b
+
+- Carry flag persists between arithmetic ops.
+  The WELT interpreter hides this; GRUND exposes
+  it. Use mak to inspect.
+
+- Strings do not exist at the GRUND level. String
+  literals become data section entries referenced
+  by label (s0, s1, ...).
+
+PROGRAM FORMAT
+--------------
+  .data
+    s0: "Hello"
+    s1: "World"
+
+  .code
+    tar  r0, s0
+    mav  r0
+    nov
+
+OPEN QUESTIONS
+--------------
+- tir (indirect load): addressing mode unclear.
+  Current quaternary address space too small for
+  practical indirect addressing. Revisit when
+  expanding to DAS-16?
+
+- Should the ring dispatch an interrupt on
+  overflow? Currently silent. Schopenhauer would
+  say: suffering is silent.
+
+- Consider adding a "negate carry" instruction
+  (nak?) to complete the perception category
+  symmetrically. But 16 opcodes fit the
+  quaternary encoding perfectly. 17 would break
+  the fourfold structure.
+
+================================================
+  (C) 1994 Fatitech Industries
+  Dr. T. Pferd - P.O. Box 1888, Turin, Italy
+================================================`
+
+const SYS_KERNEL_GRUND = `; === GRUND (DAS-8 Q4) ===
+; source: kernel.welt
+; compiled by welt 0.3.1
+
+.data
+  s0: "IRQ_HANDLED"
+  s1: "tick"
+  s2: "KERNEL OK"
+
+.code
+  tar  r0, 0
+  tar  r1, 255
+  tar  r2, 4
+.L0:
+  pav  r0, r1
+  rgv  .L1
+  rev  .L1
+  dur  r3, r0, r2
+  pav  r3, 0
+  rev  .L2
+  rav  .L3
+.L2:
+  tar  r4, s0
+.L3:
+  kur  r0, r0, r7
+  tar  r7, 1
+  kur  r0, r0, r7
+  rav  .L0
+.L1:
+  tar  r5, 18
+  tar  r6, 0
+.L4:
+  pav  r6, r5
+  rgv  .L5
+  rev  .L5
+  tar  r7, s1
+  tar  r7, 1
+  kur  r6, r6, r7
+  rav  .L4
+.L5:
+  tar  r7, s2
+  mav  r7
+  nov`
+
+const SYS_BOOT_GRUND = `; === GRUND (DAS-8 Q4) ===
+; source: boot.welt
+; compiled by welt 0.3.1
+
+.data
+  s0: "POST: CPU... OK"
+  s1: "POST: RAM... OK"
+  s2: "POST: HDD... OK"
+  s3: "POST: VGA... OK"
+  s4: "BOOT OK"
+
+.code
+  tar  r0, 0
+  tar  r1, 4
+.L0:
+  pav  r0, r1
+  rgv  .L1
+  rev  .L1
+  pav  r0, 0
+  rev  .L2
+  rav  .L3
+.L2:
+  tar  r7, s0
+  mav  r7
+.L3:
+  pav  r0, 1
+  rev  .L4
+  rav  .L5
+.L4:
+  tar  r7, s1
+  mav  r7
+.L5:
+  pav  r0, 2
+  rev  .L6
+  rav  .L7
+.L6:
+  tar  r7, s2
+  mav  r7
+.L7:
+  pav  r0, 3
+  rev  .L8
+  rav  .L9
+.L8:
+  tar  r7, s3
+  mav  r7
+.L9:
+  tar  r7, 1
+  kur  r0, r0, r7
+  rav  .L0
+.L1:
+  tar  r7, s4
+  mav  r7
+  nov`
 
 const DESKTOP_FILE_CONTENT: Partial<Record<string, string>> = {
     "Internet Explorer.lnk":
@@ -686,11 +919,13 @@ function buildExerciseChildren(): Record<string, FSNode> {
     const children: Record<string, FSNode> = {}
 
     for (const exercise of EXERCISES) {
-        const weltName = `${exercise.name}.welt`
-        const testName = `${exercise.name}.welttest`
+        const srcExt = exercise.grund ? ".grund" : ".welt"
+        const testExt = exercise.grund ? ".grundtest" : ".welttest"
+        const srcName = `${exercise.name}${srcExt}`
+        const testName = `${exercise.name}${testExt}`
 
-        children[weltName] = {
-            name: weltName,
+        children[srcName] = {
+            name: srcName,
             type: "file",
             content: exercise.stub,
             readonly: exercise.locked,
@@ -839,6 +1074,24 @@ Commands:
                     name: "syslog.txt",
                     type: "file",
                     content: SYS_LOG,
+                },
+                "grund.txt": {
+                    name: "grund.txt",
+                    type: "file",
+                    content: GRUND_SPEC,
+                    readonly: true,
+                },
+                "kernel.grund": {
+                    name: "kernel.grund",
+                    type: "file",
+                    content: SYS_KERNEL_GRUND,
+                    readonly: true,
+                },
+                "boot.grund": {
+                    name: "boot.grund",
+                    type: "file",
+                    content: SYS_BOOT_GRUND,
+                    readonly: true,
                 },
             },
         },

@@ -1,3 +1,4 @@
+import { isCalmMode } from "./calmMode"
 import { getLocaleManager, type LocaleId } from "./localeManager"
 import { getThemeManager } from "./themeManager"
 
@@ -97,6 +98,7 @@ export class GlitchManager {
     }
 
     private triggerThemeGlitch(): void {
+        if (isCalmMode()) return
         const tm = getThemeManager()
         const isFullSwitch =
             Math.random() < THEME_GLITCH_CONFIG.fullSwitchChance
@@ -165,6 +167,7 @@ export class GlitchManager {
     }
 
     private triggerLocaleGlitch(): void {
+        if (isCalmMode()) return
         const lm = getLocaleManager()
         const currentLocale = lm.getCurrentLocale()
         const allLocales = lm.getLocaleIds()
@@ -223,6 +226,7 @@ export class GlitchManager {
     }
 
     private triggerGlitch(): void {
+        if (isCalmMode()) return
         const glitch = this.generateRandomGlitchEvent()
         this.applyGlitch(glitch)
 
