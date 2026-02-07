@@ -32,6 +32,7 @@ import type { CommodityId } from "./commodities"
 import type { MarketEventDef } from "./events"
 import type { FactoryId } from "./factories"
 import type { InfluenceId } from "./influences"
+import type { OrgChartSaveData } from "./orgChart"
 import type { UpgradeId } from "./upgrades"
 
 export type TrendDirection = "bull" | "bear" | "flat"
@@ -66,6 +67,17 @@ export type GameEventType =
     | "tradeExecuted"
     | "limitOrderFilled"
     | "stateChanged"
+    | "employeeHired"
+    | "employeeFired"
+    | "orgChartChanged"
+    | "moraleEvent"
+    // Phase 6: Structured Products Desk
+    | "dasCreated"
+    | "dasDefaulted"
+    | "dasUnwound"
+    | "marginEvent"
+    | "ratingChanged"
+    | "debtChanged"
 
 export type GameEventCallback = (data?: unknown) => void
 
@@ -99,6 +111,110 @@ export interface TradeResult {
     totalCost: number
 }
 
+// ── Phase 6: Structured Products Desk ────────────────────────────────────────
+
+export type CreditRating = "F" | "D" | "C" | "B" | "A" | "AA" | "AAA"
+
+export const CREDIT_RATING_SCALE: CreditRating[] = [
+    "F",
+    "D",
+    "C",
+    "B",
+    "A",
+    "AA",
+    "AAA",
+]
+
+/** Digital Asset Security: commodity units locked to generate passive yield. */
+export interface DigitalAssetSecurity {
+    id: string
+    commodityId: CommodityId
+    lockedQuantity: number
+    /** Price at time of securitization (default threshold = 50% of this). */
+    securitizationPrice: number
+    /** Tick when created (for tracking). */
+    createdAtTick: number
+    /** Status: performing = yielding, defaulted = dead. */
+    status: "performing" | "defaulted"
+}
+
+export const PHASE_6_GATE = { prestigeCount: 3, level: 15 } as const
+
+/** Base yield per unit per tick (before rating multiplier). */
+export const DAS_BASE_YIELD = 0.002
+/** Yield diminishes by this factor for each additional DAS of the same commodity. */
+export const DAS_SAME_COMMODITY_DECAY = 0.7
+/** DAS defaults when commodity price drops below this fraction of securitization price. */
+export const DAS_DEFAULT_THRESHOLD = 0.5
+/** Max active DAS positions (base; can be expanded via prestige/ascension). */
+export const DAS_MAX_POSITIONS = 8
+/** Min commodity units to securitize. */
+export const DAS_MIN_QUANTITY = 10
+
+/** Credit rating -> DAS yield multiplier. */
+export const RATING_YIELD_MULT: Record<CreditRating, number> = {
+    F: 0.5,
+    D: 0.65,
+    C: 1.0,
+    B: 1.2,
+    A: 1.5,
+    AA: 1.75,
+    AAA: 2.0,
+}
+
+/** Credit rating -> max leverage ratio (borrow limit = portfolioValue * ratio). */
+export const RATING_LEVERAGE_RATIO: Record<CreditRating, number> = {
+    F: 0.3,
+    D: 0.4,
+    C: 0.5,
+    B: 0.6,
+    A: 0.8,
+    AA: 1.0,
+    AAA: 1.2,
+}
+
+/** Credit rating -> interest rate per tick (as a decimal fraction). */
+export const RATING_INTEREST_RATE: Record<CreditRating, number> = {
+    F: 0.0015,
+    D: 0.001,
+    C: 0.0005,
+    B: 0.0004,
+    A: 0.0002,
+    AA: 0.00015,
+    AAA: 0.0001,
+}
+
+/** Margin call fires when debt / portfolioValue exceeds this. */
+export const MARGIN_CALL_THRESHOLD = 0.9
+/** Rating review happens every N ticks. */
+export const RATING_REVIEW_INTERVAL = 50
+/** Debt-to-asset ratio below this improves rating. */
+export const RATING_IMPROVE_RATIO = 0.3
+/** Debt-to-asset ratio above this for 50+ ticks degrades rating. */
+export const RATING_DEGRADE_RATIO = 0.6
+/** Ticks of high-ratio before degradation. */
+export const RATING_DEGRADE_TICKS = 50
+/** No defaults in this many ticks = eligible for upgrade. */
+export const RATING_NO_DEFAULT_WINDOW = 200
+/** DAS across this many commodity types = diversified for rating upgrade. */
+export const RATING_DIVERSIFICATION_MIN = 3
+
+export interface CreditFacilityState {
+    outstandingDebt: number
+    totalInterestPaid: number
+}
+
+export interface DeskSaveData {
+    securities: DigitalAssetSecurity[]
+    creditRating: CreditRating
+    facility: CreditFacilityState
+    ticksSinceLastDefault: number
+    ticksAboveDegradeRatio: number
+    /** For margin-survivor achievement tracking. */
+    marginEventTick: number
+    ratingAtMarginEvent: CreditRating
+}
+
 export interface MarketSaveData {
     cash: number
     lifetimeEarnings: number
@@ -109,4 +225,13 @@ export interface MarketSaveData {
     unlockedPhases: number[]
     limitOrders: LimitOrder[]
     popupLevel: number
+    /** Phase 5: HR org chart data (optional for backward compat) */
+    orgChart?: OrgChartSaveData
+    /** Phase 6: Structured Products Desk */
+    desk?: DeskSaveData
+    // Legacy Phase 6 fields (ignored on load, kept for migration safety)
+    ipoHistory?: unknown[]
+    indexFunds?: unknown[]
+    shortPositions?: unknown[]
+    ipoUsedThisPrestige?: boolean
 }

@@ -19,17 +19,23 @@ export class NowPlayingWidget {
     private widget: HTMLElement
 
     constructor() {
-        this.widget = createWidgetFrame(
-            "🎧 Recently Played (3mo)",
-            "now-playing-widget"
-        )
-
         const content = document.createElement("div")
         content.className = "widget-content recently-played"
-        content.innerHTML = `<div class="rp-loading">Loading...</div>`
+        content.innerHTML = `<div class="rp-loading">Expand to load</div>`
+
+        this.widget = createWidgetFrame(
+            "🎧 Recently Played (3mo)",
+            "now-playing-widget",
+            {
+                lazy: true,
+                onFirstExpand: () => {
+                    content.innerHTML = `<div class="rp-loading">Loading...</div>`
+                    void this.fetchTopTracks(content)
+                },
+            }
+        )
 
         this.widget.appendChild(content)
-        void this.fetchTopTracks(content)
     }
 
     public getElement(): HTMLElement {
