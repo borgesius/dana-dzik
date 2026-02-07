@@ -1,3 +1,10 @@
+# [1.34.0](https://github.com/borgesius/dana-dzik/compare/v1.33.0...v1.34.0) (2026-02-07)
+
+
+### Features
+
+* **copy:** languages ([#30](https://github.com/borgesius/dana-dzik/issues/30)) ([424ac35](https://github.com/borgesius/dana-dzik/commit/424ac35bfdc809c0e1980b38aef0dd742159ad09))
+
 # [1.33.0](https://github.com/borgesius/dana-dzik/compare/v1.32.0...v1.33.0) (2026-02-06)
 
 
