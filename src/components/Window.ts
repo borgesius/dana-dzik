@@ -13,6 +13,8 @@ import { initVisitorCount } from "../lib/visitorCount"
 import {
     getWindowContent,
     renderAchievementsWindow,
+    renderAutobattlerWindow,
+    renderResumeWindow,
 } from "../lib/windowContent"
 import { FileExplorer } from "./FileExplorer"
 import { Terminal } from "./Terminal"
@@ -132,6 +134,10 @@ export class Window {
             this.initExplorer()
         } else if (this.config.contentType === "achievements") {
             renderAchievementsWindow()
+        } else if (this.config.contentType === "autobattler") {
+            renderAutobattlerWindow()
+        } else if (this.config.contentType === "resume") {
+            renderResumeWindow()
         }
     }
 

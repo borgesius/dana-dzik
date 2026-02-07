@@ -1,0 +1,282 @@
+import { emitAppEvent } from "../events"
+import {
+    CAREER_NODE_MAP,
+    CAREER_SWITCH_LEVEL_PENALTY,
+    DORMANT_MULTIPLIER,
+    type BonusType,
+    skillPointsForLevel,
+} from "./careers"
+import { getProgressionManager } from "./ProgressionManager"
+import type { CareerBranch, CareerHistoryEntry, ProgressionSaveData } from "./types"
+
+type CareerEventType = "careerSelected" | "nodeUnlocked" | "careerSwitched"
+type CareerCallback = (data?: unknown) => void
+
+let instance: CareerManager | null = null
+
+export function getCareerManager(): CareerManager {
+    if (!instance) {
+        instance = new CareerManager()
+    }
+    return instance
+}
+
+export class CareerManager {
+    private activeCareer: CareerBranch | null = null
+    private careerHistory: CareerHistoryEntry[] = []
+    private unlockedNodes: Map<string, Set<string>> = new Map() // branch -> node IDs
+    private educationNodes: Set<string> = new Set()
+    private onDirty: (() => void) | null = null
+    private eventListeners: Map<CareerEventType, CareerCallback[]> = new Map()
+
+    // ── Events ───────────────────────────────────────────────────────────────
+
+    public on(event: CareerEventType, callback: CareerCallback): void {
+        if (!this.eventListeners.has(event)) {
+            this.eventListeners.set(event, [])
+        }
+        this.eventListeners.get(event)?.push(callback)
+    }
+
+    private emit(event: CareerEventType, data?: unknown): void {
+        this.eventListeners.get(event)?.forEach((cb) => cb(data))
+    }
+
+    // ── Dirty callback ───────────────────────────────────────────────────────
+
+    public setDirtyCallback(fn: () => void): void {
+        this.onDirty = fn
+    }
+
+    // ── Career selection ─────────────────────────────────────────────────────
+
+    public selectCareer(branch: CareerBranch): boolean {
+        if (this.activeCareer !== null) return false // Use switchCareer instead
+
+        this.activeCareer = branch
+        this.careerHistory.push({
+            branch,
+            startedAt: Date.now(),
+            endedAt: null,
+        })
+
+        if (!this.unlockedNodes.has(branch)) {
+            this.unlockedNodes.set(branch, new Set())
+        }
+
+        this.emit("careerSelected", { branch })
+        emitAppEvent("career:selected", { branch })
+        this.onDirty?.()
+        return true
+    }
+
+    public switchCareer(newBranch: CareerBranch): boolean {
+        if (this.activeCareer === null) return false
+        if (this.activeCareer === newBranch) return false
+
+        // End the current career
+        const currentEntry = this.careerHistory.find(
+            (e) => e.branch === this.activeCareer && e.endedAt === null
+        )
+        if (currentEntry) {
+            currentEntry.endedAt = Date.now()
+        }
+
+        // Apply level penalty
+        const progression = getProgressionManager()
+        const penalty = Math.floor(
+            progression.getLevel() * CAREER_SWITCH_LEVEL_PENALTY
+        )
+        if (penalty > 0) {
+            // We don't actually reduce XP, just note the penalty for display
+            // The penalty manifests as dormant skill points being less effective
+        }
+
+        // Start the new career
+        this.activeCareer = newBranch
+        this.careerHistory.push({
+            branch: newBranch,
+            startedAt: Date.now(),
+            endedAt: null,
+        })
+
+        if (!this.unlockedNodes.has(newBranch)) {
+            this.unlockedNodes.set(newBranch, new Set())
+        }
+
+        this.emit("careerSwitched", {
+            from: currentEntry?.branch,
+            to: newBranch,
+        })
+        emitAppEvent("career:switched", {
+            from: currentEntry?.branch ?? "",
+            to: newBranch,
+        })
+        this.onDirty?.()
+        return true
+    }
+
+    // ── Skill points ─────────────────────────────────────────────────────────
+
+    public getAvailableSkillPoints(): number {
+        const level = getProgressionManager().getLevel()
+        const totalPoints = skillPointsForLevel(level)
+        const spentPoints = this.getSpentPoints()
+        return Math.max(0, totalPoints - spentPoints)
+    }
+
+    private getSpentPoints(): number {
+        let count = 0
+        for (const nodes of this.unlockedNodes.values()) {
+            count += nodes.size
+        }
+        count += this.educationNodes.size
+        return count
+    }
+
+    // ── Node unlocking ───────────────────────────────────────────────────────
+
+    public canUnlockNode(nodeId: string): boolean {
+        const def = CAREER_NODE_MAP.get(nodeId)
+        if (!def) return false
+
+        // Must have available points
+        if (this.getAvailableSkillPoints() <= 0) return false
+
+        // Check if already unlocked
+        if (this.isNodeUnlocked(nodeId)) return false
+
+        // Check prerequisites
+        for (const preReq of def.prerequisites) {
+            if (!this.isNodeUnlocked(preReq)) return false
+        }
+
+        // For career nodes, must be in the active career OR education
+        if (def.branch !== "education" && def.branch !== this.activeCareer) {
+            return false
+        }
+
+        return true
+    }
+
+    public unlockNode(nodeId: string): boolean {
+        if (!this.canUnlockNode(nodeId)) return false
+
+        const def = CAREER_NODE_MAP.get(nodeId)!
+
+        if (def.branch === "education") {
+            this.educationNodes.add(nodeId)
+        } else {
+            const nodes = this.unlockedNodes.get(def.branch) ?? new Set()
+            nodes.add(nodeId)
+            this.unlockedNodes.set(def.branch, nodes)
+        }
+
+        this.emit("nodeUnlocked", { nodeId, branch: def.branch })
+        emitAppEvent("career:node-unlocked", { nodeId })
+        this.onDirty?.()
+        return true
+    }
+
+    public isNodeUnlocked(nodeId: string): boolean {
+        const def = CAREER_NODE_MAP.get(nodeId)
+        if (!def) return false
+
+        if (def.branch === "education") {
+            return this.educationNodes.has(nodeId)
+        }
+        return this.unlockedNodes.get(def.branch)?.has(nodeId) ?? false
+    }
+
+    // ── Bonus calculation ────────────────────────────────────────────────────
+
+    /**
+     * Get total bonus for a specific bonus type, considering dormant multiplier
+     * for nodes in inactive career branches.
+     */
+    public getBonus(bonusType: BonusType): number {
+        let total = 0
+
+        for (const [branch, nodes] of this.unlockedNodes) {
+            const isDormant = branch !== this.activeCareer
+            const multiplier = isDormant ? DORMANT_MULTIPLIER : 1
+
+            for (const nodeId of nodes) {
+                const def = CAREER_NODE_MAP.get(nodeId)
+                if (def && def.bonusType === bonusType) {
+                    total += def.bonusValue * multiplier
+                }
+            }
+        }
+
+        // Education nodes are always at full power
+        for (const nodeId of this.educationNodes) {
+            const def = CAREER_NODE_MAP.get(nodeId)
+            if (def && def.bonusType === bonusType) {
+                total += def.bonusValue
+            }
+        }
+
+        return total
+    }
+
+    // ── Getters ──────────────────────────────────────────────────────────────
+
+    public getActiveCareer(): CareerBranch | null {
+        return this.activeCareer
+    }
+
+    public getCareerHistory(): CareerHistoryEntry[] {
+        return [...this.careerHistory]
+    }
+
+    public getUnlockedNodesForBranch(
+        branch: CareerBranch | "education"
+    ): string[] {
+        if (branch === "education") {
+            return [...this.educationNodes]
+        }
+        return [...(this.unlockedNodes.get(branch) ?? [])]
+    }
+
+    // ── Serialization ────────────────────────────────────────────────────────
+
+    public serialize(): Partial<ProgressionSaveData> {
+        const skillPoints: ProgressionSaveData["skillPoints"] = {}
+
+        for (const [branch, nodes] of this.unlockedNodes) {
+            skillPoints[branch] = {
+                invested: nodes.size,
+                dormant: branch !== this.activeCareer,
+                unlockedNodes: [...nodes],
+            }
+        }
+
+        return {
+            activeCareer: this.activeCareer,
+            careerHistory: this.careerHistory,
+            skillPoints,
+            educationNodes: [...this.educationNodes],
+        }
+    }
+
+    public deserialize(data: ProgressionSaveData): void {
+        this.activeCareer = data.activeCareer ?? null
+        this.careerHistory = data.careerHistory ?? []
+        this.unlockedNodes.clear()
+        this.educationNodes.clear()
+
+        if (data.skillPoints) {
+            for (const [branch, spData] of Object.entries(data.skillPoints)) {
+                const nodes = new Set(spData.unlockedNodes ?? [])
+                this.unlockedNodes.set(branch, nodes)
+            }
+        }
+
+        if (data.educationNodes) {
+            for (const nodeId of data.educationNodes) {
+                this.educationNodes.add(nodeId)
+            }
+        }
+    }
+}

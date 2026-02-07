@@ -249,3 +249,60 @@
     color: var(--text-secondary, #888888);
     margin-top: 1px;
 }
+
+/* Tier progress section */
+.achievements-tiers {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 8px 12px;
+    margin-bottom: 8px;
+    background: var(--win-bg, #c0c0c0);
+    border: 2px inset var(--win-border-light, #dfdfdf);
+}
+
+.tier-progress {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    padding: 2px 6px;
+}
+
+.tier-label {
+    font-weight: 700;
+    color: var(--text-color, #000000);
+    min-width: 70px;
+}
+
+.tier-stars {
+    display: flex;
+    gap: 2px;
+}
+
+.tier-star {
+    color: var(--text-secondary, #aaaaaa);
+    font-size: 12px;
+}
+
+.tier-star.earned {
+    color: #d4a017;
+    text-shadow: 0 0 3px rgb(212 160 23 / 40%);
+}
+
+.tier-count {
+    font-size: 10px;
+    color: var(--text-secondary, #666666);
+}
+
+.achievement-tier-badge {
+    display: inline-block;
+    font-size: 9px;
+    font-weight: 700;
+    color: #d4a017;
+    background: rgb(212 160 23 / 15%);
+    border-radius: 2px;
+    padding: 0 3px;
+    margin-left: 4px;
+    vertical-align: middle;
+}

@@ -2,6 +2,7 @@ import type { RoutableWindow } from "../config/routing"
 import { getBuildInfo } from "../lib/buildInfo"
 import { saveManager } from "../lib/saveManager"
 import { getThemeManager } from "../lib/themeManager"
+import { LevelWidget } from "./widgets/LevelWidget"
 import type { WindowManager } from "./WindowManager"
 
 function pick<T>(arr: T[]): T {
@@ -92,6 +93,9 @@ export class Taskbar {
 
         const systemTray = this.createSystemTray()
         this.element.appendChild(systemTray)
+
+        const levelWidget = new LevelWidget()
+        systemTray.appendChild(levelWidget.getElement())
 
         this.clockElement = document.createElement("div")
         this.clockElement.className = "tray-clock"
@@ -197,6 +201,11 @@ export class Taskbar {
                 icon: "😺",
                 text: "FelixGPT",
                 windowId: "felixgpt",
+            },
+            {
+                icon: "⚔️",
+                text: "FRONTIER",
+                windowId: "autobattler",
             },
         ]
         leftItems.forEach(({ icon, text, windowId }) => {

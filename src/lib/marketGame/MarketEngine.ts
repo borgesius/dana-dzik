@@ -66,6 +66,12 @@ export class MarketEngine {
 
     private rng: SeededRng
 
+    /**
+     * Optional external bonus provider. Returns a multiplier for a given bonus type.
+     * E.g. bonusProvider("factoryOutput") might return 0.15 for +15%.
+     */
+    public bonusProvider: ((type: string) => number) | null = null
+
     constructor(seed?: number) {
         this.rng = new SeededRng(seed)
         this.initMarkets()
@@ -262,6 +268,13 @@ export class MarketEngine {
             }
 
             if (totalProduced > 0) {
+                // Apply career bonus for factory output
+                const factoryBonus = this.bonusProvider?.("factoryOutput") ?? 0
+                if (factoryBonus > 0) {
+                    totalProduced = Math.ceil(
+                        totalProduced * (1 + factoryBonus)
+                    )
+                }
                 this.addToHoldings(fDef.produces, totalProduced, 0)
                 this.emit("portfolioChanged")
             }
@@ -461,7 +474,8 @@ export class MarketEngine {
                 (this.hasUpgrade("bulk-orders") ? BULK_ORDER_QUANTITY : 1),
             holding.quantity
         )
-        const revenue = market.price * qty
+        const tradeBonus = this.bonusProvider?.("tradeProfit") ?? 0
+        const revenue = Math.round(market.price * qty * (1 + tradeBonus))
 
         this.cash += revenue
         this.lifetimeEarnings += revenue
@@ -720,6 +734,15 @@ export class MarketEngine {
         this.checkUnlocks()
     }
 
+    /**
+     * Grant free commodity units (e.g. from WELT completions).
+     * Cost basis is 0 so any sale is pure profit.
+     */
+    public grantCommodity(commodityId: CommodityId, quantity: number): void {
+        this.addToHoldings(commodityId, quantity, 0)
+        this.emit("portfolioChanged")
+    }
+
     // -----------------------------------------------------------------------
     // Getters
     // -----------------------------------------------------------------------
@@ -920,6 +943,50 @@ export class MarketEngine {
         this.emit("moneyChanged", this.cash)
         this.emit("portfolioChanged")
         this.emit("stateChanged")
+    }
+
+    // -----------------------------------------------------------------------
+    // Prestige reset
+    // -----------------------------------------------------------------------
+
+    public resetForPrestige(
+        startingCash: number,
+        startingPhases: number[]
+    ): void {
+        this.stop()
+
+        this.cash = startingCash
+        this.lifetimeEarnings = 0
+        this.holdings.clear()
+        this.factories.clear()
+        this.factoryTickCounters.clear()
+        this.ownedUpgrades.clear()
+        this.limitOrders = []
+        this.popupLevel = 0
+        this.currentNews = ""
+        this.upcomingEvent = null
+        this.upcomingEventCountdown = 0
+        this.ticksSinceEvent = 0
+        this.nextEventTicks = this.rng.nextInt(EVENT_MIN_TICKS, EVENT_MAX_TICKS)
+
+        // Reset phases
+        this.unlockedPhases = new Set(startingPhases)
+
+        // Reset commodities
+        this.unlockedCommodities.clear()
+        this.initUnlockedCommodities()
+
+        // Reset markets to base prices
+        this.initMarkets()
+
+        // Reset cooldowns
+        this.influenceCooldowns.clear()
+
+        this.emit("moneyChanged", this.cash)
+        this.emit("portfolioChanged")
+        this.emit("stateChanged")
+
+        this.start()
     }
 
     // -----------------------------------------------------------------------

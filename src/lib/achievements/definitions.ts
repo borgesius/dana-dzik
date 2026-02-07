@@ -13,30 +13,40 @@ export const ACHIEVEMENTS: AchievementDef[] = [
         category: "trading",
         icon: "🪙",
         hidden: false,
+        tieredGroup: "mogul",
+        tier: 1,
     },
     {
         id: "small-business",
         category: "trading",
         icon: "🏪",
         hidden: false,
+        tieredGroup: "mogul",
+        tier: 2,
     },
     {
         id: "going-concern",
         category: "trading",
         icon: "🏢",
         hidden: false,
+        tieredGroup: "mogul",
+        tier: 3,
     },
     {
         id: "dot-com-darling",
         category: "trading",
         icon: "🌐",
         hidden: false,
+        tieredGroup: "mogul",
+        tier: 4,
     },
     {
         id: "irrational-exuberance",
         category: "trading",
         icon: "🚀",
         hidden: false,
+        tieredGroup: "mogul",
+        tier: 5,
     },
     {
         id: "buy-the-dip",
@@ -62,18 +72,24 @@ export const ACHIEVEMENTS: AchievementDef[] = [
         category: "production",
         icon: "🏭",
         hidden: false,
+        tieredGroup: "industrialist",
+        tier: 1,
     },
     {
         id: "industrialist",
         category: "production",
         icon: "⚙️",
         hidden: false,
+        tieredGroup: "industrialist",
+        tier: 3,
     },
     {
         id: "assembly-line",
         category: "production",
         icon: "🔧",
         hidden: false,
+        tieredGroup: "industrialist",
+        tier: 2,
     },
     {
         id: "fully-automated",
@@ -100,18 +116,24 @@ export const ACHIEVEMENTS: AchievementDef[] = [
         category: "milestones",
         icon: "2️⃣",
         hidden: false,
+        tieredGroup: "phases",
+        tier: 1,
     },
     {
         id: "phase-3",
         category: "milestones",
         icon: "3️⃣",
         hidden: false,
+        tieredGroup: "phases",
+        tier: 2,
     },
     {
         id: "phase-4",
         category: "milestones",
         icon: "4️⃣",
         hidden: false,
+        tieredGroup: "phases",
+        tier: 3,
     },
     {
         id: "all-commodities",
@@ -276,18 +298,24 @@ export const ACHIEVEMENTS: AchievementDef[] = [
         category: "exercises",
         icon: "📝",
         hidden: false,
+        tieredGroup: "scholar",
+        tier: 1,
     },
     {
         id: "welt-intermediate",
         category: "exercises",
         icon: "🧩",
         hidden: false,
+        tieredGroup: "scholar",
+        tier: 2,
     },
     {
         id: "welt-advanced",
         category: "exercises",
         icon: "💎",
         hidden: false,
+        tieredGroup: "scholar",
+        tier: 3,
     },
     {
         id: "welt-master",
@@ -346,12 +374,16 @@ export const ACHIEVEMENTS: AchievementDef[] = [
         category: "pinball",
         icon: "🪩",
         hidden: false,
+        tieredGroup: "arcade",
+        tier: 1,
     },
     {
         id: "high-roller",
         category: "pinball",
         icon: "🎰",
         hidden: false,
+        tieredGroup: "arcade",
+        tier: 2,
     },
     {
         id: "target-practice",
@@ -390,6 +422,110 @@ export const ACHIEVEMENTS: AchievementDef[] = [
         category: "exploration",
         icon: "🔍",
         hidden: false,
+    },
+
+    // ── Autobattler ──────────────────────────────────────────────────────────
+    {
+        id: "first-draft",
+        category: "autobattler",
+        icon: "📜",
+        hidden: false,
+    },
+    {
+        id: "posse-up",
+        category: "autobattler",
+        icon: "🤠",
+        hidden: false,
+    },
+    {
+        id: "faction-recruit",
+        category: "autobattler",
+        icon: "🏴",
+        hidden: false,
+    },
+    {
+        id: "full-spiral",
+        category: "autobattler",
+        icon: "🌀",
+        hidden: false,
+    },
+    {
+        id: "no-drifters",
+        category: "autobattler",
+        icon: "🎯",
+        hidden: true,
+    },
+    {
+        id: "triple-threat",
+        category: "autobattler",
+        icon: "⭐",
+        hidden: true,
+    },
+
+    // ── Prestige ─────────────────────────────────────────────────────────────
+    {
+        id: "bubble-popper",
+        category: "prestige",
+        icon: "💥",
+        hidden: false,
+    },
+    {
+        id: "serial-popper",
+        category: "prestige",
+        icon: "🫧",
+        hidden: false,
+    },
+    {
+        id: "hindsight-shopper",
+        category: "prestige",
+        icon: "🛒",
+        hidden: false,
+    },
+    {
+        id: "hindsight-hoarder",
+        category: "prestige",
+        icon: "💎",
+        hidden: false,
+    },
+
+    // ── Career ───────────────────────────────────────────────────────────────
+    {
+        id: "career-starter",
+        category: "career",
+        icon: "💼",
+        hidden: false,
+    },
+    {
+        id: "career-switcher",
+        category: "career",
+        icon: "🔄",
+        hidden: false,
+    },
+    {
+        id: "skill-tree-novice",
+        category: "career",
+        icon: "🌱",
+        hidden: false,
+    },
+    {
+        id: "skill-tree-master",
+        category: "career",
+        icon: "🌳",
+        hidden: false,
+    },
+
+    // ── Cross-system ─────────────────────────────────────────────────────────
+    {
+        id: "renaissance",
+        category: "cross-system",
+        icon: "🎨",
+        hidden: false,
+    },
+    {
+        id: "full-stack",
+        category: "cross-system",
+        icon: "🏗️",
+        hidden: true,
     },
 ]
 

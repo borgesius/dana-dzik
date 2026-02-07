@@ -1,6 +1,7 @@
 import type { RoutableWindow } from "../config/routing"
 import { getAboutContent } from "./windowContent/about"
 import { getAchievementsContent } from "./windowContent/achievements"
+import { getAutobattlerContent } from "./windowContent/autobattler"
 import { getFelixGPTContent } from "./windowContent/felixgpt"
 import { getGuestbookContent } from "./windowContent/guestbook"
 import { getLinksContent } from "./windowContent/links"
@@ -11,6 +12,8 @@ import { getSiteStatsContent } from "./windowContent/siteStats"
 import { getWelcomeContent } from "./windowContent/welcome"
 
 export { renderAchievementsWindow } from "./windowContent/achievements"
+export { renderAutobattlerWindow } from "./windowContent/autobattler"
+export { renderResumeWindow } from "./windowContent/resume"
 
 export function getWindowContent(contentType: RoutableWindow): string {
     switch (contentType) {
@@ -38,6 +41,8 @@ export function getWindowContent(contentType: RoutableWindow): string {
             return `<div id="explorer-content"></div>`
         case "achievements":
             return getAchievementsContent()
+        case "autobattler":
+            return getAutobattlerContent()
         default:
             return "<p>Content not found</p>"
     }

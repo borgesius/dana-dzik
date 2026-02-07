@@ -40,6 +40,16 @@ export interface AppEventMap {
         values: Record<string, number>
     }
     "calm-mode:changed": { enabled: boolean }
+    // Progression system events
+    "prestige:triggered": { count: number; hindsight: number }
+    "prestige:purchase": { upgradeId: string }
+    "autobattler:run-complete": { won: boolean }
+    "autobattler:unit-unlocked": { unitId: string }
+    "autobattler:spiral-complete": undefined
+    "career:selected": { branch: string }
+    "career:switched": { from: string; to: string }
+    "career:node-unlocked": { nodeId: string }
+    "progression:level-up": { level: number }
 }
 
 export function emitAppEvent<K extends keyof AppEventMap>(

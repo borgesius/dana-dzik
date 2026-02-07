@@ -9,6 +9,11 @@ import { GlitchManager } from "../lib/glitchEffects"
 import { getLocaleManager } from "../lib/localeManager"
 import { getMarketGame } from "../lib/marketGame/MarketEngine"
 import { Router } from "../lib/router"
+import { getCollectionManager } from "../lib/autobattler/CollectionManager"
+import { getPrestigeManager } from "../lib/prestige/PrestigeManager"
+import { getCareerManager } from "../lib/progression/CareerManager"
+import { getProgressionManager } from "../lib/progression/ProgressionManager"
+import { wireProgression } from "../lib/progression/wiring"
 import { type SaveData, saveManager } from "../lib/saveManager"
 import { SystemCrashHandler } from "../lib/systemCrash"
 import { getSharedFilesystem } from "../lib/terminal/filesystemBuilder"
@@ -25,12 +30,16 @@ export function initMobile(app: HTMLElement): void {
     })
     new AchievementToast(achievements)
 
+    wireProgression(getProgressionManager(), (cb) => {
+        phone.onAppOpen(cb)
+    })
+
     saveManager.registerGatherFn((): SaveData => {
         const pinballHighScore =
             parseInt(localStorage.getItem("pinball-high-score") || "0", 10) || 0
 
         return {
-            version: 1,
+            version: 3,
             savedAt: Date.now(),
             game: getMarketGame().serialize(),
             pinball: { highScore: pinballHighScore },
@@ -42,6 +51,12 @@ export function initMobile(app: HTMLElement): void {
             },
             filesystem: diffFilesystem(getSharedFilesystem()),
             achievements: achievements.serialize(),
+            prestige: getPrestigeManager().serialize(),
+            progression: {
+                ...getProgressionManager().serialize(),
+                ...getCareerManager().serialize(),
+            },
+            autobattler: getCollectionManager().serialize(),
         }
     })
 

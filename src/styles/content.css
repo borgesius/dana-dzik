@@ -239,6 +239,176 @@
     font-size: 11px;
 }
 
+/* Career selection */
+.career-prompt {
+    font-size: 12px;
+    color: var(--text-secondary, #666666);
+    margin-bottom: 12px;
+}
+
+.career-selection-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-bottom: 16px;
+}
+
+.career-select-btn {
+    padding: 12px;
+    text-align: left;
+    border: 2px outset var(--win-border-light, #dfdfdf);
+    background: var(--win-bg, #c0c0c0);
+    cursor: pointer;
+}
+
+.career-select-btn:hover {
+    background: var(--button-hover-bg, #d4d0c8);
+}
+
+.career-select-name {
+    font-weight: 700;
+    font-size: 13px;
+}
+
+.career-select-desc {
+    font-size: 10px;
+    color: var(--text-secondary, #666666);
+    margin-top: 4px;
+}
+
+/* Skill points */
+.skill-points-display {
+    font-size: 12px;
+    padding: 6px 8px;
+    background: var(--win-bg, #c0c0c0);
+    border: 2px inset var(--win-border-light, #dfdfdf);
+    margin-bottom: 12px;
+}
+
+/* Skill tree branch */
+.skill-tree-branch {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 12px;
+}
+
+.skill-node {
+    padding: 8px 10px;
+    border: 2px solid var(--win-border-dark, #808080);
+    background: var(--win-bg, #c0c0c0);
+    position: relative;
+}
+
+.skill-node.unlocked {
+    border-color: #228b22;
+    background: rgb(34 139 34 / 10%);
+}
+
+.skill-node.available {
+    border-color: #d4a017;
+    border-style: dashed;
+}
+
+.skill-node.locked {
+    opacity: 0.6;
+}
+
+.skill-node.prereq-missing {
+    opacity: 0.4;
+}
+
+.skill-node-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.skill-node-name {
+    font-weight: 700;
+    font-size: 12px;
+}
+
+.skill-node-badge {
+    font-size: 9px;
+    color: #228b22;
+    font-weight: 700;
+}
+
+.skill-node-desc {
+    font-size: 10px;
+    color: var(--text-secondary, #666666);
+    margin-top: 2px;
+}
+
+.node-unlock-btn {
+    margin-top: 4px;
+    padding: 3px 10px;
+    font-size: 10px;
+    border: 1px outset var(--win-border-light, #dfdfdf);
+    background: #d4a017;
+    color: #ffffff;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.node-unlock-btn:hover {
+    filter: brightness(1.1);
+}
+
+/* Career switch */
+.career-switch-section {
+    margin-top: 12px;
+    border-top: 2px solid var(--win-border-dark, #808080);
+    padding-top: 8px;
+}
+
+.career-switch-section h3 {
+    margin: 0 0 4px;
+    font-size: 12px;
+}
+
+.career-switch-warning {
+    font-size: 10px;
+    color: #cc0000;
+    margin: 0 0 8px;
+}
+
+.career-switch-options {
+    display: flex;
+    gap: 6px;
+}
+
+.career-switch-btn {
+    padding: 6px 12px;
+    font-size: 10px;
+    border: 2px outset var(--win-border-light, #dfdfdf);
+    background: var(--win-bg, #c0c0c0);
+    cursor: pointer;
+}
+
+.career-switch-btn:hover {
+    background: var(--button-hover-bg, #d4d0c8);
+}
+
+/* Career history */
+.career-history {
+    margin-bottom: 12px;
+}
+
+.career-history-entry {
+    padding: 4px 0;
+    border-bottom: 1px dotted var(--win-border-dark, #808080);
+}
+
+.career-history-entry.current {
+    font-weight: 700;
+}
+
+.career-history-entry.past {
+    opacity: 0.7;
+}
+
 /* === Links Window === */
 .links-content {
     padding: 20px;
