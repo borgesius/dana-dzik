@@ -18,6 +18,7 @@ export class FactoriesSection {
         this.lockedEl = document.createElement("div")
         this.lockedEl.className = "phase-locked-teaser"
         this.element = this.createElement()
+        this.updateVisibility()
         this.render()
     }
 
@@ -37,7 +38,6 @@ export class FactoriesSection {
         section.appendChild(this.lockedEl)
         section.appendChild(this.listEl)
 
-        this.updateVisibility()
         return section
     }
 

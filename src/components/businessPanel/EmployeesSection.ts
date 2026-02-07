@@ -45,6 +45,7 @@ export class EmployeesSection {
         this.playSound = playSound
         this.contentEl = document.createElement("div")
         this.element = this.createElement()
+        this.updateVisibility()
 
         // Listen for morale events
         this.game.on("moraleEvent", (data) => {
@@ -85,7 +86,6 @@ export class EmployeesSection {
         section.appendChild(this.lockedEl)
         section.appendChild(this.contentEl)
 
-        this.updateVisibility()
         return section
     }
 
