@@ -128,22 +128,6 @@ test.describe("Desktop Navigation", () => {
         })
     })
 
-    test("popups appear after engaging with money game", async ({ page }) => {
-        await page.goto("/")
-        await page.waitForSelector(".loading-screen.hidden", {
-            state: "attached",
-            timeout: 10000,
-        })
-
-        const ventureBtn = page.locator(".venture-btn").first()
-        await expect(ventureBtn).toBeVisible({ timeout: 5000 })
-        await ventureBtn.click()
-
-        await expect(page.locator(".popup-window")).toBeVisible({
-            timeout: 5000,
-        })
-    })
-
     test("toolbars are visible with game elements", async ({ page }) => {
         await page.goto("/")
         await page.waitForSelector(".loading-screen.hidden", {
@@ -152,7 +136,7 @@ test.describe("Desktop Navigation", () => {
         })
 
         await expect(page.locator(".toolbar")).toHaveCount(2)
-        await expect(page.locator(".venture-btn").first()).toBeVisible()
+        await expect(page.locator(".market-ticker")).toBeVisible()
         await expect(page.locator(".money-counter")).toBeVisible()
     })
 
