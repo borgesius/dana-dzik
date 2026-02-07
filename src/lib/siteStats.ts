@@ -182,10 +182,11 @@ function renderAbTest(abTest: Stats["abTest"]): void {
                     : "0.0"
             const variantData = PHOTO_VARIANTS.find((v) => v.id === name)
             const photo = variantData?.photo || ""
+            const webp = variantData?.webp || ""
             return `
                 <div class="ab-variant">
                     <div class="ab-variant-header">
-                        ${photo ? `<img src="${photo}" alt="Variant ${name}" class="ab-photo" />` : ""}
+                        ${photo ? `<picture><source srcset="${webp}" type="image/webp" /><img src="${photo}" alt="Variant ${name}" class="ab-photo" /></picture>` : ""}
                         <div class="ab-variant-info">
                             <span class="ab-variant-name">Photo ${name}</span>
                             <span class="ab-variant-rate">${rate}% engagement</span>

@@ -564,6 +564,8 @@
     "suffering": { "name": "Toda Vida É Sofrimento", "description": "Alcance a iluminação." },
     "divide-by-zero": { "name": "Divisão por Zero", "description": "Cause uma divisão por zero no WELT." },
     "popup-enjoyer": { "name": "Príncipe-Consorte Nigeriano", "description": "Reivindique 5 popups de bônus." },
-    "y2k-survivor": { "name": "Sobrevivente do Y2K", "description": "Tenha uma sessão rodando por 30 minutos." }
+    "y2k-survivor": { "name": "Sobrevivente do Y2K", "description": "Tenha uma sessão rodando por 30 minutos." },
+    "big-spender": { "name": "Jogada de Mestre", "description": "Acumule um custo de sessão normalizado de $0,001." },
+    "whale": { "name": "Caça-Notas", "description": "Acumule um custo de sessão normalizado de $0,0025." }
   }
 }

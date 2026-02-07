@@ -42,6 +42,7 @@ export function wireAchievements(
     wireGuestbookEvents(mgr)
     wireWeltEvents(mgr)
     wireSessionTimer(mgr)
+    wireSessionCost(mgr)
 }
 
 function wireWindowManager(
@@ -326,4 +327,13 @@ function wireSessionTimer(mgr: AchievementManager): void {
         },
         30 * 60 * 1000
     )
+}
+
+function wireSessionCost(mgr: AchievementManager): void {
+    document.addEventListener("session-cost:big-spender", () => {
+        mgr.earn("big-spender")
+    })
+    document.addEventListener("session-cost:whale", () => {
+        mgr.earn("whale")
+    })
 }

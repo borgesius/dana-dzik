@@ -334,3 +334,119 @@ body {
     color: var(--theme-accent);
     text-decoration: underline;
 }
+
+/* ── Session Cost Widget ─────────────────────────────────────────────────── */
+
+.toolbar-cost {
+    position: relative;
+    padding: 2px 6px;
+    font-size: 10px;
+    font-family: "Courier New", monospace;
+    background: var(--theme-weather-bg);
+    border: 1px solid var(--theme-weather-border);
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.toolbar-cost-tooltip {
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--theme-tooltip-bg);
+    border: var(--theme-tooltip-border);
+    padding: 10px 12px;
+    font-size: 10px;
+    font-family: "Courier New", monospace;
+    color: var(--theme-tooltip-text);
+    white-space: nowrap;
+    z-index: 8000;
+    box-shadow: var(--theme-tooltip-shadow);
+    min-width: 220px;
+    text-align: center;
+    pointer-events: none;
+}
+
+.cost-gif {
+    display: block;
+    margin: 0 auto 6px;
+    width: 48px;
+    height: auto;
+    image-rendering: pixelated;
+}
+
+.cost-title {
+    font-weight: bold;
+    font-size: 10px;
+    margin-bottom: 4px;
+}
+
+.cost-divider {
+    border-top: 1px solid var(--theme-border-dark);
+    margin: 4px 0;
+}
+
+.cost-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    text-align: left;
+    line-height: 1.6;
+}
+
+.cost-label {
+    color: var(--theme-tooltip-text);
+}
+
+.cost-value {
+    font-weight: bold;
+    text-align: right;
+}
+
+.cost-section-header {
+    font-size: 9px;
+    color: #aaa;
+    margin-top: 6px;
+    margin-bottom: 2px;
+    text-align: left;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-bottom: 1px dotted var(--theme-border-dark);
+    padding-bottom: 2px;
+}
+
+.cost-row-sampled .cost-label {
+    color: #aaa;
+    font-style: italic;
+}
+
+.cost-row-sampled .cost-value {
+    color: #aaa;
+}
+
+.cost-lottery {
+    margin-top: 6px;
+    font-size: 11px;
+    font-weight: bold;
+    color: #ff0;
+    background: #000;
+    padding: 2px 6px;
+    animation: cost-blink 0.6s step-end infinite;
+}
+
+.cost-total-divider {
+    border-top: 2px solid var(--theme-border-dark);
+    margin: 6px 0 4px;
+}
+
+.cost-total {
+    font-size: 16px;
+    font-weight: bold;
+    color: #cc0000;
+    animation: cost-blink 1s step-end infinite;
+}
+
+@keyframes cost-blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+}

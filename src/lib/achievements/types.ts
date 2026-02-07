@@ -65,6 +65,8 @@ export type AchievementId =
     | "divide-by-zero"
     | "popup-enjoyer"
     | "y2k-survivor"
+    | "big-spender"
+    | "whale"
 
 export interface AchievementDef {
     id: AchievementId

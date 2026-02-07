@@ -564,6 +564,8 @@
     "suffering": { "name": "人生皆苦", "description": "获得开悟。" },
     "divide-by-zero": { "name": "除以零", "description": "在 WELT 中引发除以零错误。" },
     "popup-enjoyer": { "name": "尼日利亚王配", "description": "领取5个奖励弹窗。" },
-    "y2k-survivor": { "name": "Y2K幸存者", "description": "保持一个会话运行30分钟。" }
+    "y2k-survivor": { "name": "Y2K幸存者", "description": "保持一个会话运行30分钟。" },
+    "big-spender": { "name": "财路亨通", "description": "累计标准化会话成本达到 $0.001。" },
+    "whale": { "name": "追钞达人", "description": "累计标准化会话成本达到 $0.0025。" }
   }
 }

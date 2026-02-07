@@ -309,6 +309,18 @@ export const ACHIEVEMENTS: AchievementDef[] = [
         icon: "⏰",
         hidden: true,
     },
+    {
+        id: "big-spender",
+        category: "exploration",
+        icon: "💸",
+        hidden: true,
+    },
+    {
+        id: "whale",
+        category: "exploration",
+        icon: "🐋",
+        hidden: true,
+    },
 ]
 
 export const ACHIEVEMENT_MAP: ReadonlyMap<string, AchievementDef> = new Map(
