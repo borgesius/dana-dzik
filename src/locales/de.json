@@ -567,6 +567,8 @@
     "grund-compiled": { "name": "Grundlegung", "description": "Kompiliere ein WELT-Programm nach GRUND." },
     "grund-executed": { "name": "Satz vom Grund", "description": "Führe ein GRUND-Programm aus." },
     "ring-overflow": { "name": "Rad des Ixion", "description": "Überlaufe den Ringpuffer." },
+    "ring-cycle": { "name": "Ewige Wiederkehr", "description": "Vollende eine volle Ringrotation." },
+    "ring-spin": { "name": "Glücksrad", "description": "Überschreibe jeden Platz in einem vollen Ring." },
     "thermal-protection": { "name": "Thermoschutz", "description": "Löse den WELT-Thermoschutz aus." },
     "suffering": { "name": "Alles Leben Ist Leiden", "description": "Werde erleuchtet." },
     "freakgpt": { "name": "Altman Winklevossed Me in Q4 2025", "description": "Nutze FreakGPT für deine Anfragen." },

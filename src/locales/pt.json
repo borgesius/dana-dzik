@@ -567,6 +567,8 @@
     "grund-compiled": { "name": "Grundlegung", "description": "Compilar um programa WELT para GRUND." },
     "grund-executed": { "name": "Sufficient Reason", "description": "Executar um programa GRUND." },
     "ring-overflow": { "name": "Wheel of Ixion", "description": "Transbordar o buffer circular." },
+    "ring-cycle": { "name": "Eterno Retorno", "description": "Completar uma rotação completa do ring." },
+    "ring-spin": { "name": "Roda da Fortuna", "description": "Sobrescrever cada posição em um ring cheio." },
     "thermal-protection": { "name": "Proteção Térmica", "description": "Acione a proteção térmica do WELT." },
     "suffering": { "name": "Toda Vida É Sofrimento", "description": "Alcance a iluminação." },
     "freakgpt": { "name": "Altman Winklevossed Me in Q4 2025", "description": "Use o FreakGPT para atender seus pedidos." },

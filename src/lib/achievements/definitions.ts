@@ -234,6 +234,18 @@ export const ACHIEVEMENTS: AchievementDef[] = [
         hidden: true,
     },
     {
+        id: "ring-cycle",
+        category: "coding",
+        icon: "⭕",
+        hidden: true,
+    },
+    {
+        id: "ring-spin",
+        category: "coding",
+        icon: "🎰",
+        hidden: true,
+    },
+    {
         id: "thermal-protection",
         category: "coding",
         icon: "🔥",

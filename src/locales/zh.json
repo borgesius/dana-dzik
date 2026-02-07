@@ -567,6 +567,8 @@
     "grund-compiled": { "name": "Grundlegung", "description": "将 WELT 程序编译为 GRUND。" },
     "grund-executed": { "name": "Sufficient Reason", "description": "运行 GRUND 程序。" },
     "ring-overflow": { "name": "伊克西翁之轮", "description": "溢出环形缓冲区。" },
+    "ring-cycle": { "name": "永恒回归", "description": "完成一次完整的环形旋转。" },
+    "ring-spin": { "name": "命运之轮", "description": "覆盖满环的每个位置。" },
     "thermal-protection": { "name": "热保护", "description": "触发 WELT 热保护机制。" },
     "suffering": { "name": "人生皆苦", "description": "获得开悟。" },
     "freakgpt": { "name": "Altman Winklevossed Me in Q4 2025", "description": "使用 FreakGPT 满足你的请求。" },

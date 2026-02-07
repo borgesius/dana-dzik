@@ -53,6 +53,8 @@ export type AchievementId =
     | "grund-compiled"
     | "grund-executed"
     | "ring-overflow"
+    | "ring-cycle"
+    | "ring-spin"
     | "thermal-protection"
     | "suffering"
     | "freakgpt"

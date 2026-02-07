@@ -567,6 +567,8 @@
     "grund-compiled": { "name": "Grundlegung", "description": "WELTプログラムをGRUNDにコンパイルする。" },
     "grund-executed": { "name": "Sufficient Reason", "description": "GRUNDプログラムを実行する。" },
     "ring-overflow": { "name": "イクシオンの輪", "description": "リングバッファをオーバーフローさせる。" },
+    "ring-cycle": { "name": "永劫回帰", "description": "リングの完全な回転を達成する。" },
+    "ring-spin": { "name": "運命の輪", "description": "満杯のリングの全スロットを上書きする。" },
     "thermal-protection": { "name": "熱保護", "description": "WELTの熱保護を発動させる。" },
     "suffering": { "name": "一切皆苦", "description": "悟りを開く。" },
     "freakgpt": { "name": "Altman Winklevossed Me in Q4 2025", "description": "FreakGPTを使ってリクエストを処理する。" },

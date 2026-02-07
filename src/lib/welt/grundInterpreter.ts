@@ -12,6 +12,8 @@ interface GrundState {
     ring: WeltValue[]
     ringPointer: number
     ringCount: number
+    ringTotalPushes: number
+    ringOverflowStreak: number
     carry: boolean
     flagEqual: boolean
     flagGreater: boolean
@@ -32,6 +34,8 @@ function createState(initialMemory?: WeltValue[]): GrundState {
         ring: [0, 0, 0, 0],
         ringPointer: 0,
         ringCount: 0,
+        ringTotalPushes: 0,
+        ringOverflowStreak: 0,
         carry: false,
         flagEqual: false,
         flagGreater: false,
@@ -231,13 +235,19 @@ function execTin(instr: GrundInstruction, state: GrundState): void {
     const src = getRegIndex(instr, 0)
     const value = state.registers[src]
 
-    if (state.ringCount >= RING_SIZE) {
+    const isOverflow = state.ringCount >= RING_SIZE
+
+    if (isOverflow) {
+        state.ringOverflowStreak++
         if (typeof document !== "undefined") {
             document.dispatchEvent(
                 new CustomEvent("grund:ring-overflow", {
                     detail: { pointer: state.ringPointer },
                 })
             )
+            if (state.ringOverflowStreak >= RING_SIZE) {
+                document.dispatchEvent(new CustomEvent("grund:ring-spin"))
+            }
         }
     }
 
@@ -245,6 +255,15 @@ function execTin(instr: GrundInstruction, state: GrundState): void {
     state.ringPointer = (state.ringPointer + 1) % RING_SIZE
     if (state.ringCount < RING_SIZE) {
         state.ringCount++
+    }
+
+    state.ringTotalPushes++
+    if (
+        state.ringTotalPushes >= RING_SIZE &&
+        state.ringPointer === 0 &&
+        typeof document !== "undefined"
+    ) {
+        document.dispatchEvent(new CustomEvent("grund:ring-cycle"))
     }
 }
 

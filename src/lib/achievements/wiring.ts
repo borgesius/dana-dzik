@@ -343,6 +343,14 @@ function wireWeltEvents(mgr: AchievementManager): void {
         mgr.earn("ring-overflow")
     })
 
+    document.addEventListener("grund:ring-cycle", () => {
+        mgr.earn("ring-cycle")
+    })
+
+    document.addEventListener("grund:ring-spin", () => {
+        mgr.earn("ring-spin")
+    })
+
     document.addEventListener("freak:used", () => {
         mgr.earn("freakgpt")
     })
