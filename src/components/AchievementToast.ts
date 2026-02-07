@@ -3,8 +3,8 @@ import type { AchievementManager } from "../lib/achievements/AchievementManager"
 import type { AchievementId } from "../lib/achievements/types"
 import { getLocaleManager } from "../lib/localeManager"
 
-const TOAST_DURATION_MS = 4000
-const TOAST_ANIMATION_MS = 300
+const TOAST_DURATION_MS = 6000
+const TOAST_ANIMATION_MS = 500
 const MAX_VISIBLE = 3
 
 export class AchievementToast {
@@ -31,13 +31,29 @@ export class AchievementToast {
         toast.className = "achievement-toast"
 
         toast.innerHTML = `
+            <div class="achievement-toast-shine"></div>
             <div class="achievement-toast-icon">${def.icon}</div>
             <div class="achievement-toast-content">
-                <div class="achievement-toast-title">Achievement Unlocked!</div>
+                <div class="achievement-toast-title">🎉 Achievement Unlocked!</div>
                 <div class="achievement-toast-name">${name}</div>
                 <div class="achievement-toast-desc">${description}</div>
             </div>
         `
+
+        toast.addEventListener("click", () => {
+            document.dispatchEvent(
+                new CustomEvent("terminal:open-window", {
+                    detail: { windowId: "achievements" },
+                })
+            )
+            toast.classList.remove("achievement-toast-visible")
+            toast.classList.add("achievement-toast-exit")
+            setTimeout(() => {
+                toast.remove()
+                const idx = this.activeToasts.indexOf(toast)
+                if (idx !== -1) this.activeToasts.splice(idx, 1)
+            }, TOAST_ANIMATION_MS)
+        })
 
         if (this.activeToasts.length >= MAX_VISIBLE) {
             const oldest = this.activeToasts.shift()

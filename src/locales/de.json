@@ -552,7 +552,7 @@
     "guest": { "name": "Gast", "description": "Öffne das Gästebuch." },
     "signed": { "name": "H.A.G.S.", "description": "Klicke auf den Button Gästebuch unterschreiben." },
     "cat-person": { "name": "Katzenmensch", "description": "Sende 5 Nachrichten an FelixGPT." },
-    "meow": { "name": "Miau", "description": "Sprich mit FelixGPT." },
+    "meow": { "name": "Katzenflüsterer", "description": "Miau FelixGPT an." },
     "pinball-wizard": { "name": "Flipper-Zauberer", "description": "Erziele 1,000 Punkte beim Flipper." },
     "high-roller": { "name": "Hoher Einsatz", "description": "Erziele 5,000 Punkte beim Flipper." },
     "target-practice": { "name": "Zielübung", "description": "Triff alle 4 Ziele in einem einzigen Spiel." },

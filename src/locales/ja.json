@@ -552,7 +552,7 @@
     "guest": { "name": "ゲスト", "description": "ゲストブックを開く。" },
     "signed": { "name": "H.A.G.S.", "description": "ゲストブックに記入ボタンをクリックする。" },
     "cat-person": { "name": "猫好き", "description": "FelixGPTに5件のメッセージを送る。" },
-    "meow": { "name": "ニャー", "description": "FelixGPTに話しかける。" },
+    "meow": { "name": "猫使い", "description": "FelixGPTにニャーと言う。" },
     "pinball-wizard": { "name": "ピンボールの魔術師", "description": "ピンボールで1,000点を獲得する。" },
     "high-roller": { "name": "ハイローラー", "description": "ピンボールで5,000点を獲得する。" },
     "target-practice": { "name": "射撃練習", "description": "1回のゲームで4つすべてのターゲットに当てる。" },

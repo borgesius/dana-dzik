@@ -552,7 +552,7 @@
     "guest": { "name": "Invitado", "description": "Abre el libro de visitas." },
     "signed": { "name": "H.A.G.S.", "description": "Haz clic en el botón Firmar el Libro de Visitas." },
     "cat-person": { "name": "Amante de Gatos", "description": "Envía 5 mensajes a FelixGPT." },
-    "meow": { "name": "Miau", "description": "Habla con FelixGPT." },
+    "meow": { "name": "Susurrador de Gatos", "description": "Maúlla a FelixGPT." },
     "pinball-wizard": { "name": "Mago del Pinball", "description": "Consigue 1,000 puntos en pinball." },
     "high-roller": { "name": "Gran Apostador", "description": "Consigue 5,000 puntos en pinball." },
     "target-practice": { "name": "Tiro al Blanco", "description": "Golpea los 4 objetivos en una sola partida." },

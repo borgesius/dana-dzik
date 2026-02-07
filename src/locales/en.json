@@ -618,7 +618,7 @@
     "guest": { "name": "Guest", "description": "Open the guestbook." },
     "signed": { "name": "H.A.G.S.", "description": "Click the Sign the Guestbook button." },
     "cat-person": { "name": "Cat Person", "description": "Send 5 messages to FelixGPT." },
-    "meow": { "name": "Meow", "description": "Talk to FelixGPT." },
+    "meow": { "name": "Cat Whisperer", "description": "Meow at FelixGPT." },
     "pinball-wizard": { "name": "Pinball Wizard", "description": "Score 1,000 points in pinball." },
     "high-roller": { "name": "High Roller", "description": "Score 5,000 points in pinball." },
     "target-practice": { "name": "Target Practice", "description": "Hit all 4 targets in a single game." },

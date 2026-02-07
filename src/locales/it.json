@@ -552,7 +552,7 @@
     "guest": { "name": "Ospite", "description": "Apri il libro degli ospiti." },
     "signed": { "name": "H.A.G.S.", "description": "Clicca il pulsante Firma il Libro degli Ospiti." },
     "cat-person": { "name": "Amante dei Gatti", "description": "Invia 5 messaggi a FelixGPT." },
-    "meow": { "name": "Miao", "description": "Parla con FelixGPT." },
+    "meow": { "name": "Sussurratore di Gatti", "description": "Miagola a FelixGPT." },
     "pinball-wizard": { "name": "Mago del Flipper", "description": "Segna 1,000 punti a flipper." },
     "high-roller": { "name": "Grande Scommettitore", "description": "Segna 5,000 punti a flipper." },
     "target-practice": { "name": "Tiro a Segno", "description": "Colpisci tutti e 4 i bersagli in una singola partita." },

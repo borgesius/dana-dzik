@@ -360,12 +360,12 @@ export function renderAchievementsWindow(): void {
         for (const def of defs) {
             const isEarned = mgr.hasEarned(def.id)
             const isHidden = def.hidden && !isEarned
-            const name = isHidden ? "???" : lm.t(`achievements.${def.id}.name`)
+            const name = lm.t(`achievements.${def.id}.name`)
             const description = isEarned
                 ? lm.t(`achievements.${def.id}.description`)
                 : isHidden
-                  ? "Secret achievement"
-                  : "???"
+                  ? "???"
+                  : lm.t(`achievements.${def.id}.description`)
 
             let dateStr = ""
             if (isEarned) {

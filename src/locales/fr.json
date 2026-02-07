@@ -552,7 +552,7 @@
     "guest": { "name": "Invité", "description": "Ouvrez le livre d'or." },
     "signed": { "name": "H.A.G.S.", "description": "Cliquez sur le bouton Signer le Livre d'Or." },
     "cat-person": { "name": "Ami des Chats", "description": "Envoyez 5 messages à FelixGPT." },
-    "meow": { "name": "Miaou", "description": "Parlez à FelixGPT." },
+    "meow": { "name": "Chuchoteur de Chats", "description": "Miaulez à FelixGPT." },
     "pinball-wizard": { "name": "Magicien du Flipper", "description": "Marquez 1,000 points au flipper." },
     "high-roller": { "name": "Flambeur", "description": "Marquez 5,000 points au flipper." },
     "target-practice": { "name": "Tir sur Cible", "description": "Touchez les 4 cibles en une seule partie." },
