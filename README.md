@@ -4,7 +4,7 @@ Personal website. [danadzik.com](https://danadzik.com)
 
 ## Architecture
 
-Vanilla TypeScript SPA styled as a retro desktop OS. No framework — DOM manipulation via class-based components. Vercel serverless functions for API integrations. Upstash Redis for persistence.
+Vanilla TypeScript SPA styled as a retro desktop OS. DOM manipulation via class-based components. Vercel serverless functions for API integrations. Upstash Redis for persistence.
 
 ## Features
 
