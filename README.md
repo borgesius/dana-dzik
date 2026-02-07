@@ -115,6 +115,63 @@ Editing system files in the virtual filesystem (`3:\DAS\*.welt`) triggers themed
 
 Vercel functions in [`api/`](api/) with Upstash Redis ([`api/lib/redisGateway.ts`](api/lib/redisGateway.ts)). Response caching (1hr Last.fm, 6hr Strava, 5min analytics, 60s visitor count). Strava OAuth token refresh via Redis.
 
+## Testing
+
+### Unit Tests
+
+Vitest with v8 coverage. Node environment, thread pool. 600 unit tests across 25 suites covering market simulation, filesystem diff, terminal commands, Welt interpreter, pinball physics, progression balance, save migrations, etc.
+
+- [`vitest.config.ts`](vitest.config.ts) — test config
+- [`src/__tests__/`](src/__tests__/) — test files
+
+### E2E Tests
+
+17 basic functionality E2E tests via Playwright Chromium against a Vite preview server (`localhost:4173`).
+
+- [`e2e/navigation.spec.ts`](e2e/navigation.spec.ts) — desktop load, window open/close/drag, start menu, taskbar, widgets
+- [`e2e/accessibility.spec.ts`](e2e/accessibility.spec.ts) — lang attr, viewport meta, title, focus management, window titles
+- [`e2e/analytics.spec.ts`](e2e/analytics.spec.ts) — perf event capping
+- [`playwright.config.ts`](playwright.config.ts) — Playwright config
+
+## CI/CD
+
+### CI ([`.github/workflows/ci.yml`](.github/workflows/ci.yml))
+
+Runs on PRs, pushes to main/staging, and merge queue. Single job: lint → typecheck → build → unit tests with coverage → Playwright E2E. Posts coverage summary as commit status. PR comments for both coverage (vitest-coverage-report-action) and Playwright results. Uploads both reports as artifacts (30 day retention).
+
+### Lighthouse ([`.github/workflows/lighthouse.yml`](.github/workflows/lighthouse.yml))
+
+Runs on PRs and pushes to main/staging. Builds and runs Lighthouse CI, posts scores (Performance, Accessibility, Best Practices, SEO) and Web Vitals (FCP, LCP, CLS, TBT, SI) as commit status, job summary, and PR comment. Updates existing PR comment on re-runs.
+
+### Nightly ([`.github/workflows/nightly.yml`](.github/workflows/nightly.yml))
+
+Cron at 2 AM UTC. Full pipeline: lint, typecheck, build, unit tests, E2E. Uploads test results with 7-day retention.
+
+### Release ([`.github/workflows/release.yml`](.github/workflows/release.yml))
+
+Runs on push to main. semantic-release with Angular preset. Generates changelog, bumps version in package.json, creates GitHub release. feat → minor, fix/perf/revert → patch, everything else skipped.
+
+- [`.releaserc.json`](.releaserc.json) — semantic-release config
+
+### Commit Validation ([`.github/workflows/validate-commit-message.yml`](.github/workflows/validate-commit-message.yml))
+
+Validates PR titles (squash merge message) and merge queue commits against commitlint with conventional commits. Allowed types: feat, fix, docs, style, refactor, perf, test, chore, revert, ci, build.
+
+- [`commitlint.config.js`](commitlint.config.js) — commitlint config
+
+## Linting & Formatting
+
+- **ESLint** — typescript-eslint with strict rules: explicit return types, explicit member accessibility, consistent type imports/exports, sorted imports (simple-import-sort), no unused imports. Prettier integration. ([`eslint.config.mjs`](eslint.config.mjs))
+- **Stylelint** — stylelint-config-standard ([`stylelint.config.mjs`](stylelint.config.mjs))
+- **Prettier** — via eslint-plugin-prettier
+
+## Build
+
+Vite with `@` path alias to `src/`. Injects `__BUILD_TIME__`, `__GIT_COMMIT__`, `__VERSION__` as compile-time constants. Deployed on Vercel.
+
+- [`vite.config.ts`](vite.config.ts) — Vite config
+- [`vercel.json`](vercel.json) — Vercel config
+
 ## Development
 
 ```bash
