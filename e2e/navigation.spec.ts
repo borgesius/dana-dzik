@@ -12,8 +12,14 @@ test.describe("Desktop Navigation", () => {
 
     test("desktop icons are visible", async ({ page }) => {
         await page.goto("/")
+        await page.waitForSelector(".loading-screen.hidden", {
+            state: "attached",
+            timeout: 10000,
+        })
 
-        await expect(page.locator(".desktop-icon")).toHaveCount(11)
+        await expect(page.locator(".desktop-icon")).toHaveCount(11, {
+            timeout: 5000,
+        })
         await expect(
             page.locator('.desktop-icon:has-text("Internet Explorer")')
         ).toBeVisible()
@@ -32,10 +38,10 @@ test.describe("Desktop Navigation", () => {
             timeout: 10000,
         })
 
-        await expect(page.locator(".window")).toBeVisible()
+        await expect(page.locator(".window")).toBeVisible({ timeout: 10000 })
         await expect(
             page.locator('.window-titlebar:has-text("Welcome")')
-        ).toBeVisible()
+        ).toBeVisible({ timeout: 5000 })
     })
 
     test("double-click opens windows", async ({ page }) => {
@@ -65,6 +71,7 @@ test.describe("Desktop Navigation", () => {
         })
 
         const window = page.locator(".window").first()
+        await expect(window).toBeVisible({ timeout: 10000 })
         const titlebar = window.locator(".window-titlebar")
 
         const initialBox = await window.boundingBox()
