@@ -1026,6 +1026,188 @@ export const ACHIEVEMENTS: AchievementDef[] = [
         icon: "🤖",
         hidden: true,
     },
+
+    // ── Meta: Achievements Window Opens (tiered - introspection) ──────────
+    {
+        id: "self-assessment",
+        category: "exploration",
+        icon: "🔎",
+        hidden: false,
+        tieredGroup: "introspection",
+        tier: 1,
+    },
+    {
+        id: "performance-review",
+        category: "exploration",
+        icon: "📋",
+        hidden: false,
+        tieredGroup: "introspection",
+        tier: 2,
+    },
+    {
+        id: "observer-effect",
+        category: "exploration",
+        icon: "👁️",
+        hidden: false,
+        tieredGroup: "introspection",
+        tier: 3,
+    },
+    {
+        id: "the-unexamined-life",
+        category: "exploration",
+        icon: "🏛️",
+        hidden: true,
+        tieredGroup: "introspection",
+        tier: 4,
+    },
+
+    // ── Meta: Total Achievements Earned (tiered - collector) ──────────────
+    {
+        id: "participation-trophy",
+        category: "milestones",
+        icon: "🏅",
+        hidden: false,
+        tieredGroup: "collector",
+        tier: 1,
+    },
+    {
+        id: "overachiever",
+        category: "milestones",
+        icon: "⭐",
+        hidden: false,
+        tieredGroup: "collector",
+        tier: 2,
+    },
+    {
+        id: "completionist",
+        category: "milestones",
+        icon: "🏆",
+        hidden: false,
+        tieredGroup: "collector",
+        tier: 3,
+    },
+    {
+        id: "sisyphean",
+        category: "milestones",
+        icon: "🪨",
+        hidden: true,
+        tieredGroup: "collector",
+        tier: 4,
+    },
+
+    // ── Meta: Time/Date Novelties (hidden) ────────────────────────────────
+    {
+        id: "graveyard-shift",
+        category: "exploration",
+        icon: "🌃",
+        hidden: true,
+    },
+
+    // ── Meta: Lunar Cycle (tiered - lunar) ────────────────────────────────
+    {
+        id: "new-moon",
+        category: "exploration",
+        icon: "🌑",
+        hidden: true,
+        tieredGroup: "lunar",
+        tier: 1,
+    },
+    {
+        id: "waxing-crescent",
+        category: "exploration",
+        icon: "🌒",
+        hidden: true,
+        tieredGroup: "lunar",
+        tier: 2,
+    },
+    {
+        id: "first-quarter",
+        category: "exploration",
+        icon: "🌓",
+        hidden: true,
+        tieredGroup: "lunar",
+        tier: 3,
+    },
+    {
+        id: "waxing-gibbous",
+        category: "exploration",
+        icon: "🌔",
+        hidden: true,
+        tieredGroup: "lunar",
+        tier: 4,
+    },
+    {
+        id: "full-moon",
+        category: "exploration",
+        icon: "🌕",
+        hidden: true,
+        tieredGroup: "lunar",
+        tier: 5,
+    },
+    {
+        id: "waning-gibbous",
+        category: "exploration",
+        icon: "🌖",
+        hidden: true,
+        tieredGroup: "lunar",
+        tier: 6,
+    },
+    {
+        id: "last-quarter",
+        category: "exploration",
+        icon: "🌗",
+        hidden: true,
+        tieredGroup: "lunar",
+        tier: 7,
+    },
+    {
+        id: "waning-crescent",
+        category: "exploration",
+        icon: "🌘",
+        hidden: true,
+        tieredGroup: "lunar",
+        tier: 8,
+    },
+
+    // ── Meta: Spoofable Environment (hidden) ──────────────────────────────
+    {
+        id: "time-traveler",
+        category: "exploration",
+        icon: "⏳",
+        hidden: true,
+    },
+    {
+        id: "netscape-navigator",
+        category: "exploration",
+        icon: "🧭",
+        hidden: true,
+    },
+    {
+        id: "640k-enough",
+        category: "exploration",
+        icon: "🖥️",
+        hidden: true,
+    },
+    {
+        id: "lingua-franca",
+        category: "exploration",
+        icon: "🏛️",
+        hidden: true,
+    },
+    {
+        id: "dial-up-connection",
+        category: "exploration",
+        icon: "📞",
+        hidden: true,
+    },
+
+    // ── Meta: Recursive (hidden) ─────────────────────────────────────────
+    {
+        id: "achievement-achievement",
+        category: "exploration",
+        icon: "🪆",
+        hidden: true,
+    },
 ]
 
 export const ACHIEVEMENT_MAP: ReadonlyMap<string, AchievementDef> = new Map(

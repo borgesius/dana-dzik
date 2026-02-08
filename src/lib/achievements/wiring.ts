@@ -26,11 +26,15 @@ const TOURIST_WINDOWS: RoutableWindow[] = [
     "links",
 ]
 
+// Shared flag: true while the achievements window is the most recently opened
+let achievementsWindowOpen = false
+
 export function wireAchievements(
     mgr: AchievementManager,
     windowOpenCallback: (cb: (windowId: RoutableWindow) => void) => void
 ): void {
     wireWindowManager(mgr, windowOpenCallback)
+    wireMetaAchievements(mgr)
     wireThemeManager(mgr)
     wireLocaleManager(mgr)
     wireMarketGame(mgr)
@@ -46,6 +50,42 @@ export function wireAchievements(
     wireQAReports(mgr)
     wireProgressionEvents(mgr)
 }
+
+// ── Lunar helpers ────────────────────────────────────────────────────────
+const SYNODIC_PERIOD = 29.53058770576
+// Reference new moon: Jan 6, 2000 18:14 UTC
+const NEW_MOON_REF = Date.UTC(2000, 0, 6, 18, 14, 0)
+
+type LunarPhase =
+    | "new-moon"
+    | "waxing-crescent"
+    | "first-quarter"
+    | "waxing-gibbous"
+    | "full-moon"
+    | "waning-gibbous"
+    | "last-quarter"
+    | "waning-crescent"
+
+const LUNAR_PHASES: LunarPhase[] = [
+    "new-moon",
+    "waxing-crescent",
+    "first-quarter",
+    "waxing-gibbous",
+    "full-moon",
+    "waning-gibbous",
+    "last-quarter",
+    "waning-crescent",
+]
+
+function getLunarPhase(date: Date = new Date()): LunarPhase {
+    const msPerDay = 86400000
+    const daysSinceRef = (date.getTime() - NEW_MOON_REF) / msPerDay
+    const cyclePosition = ((daysSinceRef % SYNODIC_PERIOD) + SYNODIC_PERIOD) % SYNODIC_PERIOD
+    const phaseIndex = Math.floor((cyclePosition / SYNODIC_PERIOD) * 8) % 8
+    return LUNAR_PHASES[phaseIndex]
+}
+
+// ── Window manager wiring ────────────────────────────────────────────────
 
 function wireWindowManager(
     mgr: AchievementManager,
@@ -68,6 +108,65 @@ function wireWindowManager(
         if (windowId === "guestbook") {
             mgr.earn("guest")
         }
+
+        // ── Meta: achievements window opens ──────────────────────────────
+        if (windowId === "achievements") {
+            achievementsWindowOpen = true
+
+            // Introspection tiered group
+            const opens = mgr.incrementCounter("achievements-opened")
+            if (opens >= 1) mgr.earn("self-assessment")
+            if (opens >= 10) mgr.earn("performance-review")
+            if (opens >= 50) mgr.earn("observer-effect")
+            if (opens >= 200) mgr.earn("the-unexamined-life")
+
+            // Time/date novelties
+            const now = new Date()
+            const hour = now.getHours()
+            if (hour >= 0 && hour < 5) mgr.earn("graveyard-shift")
+
+            // Lunar cycle
+            const phase = getLunarPhase(now)
+            mgr.earn(phase)
+
+            // Spoofable environment
+            if (now.getFullYear() < 2000) mgr.earn("time-traveler")
+
+            const ua = navigator.userAgent.toLowerCase()
+            if (ua.includes("netscape") || ua.includes("navigator")) {
+                mgr.earn("netscape-navigator")
+            }
+
+            if (window.screen.width <= 640) mgr.earn("640k-enough")
+
+            if (navigator.language.toLowerCase().startsWith("la")) {
+                mgr.earn("lingua-franca")
+            }
+
+            const nav = navigator as unknown as Record<string, unknown>
+            const conn = nav.connection as
+                | { effectiveType?: string }
+                | undefined
+            if (conn?.effectiveType === "2g") mgr.earn("dial-up-connection")
+        } else {
+            achievementsWindowOpen = false
+        }
+    })
+}
+
+// ── Meta achievements (earned milestones + recursive) ────────────────────
+
+function wireMetaAchievements(mgr: AchievementManager): void {
+    mgr.onEarned(() => {
+        // Collector tiered group: total achievements earned
+        const total = mgr.getEarnedCount()
+        if (total >= 10) mgr.earn("participation-trophy")
+        if (total >= 25) mgr.earn("overachiever")
+        if (total >= 50) mgr.earn("completionist")
+        if (total >= 100) mgr.earn("sisyphean")
+
+        // Recursive: earn an achievement while viewing the achievements window
+        if (achievementsWindowOpen) mgr.earn("achievement-achievement")
     })
 }
 
