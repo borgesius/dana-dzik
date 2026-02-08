@@ -216,6 +216,8 @@ export type AchievementId =
     | "negative-timestamp"
     // Meta: recursive (hidden)
     | "achievement-achievement"
+    // Glitch effects
+    | "seein-double"
     // Phase 6: Novelty (Margin Call quotes)
     | "three-ways"
     | "killed-this-firm"

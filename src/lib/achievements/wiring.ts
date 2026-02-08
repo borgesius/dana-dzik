@@ -46,6 +46,7 @@ export function wireAchievements(
     wireGuestbookEvents(mgr)
     wireWeltEvents(mgr)
     wireCalmMode(mgr)
+    wireGlitchEvents(mgr)
     wireSessionTimer(mgr)
     wireSessionCost(mgr)
     wireQAReports(mgr)
@@ -605,6 +606,12 @@ function wireWeltEvents(mgr: AchievementManager): void {
 
     onAppEvent("felix:editor", () => {
         mgr.earn("keyboard-cat")
+    })
+}
+
+function wireGlitchEvents(mgr: AchievementManager): void {
+    onAppEvent("glitch:triggered", (detail) => {
+        if (detail.type === "colorSplit") mgr.earn("seein-double")
     })
 }
 

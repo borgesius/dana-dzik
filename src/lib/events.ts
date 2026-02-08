@@ -64,6 +64,7 @@ export interface AppEventMap {
     "market:scrap-dividend": Record<string, never>
     "autobattler:faction-complete": { faction: string }
     "cosmetic:unlocked": { type: string; id: string }
+    "glitch:triggered": { type: string }
 }
 
 export function emitAppEvent<K extends keyof AppEventMap>(
