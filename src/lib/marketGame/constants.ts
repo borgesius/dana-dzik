@@ -30,4 +30,4 @@ export const BULK_ORDER_QUANTITY = 10
 /** Fraction of harvestQuantity produced per click at each upgrade tier. */
 export const HARVEST_BASE_FRACTION = 0.05
 export const HARVEST_UPGRADE_BONUS = 0.45
-export const HARVEST_AUTOSCRIPT_BONUS = 0.50
+export const HARVEST_AUTOSCRIPT_BONUS = 0.5

@@ -21,11 +21,11 @@ export const COMMODITIES: CommodityDef[] = [
         name: "Email Databases",
         description: "Verified opt-in addresses. Updated daily.",
         basePrice: 0.05,
-        volatility: 0.10,
+        volatility: 0.1,
         unlockThreshold: 0,
         trendMinTicks: 6,
         trendMaxTicks: 15,
-        harvestQuantity: 40,       // 40 × $0.05 = $2.00
+        harvestQuantity: 40, // 40 × $0.05 = $2.00
     },
     {
         id: "ADS",
@@ -36,7 +36,7 @@ export const COMMODITIES: CommodityDef[] = [
         unlockThreshold: 0,
         trendMinTicks: 8,
         trendMaxTicks: 20,
-        harvestQuantity: 8,        // 8 × $0.25 = $2.00
+        harvestQuantity: 8, // 8 × $0.25 = $2.00
     },
     {
         id: "DOM",
@@ -47,7 +47,7 @@ export const COMMODITIES: CommodityDef[] = [
         unlockThreshold: 10,
         trendMinTicks: 10,
         trendMaxTicks: 28,
-        harvestQuantity: 1,        // 1 × $2.00 = $2.00
+        harvestQuantity: 1, // 1 × $2.00 = $2.00
     },
     {
         id: "BW",
@@ -58,7 +58,7 @@ export const COMMODITIES: CommodityDef[] = [
         unlockThreshold: 50,
         trendMinTicks: 12,
         trendMaxTicks: 36,
-        harvestQuantity: 0.25,     // 0.25 × $8.00 = $2.00
+        harvestQuantity: 0.25, // 0.25 × $8.00 = $2.00
     },
     {
         id: "SOFT",
@@ -69,7 +69,7 @@ export const COMMODITIES: CommodityDef[] = [
         unlockThreshold: 250,
         trendMinTicks: 18,
         trendMaxTicks: 50,
-        harvestQuantity: 0.08,     // 0.08 × $25.00 = $2.00
+        harvestQuantity: 0.08, // 0.08 × $25.00 = $2.00
     },
     {
         id: "VC",
@@ -80,6 +80,6 @@ export const COMMODITIES: CommodityDef[] = [
         unlockThreshold: 2000,
         trendMinTicks: 40,
         trendMaxTicks: 100,
-        harvestQuantity: 0.02,     // 0.02 × $100.00 = $2.00
+        harvestQuantity: 0.02, // 0.02 × $100.00 = $2.00
     },
 ]
