@@ -134,16 +134,11 @@ export function renderAchievementsWindow(): void {
 
             const displayIcon = isHidden ? "❓" : def.icon
 
-            const tierBadge =
-                def.tieredGroup && def.tier
-                    ? `<span class="achievement-tier-badge">T${def.tier}</span>`
-                    : ""
-
             html += `
                 <div class="achievement-card ${isEarned ? "earned" : "unearned"}">
                     <div class="achievement-card-icon ${isEarned ? "" : "unearned"}">${displayIcon}</div>
                     <div class="achievement-card-info">
-                        <div class="achievement-card-name">${name}${tierBadge}</div>
+                        <div class="achievement-card-name">${name}</div>
                         <div class="achievement-card-desc">${description}</div>
                         ${dateStr ? `<div class="achievement-card-date">${dateStr}</div>` : ""}
                     </div>

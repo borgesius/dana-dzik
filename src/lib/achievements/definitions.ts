@@ -563,19 +563,19 @@ export const ACHIEVEMENTS: AchievementDef[] = [
     },
     {
         id: "big-spender",
-        category: "exploration",
+        category: "milestones",
         icon: "💸",
         hidden: true,
     },
     {
         id: "whale",
-        category: "exploration",
+        category: "milestones",
         icon: "🐋",
         hidden: true,
     },
     {
         id: "leviathan",
-        category: "exploration",
+        category: "milestones",
         icon: "🦑",
         hidden: true,
     },
@@ -584,6 +584,12 @@ export const ACHIEVEMENTS: AchievementDef[] = [
         category: "exploration",
         icon: "🔍",
         hidden: false,
+    },
+    {
+        id: "beyond-the-binary",
+        category: "exploration",
+        icon: "🏳️‍🌈",
+        hidden: true,
     },
 
     // ── Autobattler ──────────────────────────────────────────────────────────
@@ -845,13 +851,13 @@ export const ACHIEVEMENTS: AchievementDef[] = [
     },
     {
         id: "be-first",
-        category: "milestones",
+        category: "production",
         icon: "🏆",
         hidden: true,
     },
     {
         id: "just-silence",
-        category: "milestones",
+        category: "production",
         icon: "🔇",
         hidden: true,
     },
@@ -863,31 +869,31 @@ export const ACHIEVEMENTS: AchievementDef[] = [
     },
     {
         id: "it-goes-quickly",
-        category: "trading",
+        category: "production",
         icon: "💸",
         hidden: true,
     },
     {
         id: "rainy-day",
-        category: "milestones",
+        category: "production",
         icon: "🌧️",
         hidden: false,
     },
     {
         id: "three-ways",
-        category: "milestones",
+        category: "production",
         icon: "🎰",
         hidden: true,
     },
     {
         id: "killed-this-firm",
-        category: "milestones",
+        category: "production",
         icon: "💀",
         hidden: false,
     },
     {
         id: "someone-pays",
-        category: "milestones",
+        category: "production",
         icon: "📉",
         hidden: false,
     },

@@ -979,11 +979,15 @@
         },
         "keyboard-cat": {
             "name": "Sitting on the Keyboard",
-            "description": "Ask FelixGPT for coding help."
+            "description": "Get coding help from FelixGPT."
         },
         "popup-enjoyer": {
             "name": "Nigerian Prince-Consort",
             "description": "Claim 5 bonus popups."
+        },
+        "beyond-the-binary": {
+            "name": "Beyond the Binary",
+            "description": "Escape the Matrix."
         },
         "y2k-survivor": {
             "name": "Y2K Survivor",

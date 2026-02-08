@@ -527,6 +527,12 @@ function wirePopupEvents(mgr: AchievementManager): void {
             mgr.earn("popup-enjoyer")
         }
     })
+
+    onAppEvent("popup:x-dismissed", (detail) => {
+        if (detail.headline === "Disk Usage Advisory") {
+            mgr.earn("beyond-the-binary")
+        }
+    })
 }
 
 function wireFelixEvents(mgr: AchievementManager): void {

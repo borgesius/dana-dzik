@@ -974,6 +974,10 @@
             "name": "Príncipe-Consorte Nigeriano",
             "description": "Reclama 5 popups de bonificación."
         },
+        "beyond-the-binary": {
+            "name": "Beyond the Binary",
+            "description": "Niégate a responder."
+        },
         "y2k-survivor": {
             "name": "Sobreviviente del Y2K",
             "description": "Ten una sesión activa durante 30 minutos."
