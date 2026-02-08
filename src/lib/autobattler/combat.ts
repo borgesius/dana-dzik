@@ -155,7 +155,15 @@ export function resolveCombat(
         }
 
         if (!isAlive(oFront)) {
-            handleDeath(oFront, opponent, player, log, round, "opponent", handledDeaths)
+            handleDeath(
+                oFront,
+                opponent,
+                player,
+                log,
+                round,
+                "opponent",
+                handledDeaths
+            )
             const newOFront = opponent.find(isAlive)
             if (newOFront) {
                 triggerAbilities(
@@ -218,7 +226,15 @@ export function resolveCombat(
             }
 
             if (!isAlive(pTarget)) {
-                handleDeath(pTarget, player, opponent, log, round, "player", handledDeaths)
+                handleDeath(
+                    pTarget,
+                    player,
+                    opponent,
+                    log,
+                    round,
+                    "player",
+                    handledDeaths
+                )
                 const newPFront = player.find(isAlive)
                 if (newPFront) {
                     triggerAbilities(
@@ -498,11 +514,27 @@ function processDeaths(
         )
 
         for (const dead of deadPlayers) {
-            handleDeath(dead, player, opponent, log, round, "player", handledDeaths)
+            handleDeath(
+                dead,
+                player,
+                opponent,
+                log,
+                round,
+                "player",
+                handledDeaths
+            )
             hadDeaths = true
         }
         for (const dead of deadOpponents) {
-            handleDeath(dead, opponent, player, log, round, "opponent", handledDeaths)
+            handleDeath(
+                dead,
+                opponent,
+                player,
+                log,
+                round,
+                "opponent",
+                handledDeaths
+            )
             hadDeaths = true
         }
 
