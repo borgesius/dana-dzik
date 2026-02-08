@@ -31,6 +31,9 @@ import {
     type GameEventType,
     type GameSnapshot,
     HARVEST_BASE_FRACTION,
+    HARVEST_DOLLAR_CEILING,
+    HARVEST_DOLLAR_FLOOR,
+    HARVEST_PRICE_SENSITIVITY,
     HARVEST_UPGRADE_BONUS,
     type Holding,
     type InfluenceDef,
@@ -773,17 +776,19 @@ export class MarketEngine {
      * Compute how many units a single harvest click produces for a commodity.
      * Starts tiny (5% of harvestQuantity ≈ $0.10/click), scales up with
      * per-commodity upgrade (+45%) and autoscript tiers (+25/50/75%).
+     *
+     * Harvest quantity is also adjusted inversely with price so that $/click
+     * stays roughly stable, but still rewards harvesting when a commodity is
+     * up (≈75–125% of baseline $/click).
      */
     public getHarvestOutput(commodityId: CommodityId): number {
         let fraction = HARVEST_BASE_FRACTION
 
-        // Per-commodity harvest upgrade — big jump
         const perAssetId = MarketEngine.HARVEST_UPGRADE_MAP[commodityId]
         if (perAssetId && this.ownedUpgrades.has(perAssetId)) {
             fraction += HARVEST_UPGRADE_BONUS
         }
 
-        // Tiered autoscript upgrades (highest tier wins)
         if (this.ownedUpgrades.has("autoscript-iii")) {
             fraction += AUTOSCRIPT_TIER_BONUS[2]
         } else if (this.ownedUpgrades.has("autoscript-ii")) {
@@ -794,8 +799,33 @@ export class MarketEngine {
 
         const def = COMMODITIES.find((c) => c.id === commodityId)
         const harvestQty = def?.harvestQuantity ?? 1
+        const baseOutput = harvestQty * fraction
 
-        return harvestQty * fraction
+        const basePrice = def?.basePrice ?? 1
+        const currentPrice = this.getPrice(commodityId) || basePrice
+        const priceRatio = currentPrice / basePrice
+
+        const dollarMultiplier = Math.max(
+            HARVEST_DOLLAR_FLOOR,
+            Math.min(
+                HARVEST_DOLLAR_CEILING,
+                1 + (priceRatio - 1) * HARVEST_PRICE_SENSITIVITY
+            )
+        )
+
+        return baseOutput * (dollarMultiplier / priceRatio)
+    }
+
+    /**
+     * Fixed number of decimal places for displaying harvest output for a
+     * commodity. Derived from the smallest expected output (base fraction of
+     * harvestQuantity) so that at least 2 significant digits are always visible.
+     */
+    public getHarvestDecimals(commodityId: CommodityId): number {
+        const def = COMMODITIES.find((c) => c.id === commodityId)
+        const minOutput = (def?.harvestQuantity ?? 1) * HARVEST_BASE_FRACTION
+        if (minOutput >= 1) return 2
+        return Math.ceil(-Math.log10(minOutput)) + 1
     }
 
     /**

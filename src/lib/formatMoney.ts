@@ -46,6 +46,17 @@ export function formatMoney(value: number): string {
  */
 export function formatQuantity(value: number): string {
     if (Number.isInteger(value)) return value.toString()
-    // Up to 2 decimal places, strip trailing zeros
     return parseFloat(value.toFixed(2)).toString()
+}
+
+/**
+ * Format a quantity with a fixed number of decimal places.
+ * Used when the display precision should stay constant regardless of the
+ * current value (e.g. harvest output anchored to the commodity's scale).
+ */
+export function formatQuantityFixed(
+    value: number,
+    decimalPlaces: number
+): string {
+    return value.toFixed(decimalPlaces)
 }

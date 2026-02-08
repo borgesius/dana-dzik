@@ -900,10 +900,6 @@ function wireProgressionEvents(mgr: AchievementManager): void {
     wirePhase6Achievements(mgr)
 
     // ── Career achievements ──────────────────────────────────────────────
-    onAppEvent("career:selected", () => {
-        mgr.earn("career-starter")
-    })
-
     let careerSwitchCount = 0
     onAppEvent("career:switched", () => {
         mgr.earn("career-switcher")
@@ -920,6 +916,7 @@ function wireProgressionEvents(mgr: AchievementManager): void {
 
     let nodesUnlocked = 0
     onAppEvent("career:node-unlocked", () => {
+        mgr.earn("career-starter")
         nodesUnlocked++
         if (nodesUnlocked >= 5) mgr.earn("skill-tree-novice")
         if (nodesUnlocked >= 15) mgr.earn("skill-tree-master")
@@ -975,7 +972,7 @@ function wireProgressionEvents(mgr: AchievementManager): void {
         // rely on the level-up event to pick this up
     })
 
-    // "Full Stack" = prestige + win autobattler + career selected
+    // "Full Stack" = prestige + win autobattler + first resume upgrade
     const checkFullStack = (): void => {
         if (
             mgr.hasEarned("ive-been-wrong") &&
@@ -987,7 +984,7 @@ function wireProgressionEvents(mgr: AchievementManager): void {
     }
     onAppEvent("prestige:triggered", checkFullStack)
     onAppEvent("autobattler:run-complete", checkFullStack)
-    onAppEvent("career:selected", checkFullStack)
+    onAppEvent("career:node-unlocked", checkFullStack)
 
     // ── Faction-complete achievements ─────────────────────────────────────
     const factionAchievementMap: Record<string, string> = {

@@ -4,7 +4,7 @@
     --theme-desktop-bg-pattern: none;
     --theme-desktop-icon-hover: rgb(120 105 196 / 30%);
     --theme-desktop-icon-selected: rgb(120 105 196 / 50%);
-    --theme-desktop-icon-text: #7869c4;
+    --theme-desktop-icon-text: #9a8ce0;
 
     /* Typography - C64 blocky style */
     --theme-font-system: "Courier New", "Lucida Console", monospace;
@@ -14,7 +14,7 @@
     /* Window Chrome - C64 borders */
     --theme-window-bg: #40318d;
     --theme-window-content-bg: #40318d;
-    --theme-window-content-text: #7869c4;
+    --theme-window-content-text: #9a8ce0;
     --theme-window-border-light: #7869c4;
     --theme-window-border-dark: #2a1f5e;
     --theme-window-border-style: solid;
@@ -43,13 +43,13 @@
     --theme-start-btn-bg: #40318d;
     --theme-start-btn-hover: #5a4b8e;
     --theme-start-btn-active: #2a1f5e;
-    --theme-start-btn-text: #7869c4;
+    --theme-start-btn-text: #9a8ce0;
     --theme-start-btn-radius: 0;
     --theme-taskbar-btn-bg: #40318d;
     --theme-taskbar-btn-active: #5a4b8e;
-    --theme-taskbar-btn-text: #7869c4;
+    --theme-taskbar-btn-text: #9a8ce0;
     --theme-systray-bg: #40318d;
-    --theme-clock-text: #7869c4;
+    --theme-clock-text: #9a8ce0;
     --theme-start-menu-bg: #40318d;
     --theme-start-menu-border: 2px solid #7869c4;
     --theme-start-menu-header-bg: #7869c4;
@@ -68,17 +68,17 @@
 
     /* Terminal - C64 BASIC screen */
     --theme-terminal-bg: #40318d;
-    --theme-terminal-text: #7869c4;
+    --theme-terminal-text: #9a8ce0;
     --theme-terminal-glow: transparent;
     --theme-terminal-input-bg: #40318d;
     --theme-terminal-input-border: #7869c4;
     --theme-terminal-scrollbar-track: #352878;
-    --theme-terminal-scrollbar-thumb: #7869c4;
-    --theme-terminal-dim: #5a4b8e;
+    --theme-terminal-scrollbar-thumb: #9a8ce0;
+    --theme-terminal-dim: #7869c4;
     --theme-terminal-error: #e04040;
-    --theme-terminal-info: #7869c4;
-    --theme-terminal-dir: #9a8ce0;
-    --theme-terminal-cursor: #7869c4;
+    --theme-terminal-info: #9a8ce0;
+    --theme-terminal-dir: #b8aaf0;
+    --theme-terminal-cursor: #9a8ce0;
 
     /* Explorer */
     --theme-explorer-bg: #40318d;
@@ -86,14 +86,14 @@
     --theme-explorer-hover-bg: #7869c4;
     --theme-explorer-hover-text: #40318d;
     --theme-explorer-border: #7869c4;
-    --theme-explorer-text: #7869c4;
+    --theme-explorer-text: #9a8ce0;
 
     /* Common */
     --theme-surface-primary: #40318d;
     --theme-surface-secondary: #352878;
     --theme-surface-elevated: #5a4b8e;
-    --theme-text-on-surface: #7869c4;
-    --theme-text-secondary: #5a4b8e;
+    --theme-text-on-surface: #9a8ce0;
+    --theme-text-secondary: #7869c4;
     --theme-link: #9a8ce0;
     --theme-accent: #7869c4;
     --theme-accent-text: #40318d;
@@ -103,7 +103,7 @@
     /* Tooltip */
     --theme-tooltip-bg: #352878;
     --theme-tooltip-border: 2px solid #7869c4;
-    --theme-tooltip-text: #7869c4;
+    --theme-tooltip-text: #9a8ce0;
     --theme-tooltip-shadow: 2px 2px 0 #2a1f5e;
 
     /* Widgets */
@@ -112,7 +112,7 @@
     --theme-widget-title-bg: #7869c4;
     --theme-widget-title-text: #40318d;
     --theme-widget-content-bg: #40318d;
-    --theme-widget-content-text: #7869c4;
+    --theme-widget-content-text: #9a8ce0;
 
     /* QA / Weather */
     --theme-qa-bg: #352878;
@@ -120,6 +120,7 @@
     --theme-qa-badge-border: #7869c4;
     --theme-weather-bg: #352878;
     --theme-weather-border: #7869c4;
+    --theme-terminal-placeholder: #7869c4;
 }
 
 /* Chunky C64 aesthetic */
@@ -200,7 +201,7 @@
 }
 
 [data-theme="c64"] .desktop-icon span {
-    color: #7869c4;
+    color: #9a8ce0;
     text-shadow: none;
     font-family: "Courier New", monospace;
     text-transform: uppercase;

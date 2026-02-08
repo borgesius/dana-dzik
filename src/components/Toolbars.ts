@@ -17,6 +17,7 @@ import { createLanguageToggle } from "./toolbars/LanguageToggle"
 import { MarketTicker } from "./toolbars/MarketTicker"
 import { QAReportsWidget } from "./toolbars/QAReportsWidget"
 import { SystemResourcesWidget } from "./toolbars/SystemResourcesWidget"
+import { createThemeToggle } from "./toolbars/ThemeToggle"
 import { WeatherWidget } from "./toolbars/WeatherWidget"
 
 export class Toolbars {
@@ -97,6 +98,7 @@ export class Toolbars {
         toolbar.appendChild(this.createAchievementsButton())
         toolbar.appendChild(this.createCalmModeToggle())
         toolbar.appendChild(createLanguageToggle())
+        toolbar.appendChild(createThemeToggle())
         toolbar.appendChild(createColorSchemeToggle())
 
         return toolbar
@@ -208,6 +210,17 @@ export class Toolbars {
         setTimeout(() => floater.remove(), 1000)
     }
 
+    private performSearch(): void {
+        const query = this.searchInputEl?.value.trim()
+        if (!query) return
+        const searchUrl = getThemeManager().getLabels().searchUrl
+        window.open(
+            searchUrl + encodeURIComponent(query),
+            "_blank",
+            "noopener,noreferrer"
+        )
+    }
+
     private createSearchBar(
         placeholder: string,
         buttonText: string
@@ -218,11 +231,15 @@ export class Toolbars {
         const input = document.createElement("input")
         input.type = "text"
         input.placeholder = placeholder
+        input.addEventListener("keydown", (e) => {
+            if (e.key === "Enter") this.performSearch()
+        })
         this.searchInputEl = input
         container.appendChild(input)
 
         const btn = document.createElement("button")
         btn.textContent = buttonText
+        btn.addEventListener("click", () => this.performSearch())
         container.appendChild(btn)
 
         return container
