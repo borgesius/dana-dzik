@@ -24,7 +24,7 @@ test.describe("Desktop Navigation", () => {
         await page.goto("/")
         await waitForDesktop(page)
 
-        await expect(page.locator(".desktop-icon")).toHaveCount(12, {
+        await expect(page.locator(".desktop-icon")).toHaveCount(13, {
             timeout: 5000,
         })
         await expect(
