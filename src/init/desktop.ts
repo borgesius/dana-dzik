@@ -8,7 +8,10 @@ import { setTerminalInit } from "../components/Terminal"
 import { Widgets } from "../components/Widgets"
 import { getDeployEnv } from "../config/environment"
 import { getAchievementManager } from "../lib/achievements/AchievementManager"
-import { wireAchievements, wireVeilAchievements } from "../lib/achievements/wiring"
+import {
+    wireAchievements,
+    wireVeilAchievements,
+} from "../lib/achievements/wiring"
 import { createAudioManager } from "../lib/audio"
 import { getCollectionManager } from "../lib/autobattler/CollectionManager"
 import { isCalmMode } from "../lib/calmMode"

@@ -5,8 +5,8 @@ import { getCollectionManager } from "../lib/autobattler/CollectionManager"
 import { ALL_UNITS } from "../lib/autobattler/units"
 import { isCalmMode, setCalmMode } from "../lib/calmMode"
 import {
-    getCosmeticManager,
     type CosmeticType,
+    getCosmeticManager,
 } from "../lib/cosmetics/CosmeticManager"
 import { COSMETIC_DEFINITIONS } from "../lib/cosmetics/definitions"
 import { getMarketGame } from "../lib/marketGame/MarketEngine"
@@ -111,7 +111,10 @@ export class DevPanel {
 
     // ── Section helpers ──────────────────────────────────────────────────────
 
-    private createSection(title: string, collapsed = true): {
+    private createSection(
+        title: string,
+        collapsed = true
+    ): {
         section: HTMLElement
         content: HTMLElement
     } {
@@ -218,9 +221,7 @@ export class DevPanel {
         grid.className = "dev-btn-grid"
         for (const id of ROUTABLE_WINDOWS) {
             grid.appendChild(
-                this.btn(id, () =>
-                    this.windowManager.openWindow(id as RoutableWindow)
-                )
+                this.btn(id, () => this.windowManager.openWindow(id))
             )
         }
         content.appendChild(grid)
@@ -533,7 +534,9 @@ export class DevPanel {
                         saveManager.requestSave()
                         updateStatus()
                     } else {
-                        console.warn(`[DevPanel] Could not earn achievement: ${v}`)
+                        console.warn(
+                            `[DevPanel] Could not earn achievement: ${v}`
+                        )
                     }
                 }
             })
@@ -703,10 +706,7 @@ export class DevPanel {
                 this.btn("Dump State", () => {
                     const raw = localStorage.getItem("save")
                     if (raw) {
-                        console.log(
-                            "[DevPanel] Current save:",
-                            JSON.parse(raw)
-                        )
+                        console.log("[DevPanel] Current save:", JSON.parse(raw))
                     }
                 }),
                 this.btn("Reset", () => {
@@ -772,15 +772,19 @@ export class DevPanel {
         )
 
         content.appendChild(
-            this.btn(`Calm Mode: ${isCalmMode() ? "ON" : "OFF"}`, function (this: void) {
-                setCalmMode(!isCalmMode())
-                saveManager.requestSave()
-                // Update the button text
-                const btn = document.querySelector(
-                    '.dev-btn[data-calm-toggle]'
-                ) as HTMLElement
-                if (btn) btn.textContent = `Calm Mode: ${isCalmMode() ? "ON" : "OFF"}`
-            })
+            this.btn(
+                `Calm Mode: ${isCalmMode() ? "ON" : "OFF"}`,
+                function (this: void) {
+                    setCalmMode(!isCalmMode())
+                    saveManager.requestSave()
+                    // Update the button text
+                    const btn = document.querySelector(
+                        ".dev-btn[data-calm-toggle]"
+                    ) as HTMLElement
+                    if (btn)
+                        btn.textContent = `Calm Mode: ${isCalmMode() ? "ON" : "OFF"}`
+                }
+            )
         )
         // Tag the calm mode button for self-update
         const lastBtn = content.lastElementChild as HTMLElement
@@ -872,9 +876,7 @@ export function attachDevApi(
             saveManager.requestSave()
         },
         openWindow: (id) => {
-            if (
-                ROUTABLE_WINDOWS.includes(id as RoutableWindow)
-            ) {
+            if (ROUTABLE_WINDOWS.includes(id as RoutableWindow)) {
                 windowManager.openWindow(id as RoutableWindow)
             } else {
                 console.warn(`[__dev] Unknown window: ${id}`)

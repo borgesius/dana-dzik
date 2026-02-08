@@ -254,7 +254,10 @@ export class Window {
             if (parent) {
                 const minVisible = 100
                 const maxLeft = parent.clientWidth - minVisible
-                newLeft = Math.max(-this.element.offsetWidth + minVisible, newLeft)
+                newLeft = Math.max(
+                    -this.element.offsetWidth + minVisible,
+                    newLeft
+                )
                 newLeft = Math.min(maxLeft, newLeft)
             }
 

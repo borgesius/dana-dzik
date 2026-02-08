@@ -1,5 +1,5 @@
-import { emitAppEvent } from "../events"
 import { isCalmMode } from "../calmMode"
+import { emitAppEvent } from "../events"
 import type { VeilId, VeilSaveData } from "./types"
 import { BOSS_VEIL } from "./types"
 
