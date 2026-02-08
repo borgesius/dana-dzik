@@ -614,6 +614,11 @@ function wireDragDrop(container: HTMLElement): void {
             if ((e.target as HTMLElement).closest(".uc-sell-btn")) return
 
             e.preventDefault()
+
+            // Dismiss any stuck tooltip
+            document
+                .querySelectorAll(".ab-tooltip")
+                .forEach((el) => el.remove())
             const source = card.getAttribute("data-source") as
                 | "lineup"
                 | "bench"
