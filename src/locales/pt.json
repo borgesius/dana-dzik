@@ -1023,6 +1023,22 @@
             "name": "Príncipe-Consorte Nigeriano",
             "description": "Reivindique 5 popups de bônus."
         },
+        "open-source": {
+            "name": "Open Source",
+            "description": "Veja o código-fonte no GitHub."
+        },
+        "link-and-build": {
+            "name": "Link and Build",
+            "description": "Visite o perfil do LinkedIn."
+        },
+        "sliding-into-dms": {
+            "name": "Sliding Into DMs",
+            "description": "Clique no link de e-mail."
+        },
+        "connections": {
+            "name": "Connections",
+            "description": "Visite o perfil do GitHub."
+        },
         "beyond-the-binary": {
             "name": "Beyond the Binary",
             "description": "Recuse-se a responder."
