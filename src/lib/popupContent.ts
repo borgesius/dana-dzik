@@ -169,6 +169,26 @@ const WINNER_POPUPS: PopupContent[] = [
             { text: "View Benefits", className: "" },
         ],
     },
+    {
+        type: "winner",
+        title: "Supply Chain Award",
+        headline: "🏆 VERTICAL INTEGRATION ACHIEVEMENT 🏆",
+        body: "Your facility has been recognized for outstanding end-to-end processing efficiency. Certificate will be mailed.",
+        buttons: [
+            { text: "Accept Award", className: "green" },
+            { text: "View Certificate", className: "" },
+        ],
+    },
+    {
+        type: "winner",
+        title: "Production Milestone",
+        headline: "Output Target Exceeded",
+        body: "Adhesive output at your facility has exceeded quarterly targets by 340%. All livestock inputs have been processed on schedule.",
+        buttons: [
+            { text: "View Report", className: "green" },
+            { text: "Dismiss", className: "" },
+        ],
+    },
 ]
 
 const ERROR_POPUPS: PopupContent[] = [
@@ -387,6 +407,46 @@ const ERROR_POPUPS: PopupContent[] = [
             { text: "Cancel", className: "" },
         ],
     },
+    {
+        type: "error",
+        title: "Process Error",
+        headline: "Rendering Pipeline Failed",
+        body: "The rendering pipeline encountered an unexpected input at stage 3 (collagen extraction). Process halted. Batch 0047 has been discarded.",
+        buttons: [
+            { text: "Restart Pipeline", className: "primary" },
+            { text: "View Logs", className: "" },
+        ],
+    },
+    {
+        type: "error",
+        title: "Temperature Alert",
+        headline: "⚠️ VAT TEMPERATURE CRITICAL ⚠️",
+        body: "Vat 12 has exceeded maximum operating temperature. Gelatin viscosity is outside acceptable range. Cooling system engaged.",
+        buttons: [
+            { text: "Acknowledge", className: "primary" },
+            { text: "Override", className: "" },
+        ],
+    },
+    {
+        type: "error",
+        title: "Inventory Error",
+        headline: "Intake Discrepancy Detected",
+        body: "Livestock intake count does not match bill of lading. Expected: 140. Received: 138. Two units unaccounted for.",
+        buttons: [
+            { text: "File Report", className: "primary" },
+            { text: "Adjust Count", className: "" },
+        ],
+    },
+    {
+        type: "error",
+        title: "Quality Control",
+        headline: "Batch Rejected",
+        body: "Batch 0293 failed viscosity testing. Adhesive bond strength below minimum threshold. Raw materials have been flagged for reprocessing.",
+        buttons: [
+            { text: "Reprocess", className: "primary" },
+            { text: "Discard Batch", className: "" },
+        ],
+    },
 ]
 
 const WARNING_POPUPS: PopupContent[] = [
@@ -498,7 +558,7 @@ const WARNING_POPUPS: PopupContent[] = [
         type: "warning",
         title: "ActiveX Control",
         headline: "ActiveX Component Required",
-        body: "This page requires an ActiveX control to display correctly. Click here to install HorseViewer.ocx.",
+        body: "This horse requires an ActiveX control to display correctly. Click here to install HorseViewer.ocx.",
         buttons: [
             { text: "Install", className: "primary" },
             { text: "Block", className: "" },
@@ -532,6 +592,36 @@ const WARNING_POPUPS: PopupContent[] = [
         buttons: [
             { text: "Update", className: "primary" },
             { text: "Skip", className: "" },
+        ],
+    },
+    {
+        type: "warning",
+        title: "Compliance",
+        headline: "USDA Inspection Scheduled",
+        body: "A routine facility inspection has been scheduled for your processing plant. Please ensure all rendering equipment is accessible.",
+        buttons: [
+            { text: "Confirm", className: "primary" },
+            { text: "Reschedule", className: "" },
+        ],
+    },
+    {
+        type: "warning",
+        title: "Supply Chain",
+        headline: "Livestock Shipment Delayed",
+        body: "Inbound shipment #4471 from regional supplier has been delayed. Estimated new arrival: 48 hours. Production schedule may be affected.",
+        buttons: [
+            { text: "Adjust Schedule", className: "primary" },
+            { text: "Notify Plant Manager", className: "" },
+        ],
+    },
+    {
+        type: "warning",
+        title: "Environmental",
+        headline: "Effluent Levels Approaching Limit",
+        body: "Waste output from the rendering facility is at 94% of permitted daily volume. Please review discharge rates.",
+        buttons: [
+            { text: "Review", className: "primary" },
+            { text: "Dismiss", className: "" },
         ],
     },
 ]
@@ -637,6 +727,46 @@ const AD_POPUPS: PopupContent[] = [
             { text: "No Thanks", className: "gray" },
         ],
     },
+    {
+        type: "ad",
+        title: "Industrial Supply",
+        headline: "Bulk Adhesive at Wholesale Prices",
+        body: "100% animal-derived adhesive for woodworking, bookbinding, and industrial use. Order 50+ gallons and save 15%.",
+        buttons: [
+            { text: "Request Quote", className: "" },
+            { text: "No Thanks", className: "gray" },
+        ],
+    },
+    {
+        type: "ad",
+        title: "Career Opportunity",
+        headline: "NOW HIRING: Processing Technicians",
+        body: "Join our team at MidWest Rendering Solutions. Competitive pay, full benefits, and advancement opportunities. No experience necessary.",
+        buttons: [
+            { text: "Apply Now", className: "" },
+            { text: "Not Interested", className: "gray" },
+        ],
+    },
+    {
+        type: "ad",
+        title: "Trade Publication",
+        headline: "📰 RENDERING QUARTERLY - FREE ISSUE 📰",
+        body: "The industry's leading publication on animal byproduct processing. Featured this month: optimizing collagen yield from aged livestock.",
+        buttons: [
+            { text: "Claim Free Issue", className: "" },
+            { text: "No Thanks", className: "gray" },
+        ],
+    },
+    {
+        type: "ad",
+        title: "Equipment Sale",
+        headline: "Pre-Owned Rendering Equipment",
+        body: "Continuous cookers, presses, and centrifuges available. All units inspected and certified. Financing available.",
+        buttons: [
+            { text: "View Inventory", className: "" },
+            { text: "Not Now", className: "gray" },
+        ],
+    },
 ]
 
 export function getRandomPopup(): PopupContent {
@@ -732,6 +862,28 @@ export const BONUS_POPUP_CONTENTS: PopupContent[] = [
         buttons: [
             { text: "Accept", className: "green", action: "bonus" },
             { text: "Reject Own Money", className: "", action: "close" },
+        ],
+    },
+    {
+        type: "bonus",
+        title: "Production Bonus",
+        headline: "Quarterly Output Bonus",
+        body: "Your facility exceeded its adhesive production target this quarter. A performance bonus has been issued.",
+        bonusAmount: 1.5,
+        buttons: [
+            { text: "Collect", className: "green", action: "bonus" },
+            { text: "Decline", className: "", action: "close" },
+        ],
+    },
+    {
+        type: "bonus",
+        title: "Commodity Credit",
+        headline: "Livestock Futures Settled",
+        body: "Your forward contract on livestock futures has settled above strike price. Proceeds are available for withdrawal.",
+        bonusAmount: 2.0,
+        buttons: [
+            { text: "Withdraw", className: "green", action: "bonus" },
+            { text: "Roll Over", className: "", action: "close" },
         ],
     },
 ]
