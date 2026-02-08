@@ -470,6 +470,14 @@
                 "name": "Ventaja Material",
                 "description": "Información material no pública. Precio objetivo estimado en gráficos."
             },
+            "seasonal-forecast": {
+                "name": "Pronóstico Estacional",
+                "description": "Informe de perspectivas trimestrales. Muestra la próxima dirección de tendencia."
+            },
+            "insider-calendar": {
+                "name": "Calendario Privilegiado",
+                "description": "El calendario completo. Secuencia de tendencias futuras visible como barra de pronóstico."
+            },
             "harvest-email": { "name": "EMAIL Harvester", "description": "Automated scraper. +1 EMAIL per harvest click." },
             "harvest-ads": { "name": "ADS Generator", "description": "Impression bot. +1 ADS per harvest click." },
             "harvest-dom": { "name": "DOM Registrar", "description": "Bulk registration script. +1 DOM per harvest click." },

@@ -400,6 +400,8 @@
       "moving-average": { "name": "移動平均オーバーレイ", "description": "価格チャート用テクニカル分析ツール。" },
       "confidential-tip": { "name": "極秘情報", "description": "ファンドの知人。チャート上にトレンド残り時間を表示。" },
       "material-advantage": { "name": "重要な優位性", "description": "重要な非公開情報。チャート上に推定目標価格を表示。" },
+      "seasonal-forecast": { "name": "季節予報", "description": "四半期見通しレポート。現在のトレンド終了後の次の方向を表示。" },
+      "insider-calendar": { "name": "インサイダーカレンダー", "description": "完全なスケジュール。今後のトレンド配列がチャート上に予測バーとして表示。" },
       "harvest-email": { "name": "EMAIL Harvester", "description": "Automated scraper. +1 EMAIL per harvest click." },
       "harvest-ads": { "name": "ADS Generator", "description": "Impression bot. +1 ADS per harvest click." },
       "harvest-dom": { "name": "DOM Registrar", "description": "Bulk registration script. +1 DOM per harvest click." },

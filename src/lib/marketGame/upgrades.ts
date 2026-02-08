@@ -10,6 +10,8 @@ export type UpgradeId =
     | "moving-average"
     | "confidential-tip"
     | "material-advantage"
+    | "seasonal-forecast"
+    | "insider-calendar"
     | "harvest-email"
     | "harvest-ads"
     | "harvest-dom"
@@ -112,6 +114,22 @@ export const UPGRADES: UpgradeDef[] = [
             "Material non-public information. Estimated price target on charts.",
         category: "intelligence",
         cost: 70,
+    },
+    {
+        id: "seasonal-forecast",
+        name: "Seasonal Forecast",
+        description:
+            "Quarterly outlook report. Shows the next trend direction after the current one ends.",
+        category: "intelligence",
+        cost: 90,
+    },
+    {
+        id: "insider-calendar",
+        name: "Insider Calendar",
+        description:
+            "The full schedule. Upcoming trend sequence visible as a forecast bar on charts.",
+        category: "intelligence",
+        cost: 120,
     },
 
     // ── Automation (per-commodity harvest upgrades) ──────────────────────────

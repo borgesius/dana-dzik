@@ -37,6 +37,7 @@ import {
     type LimitOrder,
     MARGIN_CALL_THRESHOLD,
     MARKET_EVENTS,
+    MARKET_YEAR_TICKS,
     type MarketEventDef,
     type MarketSaveData,
     type MarketState,
@@ -62,6 +63,8 @@ import {
     TREND_MAX_TICKS,
     TREND_MIN_TICKS,
     type TrendDirection,
+    type TrendScheduleSaveData,
+    type TrendSegment,
     type UpgradeDef,
     type UpgradeId,
     UPGRADES,
@@ -109,6 +112,9 @@ export class MarketEngine {
     /** For margin-survivor achievement tracking. */
     private marginEventTick: number = -999
     private ratingAtMarginEvent: CreditRating = "C"
+
+    /** Original duration of the currently active trend segment, per commodity. */
+    private trendOriginalDuration: Map<CommodityId, number> = new Map()
 
     /**
      * Optional external bonus provider. Returns a multiplier for a given bonus type.
@@ -168,21 +174,127 @@ export class MarketEngine {
 
     private initMarkets(): void {
         for (const c of COMMODITIES) {
-            const trendTicks = this.rng.nextInt(
-                TREND_MIN_TICKS,
-                TREND_MAX_TICKS
-            )
-            this.markets.set(c.id, {
+            const state: MarketState = {
                 commodityId: c.id,
                 price: c.basePrice,
                 trend: "flat",
                 trendStrength: 0,
-                trendTicksRemaining: trendTicks,
+                trendTicksRemaining: 0,
                 priceHistory: [c.basePrice],
                 influenceMultiplier: 0,
                 influenceTicksRemaining: 0,
-            })
+                trendQueue: [],
+                trendHistory: [],
+            }
+            this.markets.set(c.id, state)
+
+            // Pre-fill the trend queue with ~1 year of segments
+            this.fillTrendQueue(c.id, c)
+
+            // Pop the first segment as the initial active trend
+            this.advanceTrendFromQueue(state, c)
         }
+    }
+
+    // -----------------------------------------------------------------------
+    // Trend schedule helpers
+    // -----------------------------------------------------------------------
+
+    /**
+     * Generate a single trend segment using the seeded RNG.
+     * This mirrors the old assignNewTrend logic but returns a segment
+     * instead of mutating state directly.
+     */
+    private generateTrendSegment(def: CommodityDef): TrendSegment {
+        const r = this.rng.next()
+        let trend: TrendDirection
+        if (r < 0.35) {
+            trend = "bull"
+        } else if (r < 0.7) {
+            trend = "bear"
+        } else {
+            trend = "flat"
+        }
+        const strength = 0.3 + this.rng.next() * 0.7
+        const duration = this.rng.nextInt(def.trendMinTicks, def.trendMaxTicks)
+        return { trend, strength, duration }
+    }
+
+    /**
+     * Ensure the trend queue for a commodity contains at least
+     * MARKET_YEAR_TICKS worth of total segment duration.
+     */
+    private fillTrendQueue(commodityId: CommodityId, def: CommodityDef): void {
+        const state = this.markets.get(commodityId)
+        if (!state) return
+
+        let queuedTicks = 0
+        for (const seg of state.trendQueue) {
+            queuedTicks += seg.duration
+        }
+
+        while (queuedTicks < MARKET_YEAR_TICKS) {
+            const seg = this.generateTrendSegment(def)
+            state.trendQueue.push(seg)
+            queuedTicks += seg.duration
+        }
+    }
+
+    /**
+     * Pop the next trend segment from the queue and apply it to the market
+     * state. Pushes the completed segment to history (trimmed to ~1 year).
+     */
+    private advanceTrendFromQueue(
+        state: MarketState,
+        def: CommodityDef
+    ): void {
+        // Push completed segment to history (if there was one active)
+        if (this.trendOriginalDuration.has(state.commodityId)) {
+            const origDuration =
+                this.trendOriginalDuration.get(state.commodityId) ?? 0
+            state.trendHistory.push({
+                trend: state.trend,
+                strength: state.trendStrength,
+                duration: origDuration,
+            })
+
+            // Trim history to ~1 year of ticks
+            let historyTicks = 0
+            for (let i = state.trendHistory.length - 1; i >= 0; i--) {
+                historyTicks += state.trendHistory[i].duration
+                if (historyTicks > MARKET_YEAR_TICKS) {
+                    state.trendHistory = state.trendHistory.slice(i)
+                    break
+                }
+            }
+        }
+
+        // Pop the next segment from the queue
+        const next = state.trendQueue.shift()
+        if (!next) {
+            // Fallback: generate on-the-fly if queue is empty
+            const seg = this.generateTrendSegment(def)
+            state.trend = seg.trend
+            state.trendStrength = seg.strength
+            state.trendTicksRemaining = seg.duration
+            this.trendOriginalDuration.set(state.commodityId, seg.duration)
+        } else {
+            state.trend = next.trend
+            state.trendStrength = next.strength
+            state.trendTicksRemaining = next.duration
+            this.trendOriginalDuration.set(state.commodityId, next.duration)
+        }
+
+        // Price correction: override trend direction at extreme prices
+        const priceFraction = state.price / def.basePrice
+        if (priceFraction > 5 && state.trend === "bull") {
+            state.trend = "bear"
+        } else if (priceFraction < 0.3 && state.trend === "bear") {
+            state.trend = "bull"
+        }
+
+        // Refill the queue
+        this.fillTrendQueue(state.commodityId, def)
     }
 
     private initUnlockedCommodities(): void {
@@ -277,26 +389,7 @@ export class MarketEngine {
     }
 
     private assignNewTrend(state: MarketState, def: CommodityDef): void {
-        const r = this.rng.next()
-        if (r < 0.35) {
-            state.trend = "bull"
-        } else if (r < 0.7) {
-            state.trend = "bear"
-        } else {
-            state.trend = "flat"
-        }
-        state.trendStrength = 0.3 + this.rng.next() * 0.7
-        state.trendTicksRemaining = this.rng.nextInt(
-            def.trendMinTicks,
-            def.trendMaxTicks
-        )
-
-        const priceFraction = state.price / def.basePrice
-        if (priceFraction > 5 && state.trend === "bull") {
-            state.trend = "bear"
-        } else if (priceFraction < 0.3 && state.trend === "bear") {
-            state.trend = "bull"
-        }
+        this.advanceTrendFromQueue(state, def)
     }
 
     private processFactories(): void {
@@ -1114,6 +1207,40 @@ export class MarketEngine {
         return target
     }
 
+    // ── Forecasting accessors (queue-based) ─────────────────────────────────
+
+    /** Whether the "next trend" arrow should appear (seasonal-forecast upgrade). */
+    public canShowNextTrend(): boolean {
+        return (
+            this.hasUpgrade("seasonal-forecast") ||
+            (this.prestigeProvider?.("insiderEdge") ?? 0) > 0
+        )
+    }
+
+    /** Direction of the very next trend segment in the queue. */
+    public getNextTrendDirection(
+        commodityId: CommodityId
+    ): TrendDirection | null {
+        const state = this.markets.get(commodityId)
+        if (!state || state.trendQueue.length === 0) return null
+        return state.trendQueue[0].trend
+    }
+
+    /** Whether the full forecast bar should appear (insider-calendar upgrade). */
+    public canShowTrendForecast(): boolean {
+        return this.hasUpgrade("insider-calendar")
+    }
+
+    /**
+     * Return the upcoming trend queue (shallow copy) for rendering in the
+     * forecast bar. Each segment includes direction, strength, and duration.
+     */
+    public getTrendForecast(commodityId: CommodityId): TrendSegment[] {
+        const state = this.markets.get(commodityId)
+        if (!state) return []
+        return state.trendQueue.map((s) => ({ ...s }))
+    }
+
     public getSnapshot(): GameSnapshot {
         const holdingsRecord: Record<CommodityId, Holding> = {} as Record<
             CommodityId,
@@ -1128,7 +1255,13 @@ export class MarketEngine {
             MarketState
         >
         for (const [k, v] of this.markets) {
-            marketsRecord[k] = { ...v, priceHistory: [...v.priceHistory] }
+            // Exclude trendQueue and trendHistory from snapshot to keep it lightweight
+            marketsRecord[k] = {
+                ...v,
+                priceHistory: [...v.priceHistory],
+                trendQueue: [],
+                trendHistory: [],
+            }
         }
 
         const factoriesRecord: Record<FactoryId, number> = {} as Record<
@@ -1544,6 +1677,25 @@ export class MarketEngine {
             factoriesRecord[k] = v
         }
 
+        // Build trend schedules per commodity
+        const trendSchedules: Record<string, TrendScheduleSaveData> = {}
+        for (const [id, state] of this.markets) {
+            const origDuration =
+                this.trendOriginalDuration.get(id) ??
+                state.trendTicksRemaining
+            const ticksElapsed = origDuration - state.trendTicksRemaining
+            trendSchedules[id] = {
+                queue: state.trendQueue.map((s) => ({ ...s })),
+                history: state.trendHistory.map((s) => ({ ...s })),
+                currentSegment: {
+                    trend: state.trend,
+                    strength: state.trendStrength,
+                    duration: origDuration,
+                },
+                currentTicksElapsed: ticksElapsed,
+            }
+        }
+
         return {
             cash: this.cash,
             lifetimeEarnings: this.lifetimeEarnings,
@@ -1565,6 +1717,7 @@ export class MarketEngine {
                 marginEventTick: this.marginEventTick,
                 ratingAtMarginEvent: this.ratingAtMarginEvent,
             },
+            trendSchedules,
         }
     }
 
@@ -1613,6 +1766,41 @@ export class MarketEngine {
             this.ticksSinceLastDefault = 999
             this.ticksAboveDegradeRatio = 0
             this.dasIdCounter = 0
+        }
+
+        // Restore trend schedules (if present)
+        if (data.trendSchedules) {
+            for (const [id, schedule] of Object.entries(data.trendSchedules)) {
+                const state = this.markets.get(id as CommodityId)
+                if (!state) continue
+
+                state.trendQueue = schedule.queue.map((s) => ({ ...s }))
+                state.trendHistory = schedule.history.map((s) => ({ ...s }))
+
+                // Restore the active segment from save data
+                state.trend = schedule.currentSegment.trend
+                state.trendStrength = schedule.currentSegment.strength
+                state.trendTicksRemaining =
+                    schedule.currentSegment.duration -
+                    schedule.currentTicksElapsed
+                this.trendOriginalDuration.set(
+                    id as CommodityId,
+                    schedule.currentSegment.duration
+                )
+            }
+        } else {
+            // Legacy save: generate fresh queues for all markets
+            for (const c of COMMODITIES) {
+                const state = this.markets.get(c.id)
+                if (!state) continue
+                state.trendQueue = []
+                state.trendHistory = []
+                this.trendOriginalDuration.set(
+                    c.id,
+                    state.trendTicksRemaining
+                )
+                this.fillTrendQueue(c.id, c)
+            }
         }
 
         this.emit("moneyChanged", this.cash)

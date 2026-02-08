@@ -186,6 +186,12 @@ export class ChartSection {
         const priceTarget = this.game.canShowPriceTarget()
             ? this.game.getPriceTarget(this.selectedCommodity)
             : null
+        const nextTrendDirection = this.game.canShowNextTrend()
+            ? this.game.getNextTrendDirection(this.selectedCommodity)
+            : null
+        const trendForecast = this.game.canShowTrendForecast()
+            ? this.game.getTrendForecast(this.selectedCommodity)
+            : []
 
         // Slice to the selected timescale window (1 tick = 1 market day)
         const days = this.getTimescaleDays()
@@ -213,6 +219,8 @@ export class ChartSection {
             movingAverageData: maData,
             trendTicksRemaining,
             priceTarget,
+            nextTrendDirection,
+            trendForecast,
         })
     }
 }

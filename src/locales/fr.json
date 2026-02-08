@@ -407,6 +407,8 @@
       "moving-average": { "name": "Moyenne Mobile", "description": "Outils d'analyse technique pour graphiques." },
       "confidential-tip": { "name": "Tuyau Confidentiel", "description": "Un ami au fonds. Compte à rebours de tendance visible sur les graphiques." },
       "material-advantage": { "name": "Avantage Matériel", "description": "Information privilégiée non publique. Prix cible estimé sur les graphiques." },
+      "seasonal-forecast": { "name": "Prévisions Saisonnières", "description": "Rapport trimestriel. Affiche la prochaine direction de tendance après la fin de l'actuelle." },
+      "insider-calendar": { "name": "Calendrier Initié", "description": "Le programme complet. Séquence de tendances à venir visible sous forme de barre de prévision." },
       "harvest-email": { "name": "EMAIL Harvester", "description": "Automated scraper. +1 EMAIL per harvest click." },
       "harvest-ads": { "name": "ADS Generator", "description": "Impression bot. +1 ADS per harvest click." },
       "harvest-dom": { "name": "DOM Registrar", "description": "Bulk registration script. +1 DOM per harvest click." },
