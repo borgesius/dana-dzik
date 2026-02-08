@@ -281,3 +281,15 @@
     color: #606060;
     cursor: not-allowed;
 }
+
+.popup-btn.blue {
+    background: #6699ff;
+    color: #ffffff;
+    font-weight: bold;
+}
+
+.popup-btn.pink {
+    background: #ff69b4;
+    color: #ffffff;
+    font-weight: bold;
+}

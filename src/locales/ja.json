@@ -697,6 +697,7 @@
     "freakgpt": { "name": "Altman Winklevossed Me in Q4 2025", "description": "FreakGPTを使ってリクエストを処理する。" },
     "keyboard-cat": { "name": "キーボードの上に座る", "description": "FelixGPTにコーディングの助けを求める。" },
     "popup-enjoyer": { "name": "ナイジェリアの王配", "description": "ボーナスポップアップを5回受け取る。" },
+    "beyond-the-binary": { "name": "Beyond the Binary", "description": "回答を拒否する。" },
     "y2k-survivor": { "name": "Y2Kサバイバー", "description": "セッションを30分間維持する。" },
     "big-spender": { "name": "金の動き", "description": "正規化セッションコストを$0.001まで上げる。" },
     "whale": { "name": "札束追い", "description": "正規化セッションコストを$0.002まで上げる。" },

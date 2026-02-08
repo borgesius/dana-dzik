@@ -89,6 +89,7 @@ export type AchievementId =
     | "cat-person"
     | "meow"
     | "popup-enjoyer"
+    | "beyond-the-binary"
     // Pinball
     | "pinball-wizard"
     | "high-roller"

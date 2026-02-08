@@ -30,6 +30,7 @@ export interface AppEventMap {
     "analytics:intent": { type: string }
     "qa:report-clicked": undefined
     "popup:bonus-claimed": undefined
+    "popup:x-dismissed": { headline: string }
     "felix:message": undefined
     "session-cost:big-spender": undefined
     "session-cost:whale": undefined
