@@ -830,6 +830,24 @@ export const ACHIEVEMENTS: AchievementDef[] = [
         icon: "🌧️",
         hidden: false,
     },
+    {
+        id: "three-ways",
+        category: "milestones",
+        icon: "🎰",
+        hidden: true,
+    },
+    {
+        id: "killed-this-firm",
+        category: "milestones",
+        icon: "💀",
+        hidden: false,
+    },
+    {
+        id: "someone-pays",
+        category: "milestones",
+        icon: "📉",
+        hidden: false,
+    },
 
     // ── Standalone new achievements ──────────────────────────────────────
     {
@@ -860,6 +878,50 @@ export const ACHIEVEMENTS: AchievementDef[] = [
         id: "pieces-of-paper",
         category: "prestige",
         icon: "🛍️",
+        hidden: true,
+    },
+
+    // ── Ascension (tiered - ascension) ──────────────────────────────────
+    {
+        id: "through-the-looking-glass",
+        category: "prestige",
+        icon: "🪞",
+        hidden: false,
+        tieredGroup: "ascension",
+        tier: 1,
+    },
+    {
+        id: "eternal-return",
+        category: "prestige",
+        icon: "♾️",
+        hidden: false,
+        tieredGroup: "ascension",
+        tier: 2,
+    },
+    {
+        id: "samsara",
+        category: "prestige",
+        icon: "☸️",
+        hidden: false,
+        tieredGroup: "ascension",
+        tier: 3,
+    },
+    {
+        id: "foresight-shopper",
+        category: "prestige",
+        icon: "🔮",
+        hidden: false,
+    },
+    {
+        id: "oracle-of-delphi",
+        category: "prestige",
+        icon: "🏛️",
+        hidden: true,
+    },
+    {
+        id: "windfall",
+        category: "prestige",
+        icon: "💨",
         hidden: true,
     },
 
