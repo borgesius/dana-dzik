@@ -132,7 +132,7 @@ function renderSkillsSection(): string {
     `
 
     // Always show the base skills line
-    html += `<li>${SKILLS_STARTER_NODE.name}</li>`
+    html += `<li>${SKILLS_STARTER_NODE.name} <span class="resume-skill-bonus">(${SKILLS_STARTER_NODE.bonusLabel})</span></li>`
 
     // Show unlocked skill nodes
     const skillNodes = getNodesForBranch("skills")
