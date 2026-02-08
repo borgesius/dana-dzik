@@ -220,8 +220,8 @@ const WARNING_POPUPS: PopupContent[] = [
         type: "warning",
         title: "Accessibility",
         headline: "Cursor Not Found",
-        body: "Your mouse cursor has left the visible area. It may return on its own. It may not.",
-        buttons: [{ text: "Search for Cursor", className: "primary" }],
+        body: "Your mouse has been deleted.",
+        buttons: [{ text: "Order New Mouse", className: "primary" }],
     },
 ]
 
