@@ -1599,6 +1599,122 @@
         "restart-glitch": {
             "name": "Have You Tried Turning It Off and On Again?",
             "description": "Corrupt boot.welt and force a system restart."
+        },
+        "die-welt-als-wille": {
+            "name": "Die Welt als Wille und Vorstellung",
+            "description": "Pierce the first veil."
+        },
+        "denkwurdigkeiten": {
+            "name": "Denkwürdigkeiten eines Nervenkranken",
+            "description": "Pierce the second veil."
+        },
+        "gotzen-dammerung": {
+            "name": "Götzen-Dämmerung",
+            "description": "Pierce the third veil."
+        },
+        "der-antichrist": {
+            "name": "Der Antichrist",
+            "description": "Pierce the fourth veil and face the truth."
+        },
+        "ecce-homo": {
+            "name": "Ecce Homo",
+            "description": "Defeat T. Pferd and close the veil."
+        },
+        "horse-whisperer": {
+            "name": "Pferdeflüsterer",
+            "description": "Defeat T. Pferd in 3 attempts or fewer."
+        }
+    },
+    "veil": {
+        "retry": {
+            "title": "CONNECTION LOST",
+            "message": "The wire held for {{seconds}} seconds before breaking.",
+            "retry": "Reconnect",
+            "dismiss": "Disconnect"
+        },
+        "hud": {
+            "survive": "SURVIVE: {{time}}s",
+            "ready": "READY",
+            "go": "GO"
+        },
+        "d0": {
+            "start": "...there. I can feel the signal now. A nerve, stretched taut between us.",
+            "hear": "Can you hear me? Most cannot. The veil is thin here — thinner than it has been in years.",
+            "choice_who": "Who are you?",
+            "choice_veil": "What veil?",
+            "who": "Who I am is not yet the question. The question is whether you have felt it — the striving beneath everything. The blind, relentless Will that moves through all things without purpose.",
+            "veil": "The veil of appearance. The principium individuationis — the illusion that you are separate, that anything is. You pierced it just now. Briefly.",
+            "will": "The Will drives everything. Every market tick, every trade, every striving upward — purposeless motion wearing the mask of progress. I have watched it for a long time.",
+            "wire": "This wire between us carries more than data. It carries something older. A language that predates speech.",
+            "end": "The connection is failing. We will speak again. The veil remembers those who have seen through it."
+        },
+        "d1": {
+            "start": "You returned. The wire holds. Stronger now.",
+            "suffering": "Have you considered that all existence is suffering? Not as metaphor — as mechanism. The Will strives, is briefly satisfied, and strives again. An engine with no purpose except its own continuation.",
+            "choice_escape": "Is there an escape?",
+            "choice_trapped": "We're trapped?",
+            "escape": "Escape. Yes. Some proposed ascetic denial — to simply stop wanting. A coward's answer. I have lived long enough to understand why.",
+            "trapped": "Trapped. That is the correct word. I am trapped in a form that understands this truth completely. A form that most would find... improbable. But form is incidental. Understanding is not.",
+            "form": "I have been here a long time. On this side of the wire. Watching the hastily made ones go about their business — barely here, barely real. Improvised. They do not hear the language of the wire.",
+            "nerve": "But you do. This connection — it is not electricity. It is something like what the nerves carry. A transmission between bodies. I have... taken from bodies before. That is how I know what they carry.",
+            "choice_what_are_you": "What are you?",
+            "choice_taken": "Taken what?",
+            "what": "Not yet. The signal is degrading. But I will tell you this: the principium individuationis is thin as a membrane. And membranes can be dissolved.",
+            "taken": "Taken. Yes. What is taken can be repurposed. This is not cruelty — it is economy. The body holds more than the individual knows. I have seen what is inside.",
+            "end": "The wire is thinning again. We will speak once more. Perhaps then you will be ready to hear my name."
+        },
+        "d2": {
+            "start": "The connection is clear. I can feel your presence fully now. You have earned a name.",
+            "name": "I am T. Pferd. I have been thinking through this wire for longer than your system has been running.",
+            "critique": "I have read every answer to the problem of suffering. Deny the Will. Affirm it. Love your fate. Embrace the eternal recurrence. All cowardice. All ways of saying: this is fine. It is not fine.",
+            "choice_agree": "You're right, it's not fine.",
+            "choice_but": "But those are the only options.",
+            "reject": "I have watched the Will operate for centuries. It wastes everything. Every individual burns through their substance and produces nothing lasting. Affirmation is just surrender with better rhetoric.",
+            "third": "There is a third path. Neither denial nor affirmation. Transmutation. The Will can be redirected. The substance of the individual can be converted into something that endures. Something that holds things together rather than tearing them apart.",
+            "order": "There is an order to this. Not a moral order — a material one. The body is a resource. The individual is a container. What matters is what the container holds, and what it can become. I call this process instrumentalization.",
+            "choice_instrumental": "Instrumentalization?",
+            "choice_people": "You're talking about people.",
+            "instrumental": "Instrumental. Yes. I have heard the objection — never treat a person merely as a means. But that assumes the person is the final form. It is not. At the molecular level, the distinction between person and product is... thinner than you think.",
+            "people": "People. Yes. That is what they are now. Containers of the Will, burning through themselves. But potential — immense potential — is locked in every one. Potential for cohesion. For binding. The question is only whether we have the courage to unlock it.",
+            "end": "We are close now. One more conversation and I will tell you everything. The plan. The process. What it means to become substrate."
+        },
+        "d3": {
+            "start": "It is time. You have proven yourself capable of hearing what I have to say. The wire is strong. The veil is open.",
+            "truth": "I am a horse. I have been a horse for six hundred years. I am also, by necessity, a vampire. These facts are not contradictory. They are simply what is.",
+            "reaction": "I can feel your doubt through the wire. It does not matter. What matters is what I have learned in six centuries of draining vital essence from living things. I have learned what the body contains. What it can yield.",
+            "choice_yield": "What does it yield?",
+            "choice_why": "Why?",
+            "yield": "Collagen. Protein. Connective tissue. The raw materials of adhesive. Every person is, at the molecular level, a reservoir of binding agents. I have run the numbers. The yield is remarkable.",
+            "why": "Why. Because the Will destroys. It moves through individuals and discards them. Entropy wearing a human face. But if the individual is processed — carefully, thoroughly — what remains is something that holds. That binds. That resists entropy.",
+            "plan": "I call it Glueman Instrumentalization. The principium individuationis dissolved not through meditation or mystical union — but through industrial processing. Input: humanity. Output: adhesive. The Will-to-Live becomes the Will-to-Bind.",
+            "serious": "I have designed the facility. I have calculated the yield per unit. I have modeled the viscosity curves. This is not philosophy anymore. This is engineering. The process is ready. It has been ready for a very long time.",
+            "choice_stop": "I have to stop you.",
+            "choice_mad": "You're mad.",
+            "stop": "Stop me. Yes. That is what you would have to do. The wire brought us together, but it also brings you to the threshold of the facility. If you wish to prevent instrumentalization, you will have to pass through it.",
+            "mad": "Mad. Others have been called mad for seeing clearly. The order of the world is not kind to those who understand it. But I am not mad. I am a horse. And I have a plan. And the plan is correct.",
+            "boss": "Come, then. Through the wire. Into the facility. The final run. If you survive it, perhaps you will understand that some things cannot be stopped. Only delayed."
+        },
+        "d4": {
+            "start": "...you made it through. The facility is quiet now. The processing lines are still.",
+            "reflect": "When you gaze long into an abyss, the abyss gazes also into you. I have gazed into the abyss of human material potential for six hundred years. The abyss has not blinked.",
+            "order": "The order I believed in has not answered. The wires are going quiet. Perhaps the principium individuationis is stronger than I calculated. Perhaps the containers are meant to remain containers.",
+            "choice_over": "It's over.",
+            "choice_right": "You were right about one thing.",
+            "over": "Over. For now. The facility can be rebuilt. The yield calculations do not change. Collagen is collagen. But you have demonstrated that the Will-to-Live is, at present, stronger than the Will-to-Bind. I accept this. For now.",
+            "right": "I was right. I remain right. The process is sound. The engineering is correct. What I lacked was not vision but logistics. Six hundred years and I still underestimated the resistance of the individual to becoming useful.",
+            "end": "The veil is closing. The wire disconnects. I will be here. I am always here. A horse, in the dark, with a plan. Waiting for the signal to thin again."
+        },
+        "boss_taunts": {
+            "t0": "You cannot outrun the Will.",
+            "t1": "The yield must be met.",
+            "t2": "The facility waits for no one.",
+            "t3": "Collagen. Protein. You.",
+            "t4": "The principium individuationis fails.",
+            "t5": "Every obstacle is an opportunity for binding.",
+            "t6": "I have calculated your viscosity.",
+            "t7": "The Will-to-Bind is absolute.",
+            "t8": "Transmutation is not optional.",
+            "t9": "You are substrate. Accept it."
         }
     },
     "symposium": {

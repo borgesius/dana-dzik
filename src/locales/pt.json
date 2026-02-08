@@ -863,8 +863,14 @@
             "name": "Sysadmin",
             "description": "Navegue até 3:\\DAS."
         },
-        "syslog": { "name": "Syslog", "description": "Leia o syslog.txt." },
-        "readme": { "name": "RTFM", "description": "Leia o manual do WELT." },
+        "syslog": {
+            "name": "Syslog",
+            "description": "Leia o syslog.txt."
+        },
+        "readme": {
+            "name": "RTFM",
+            "description": "Leia o manual do WELT."
+        },
         "hacker": {
             "name": "I'm In",
             "description": "Execute seu primeiro comando no terminal."
@@ -913,7 +919,10 @@
             "name": "Autoconsciente",
             "description": "Perguntar à máquina quem você é."
         },
-        "rtfm": { "name": "RTFM", "description": "Ler o texto de ajuda." },
+        "rtfm": {
+            "name": "RTFM",
+            "description": "Ler o texto de ajuda."
+        },
         "from-nothing": {
             "name": "Ex Nihilo",
             "description": "Criar um arquivo."
@@ -978,7 +987,10 @@
             "name": "Za Warudo",
             "description": "Passe em Die Welt."
         },
-        "nibelung": { "name": "Nibelung", "description": "Forje o Anel." },
+        "nibelung": {
+            "name": "Nibelung",
+            "description": "Forje o Anel."
+        },
         "erlosung": {
             "name": "Erlösung",
             "description": "Passe em todos os exercícios."
@@ -1067,7 +1079,10 @@
             "name": "First Thesis",
             "description": "Complete your first symposium."
         },
-        "posse-up": { "name": "Quorum", "description": "Win a symposium." },
+        "posse-up": {
+            "name": "Quorum",
+            "description": "Win a symposium."
+        },
         "faction-recruit": {
             "name": "Faction Recruit",
             "description": "Unlock your first faction unit."
@@ -1144,8 +1159,14 @@
             "name": "Postdoc",
             "description": "Win your first symposium."
         },
-        "deputy": { "name": "Adjunct", "description": "Win 5 symposia." },
-        "sheriff": { "name": "Lecturer", "description": "Win 15 symposia." },
+        "deputy": {
+            "name": "Adjunct",
+            "description": "Win 5 symposia."
+        },
+        "sheriff": {
+            "name": "Lecturer",
+            "description": "Win 15 symposia."
+        },
         "marshal": {
             "name": "Department Chair",
             "description": "Win 50 symposia."
@@ -1605,6 +1626,30 @@
         "restart-glitch": {
             "name": "Have You Tried Turning It Off and On Again?",
             "description": "Corrompa boot.welt e force uma reinicialização do sistema."
+        },
+        "die-welt-als-wille": {
+            "name": "Die Welt als Wille und Vorstellung",
+            "description": "Pierce the first veil."
+        },
+        "denkwurdigkeiten": {
+            "name": "Denkwürdigkeiten eines Nervenkranken",
+            "description": "Pierce the second veil."
+        },
+        "gotzen-dammerung": {
+            "name": "Götzen-Dämmerung",
+            "description": "Pierce the third veil."
+        },
+        "der-antichrist": {
+            "name": "Der Antichrist",
+            "description": "Pierce the fourth veil and face the truth."
+        },
+        "ecce-homo": {
+            "name": "Ecce Homo",
+            "description": "Defeat T. Pferd and close the veil."
+        },
+        "horse-whisperer": {
+            "name": "Pferdeflüsterer",
+            "description": "Defeat T. Pferd in 3 attempts or fewer."
         }
     },
     "symposium": {
@@ -1789,6 +1834,14 @@
                 "name": "Financiamento VC",
                 "description": "Comece com +3 Pensamentos bônus"
             }
+        }
+    },
+    "veil": {
+        "retry": {
+            "title": "CONNECTION LOST",
+            "message": "The wire held for {{seconds}} seconds before breaking.",
+            "retry": "Reconnect",
+            "dismiss": "Disconnect"
         }
     }
 }

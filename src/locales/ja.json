@@ -1,860 +1,1658 @@
 {
-  "loading": {
-    "pleaseWait": "お待ちください...",
-    "loading": "読み込み中...",
-    "das": "DAS"
-  },
-  "boot": {
-    "bios": {
-      "v1": "Fatitech BIOS v4.51 (C) 1997 Fatitech Industries",
-      "v2": "Fatitech BIOS v-3.7 (C) 1997-2003-1991",
-      "v3": "Fatitech BIOS vNaN (C) 19??",
-      "v4": "Fatitech BIOS v0.0.1 BETA (UNLICENSED)",
-      "v5": "Fatitech BIOS v∞.0.1 (C) Dr. T. Pferd"
+    "loading": {
+        "pleaseWait": "お待ちください...",
+        "loading": "読み込み中...",
+        "das": "DAS"
     },
-    "cpu": {
-      "c1": "Fatitech QX-97 Quaternary Core @ 4.51MHz",
-      "c2": "Fatitech QX-97 @ probably (quaternary mode)",
-      "c3": "DAS-8 Q4 Core @ -200MHz (estimated)",
-      "c4": "Fatitech QX-97 Quaternary @ fast",
-      "c5": "Generic q86 @ 0.5MHz (fourfold root)"
+    "boot": {
+        "bios": {
+            "v1": "Fatitech BIOS v4.51 (C) 1997 Fatitech Industries",
+            "v2": "Fatitech BIOS v-3.7 (C) 1997-2003-1991",
+            "v3": "Fatitech BIOS vNaN (C) 19??",
+            "v4": "Fatitech BIOS v0.0.1 BETA (UNLICENSED)",
+            "v5": "Fatitech BIOS v∞.0.1 (C) Dr. T. Pferd"
+        },
+        "cpu": {
+            "c1": "Fatitech QX-97 Quaternary Core @ 4.51MHz",
+            "c2": "Fatitech QX-97 @ probably (quaternary mode)",
+            "c3": "DAS-8 Q4 Core @ -200MHz (estimated)",
+            "c4": "Fatitech QX-97 Quaternary @ fast",
+            "c5": "Generic q86 @ 0.5MHz (fourfold root)"
+        },
+        "ram": {
+            "r1": "8 DING registers OK (256 qbytes each)",
+            "r2": "2296 qbytes (quaternary verified)",
+            "r3": "????K qbytes detected",
+            "r4": "8 banks, 2296 qbytes free",
+            "r5": "enough (quaternary mode)"
+        },
+        "hdd": {
+            "h1": "IDE Primary: C:\\ (WELT filesystem)",
+            "h2": "ATA-33: Fatitech Industries (S/N: ????????)",
+            "h3": "HDD: C:\\WINDOWS\\system32 (7 files)",
+            "h4": "SCSI-0: 120MB (formatted as 2TB)",
+            "h5": "3.5\" Floppy (quaternary formatted)"
+        },
+        "warnings": {
+            "w1": "WELT THERMAL: 保護回路作動中 (1818回の反復)",
+            "w2": "警告: システム使用期間が予想動作寿命を超過",
+            "w3": "QUATERNARY OVERFLOW: キャリーフラグが未クリア",
+            "w4": "通知: DING 7 がまだDING 7に占有されています",
+            "w5": "CMOS CHECKSUM: まあまあ",
+            "w6": "警告: VORSTELLUNG バッファがフラッシュされていません",
+            "w7": "IRQ CONFLICT: IRQ 5 がすでにIRQ 5です",
+            "w8": "キーボードエラー: キーボードが見つかりません"
+        },
+        "responses": {
+            "r1": "続行中...",
+            "r2": "無視中...",
+            "r3": "確認済...",
+            "r4": "OK...",
+            "r5": "VERNEINUNG..."
+        },
+        "bootPaths": {
+            "b1": "実行中 C:\\WINDOWS\\system32\\boot.welt...",
+            "b2": "読み込み中 C:\\WINDOWS\\system32\\config.welt...",
+            "b3": "ERWACHE... boot.weltから起動中...",
+            "b4": "boot.weltの指示通りに起動中...",
+            "b5": "起動中 C:\\WINDOWS\\system32\\..."
+        },
+        "loadingTexts": {
+            "set1": {
+                "l1": "VORSTELLUNG バッファを初期化中...",
+                "l2": "DING レジスタをキャリブレーション中...",
+                "l3": "準備完了（多分）"
+            },
+            "set2": {
+                "l1": "WELT モジュールを読み込み中...",
+                "l2": "スプラインを網状化中...",
+                "l3": "VERNEINUNG"
+            },
+            "set3": {
+                "l1": "4進メモリをデフラグ中...",
+                "l2": "CRTをウォームアップ中...",
+                "l3": "準備完了"
+            },
+            "set4": {
+                "l1": "C:\\をマウント中...",
+                "l2": "C:\\をアンマウント中...",
+                "l3": "C:\\を再マウント中..."
+            },
+            "set5": {
+                "l1": "読み込み中...",
+                "l2": "起動中...",
+                "l3": "KERNEL OK"
+            }
+        },
+        "moduleResults": {
+            "m1": "OK",
+            "m2": "OK（多分）",
+            "m3": "OK（エラーを無視）",
+            "m4": "OK（2回目で成功）"
+        },
+        "detectingHardware": "ハードウェアを検出中...",
+        "cpuLabel": "CPU:",
+        "ramLabel": "RAM:",
+        "hddLabel": "HDD:",
+        "loadingModules": "システムモジュールを読み込み中...",
+        "loadLabel": "LOAD:",
+        "dasLoading": "DAS 読み込み中..."
     },
-    "ram": {
-      "r1": "8 DING registers OK (256 qbytes each)",
-      "r2": "2296 qbytes (quaternary verified)",
-      "r3": "????K qbytes detected",
-      "r4": "8 banks, 2296 qbytes free",
-      "r5": "enough (quaternary mode)"
+    "common": {
+        "ok": "OK",
+        "cancel": "キャンセル",
+        "close": "閉じる",
+        "save": "保存",
+        "quit": "終了",
+        "yes": "はい",
+        "no": "いいえ",
+        "error": "エラー",
+        "success": "成功"
     },
-    "hdd": {
-      "h1": "IDE Primary: C:\\ (WELT filesystem)",
-      "h2": "ATA-33: Fatitech Industries (S/N: ????????)",
-      "h3": "HDD: C:\\WINDOWS\\system32 (7 files)",
-      "h4": "SCSI-0: 120MB (formatted as 2TB)",
-      "h5": "3.5\" Floppy (quaternary formatted)"
+    "toolbar": {
+        "weatherLoading": "☀️ 読み込み中...",
+        "qaLoading": "🔬 QA: 読み込み中...",
+        "qaFallback1": "🔬 QA: ¯\\_(ツ)_/¯",
+        "qaFallback2": "🔬 Tests: ?",
+        "qaFallback3": "🔬 QA: N/A",
+        "colorScheme": "カラー: {{scheme}}",
+        "language": "言語: {{language}}",
+        "tradeOpen": "📈 TRADE ▶",
+        "tradeClosed": "📈 TRADE ◀",
+        "github": "🐙 GitHub"
     },
-    "warnings": {
-      "w1": "WELT THERMAL: 保護回路作動中 (1818回の反復)",
-      "w2": "警告: システム使用期間が予想動作寿命を超過",
-      "w3": "QUATERNARY OVERFLOW: キャリーフラグが未クリア",
-      "w4": "通知: DING 7 がまだDING 7に占有されています",
-      "w5": "CMOS CHECKSUM: まあまあ",
-      "w6": "警告: VORSTELLUNG バッファがフラッシュされていません",
-      "w7": "IRQ CONFLICT: IRQ 5 がすでにIRQ 5です",
-      "w8": "キーボードエラー: キーボードが見つかりません"
+    "qa": {
+        "performance": "パフォーマンス",
+        "accessibility": "アクセシビリティ",
+        "bestPractices": "ベストプラクティス",
+        "seo": "SEO",
+        "noScores": "スコアなし",
+        "lighthouseReport": "Lighthouseレポート",
+        "passing": "合格",
+        "failing": "失敗",
+        "clickFullReport": "クリックして完全なレポートを表示",
+        "e2eTests": "E2Eテスト（Playwright）",
+        "status": "ステータス",
+        "allTestsPassing": "全テスト合格",
+        "testsFailing": "テスト失敗",
+        "chromiumLatest": "Chromium · mainの最新版",
+        "statements": "ステートメント",
+        "branches": "分岐",
+        "functions": "関数",
+        "lines": "行",
+        "noMetrics": "メトリクスなし",
+        "testCoverage": "テストカバレッジ",
+        "v8Provider": "v8プロバイダー",
+        "clickCIDetails": "クリックしてCI実行の詳細を表示"
     },
-    "responses": {
-      "r1": "続行中...",
-      "r2": "無視中...",
-      "r3": "確認済...",
-      "r4": "OK...",
-      "r5": "VERNEINUNG..."
+    "window": {
+        "minimize": "ウィンドウを最小化",
+        "maximize": "ウィンドウを最大化",
+        "close": "ウィンドウを閉じる"
     },
-    "bootPaths": {
-      "b1": "実行中 C:\\WINDOWS\\system32\\boot.welt...",
-      "b2": "読み込み中 C:\\WINDOWS\\system32\\config.welt...",
-      "b3": "ERWACHE... boot.weltから起動中...",
-      "b4": "boot.weltの指示通りに起動中...",
-      "b5": "起動中 C:\\WINDOWS\\system32\\..."
+    "taskbar": {
+        "userName": "Dana",
+        "userAlt": "ユーザー",
+        "logOff": "ログオフ",
+        "shutDown": "シャットダウン",
+        "changelog": "変更履歴",
+        "staging": "STAGING",
+        "goToProduction": "本番環境",
+        "goToStaging": "ステージング",
+        "fileExplorer": "ファイルエクスプローラー",
+        "terminal": "ターミナル",
+        "achievements": "実績",
+        "pinball": "ピンボール",
+        "felixgpt": "FelixGPT",
+        "frontier": "SYMPOSIUM",
+        "customize": "カスタマイズ",
+        "careerDev": "キャリア開発",
+        "about": "自己紹介",
+        "projects": "プロジェクト",
+        "resume": "履歴書",
+        "links": "リンク",
+        "guestbook": "ゲストブック",
+        "locked": "(ロック中)",
+        "lockedTooltip": "シンポジウムで勝利するとロック解除",
+        "reset": "🔄 リセット",
+        "resetTooltip": "すべての保存済み進行状況を消去",
+        "resetTitle": "⚠️ すべてのデータをリセット",
+        "resetMessage": "すべての進行状況、実績、経済状態、ファイルシステムの編集、設定が完全に消去されます。この操作は元に戻せません。",
+        "resetCancel": "キャンセル",
+        "resetConfirm": "すべて消去"
     },
-    "loadingTexts": {
-      "set1": {
-        "l1": "VORSTELLUNG バッファを初期化中...",
-        "l2": "DING レジスタをキャリブレーション中...",
-        "l3": "準備完了（多分）"
-      },
-      "set2": {
-        "l1": "WELT モジュールを読み込み中...",
-        "l2": "スプラインを網状化中...",
-        "l3": "VERNEINUNG"
-      },
-      "set3": {
-        "l1": "4進メモリをデフラグ中...",
-        "l2": "CRTをウォームアップ中...",
-        "l3": "準備完了"
-      },
-      "set4": {
-        "l1": "C:\\をマウント中...",
-        "l2": "C:\\をアンマウント中...",
-        "l3": "C:\\を再マウント中..."
-      },
-      "set5": {
-        "l1": "読み込み中...",
-        "l2": "起動中...",
-        "l3": "KERNEL OK"
-      }
+    "startMenu": {
+        "programs": {
+            "browser1": "Internet Exploder",
+            "browser2": "Netscape Navigator 7.0（IEモード）",
+            "browser3": "The Web.exe",
+            "email1": "Outlook Distress",
+            "email2": "Microsoft Outcast Express",
+            "email3": "Mail（壊れています）",
+            "media1": "Windows Media Destroyer",
+            "media2": "RealPlayer（偽物）",
+            "media3": "Winamp 2.91（v5.8）",
+            "chat1": "MSN Messenger（AIM）",
+            "chat2": "ICQ/AIM/MSN/Yahoo（なし）",
+            "chat3": "Chat.dll",
+            "game1": "3D Pinball（2D）",
+            "game2": "Space Cadet Pinball（壊れています）",
+            "game3": "Minesweeper（ピンボールモード）"
+        },
+        "folders": {
+            "docs1": "マイドキュメント",
+            "docs2": "あなたのドキュメント",
+            "docs3": "誰かのドキュメント",
+            "docs4": "C:\\DOCS~1",
+            "pics1": "マイピクチャ",
+            "pics2": "マイピクチャ（空）",
+            "pics3": "ピクチャ（見つかりません）",
+            "pics4": "*.jpg",
+            "music1": "マイミュージック",
+            "music2": "マイミュージック（無音）",
+            "music3": "オーディオファイル（破損）",
+            "music4": "Sounds.wav",
+            "computer1": "マイコンピュータ",
+            "computer2": "このコンピュータ",
+            "computer3": "コンピュータ",
+            "computer4": "コンピュータ（多分）",
+            "control1": "コントロールパネル",
+            "control2": "コントロールパンネル",
+            "control3": "Settings.cpl",
+            "control4": "System32（フレンドリーモード）"
+        }
     },
-    "moduleResults": {
-      "m1": "OK",
-      "m2": "OK（多分）",
-      "m3": "OK（エラーを無視）",
-      "m4": "OK（2回目で成功）"
+    "windowManager": {
+        "welcomeTitle": "Danaのデスクトップへようこそ",
+        "aboutTitle": "about_me.doc",
+        "projectsTitle": "cool_projects.zip",
+        "resumeTitle": "resume.pdf",
+        "linksTitle": "ブックマーク",
+        "guestbookTitle": "guestbook.exe",
+        "felixgptTitle": "FelixGPT",
+        "statsTitle": "サイト統計",
+        "pinballTitle": "Pinball.exe",
+        "terminalTitle": "C:\\HACKTERM.EXE",
+        "explorerTitle": "ファイルエクスプローラー"
     },
-    "detectingHardware": "ハードウェアを検出中...",
-    "cpuLabel": "CPU:",
-    "ramLabel": "RAM:",
-    "hddLabel": "HDD:",
-    "loadingModules": "システムモジュールを読み込み中...",
-    "loadLabel": "LOAD:",
-    "dasLoading": "DAS 読み込み中..."
-  },
-  "common": {
-    "ok": "OK",
-    "cancel": "キャンセル",
-    "close": "閉じる",
-    "save": "保存",
-    "quit": "終了",
-    "yes": "はい",
-    "no": "いいえ",
-    "error": "エラー",
-    "success": "成功"
-  },
-  "toolbar": {
-    "weatherLoading": "☀️ 読み込み中...",
-    "qaLoading": "🔬 QA: 読み込み中...",
-    "qaFallback1": "🔬 QA: ¯\\_(ツ)_/¯",
-    "qaFallback2": "🔬 Tests: ?",
-    "qaFallback3": "🔬 QA: N/A",
-    "colorScheme": "カラー: {{scheme}}",
-    "language": "言語: {{language}}",
-    "tradeOpen": "📈 TRADE ▶",
-    "tradeClosed": "📈 TRADE ◀",
-    "github": "🐙 GitHub"
-  },
-  "qa": {
-    "performance": "パフォーマンス",
-    "accessibility": "アクセシビリティ",
-    "bestPractices": "ベストプラクティス",
-    "seo": "SEO",
-    "noScores": "スコアなし",
-    "lighthouseReport": "Lighthouseレポート",
-    "passing": "合格",
-    "failing": "失敗",
-    "clickFullReport": "クリックして完全なレポートを表示",
-    "e2eTests": "E2Eテスト（Playwright）",
-    "status": "ステータス",
-    "allTestsPassing": "全テスト合格",
-    "testsFailing": "テスト失敗",
-    "chromiumLatest": "Chromium · mainの最新版",
-    "statements": "ステートメント",
-    "branches": "分岐",
-    "functions": "関数",
-    "lines": "行",
-    "noMetrics": "メトリクスなし",
-    "testCoverage": "テストカバレッジ",
-    "v8Provider": "v8プロバイダー",
-    "clickCIDetails": "クリックしてCI実行の詳細を表示"
-  },
-  "window": {
-    "minimize": "ウィンドウを最小化",
-    "maximize": "ウィンドウを最大化",
-    "close": "ウィンドウを閉じる"
-  },
-  "taskbar": {
-    "userName": "Dana",
-    "userAlt": "ユーザー",
-    "logOff": "ログオフ",
-    "shutDown": "シャットダウン",
-    "changelog": "変更履歴",
-    "staging": "STAGING",
-    "goToProduction": "本番環境",
-    "goToStaging": "ステージング",
-    "fileExplorer": "ファイルエクスプローラー",
-    "terminal": "ターミナル",
-    "achievements": "実績",
-    "pinball": "ピンボール",
-    "felixgpt": "FelixGPT",
-    "frontier": "SYMPOSIUM",
-    "customize": "カスタマイズ",
-    "careerDev": "キャリア開発",
-    "about": "自己紹介",
-    "projects": "プロジェクト",
-    "resume": "履歴書",
-    "links": "リンク",
-    "guestbook": "ゲストブック",
-    "locked": "(ロック中)",
-    "lockedTooltip": "シンポジウムで勝利するとロック解除",
-    "reset": "🔄 リセット",
-    "resetTooltip": "すべての保存済み進行状況を消去",
-    "resetTitle": "⚠️ すべてのデータをリセット",
-    "resetMessage": "すべての進行状況、実績、経済状態、ファイルシステムの編集、設定が完全に消去されます。この操作は元に戻せません。",
-    "resetCancel": "キャンセル",
-    "resetConfirm": "すべて消去"
-  },
-  "startMenu": {
-    "programs": {
-      "browser1": "Internet Exploder",
-      "browser2": "Netscape Navigator 7.0（IEモード）",
-      "browser3": "The Web.exe",
-      "email1": "Outlook Distress",
-      "email2": "Microsoft Outcast Express",
-      "email3": "Mail（壊れています）",
-      "media1": "Windows Media Destroyer",
-      "media2": "RealPlayer（偽物）",
-      "media3": "Winamp 2.91（v5.8）",
-      "chat1": "MSN Messenger（AIM）",
-      "chat2": "ICQ/AIM/MSN/Yahoo（なし）",
-      "chat3": "Chat.dll",
-      "game1": "3D Pinball（2D）",
-      "game2": "Space Cadet Pinball（壊れています）",
-      "game3": "Minesweeper（ピンボールモード）"
+    "fileExplorer": {
+        "up": "上へ",
+        "fileFolder": "ファイルフォルダー",
+        "application": "アプリケーション",
+        "shortcut": "ショートカット",
+        "file": "ファイル",
+        "edit": "編集",
+        "viewSource": "ソースを表示",
+        "open": "開く",
+        "view": "表示"
     },
-    "folders": {
-      "docs1": "マイドキュメント",
-      "docs2": "あなたのドキュメント",
-      "docs3": "誰かのドキュメント",
-      "docs4": "C:\\DOCS~1",
-      "pics1": "マイピクチャ",
-      "pics2": "マイピクチャ（空）",
-      "pics3": "ピクチャ（見つかりません）",
-      "pics4": "*.jpg",
-      "music1": "マイミュージック",
-      "music2": "マイミュージック（無音）",
-      "music3": "オーディオファイル（破損）",
-      "music4": "Sounds.wav",
-      "computer1": "マイコンピュータ",
-      "computer2": "このコンピュータ",
-      "computer3": "コンピュータ",
-      "computer4": "コンピュータ（多分）",
-      "control1": "コントロールパネル",
-      "control2": "コントロールパンネル",
-      "control3": "Settings.cpl",
-      "control4": "System32（フレンドリーモード）"
-    }
-  },
-  "windowManager": {
-    "welcomeTitle": "Danaのデスクトップへようこそ",
-    "aboutTitle": "about_me.doc",
-    "projectsTitle": "cool_projects.zip",
-    "resumeTitle": "resume.pdf",
-    "linksTitle": "ブックマーク",
-    "guestbookTitle": "guestbook.exe",
-    "felixgptTitle": "FelixGPT",
-    "statsTitle": "サイト統計",
-    "pinballTitle": "Pinball.exe",
-    "terminalTitle": "C:\\HACKTERM.EXE",
-    "explorerTitle": "ファイルエクスプローラー"
-  },
-  "fileExplorer": {
-    "up": "上へ",
-    "fileFolder": "ファイルフォルダー",
-    "application": "アプリケーション",
-    "shortcut": "ショートカット",
-    "file": "ファイル",
-    "edit": "編集",
-    "viewSource": "ソースを表示",
-    "open": "開く",
-    "view": "表示"
-  },
-  "terminal": {
-    "header": "HACKTERM v1.0 - 不正アクセスを検出",
-    "helpPrompt": "'help'と入力して利用可能なコマンドを表示します。",
-    "prompt": "? "
-  },
-  "terminalCommands": {
-    "availableCommands": "利用可能なコマンド:",
-    "navigation": "ナビゲーション:",
-    "files": "ファイル:",
-    "programs": "プログラム:",
-    "utilities": "ユーティリティ:",
-    "tip": "ヒント:",
-    "usageCat": "使い方: cat [-n] <ファイル名>",
-    "binaryFile": "[バイナリファイル - 'open {{filename}}'で実行してください]",
-    "emptyFile": "[空のファイル]",
-    "usageOpen": "使い方: open <ファイル名>",
-    "cannotOpen": "開けません: {{filename}}",
-    "opening": "[{{filename}}を開いています...]",
-    "usageEdit": "使い方: edit <ファイル名>",
-    "accessDenied": "アクセス拒否: {{filename}}は読み取り専用です",
-    "usageTouch": "使い方: touch <ファイル名>",
-    "usageMkdir": "使い方: mkdir <ディレクトリ名>",
-    "usageRm": "使い方: rm <ファイル名>",
-    "usageMv": "使い方: mv <元の名前> <新しい名前>",
-    "created": "作成: {{name}}",
-    "deleted": "削除: {{name}}",
-    "renamed": "名前変更: {{from}} -> {{to}}",
-    "usageWelt": "使い方: welt [--grund] <ファイル名>",
-    "usageWeltGrund": "使い方: welt --grund <ファイル名>",
-    "usageGrund": "使い方: grund <ファイル名>",
-    "emptyFileEdit": "空のファイル: {{filename}}",
-    "whoamiOutput": "DANA\\Guest\n\nユーザー: Guest\nホーム: 3:\\Users\\Dana\nターミナル: HACKTERM v1.0",
-    "systemFault": "システム障害: {{message}}",
-    "weltError": "WELTエラー{{lineInfo}}: {{message}}",
-    "grundError": "GRUNDエラー{{lineInfo}}: {{message}}",
-    "weltCompileError": "WELTコンパイルエラー{{lineInfo}}: {{message}}",
-    "notRecognized": "'{{command}}'は、内部コマンドまたは外部コマンド、\n操作可能なプログラムまたはバッチファイルとして認識されていません。",
-    "directoryOf": " {{path}} のディレクトリ",
-    "launching": "[{{filename}}を起動中...]",
-    "dir": "<DIR> ",
-    "exe": "<EXE> ",
-    "lnk": "<LNK> ",
-    "testRunnerTitle": "WELT Test Runner v1.0",
-    "testRunnerSeparator": "=====================",
-    "noFiles": "現在のディレクトリにファイルがありません。",
-    "integrityFailed": "整合性チェック失敗",
-    "tampered": "  改竄: {{file}}",
-    "testFilesModified": "テストファイルは変更しないでください。",
-    "runReset": "reset.exeを実行してオリジナルを復元してください。",
-    "pass": "  合格  {{name}}",
-    "fail": "  不合格  {{name}}: {{error}}",
-    "allTestsPassed": "  全テスト合格",
-    "dieWelt": "Die Welt als Wille und Vorstellung.",
-    "mastered": "WELT言語をマスターしました。",
-    "exercisesPassed": "{{passed}}/{{total}} 演習合格。",
-    "resetting": "演習をリセット中...",
-    "restored": "  復元: {{file}}",
-    "allRestored": "すべての演習とシステムファイルが復元されました。"
-  },
-  "terminalEditor": {
-    "shortcuts": "^S 保存  ^Q 終了",
-    "title": "EDIT - {{filename}}{{dirtyMarker}}",
-    "position": "{{line}}行, {{col}}列",
-    "cannotEditDir": "ディレクトリは編集できません: {{filename}}",
-    "freakgpt": "🔥 FreakGPT",
-    "freakgptTooltip": "ちょっとフリーキーなGPT",
-    "felixgptLocked": "🔒 FelixGPT",
-    "felixgptLockedTooltip": "シンポジウムで勝利するとロック解除",
-    "felixgpt": "🐱 FelixGPT",
-    "felixgptTooltip": "にゃー",
-    "generating": "🔥 生成中...",
-    "freakGreet": "🔥 FreakGPT: やあ、キレイだね。😏",
-    "freakDone": "🔥 FreakGPT: 完了だよ、ハニー。😘",
-    "freakContext": "🔥 FreakGPT: コンテキストを追加中... 🤔",
-    "unsavedChanges": "未保存の変更あり！^Qで破棄、^Sで保存",
-    "modified": " [変更あり]",
-    "saveFailed": "保存失敗: {{error}}",
-    "saved": "{{filename}}を保存しました（{{lineCount}}行）"
-  },
-  "filesystem": {
-    "invalidPath": "無効なパス: {{path}}",
-    "pathNotFound": "指定されたパスが見つかりません: {{path}}",
-    "notADirectory": "ディレクトリではありません: {{path}}",
-    "cannotList": "一覧表示できません: ディレクトリではありません",
-    "fileNotFound": "ファイルが見つかりません: {{path}}",
-    "isADirectory": "{{path}}はディレクトリです",
-    "fileSizeLimit": "ファイルが{{limit}}バイトの制限を超えています",
-    "dirNotFound": "ディレクトリが見つかりません: {{path}}",
-    "fileExists": "ファイルは既に存在します: {{name}}",
-    "notFound": "見つかりません: {{path}}",
-    "dirNotEmpty": "ディレクトリが空ではありません: {{path}}",
-    "parentNotFound": "親ディレクトリが見つかりません",
-    "alreadyExists": "既に存在します: {{name}}"
-  },
-  "commodityExchange": {
-    "ui": {
-      "title": "商品取引ターミナル",
-      "close": "×",
-      "portfolio": "ポートフォリオ",
-      "production": "生産",
-      "improvements": "改善",
-      "marketOperations": "市場操作",
-      "buy": "購入",
-      "sell": "売却",
-      "sellAll": "全て売却",
-      "harvest": "HARVEST",
-      "harvest_EMAIL": "SCRAPE",
-      "harvest_ADS": "CLICK",
-      "harvest_DOM": "SQUAT",
-      "harvest_BW": "LEECH",
-      "harvest_SOFT": "PIRATE",
-      "harvest_VC": "PITCH",
-      "deploy": "配置",
-      "acquire": "取得",
-      "execute": "実行",
-      "installed": "導入済み",
-      "cooldown": "クールダウン",
-      "qty": "数量",
-      "avgCost": "平均コスト",
-      "pl": "損益",
-      "tick": "ティック",
-      "deployed": "配置済み",
-      "noHoldings": "保有なし。取引を開始するにはコモディティを購入してください。",
-      "unlockAt": "${{threshold}}の累計収益でアンロック",
-      "phaseLocked": "🔒 {{name}}",
-      "phaseEarningsHint": "累計収益{{threshold}}でアンロック",
-      "phase5Hint": "必要条件：初回プレステージ · レベル8 · シンポジウム3勝"
+    "terminal": {
+        "header": "HACKTERM v1.0 - 不正アクセスを検出",
+        "helpPrompt": "'help'と入力して利用可能なコマンドを表示します。",
+        "prompt": "? "
     },
-    "commodities": {
-      "EMAIL": { "name": "メールデータベース", "description": "検証済みオプトインアドレス。毎日更新。" },
-      "ADS": { "name": "バナーインプレッション", "description": "プレミアム468x60広告枠。" },
-      "DOM": { "name": ".comドメイン", "description": "事前登録済みプレミアムドメイン名。" },
-      "BW": { "name": "帯域幅", "description": "専用T1回線容量。1.544 Mbps。" },
-      "SOFT": { "name": "ソフトウェアライセンス", "description": "エンタープライズボリュームライセンス。出荷準備完了。" },
-      "VC": { "name": "ベンチャーキャピタル", "description": "IPO前投資証券。在庫限定。" }
+    "terminalCommands": {
+        "availableCommands": "利用可能なコマンド:",
+        "navigation": "ナビゲーション:",
+        "files": "ファイル:",
+        "programs": "プログラム:",
+        "utilities": "ユーティリティ:",
+        "tip": "ヒント:",
+        "usageCat": "使い方: cat [-n] <ファイル名>",
+        "binaryFile": "[バイナリファイル - 'open {{filename}}'で実行してください]",
+        "emptyFile": "[空のファイル]",
+        "usageOpen": "使い方: open <ファイル名>",
+        "cannotOpen": "開けません: {{filename}}",
+        "opening": "[{{filename}}を開いています...]",
+        "usageEdit": "使い方: edit <ファイル名>",
+        "accessDenied": "アクセス拒否: {{filename}}は読み取り専用です",
+        "usageTouch": "使い方: touch <ファイル名>",
+        "usageMkdir": "使い方: mkdir <ディレクトリ名>",
+        "usageRm": "使い方: rm <ファイル名>",
+        "usageMv": "使い方: mv <元の名前> <新しい名前>",
+        "created": "作成: {{name}}",
+        "deleted": "削除: {{name}}",
+        "renamed": "名前変更: {{from}} -> {{to}}",
+        "usageWelt": "使い方: welt [--grund] <ファイル名>",
+        "usageWeltGrund": "使い方: welt --grund <ファイル名>",
+        "usageGrund": "使い方: grund <ファイル名>",
+        "emptyFileEdit": "空のファイル: {{filename}}",
+        "whoamiOutput": "DANA\\Guest\n\nユーザー: Guest\nホーム: 3:\\Users\\Dana\nターミナル: HACKTERM v1.0",
+        "systemFault": "システム障害: {{message}}",
+        "weltError": "WELTエラー{{lineInfo}}: {{message}}",
+        "grundError": "GRUNDエラー{{lineInfo}}: {{message}}",
+        "weltCompileError": "WELTコンパイルエラー{{lineInfo}}: {{message}}",
+        "notRecognized": "'{{command}}'は、内部コマンドまたは外部コマンド、\n操作可能なプログラムまたはバッチファイルとして認識されていません。",
+        "directoryOf": " {{path}} のディレクトリ",
+        "launching": "[{{filename}}を起動中...]",
+        "dir": "<DIR> ",
+        "exe": "<EXE> ",
+        "lnk": "<LNK> ",
+        "testRunnerTitle": "WELT Test Runner v1.0",
+        "testRunnerSeparator": "=====================",
+        "noFiles": "現在のディレクトリにファイルがありません。",
+        "integrityFailed": "整合性チェック失敗",
+        "tampered": "  改竄: {{file}}",
+        "testFilesModified": "テストファイルは変更しないでください。",
+        "runReset": "reset.exeを実行してオリジナルを復元してください。",
+        "pass": "  合格  {{name}}",
+        "fail": "  不合格  {{name}}: {{error}}",
+        "allTestsPassed": "  全テスト合格",
+        "dieWelt": "Die Welt als Wille und Vorstellung.",
+        "mastered": "WELT言語をマスターしました。",
+        "exercisesPassed": "{{passed}}/{{total}} 演習合格。",
+        "resetting": "演習をリセット中...",
+        "restored": "  復元: {{file}}",
+        "allRestored": "すべての演習とシステムファイルが復元されました。"
     },
-    "factories": {
-      "list-builder": { "name": "自動リストビルダー", "description": "検証済みメールアドレスを24時間365日収集。結果は異なる場合があります。" },
-      "banner-exchange": { "name": "バナー交換", "description": "ローテーション広告ネットワーク。インプレッション自動生成。" },
-      "colocation-rack": { "name": "コロケーションラック", "description": "専用サーバーホスティング。稼働時間保証なし。" },
-      "offshore-dev": { "name": "オフショア開発チーム", "description": "24時間開発サイクル。品質保証は保留中。" }
+    "terminalEditor": {
+        "shortcuts": "^S 保存  ^Q 終了",
+        "title": "EDIT - {{filename}}{{dirtyMarker}}",
+        "position": "{{line}}行, {{col}}列",
+        "cannotEditDir": "ディレクトリは編集できません: {{filename}}",
+        "freakgpt": "🔥 FreakGPT",
+        "freakgptTooltip": "ちょっとフリーキーなGPT",
+        "felixgptLocked": "🔒 FelixGPT",
+        "felixgptLockedTooltip": "シンポジウムで勝利するとロック解除",
+        "felixgpt": "🐱 FelixGPT",
+        "felixgptTooltip": "にゃー",
+        "generating": "🔥 生成中...",
+        "freakGreet": "🔥 FreakGPT: やあ、キレイだね。😏",
+        "freakDone": "🔥 FreakGPT: 完了だよ、ハニー。😘",
+        "freakContext": "🔥 FreakGPT: コンテキストを追加中... 🤔",
+        "unsavedChanges": "未保存の変更あり！^Qで破棄、^Sで保存",
+        "modified": " [変更あり]",
+        "saveFailed": "保存失敗: {{error}}",
+        "saved": "{{filename}}を保存しました（{{lineCount}}行）"
     },
-    "upgrades": {
-      "batch-processing": { "name": "バッチ処理", "description": "5単位で取引を実行。" },
-      "bulk-orders": { "name": "一括注文処理", "description": "10単位で取引を実行。" },
-      "block-trading": { "name": "ブロック取引", "description": "機関投資家規模のロット。50単位で取引を実行。" },
-      "limit-orders": { "name": "指値注文システム", "description": "目標価格を設定。保有分は自動的に売却。" },
-      "trend-analysis": { "name": "トレンド分析パッケージ", "description": "価格チャートに方向性インジケーターを表示。" },
-      "cpu-overclock": { "name": "CPUオーバークロック", "description": "生産サイクルを1ティック短縮。不安定になる可能性あり。" },
-      "overclock-ii": { "name": "オーバークロック II", "description": "さらなるサイクル短縮。合計-2ティック/サイクル。" },
-      "quality-assurance": { "name": "品質保証", "description": "生産のばらつきを軽減。最低収量は最大の25%。" },
-      "quality-assurance-ii": { "name": "品質保証 II", "description": "より厳格な基準。最低収量は最大の50%。" },
-      "supply-chain": { "name": "サプライチェーン統合", "description": "余剰コモディティをプレミアム商品に変換。" },
-      "insider-newsletter": { "name": "インサイダーニュースレター", "description": "市場を動かすイベントの事前通知。10秒のリードタイム。" },
-      "analyst-reports": { "name": "アナリストレポート", "description": "トレンド強度の数値インジケーター。" },
-      "moving-average": { "name": "移動平均オーバーレイ", "description": "価格チャート用テクニカル分析ツール。" },
-      "confidential-tip": { "name": "極秘情報", "description": "ファンドの知人。チャート上にトレンド残り時間を表示。" },
-      "material-advantage": { "name": "重要な優位性", "description": "重要な非公開情報。チャート上に推定目標価格を表示。" },
-      "seasonal-forecast": { "name": "季節予報", "description": "四半期見通しレポート。現在のトレンド終了後の次の方向を表示。" },
-      "insider-calendar": { "name": "インサイダーカレンダー", "description": "完全なスケジュール。今後のトレンド配列がチャート上に予測バーとして表示。" },
-      "harvest-email": { "name": "EMAIL Harvester", "description": "Automated scraper. +1 EMAIL per harvest click." },
-      "harvest-ads": { "name": "ADS Generator", "description": "Impression bot. +1 ADS per harvest click." },
-      "harvest-dom": { "name": "DOM Registrar", "description": "Bulk registration script. +1 DOM per harvest click." },
-      "harvest-bw": { "name": "BW Allocator", "description": "Bandwidth provisioner. +1 BW per harvest click." },
-      "harvest-soft": { "name": "SOFT Compiler", "description": "License keygen. +1 SOFT per harvest click." },
-      "harvest-vc": { "name": "VC Pipeline", "description": "Pitch deck generator. +1 VC per harvest click." },
-      "autoscript-i": { "name": "Autoscript I", "description": "基本自動化。全コモディティの収穫量+25%。" },
-      "autoscript-ii": { "name": "Autoscript II", "description": "高度な自動化。全コモディティの収穫量+50%。" },
-      "autoscript-iii": { "name": "Autoscript III", "description": "完全自動化スイート。全コモディティの収穫量+75%。" }
+    "filesystem": {
+        "invalidPath": "無効なパス: {{path}}",
+        "pathNotFound": "指定されたパスが見つかりません: {{path}}",
+        "notADirectory": "ディレクトリではありません: {{path}}",
+        "cannotList": "一覧表示できません: ディレクトリではありません",
+        "fileNotFound": "ファイルが見つかりません: {{path}}",
+        "isADirectory": "{{path}}はディレクトリです",
+        "fileSizeLimit": "ファイルが{{limit}}バイトの制限を超えています",
+        "dirNotFound": "ディレクトリが見つかりません: {{path}}",
+        "fileExists": "ファイルは既に存在します: {{name}}",
+        "notFound": "見つかりません: {{path}}",
+        "dirNotEmpty": "ディレクトリが空ではありません: {{path}}",
+        "parentNotFound": "親ディレクトリが見つかりません",
+        "alreadyExists": "既に存在します: {{name}}"
     },
-    "influence": {
-      "promo-campaign": { "name": "プロモーションキャンペーン", "description": "選択したコモディティの人工的な需要を生成。" },
-      "negative-press": { "name": "ネガティブプレスリリース", "description": "対象コモディティの市場価値を一時的に下落させる。" },
-      "pump-and-dump": { "name": "パンプ・アンド・ダンプ", "description": "自動清算を伴う協調的な価格膨張。" }
-    }
-  },
-  "welcome": {
-    "title": "★☆★ Danaのホームページへようこそ ★☆★",
-    "visitorCount": "あなたは訪問者 #",
-    "signGuestbook": "ゲストブックに記入するのをお忘れなく！",
-    "altWelcome": "ようこそ",
-    "taglineDesktop": "私のウェブサイトへようこそ！デスクトップのアイコンをダブルクリックして、自由に探索してください。",
-    "taglineMobile": "私のウェブサイトへようこそ！アイコンをタップして、自由に探索してください。",
-    "ctaGuestbook": "📖 ゲストブックに記入する！",
-    "underConstruction": "🚧 工事中 🚧",
-    "footer": "最終更新: 2026年2月 | Made with ❤️"
-  },
-  "about": {
-    "title": "📝 自己紹介",
-    "altDana": "Dana",
-    "altFelix": "Felix",
-    "felixName": "Felix Ramon Vanderbilt 🐱",
-    "hello": "こんにちは！",
-    "bio": "こんにちは、私の名前は<strong>Dana</strong>です。サンフランシスコに住んでいるソフトウェアエンジニアです。",
-    "interests": "興味:",
-    "interestsList": "🏃 ランニング • 🚴 サイクリング • 💻 テクノロジー • 📚 文学 • 🤔 哲学",
-    "cat": "猫:",
-    "catName": "🐱 <strong>Felix Ramon Vanderbilt</strong>",
-    "recentlyPlayed": "最近聴いた曲（3ヶ月）:",
-    "loading": "読み込み中...",
-    "emailMe": "📧 メールを送る！"
-  },
-  "projects": {
-    "title": "📦 プロジェクト",
-    "thisWebsite": "🌐 このウェブサイト",
-    "description": "今ご覧になっているものです！",
-    "stack": "技術スタック:",
-    "viewSource": "📦 GitHubでソースを見る"
-  },
-  "resume": {
-    "name": "Dana Dzik",
-    "experience": "職歴",
-    "title": "シニアソフトウェアエンジニア",
-    "company": "Volley · サンフランシスコ, CA",
-    "dates": "2021 – 現在",
-    "education": "学歴",
-    "school": "シカゴ大学",
-    "degree": "数学と哲学の優等学士号",
-    "location": "シカゴ, IL",
-    "skills": "スキル"
-  },
-  "links": {
-    "title": "🔗 リンク"
-  },
-  "guestbook": {
-    "title": "📖 ゲストブック",
-    "signButton": "✍️ ゲストブックに記入する！",
-    "loadingEntries": "エントリーを読み込み中...",
-    "couldNotLoad": "エントリーを読み込めませんでした",
-    "noEntries": "まだエントリーがありません。最初にサインしましょう！",
-    "noMessage": "（メッセージなし）"
-  },
-  "felixgpt": {
-    "title": "🐱 FelixGPT",
-    "status": "オンライン • 対応可能",
-    "greeting": "にゃー！僕はFelixGPT、君のネコ型AIアシスタントだよ。何でも聞いてね！",
-    "placeholder": "メッセージを入力...",
-    "send": "送信"
-  },
-  "stats": {
-    "title": "📊 サイト統計",
-    "subtitle": "リアルタイム分析",
-    "loading": "分析データを読み込み中...",
-    "totalViews": "合計閲覧数",
-    "windowOpens": "ウィンドウを開いた回数",
-    "viewHeatmap": "🔥 ヒートマップを見る",
-    "conversionFunnel": "📈 コンバージョンファネル",
-    "abTest": "🧪 A/Bテスト: 起動画面の写真",
-    "abQuestion": "どの写真がより多くのエンゲージメントを獲得する？",
-    "performance": "⚡ パフォーマンス",
-    "couldNotLoad": "統計を読み込めませんでした",
-    "couldNotLoadAnalytics": "分析データを読み込めませんでした",
-    "noABData": "まだA/Bテストデータなし"
-  },
-  "popups": {
-    "winner1": {
-      "title": "おめでとうございます！！！",
-      "headline": "🎉 あなたは100万人目の訪問者です！ 🎉",
-      "body": "OKをクリックして無料のiPod Nanoを獲得！",
-      "btn1": "OK！！！",
-      "btn2": "後で獲得する"
+    "commodityExchange": {
+        "ui": {
+            "title": "商品取引ターミナル",
+            "close": "×",
+            "portfolio": "ポートフォリオ",
+            "production": "生産",
+            "improvements": "改善",
+            "marketOperations": "市場操作",
+            "buy": "購入",
+            "sell": "売却",
+            "sellAll": "全て売却",
+            "harvest": "HARVEST",
+            "harvest_EMAIL": "SCRAPE",
+            "harvest_ADS": "CLICK",
+            "harvest_DOM": "SQUAT",
+            "harvest_BW": "LEECH",
+            "harvest_SOFT": "PIRATE",
+            "harvest_VC": "PITCH",
+            "deploy": "配置",
+            "acquire": "取得",
+            "execute": "実行",
+            "installed": "導入済み",
+            "cooldown": "クールダウン",
+            "qty": "数量",
+            "avgCost": "平均コスト",
+            "pl": "損益",
+            "tick": "ティック",
+            "deployed": "配置済み",
+            "noHoldings": "保有なし。取引を開始するにはコモディティを購入してください。",
+            "unlockAt": "${{threshold}}の累計収益でアンロック",
+            "phaseLocked": "🔒 {{name}}",
+            "phaseEarningsHint": "累計収益{{threshold}}でアンロック",
+            "phase5Hint": "必要条件：初回プレステージ · レベル8 · シンポジウム3勝"
+        },
+        "commodities": {
+            "EMAIL": {
+                "name": "メールデータベース",
+                "description": "検証済みオプトインアドレス。毎日更新。"
+            },
+            "ADS": {
+                "name": "バナーインプレッション",
+                "description": "プレミアム468x60広告枠。"
+            },
+            "DOM": {
+                "name": ".comドメイン",
+                "description": "事前登録済みプレミアムドメイン名。"
+            },
+            "BW": {
+                "name": "帯域幅",
+                "description": "専用T1回線容量。1.544 Mbps。"
+            },
+            "SOFT": {
+                "name": "ソフトウェアライセンス",
+                "description": "エンタープライズボリュームライセンス。出荷準備完了。"
+            },
+            "VC": {
+                "name": "ベンチャーキャピタル",
+                "description": "IPO前投資証券。在庫限定。"
+            }
+        },
+        "factories": {
+            "list-builder": {
+                "name": "自動リストビルダー",
+                "description": "検証済みメールアドレスを24時間365日収集。結果は異なる場合があります。"
+            },
+            "banner-exchange": {
+                "name": "バナー交換",
+                "description": "ローテーション広告ネットワーク。インプレッション自動生成。"
+            },
+            "colocation-rack": {
+                "name": "コロケーションラック",
+                "description": "専用サーバーホスティング。稼働時間保証なし。"
+            },
+            "offshore-dev": {
+                "name": "オフショア開発チーム",
+                "description": "24時間開発サイクル。品質保証は保留中。"
+            }
+        },
+        "upgrades": {
+            "batch-processing": {
+                "name": "バッチ処理",
+                "description": "5単位で取引を実行。"
+            },
+            "bulk-orders": {
+                "name": "一括注文処理",
+                "description": "10単位で取引を実行。"
+            },
+            "block-trading": {
+                "name": "ブロック取引",
+                "description": "機関投資家規模のロット。50単位で取引を実行。"
+            },
+            "limit-orders": {
+                "name": "指値注文システム",
+                "description": "目標価格を設定。保有分は自動的に売却。"
+            },
+            "trend-analysis": {
+                "name": "トレンド分析パッケージ",
+                "description": "価格チャートに方向性インジケーターを表示。"
+            },
+            "cpu-overclock": {
+                "name": "CPUオーバークロック",
+                "description": "生産サイクルを1ティック短縮。不安定になる可能性あり。"
+            },
+            "overclock-ii": {
+                "name": "オーバークロック II",
+                "description": "さらなるサイクル短縮。合計-2ティック/サイクル。"
+            },
+            "quality-assurance": {
+                "name": "品質保証",
+                "description": "生産のばらつきを軽減。最低収量は最大の25%。"
+            },
+            "quality-assurance-ii": {
+                "name": "品質保証 II",
+                "description": "より厳格な基準。最低収量は最大の50%。"
+            },
+            "supply-chain": {
+                "name": "サプライチェーン統合",
+                "description": "余剰コモディティをプレミアム商品に変換。"
+            },
+            "insider-newsletter": {
+                "name": "インサイダーニュースレター",
+                "description": "市場を動かすイベントの事前通知。10秒のリードタイム。"
+            },
+            "analyst-reports": {
+                "name": "アナリストレポート",
+                "description": "トレンド強度の数値インジケーター。"
+            },
+            "moving-average": {
+                "name": "移動平均オーバーレイ",
+                "description": "価格チャート用テクニカル分析ツール。"
+            },
+            "confidential-tip": {
+                "name": "極秘情報",
+                "description": "ファンドの知人。チャート上にトレンド残り時間を表示。"
+            },
+            "material-advantage": {
+                "name": "重要な優位性",
+                "description": "重要な非公開情報。チャート上に推定目標価格を表示。"
+            },
+            "seasonal-forecast": {
+                "name": "季節予報",
+                "description": "四半期見通しレポート。現在のトレンド終了後の次の方向を表示。"
+            },
+            "insider-calendar": {
+                "name": "インサイダーカレンダー",
+                "description": "完全なスケジュール。今後のトレンド配列がチャート上に予測バーとして表示。"
+            },
+            "harvest-email": {
+                "name": "EMAIL Harvester",
+                "description": "Automated scraper. +1 EMAIL per harvest click."
+            },
+            "harvest-ads": {
+                "name": "ADS Generator",
+                "description": "Impression bot. +1 ADS per harvest click."
+            },
+            "harvest-dom": {
+                "name": "DOM Registrar",
+                "description": "Bulk registration script. +1 DOM per harvest click."
+            },
+            "harvest-bw": {
+                "name": "BW Allocator",
+                "description": "Bandwidth provisioner. +1 BW per harvest click."
+            },
+            "harvest-soft": {
+                "name": "SOFT Compiler",
+                "description": "License keygen. +1 SOFT per harvest click."
+            },
+            "harvest-vc": {
+                "name": "VC Pipeline",
+                "description": "Pitch deck generator. +1 VC per harvest click."
+            },
+            "autoscript-i": {
+                "name": "Autoscript I",
+                "description": "基本自動化。全コモディティの収穫量+25%。"
+            },
+            "autoscript-ii": {
+                "name": "Autoscript II",
+                "description": "高度な自動化。全コモディティの収穫量+50%。"
+            },
+            "autoscript-iii": {
+                "name": "Autoscript III",
+                "description": "完全自動化スイート。全コモディティの収穫量+75%。"
+            }
+        },
+        "influence": {
+            "promo-campaign": {
+                "name": "プロモーションキャンペーン",
+                "description": "選択したコモディティの人工的な需要を生成。"
+            },
+            "negative-press": {
+                "name": "ネガティブプレスリリース",
+                "description": "対象コモディティの市場価値を一時的に下落させる。"
+            },
+            "pump-and-dump": {
+                "name": "パンプ・アンド・ダンプ",
+                "description": "自動清算を伴う協調的な価格膨張。"
+            }
+        }
     },
-    "winner2": {
-      "title": "あなたが当選しました！！！",
-      "headline": "🎉 訪問者 #0x0F4240 を検出！ 🎉",
-      "body": "あなたが選ばれました！",
-      "btn1": "賞品を獲得",
-      "btn2": "後で"
+    "welcome": {
+        "title": "★☆★ Danaのホームページへようこそ ★☆★",
+        "visitorCount": "あなたは訪問者 #",
+        "signGuestbook": "ゲストブックに記入するのをお忘れなく！",
+        "altWelcome": "ようこそ",
+        "taglineDesktop": "私のウェブサイトへようこそ！デスクトップのアイコンをダブルクリックして、自由に探索してください。",
+        "taglineMobile": "私のウェブサイトへようこそ！アイコンをタップして、自由に探索してください。",
+        "ctaGuestbook": "📖 ゲストブックに記入する！",
+        "underConstruction": "🚧 工事中 🚧",
+        "footer": "最終更新: 2026年2月 | Made with ❤️"
     },
-    "error1": {
-      "title": "システムエラー",
-      "headline": "💾 RAMをもっとダウンロード 💾",
-      "body": "お使いのコンピューターのメモリが不足しています（-3KB空き容量）。",
-      "btn1": "RAMをダウンロード",
-      "btn2": "キャンセル"
+    "about": {
+        "title": "📝 自己紹介",
+        "altDana": "Dana",
+        "altFelix": "Felix",
+        "felixName": "Felix Ramon Vanderbilt 🐱",
+        "hello": "こんにちは！",
+        "bio": "こんにちは、私の名前は<strong>Dana</strong>です。サンフランシスコに住んでいるソフトウェアエンジニアです。",
+        "interests": "興味:",
+        "interestsList": "🏃 ランニング • 🚴 サイクリング • 💻 テクノロジー • 📚 文学 • 🤔 哲学",
+        "cat": "猫:",
+        "catName": "🐱 <strong>Felix Ramon Vanderbilt</strong>",
+        "recentlyPlayed": "最近聴いた曲（3ヶ月）:",
+        "loading": "読み込み中...",
+        "emailMe": "📧 メールを送る！"
     },
-    "ad1": {
-      "title": "近所の出会い",
-      "headline": "😍 あなたの地域の独身者 😍",
-      "body": "わずか5キロ圏内！",
-      "btn1": "会ってみる",
-      "btn2": "結構です"
+    "projects": {
+        "title": "📦 プロジェクト",
+        "thisWebsite": "🌐 このウェブサイト",
+        "description": "今ご覧になっているものです！",
+        "stack": "技術スタック:",
+        "viewSource": "📦 GitHubでソースを見る"
     },
-    "ad2": {
-      "title": "PCを高速化",
-      "headline": "🚀 あなたのPCは340%遅すぎます 🚀",
-      "body": "PCSpeedUp.scrをダウンロードして修正！",
-      "btn1": "高速化する",
-      "btn2": "遅いまま"
+    "resume": {
+        "name": "Dana Dzik",
+        "experience": "職歴",
+        "title": "シニアソフトウェアエンジニア",
+        "company": "Volley · サンフランシスコ, CA",
+        "dates": "2021 – 現在",
+        "education": "学歴",
+        "school": "シカゴ大学",
+        "degree": "数学と哲学の優等学士号",
+        "location": "シカゴ, IL",
+        "skills": "スキル"
     },
-    "bonus1": {
-      "title": "特別オファー！",
-      "headline": "🎁 ビジネスボーナスを獲得！ 🎁",
-      "body": "特別プロモーションオファーに選ばれました！",
-      "btn1": "今すぐ獲得！",
-      "btn2": "結構です"
+    "links": {
+        "title": "🔗 リンク"
     },
-    "bonus2": {
-      "title": "アンケート完了！",
-      "headline": "📋 フィードバックありがとうございます！ 📋",
-      "body": "感謝の気持ちとして、現金報酬を差し上げます！",
-      "btn1": "報酬を受け取る",
-      "btn2": "辞退する"
+    "guestbook": {
+        "title": "📖 ゲストブック",
+        "signButton": "✍️ ゲストブックに記入する！",
+        "loadingEntries": "エントリーを読み込み中...",
+        "couldNotLoad": "エントリーを読み込めませんでした",
+        "noEntries": "まだエントリーがありません。最初にサインしましょう！",
+        "noMessage": "（メッセージなし）"
     },
-    "bonus3": {
-      "title": "ラッキー当選者！",
-      "headline": "🍀 あなたが賞品を獲得しました！ 🍀",
-      "body": "下をクリックしてアカウントに資金を追加！",
-      "btn1": "アカウントに追加",
-      "btn2": "また今度"
-    }
-  },
-  "widgets": {
-    "winamp": {
-      "title": "WINAMP",
-      "stopped": "停止中",
-      "playing": "再生中",
-      "paused": "一時停止",
-      "time": "--/--",
-      "clickToStart": "クリックして再生を開始...",
-      "previous": "前へ",
-      "play": "再生",
-      "pause": "一時停止",
-      "stop": "停止",
-      "next": "次へ",
-      "minimize": "最小化"
+    "felixgpt": {
+        "title": "🐱 FelixGPT",
+        "status": "オンライン • 対応可能",
+        "greeting": "にゃー！僕はFelixGPT、君のネコ型AIアシスタントだよ。何でも聞いてね！",
+        "placeholder": "メッセージを入力...",
+        "send": "送信"
     },
-    "lastfm": {
-      "title": "🎧 最近聴いた曲（3ヶ月）",
-      "loading": "読み込み中...",
-      "apiNotAvailable": "APIが利用できません",
-      "noData": "データなし",
-      "offline": "オフライン",
-      "couldNotLoad": "読み込めませんでした"
+    "stats": {
+        "title": "📊 サイト統計",
+        "subtitle": "リアルタイム分析",
+        "loading": "分析データを読み込み中...",
+        "totalViews": "合計閲覧数",
+        "windowOpens": "ウィンドウを開いた回数",
+        "viewHeatmap": "🔥 ヒートマップを見る",
+        "conversionFunnel": "📈 コンバージョンファネル",
+        "abTest": "🧪 A/Bテスト: 起動画面の写真",
+        "abQuestion": "どの写真がより多くのエンゲージメントを獲得する？",
+        "performance": "⚡ パフォーマンス",
+        "couldNotLoad": "統計を読み込めませんでした",
+        "couldNotLoadAnalytics": "分析データを読み込めませんでした",
+        "noABData": "まだA/Bテストデータなし"
     },
-    "strava": {
-      "title": "🏃 Strava",
-      "loading": "アクティビティを読み込み中...",
-      "unavailable": "Stravaは利用できません",
-      "noActivities": "最近のアクティビティなし",
-      "bestRun": "🏃 ベストラン（3ヶ月）",
-      "bestRide": "🚴 ベストライド（3ヶ月）",
-      "longestRide": "🚴 最長ライド（3ヶ月）"
+    "popups": {
+        "winner1": {
+            "title": "おめでとうございます！！！",
+            "headline": "🎉 あなたは100万人目の訪問者です！ 🎉",
+            "body": "OKをクリックして無料のiPod Nanoを獲得！",
+            "btn1": "OK！！！",
+            "btn2": "後で獲得する"
+        },
+        "winner2": {
+            "title": "あなたが当選しました！！！",
+            "headline": "🎉 訪問者 #0x0F4240 を検出！ 🎉",
+            "body": "あなたが選ばれました！",
+            "btn1": "賞品を獲得",
+            "btn2": "後で"
+        },
+        "error1": {
+            "title": "システムエラー",
+            "headline": "💾 RAMをもっとダウンロード 💾",
+            "body": "お使いのコンピューターのメモリが不足しています（-3KB空き容量）。",
+            "btn1": "RAMをダウンロード",
+            "btn2": "キャンセル"
+        },
+        "ad1": {
+            "title": "近所の出会い",
+            "headline": "😍 あなたの地域の独身者 😍",
+            "body": "わずか5キロ圏内！",
+            "btn1": "会ってみる",
+            "btn2": "結構です"
+        },
+        "ad2": {
+            "title": "PCを高速化",
+            "headline": "🚀 あなたのPCは340%遅すぎます 🚀",
+            "body": "PCSpeedUp.scrをダウンロードして修正！",
+            "btn1": "高速化する",
+            "btn2": "遅いまま"
+        },
+        "bonus1": {
+            "title": "特別オファー！",
+            "headline": "🎁 ビジネスボーナスを獲得！ 🎁",
+            "body": "特別プロモーションオファーに選ばれました！",
+            "btn1": "今すぐ獲得！",
+            "btn2": "結構です"
+        },
+        "bonus2": {
+            "title": "アンケート完了！",
+            "headline": "📋 フィードバックありがとうございます！ 📋",
+            "body": "感謝の気持ちとして、現金報酬を差し上げます！",
+            "btn1": "報酬を受け取る",
+            "btn2": "辞退する"
+        },
+        "bonus3": {
+            "title": "ラッキー当選者！",
+            "headline": "🍀 あなたが賞品を獲得しました！ 🍀",
+            "body": "下をクリックしてアカウントに資金を追加！",
+            "btn1": "アカウントに追加",
+            "btn2": "また今度"
+        }
     },
-    "level": "Lv.{{level}}",
-    "levelTooltip": "レベル {{level}} · {{totalXP}} XP · 次まで {{current}}/{{next}}"
-  },
-  "levelUp": {
-    "label": "レベルアップ",
-    "hint": "スキルポイント獲得 — キャリア開発を開く"
-  },
-  "mobile": {
-    "carrier": "Pferd"
-  },
-  "themeLabels": {
-    "win95": {
-      "startButton": "スタート",
-      "startMenuTitle": "プログラム",
-      "searchPlaceholder": "Ask Jeeves",
-      "fileManager": "エクスプローラー"
+    "widgets": {
+        "winamp": {
+            "title": "WINAMP",
+            "stopped": "停止中",
+            "playing": "再生中",
+            "paused": "一時停止",
+            "time": "--/--",
+            "clickToStart": "クリックして再生を開始...",
+            "previous": "前へ",
+            "play": "再生",
+            "pause": "一時停止",
+            "stop": "停止",
+            "next": "次へ",
+            "minimize": "最小化"
+        },
+        "lastfm": {
+            "title": "🎧 最近聴いた曲（3ヶ月）",
+            "loading": "読み込み中...",
+            "apiNotAvailable": "APIが利用できません",
+            "noData": "データなし",
+            "offline": "オフライン",
+            "couldNotLoad": "読み込めませんでした"
+        },
+        "strava": {
+            "title": "🏃 Strava",
+            "loading": "アクティビティを読み込み中...",
+            "unavailable": "Stravaは利用できません",
+            "noActivities": "最近のアクティビティなし",
+            "bestRun": "🏃 ベストラン（3ヶ月）",
+            "bestRide": "🚴 ベストライド（3ヶ月）",
+            "longestRide": "🚴 最長ライド（3ヶ月）"
+        },
+        "level": "Lv.{{level}}",
+        "levelTooltip": "レベル {{level}} · {{totalXP}} XP · 次まで {{current}}/{{next}}"
     },
-    "macClassic": {
-      "startMenuTitle": "Appleメニュー",
-      "searchPlaceholder": "Sherlock",
-      "fileManager": "Finder",
-      "aboutMe": "自己紹介",
-      "projects": "プロジェクト",
-      "resume": "履歴書",
-      "bookmarks": "ブックマーク",
-      "guestBook": "ゲストブック",
-      "felixgpt": "FelixGPT",
-      "siteStats": "サイト統計",
-      "crystalQuest": "Crystal Quest",
-      "terminal": "ターミナル"
+    "levelUp": {
+        "label": "レベルアップ",
+        "hint": "スキルポイント獲得 — キャリア開発を開く"
     },
-    "apple2": {
-      "startButton": "]",
-      "startMenuTitle": "CATALOG",
-      "searchPlaceholder": "SEARCH:",
-      "fileManager": "CATALOG"
+    "mobile": {
+        "carrier": "Pferd"
     },
-    "c64": {
-      "startButton": "RUN",
-      "startMenuTitle": "LOAD",
-      "fileManager": "DIRECTORY"
-    }
-  },
-  "achievements": {
-    "first-trade": { "name": "新人の数字", "description": "最初の取引を実行する。" },
-    "penny-trader": { "name": "ペニー株", "description": "生涯収益$1を達成する。" },
-    "small-business": { "name": "個人商店", "description": "生涯収益$10を達成する。" },
-    "going-concern": { "name": "継続企業", "description": "生涯収益$100を達成する。" },
-    "dot-com-darling": { "name": "未実現の可能性", "description": "生涯収益$1,000を達成する。" },
-    "irrational-exuberance": { "name": "テクノロジー王", "description": "生涯収益$10,000を達成する。" },
-    "fire-sale": { "name": "押し目買い", "description": "弱気相場で購入する。" },
-    "first-out-the-door": { "name": "天井売り", "description": "価格が基準価値の5倍を超えた時に売却する。" },
-    "who-are-we-selling-to": { "name": "分散投資", "description": "すべてのコモディティを同時に保有する。" },
-    "factory-floor": { "name": "工場フロア", "description": "最初の工場を配置する。" },
-    "industrialist": { "name": "産業家", "description": "すべての種類の工場を配置する。" },
-    "assembly-line": { "name": "組立ライン", "description": "5つ以上の工場を配置する。" },
-    "wasnt-brains": { "name": "完全自動化", "description": "すべてのアップグレードを所有する。" },
-    "speak-to-a-retriever": { "name": "マーケットメイカー", "description": "すべての影響力操作を実行する。" },
-    "could-be-wrong": { "name": "市場独占", "description": "いずれかのコモディティの市場を独占する。" },
-    "phase-2": { "name": "フェーズ2", "description": "生産フェーズを解放する。" },
-    "phase-3": { "name": "フェーズ3", "description": "改善フェーズを解放する。" },
-    "phase-4": { "name": "フェーズ4", "description": "市場操作フェーズを解放する。" },
-    "all-commodities": { "name": "デイトレーダー", "description": "すべてのコモディティを解放する。" },
-    "limit-filled": { "name": "指値約定", "description": "指値注文を自動的に約定させる。" },
-    "calm-mode": { "name": "Business and Meetings are Important", "description": "カームモードを有効にする。" },
-    "seein-double": { "name": "I'm Seein' Double! Four Krusties!", "description": "Experience a chromatic aberration glitch." },
-    "explorer": { "name": "Internet Explorer", "description": "すべてのウィンドウタイプを開く。" },
-    "interior-decorator": { "name": "スタイルの目", "description": "4つすべてのテーマを試す。" },
-    "dark-mode": { "name": "ダークモード", "description": "ダークモードに切り替える。" },
-    "polyglot": { "name": "ポリグロット", "description": "4つ以上の言語を試す。" },
-    "tourist": { "name": "観光客", "description": "自己紹介、プロジェクト、履歴書、リンクを訪問する。" },
-    "archivist": { "name": "システム管理者", "description": "3:\\DASに移動する。" },
-    "syslog": { "name": "Syslog", "description": "syslog.txtを読む。" },
-    "readme": { "name": "RTFM", "description": "WELTのマニュアルを読む。" },
-    "hacker": { "name": "I'm In", "description": "最初のターミナルコマンドを実行する。" },
-    "author": { "name": "著者", "description": "エディターでファイルを保存する。" },
-    "programmer": { "name": "プログラマー", "description": "WELTプログラムを実行する。" },
-    "navigator": { "name": "ナビゲーター", "description": "cdを使って5つの異なるディレクトリを訪問する。" },
-    "choo-choo": { "name": "シュッシュッポッポ", "description": "slコマンドを実行する。" },
-    "ls-user": { "name": "Dir /W", "description": "ディレクトリの内容を一覧表示する。" },
-    "tree-hugger": { "name": "木の友", "description": "ディレクトリツリーを表示する。" },
-    "you-are-here": { "name": "現在地", "description": "作業ディレクトリを表示する。" },
-    "open-sesame": { "name": "開けゴマ", "description": "コマンドラインからファイルを開く。" },
-    "red-pen": { "name": "Changes Requested", "description": "エディタでファイルを開く。" },
-    "clean-desk": { "name": "クリーンデスク", "description": "ターミナルをクリアする。" },
-    "self-aware": { "name": "自己認識", "description": "マシンに自分が誰か聞く。" },
-    "rtfm": { "name": "RTFM", "description": "ヘルプテキストを読む。" },
-    "from-nothing": { "name": "Ex Nihilo", "description": "ファイルを作成する。" },
-    "empty-room": { "name": "Tabula Rasa", "description": "ディレクトリを作成する。" },
-    "shredder": { "name": "Shredder", "description": "ファイルを削除する。" },
-    "witness-protection": { "name": "Label Maker", "description": "ファイルの名前を変更する。" },
-    "guest": { "name": "ゲスト", "description": "ゲストブックを開く。" },
-    "signed": { "name": "H.A.G.S.", "description": "ゲストブックに記入ボタンをクリックする。" },
-    "cat-person": { "name": "猫好き", "description": "FelixGPTに5件のメッセージを送る。" },
-    "meow": { "name": "猫使い", "description": "FelixGPTにニャーと言う。" },
-    "pinball-wizard": { "name": "ピンボールの魔術師", "description": "ピンボールで1,000点を獲得する。" },
-    "high-roller": { "name": "ハイローラー", "description": "ピンボールで5,000点を獲得する。" },
-    "target-practice": { "name": "射撃練習", "description": "1回のゲームで4つすべてのターゲットに当てる。" },
-    "bounty-hunter": { "name": "バウンティハンター", "description": "ピンボールで10,000点を獲得する。" },
-    "welt-beginner": { "name": "Hello World", "description": "最初の演習に合格する。" },
-    "welt-intermediate": { "name": "Vorstellung", "description": "演習を3つ合格する。" },
-    "welt-advanced": { "name": "Ding an Sich", "description": "演習を5つ合格する。" },
-    "welt-master": { "name": "ザ・ワールド", "description": "Die Weltに合格する。" },
-    "nibelung": { "name": "ニーベルング", "description": "リングを鍛造する。" },
-    "erlosung": { "name": "Erlösung", "description": "全ての演習に合格する。" },
-    "grund-compiled": { "name": "Grundlegung", "description": "WELTプログラムをGRUNDにコンパイルする。" },
-    "grund-executed": { "name": "Sufficient Reason", "description": "GRUNDプログラムを実行する。" },
-    "ring-overflow": { "name": "イクシオンの輪", "description": "リングバッファをオーバーフローさせる。" },
-    "ring-cycle": { "name": "永劫回帰", "description": "リングの完全な回転を達成する。" },
-    "ring-spin": { "name": "Slötzendämmerung", "description": "満杯のリングの全スロットを上書きする。" },
-    "thermal-protection": { "name": "熱保護", "description": "WELTの熱保護を発動させる。" },
-    "suffering": { "name": "一切皆苦", "description": "悟りを開く。" },
-    "freakgpt": { "name": "Altman Winklevossed Me in Q4 2025", "description": "FreakGPTを使ってリクエストを処理する。" },
-    "keyboard-cat": { "name": "キーボードの上に座る", "description": "FelixGPTにコーディングの助けを求める。" },
-    "popup-enjoyer": { "name": "ナイジェリアの王配", "description": "ボーナスポップアップを5回受け取る。" },
-    "open-source": { "name": "オープンソース", "description": "GitHubでソースコードを見る。" },
-    "link-and-build": { "name": "リンク・アンド・ビルド", "description": "LinkedInプロフィールを訪問する。" },
-    "sliding-into-dms": { "name": "DM突撃", "description": "メールリンクをクリックする。" },
-    "connections": { "name": "コネクション", "description": "GitHubプロフィールを訪問する。" },
-    "beyond-the-binary": { "name": "Beyond the Binary", "description": "回答を拒否する。" },
-    "y2k-survivor": { "name": "Y2Kサバイバー", "description": "セッションを30分間維持する。" },
-    "big-spender": { "name": "金の動き", "description": "正規化セッションコストを$0.001まで上げる。" },
-    "whale": { "name": "札束追い", "description": "正規化セッションコストを$0.002まで上げる。" },
-    "leviathan": { "name": "リヴァイアサン", "description": "正規化セッションコストを$0.003まで上げる。" },
-    "qa-inspector": { "name": "俺の環境では動く", "description": "テストレポートバッジをクリックしてCI結果を確認する。" },
-    "first-draft": { "name": "First Thesis", "description": "Complete your first symposium." },
-    "posse-up": { "name": "Quorum", "description": "Win a symposium." },
-    "faction-recruit": { "name": "Faction Recruit", "description": "Unlock your first faction unit." },
-    "full-spiral": { "name": "Full Spiral", "description": "Complete the faction unlock spiral." },
-    "no-drifters": { "name": "Pure Theory", "description": "非常勤ユニットなしでランに勝利する。" },
-    "triple-threat": { "name": "Triple Threat", "description": "Level a unit to Level 3 in a single run." },
-    "ive-been-wrong": { "name": "Bubble Popper", "description": "Prestige for the first time." },
-    "doesnt-matter-what-floor": { "name": "Serial Popper", "description": "Prestige 5 times." },
-    "hindsight-shopper": { "name": "Hindsight Shopper", "description": "Purchase your first Hindsight upgrade." },
-    "tell-them-theyll-be-ok": { "name": "Diamond Hands", "description": "Accumulate 50 Hindsight currency." },
-    "career-starter": { "name": "Career Starter", "description": "Choose your first career path." },
-    "career-switcher": { "name": "Pivot", "description": "Switch careers." },
-    "skill-tree-novice": { "name": "Budding Professional", "description": "Unlock 5 skill tree nodes." },
-    "skill-tree-master": { "name": "Career Completionist", "description": "Unlock 15 skill tree nodes." },
-    "renaissance": { "name": "Renaissance", "description": "Reach level 5 and complete a symposium." },
-    "full-stack": { "name": "Full Stack", "description": "Prestige, win a symposium, and choose a career." },
-    "that-ones-a-person": { "name": "First Hire", "description": "Hire your first employee." },
-    "we-make-nothing": { "name": "Full House", "description": "Fill every slot in the org chart." },
-    "you-dont-get-to-choose": { "name": "Downsizing", "description": "Fire 3 employees." },
-    "reorg": { "name": "Reorg", "description": "Reorganize the org chart." },
-    "greenhorn": { "name": "Postdoc", "description": "Win your first symposium." },
-    "deputy": { "name": "Adjunct", "description": "Win 5 symposia." },
-    "sheriff": { "name": "Lecturer", "description": "Win 15 symposia." },
-    "marshal": { "name": "Department Chair", "description": "Win 50 symposia." },
-    "level-5": { "name": "Level 5", "description": "Reach player level 5." },
-    "level-10": { "name": "Level 10", "description": "Reach player level 10." },
-    "level-20": { "name": "Level 20", "description": "Reach player level 20." },
-    "level-35": { "name": "Level 35", "description": "Reach player level 35." },
-    "level-50": { "name": "Level 50", "description": "Reach player level 50." },
-    "phase-5": { "name": "Phase 5", "description": "Unlock the Human Resources phase." },
-    "win-streak": { "name": "Publish or Perish", "description": "Win 3 symposia in a row." },
-    "serial-pivoter": { "name": "Serial Pivoter", "description": "Switch careers 5 times." },
-    "overqualified": { "name": "Overqualified", "description": "Max out any career branch." },
-    "executive-material": { "name": "Executive Material", "description": "Unlock the Executive career branch." },
-    "pieces-of-paper": { "name": "Completionist", "description": "Buy every Hindsight upgrade." },
-    "through-the-looking-glass": { "name": "It's Gonna Be Ugly for a While", "description": "Ascend for the first time." },
-    "eternal-return": { "name": "People Want to Live Like This", "description": "Ascend 3 times." },
-    "samsara": { "name": "It's All Just the Same Thing, Over and Over", "description": "Ascend 5 times." },
-    "foresight-shopper": { "name": "So That We May Survive", "description": "Purchase a Foresight upgrade." },
-    "oracle-of-delphi": { "name": "It's Certainly No Different Today Than It's Ever Been", "description": "Purchase every Foresight upgrade." },
-    "windfall": { "name": "I Still Need the Money", "description": "Earn 10+ Foresight in a single ascension." },
-    "syndicate-complete": { "name": "Existentialist Canon", "description": "Collect all Existentialist units." },
-    "deputies-complete": { "name": "Idealist Archive", "description": "Collect all Idealist units." },
-    "collective-complete": { "name": "Rationalist Library", "description": "Collect all Rationalist units." },
-    "prospectors-complete": { "name": "Post-Structural Reader", "description": "Collect all Post-Structuralist units." },
-    "tenure-track": { "name": "Tenure Track", "description": "Reach round 10 in a single run." },
-    "associate-prof": { "name": "Associate Professor", "description": "Reach round 15 in a single run." },
-    "full-prof": { "name": "Full Professor", "description": "Reach round 20 in a single run." },
-    "endowed-chair": { "name": "Endowed Chair", "description": "Reach round 25 in a single run." },
-    "dissertation-defense": { "name": "Dissertation Defense", "description": "Defeat your first boss." },
-    "summa-cum-laude": { "name": "Summa Cum Laude", "description": "Defeat a boss without losing any units." },
-    "comprehensive-exams": { "name": "Comprehensive Exams", "description": "Defeat all 4 distinct bosses." },
-    "vertical-integration": { "name": "Vertical Integration", "description": "Have unlocked nodes in all three main career branches." },
-    "exit-interview": { "name": "Exit Interview", "description": "Switch careers during the same session as a prestige." },
-    "phase-6": { "name": "Phase 6", "description": "Unlock the Structured Products Desk." },
-    "its-just-money": { "name": "It's Just Money; It's Made Up", "description": "Mint your first Digital Asset Security." },
-    "be-first": { "name": "Be First, Be Smarter, Or Cheat", "description": "Reach AAA credit rating." },
-    "just-silence": { "name": "I Don't Hear a Thing, Just Silence", "description": "Recover to A+ within 100 ticks of a margin event." },
-    "music-stops": { "name": "The Music Is About to Stop", "description": "Have 6+ active DAS simultaneously." },
-    "it-goes-quickly": { "name": "It Goes Quite Quickly", "description": "Borrow at 90%+ of capacity." },
-    "rainy-day": { "name": "400 Away for a Rainy Day", "description": "Fully repay all debt with 3+ DAS performing." },
-    "three-ways": { "name": "There Are Three Ways to Make a Living in This Business", "description": "Trade, harvest, and deploy a factory in one session." },
-    "killed-this-firm": { "name": "If You Do This You Will Have Killed This Firm", "description": "Hit F credit rating." },
-    "someone-pays": { "name": "Someone Is Going to Have to Pay for This", "description": "Trigger a margin event." },
-    "harvest-100": { "name": "Cookie Clicker", "description": "Harvest 100 times." },
-    "harvest-1000": { "name": "Grandma", "description": "Harvest 1,000 times." },
-    "harvest-10000": { "name": "Farm", "description": "Harvest 10,000 times." },
-    "harvest-50000": { "name": "Mine", "description": "50,000回収穫する。" },
-    "harvest-100000": { "name": "Factory", "description": "100,000回収穫する。" },
-    "harvest-email-500": { "name": "スパム王", "description": "EMAILを500回収穫する。" },
-    "harvest-ads-500": { "name": "インプレッション農家", "description": "ADSを500回収穫する。" },
-    "harvest-dom-500": { "name": "ドメインスクワッター", "description": "DOMを500回収穫する。" },
-    "harvest-bw-500": { "name": "帯域幅の大食い", "description": "BWを500回収穫する。" },
-    "harvest-soft-500": { "name": "Warez配布者", "description": "SOFTを500回収穫する。" },
-    "harvest-vc-500": { "name": "ピッチデッキマシン", "description": "VCを500回収穫する。" },
-    "definitely-not-a-bot": { "name": "You STOLE Fizzy Lifting Drinks", "description": "超人的なクリック速度を達成する。" },
-    "la-pensee-francaise": { "name": "La Pensée Française", "description": "???" },
-    "der-deutsche-idealismus": { "name": "Der Deutsche Idealismus", "description": "???" },
-    "amor-fati": { "name": "運命愛", "description": "一度も負けずにシンポジウムに勝利する。" },
-    "continental-breakfast": { "name": "コンチネンタル・ブレックファスト", "description": "4つの哲学派すべてを編成に入れて勝利する。" },
-    "independent-study": { "name": "自主研究", "description": "非常勤ユニットのみでシンポジウムに勝利する。" },
-    "survey-course": { "name": "概論講座", "description": "各派閥を過半数としてシンポジウムに勝利する。" },
-    "revaluation-of-all-values": { "name": "一切の価値の転換", "description": "???" },
-    "expressionism-in-philosophy": { "name": "哲学における表現主義", "description": "???" },
-    "self-assessment": { "name": "Self-Assessment", "description": "実績ウィンドウを初めて開く。" },
-    "performance-review": { "name": "Performance Review", "description": "実績ウィンドウを10回開く。" },
-    "observer-effect": { "name": "Observer Effect", "description": "実績ウィンドウを50回開く。" },
-    "the-unexamined-life": { "name": "The Unexamined Life", "description": "実績ウィンドウを200回開く。" },
-    "participation-trophy": { "name": "Initiate", "description": "実績を10個獲得する。" },
-    "overachiever": { "name": "Argonaut", "description": "実績を25個獲得する。" },
-    "completionist": { "name": "Olympian", "description": "実績を50個獲得する。" },
-    "herculean": { "name": "Herculean", "description": "実績を100個獲得する。" },
-    "promethean": { "name": "Promethean", "description": "実績を150個獲得する。" },
-    "sisyphean": { "name": "Sisyphean", "description": "実績を200個獲得する。" },
-    "graveyard-shift": { "name": "Graveyard Shift", "description": "深夜0時から午前5時の間に実績を確認する。" },
-    "new-moon": { "name": "New Moon", "description": "新月の間に実績を開く。" },
-    "waxing-crescent": { "name": "Waxing Crescent", "description": "三日月の間に実績を開く。" },
-    "first-quarter": { "name": "First Quarter", "description": "上弦の月の間に実績を開く。" },
-    "waxing-gibbous": { "name": "Waxing Gibbous", "description": "十三夜月の間に実績を開く。" },
-    "full-moon": { "name": "Full Moon", "description": "満月の間に実績を開く。" },
-    "waning-gibbous": { "name": "Waning Gibbous", "description": "十八夜月の間に実績を開く。" },
-    "last-quarter": { "name": "Last Quarter", "description": "下弦の月の間に実績を開く。" },
-    "waning-crescent": { "name": "Waning Crescent", "description": "二十六夜月の間に実績を開く。" },
-    "time-traveler": { "name": "Time Traveler", "description": "ミレニアム以前から訪問する。" },
-    "netscape-navigator": { "name": "Netscape Navigator", "description": "1996年のようにブラウズする。" },
-    "640k-enough": { "name": "640K Ought to Be Enough", "description": "十分に小さな画面で表示する。" },
-    "lingua-franca": { "name": "Lingua Franca", "description": "学者の言語を話す。" },
-    "dial-up-connection": { "name": "Dial-Up Connection", "description": "ヴィンテージ速度で接続する。" },
-    "year-to-remember": { "name": "A Year to Remember", "description": "Pferd approved." },
-    "negative-timestamp": { "name": "fix: miscalculation in date.now()", "description": "Make the system clock E2E tests pass again." },
-    "achievement-achievement": { "name": "Achievement Achievement", "description": "実績を見ながら実績を獲得する。" },
-    "arcana-fool": { "name": "The Fool", "description": "回顧アップグレードを購入せずにプレステージする。" },
-    "arcana-magician": { "name": "The Magician", "description": "最初のマーケットアップグレードを購入する。" },
-    "arcana-priestess": { "name": "The High Priestess", "description": "深夜の新月の間に実績を開く。" },
-    "arcana-empress": { "name": "The Empress", "description": "10以上の工場を稼働させる。" },
-    "arcana-emperor": { "name": "The Emperor", "description": "レベル20に到達する。" },
-    "arcana-hierophant": { "name": "The Hierophant", "description": "1セッションでGrundを10回コンパイルする。" },
-    "arcana-lovers": { "name": "The Lovers", "description": "ちょうど2つの学派でシンポジウムに勝利する。" },
-    "arcana-chariot": { "name": "The Chariot", "description": "5回連続でシンポジウムに勝利する。" },
-    "arcana-strength": { "name": "Strength", "description": "100ティック後にマージンイベントから回復する。" },
-    "arcana-hermit": { "name": "The Hermit", "description": "1セッションで45分過ごす。" },
-    "arcana-fortune": { "name": "Wheel of Fortune", "description": "通算500回の取引を実行する。" },
-    "arcana-justice": { "name": "Justice", "description": "すべてのコモディティを完璧なバランスで保持する。" },
-    "arcana-hanged": { "name": "The Hanged Man", "description": "3つ以上の市場が下落中に実績を開く。" },
-    "arcana-death": { "name": "Death", "description": "3回目のプレステージを行う。" },
-    "arcana-temperance": { "name": "Temperance", "description": "無借金で仕組み商品を作成する。" },
-    "arcana-devil": { "name": "The Devil", "description": "借入能力の95%以上を借り入れる。" },
-    "arcana-tower": { "name": "The Tower", "description": "信用格付けの格下げを経験する。" },
-    "arcana-star": { "name": "The Star", "description": "すべての市場が上昇中に実績を開く。" },
-    "arcana-moon": { "name": "The Moon", "description": "8つの月相実績をすべて獲得する。" },
-    "arcana-sun": { "name": "The Sun", "description": "週末の午後に実績を開く。" },
-    "arcana-judgement": { "name": "Judgement", "description": "合計75個の実績を獲得する。" },
-    "arcana-world": { "name": "The World", "description": "他のすべての大アルカナを獲得する。" },
-    "bsod-trigger": { "name": "Fatal Exception 420", "description": "kernel.weltを破損させてブルースクリーンを引き起こす。" },
-    "display-glitch": { "name": "Waiting for the Gift of Sound and Vision", "description": "display.weltを破損させて画面表示を壊す。" },
-    "clock-glitch": { "name": "Does Anybody Really Know What Time It Is?", "description": "clock.weltを破損させてシステム時計を狂わせる。" },
-    "memory-glitch": { "name": "PC LOAD LETTER", "description": "memory.weltを破損させてメモリ障害エラーを引き起こす。" },
-    "restart-glitch": { "name": "Have You Tried Turning It Off and On Again?", "description": "boot.weltを破損させてシステムを強制再起動する。" }
-  },
-  "symposium": {
+    "themeLabels": {
+        "win95": {
+            "startButton": "スタート",
+            "startMenuTitle": "プログラム",
+            "searchPlaceholder": "Ask Jeeves",
+            "fileManager": "エクスプローラー"
+        },
+        "macClassic": {
+            "startMenuTitle": "Appleメニュー",
+            "searchPlaceholder": "Sherlock",
+            "fileManager": "Finder",
+            "aboutMe": "自己紹介",
+            "projects": "プロジェクト",
+            "resume": "履歴書",
+            "bookmarks": "ブックマーク",
+            "guestBook": "ゲストブック",
+            "felixgpt": "FelixGPT",
+            "siteStats": "サイト統計",
+            "crystalQuest": "Crystal Quest",
+            "terminal": "ターミナル"
+        },
+        "apple2": {
+            "startButton": "]",
+            "startMenuTitle": "CATALOG",
+            "searchPlaceholder": "SEARCH:",
+            "fileManager": "CATALOG"
+        },
+        "c64": {
+            "startButton": "RUN",
+            "startMenuTitle": "LOAD",
+            "fileManager": "DIRECTORY"
+        }
+    },
+    "achievements": {
+        "first-trade": {
+            "name": "新人の数字",
+            "description": "最初の取引を実行する。"
+        },
+        "penny-trader": {
+            "name": "ペニー株",
+            "description": "生涯収益$1を達成する。"
+        },
+        "small-business": {
+            "name": "個人商店",
+            "description": "生涯収益$10を達成する。"
+        },
+        "going-concern": {
+            "name": "継続企業",
+            "description": "生涯収益$100を達成する。"
+        },
+        "dot-com-darling": {
+            "name": "未実現の可能性",
+            "description": "生涯収益$1,000を達成する。"
+        },
+        "irrational-exuberance": {
+            "name": "テクノロジー王",
+            "description": "生涯収益$10,000を達成する。"
+        },
+        "fire-sale": {
+            "name": "押し目買い",
+            "description": "弱気相場で購入する。"
+        },
+        "first-out-the-door": {
+            "name": "天井売り",
+            "description": "価格が基準価値の5倍を超えた時に売却する。"
+        },
+        "who-are-we-selling-to": {
+            "name": "分散投資",
+            "description": "すべてのコモディティを同時に保有する。"
+        },
+        "factory-floor": {
+            "name": "工場フロア",
+            "description": "最初の工場を配置する。"
+        },
+        "industrialist": {
+            "name": "産業家",
+            "description": "すべての種類の工場を配置する。"
+        },
+        "assembly-line": {
+            "name": "組立ライン",
+            "description": "5つ以上の工場を配置する。"
+        },
+        "wasnt-brains": {
+            "name": "完全自動化",
+            "description": "すべてのアップグレードを所有する。"
+        },
+        "speak-to-a-retriever": {
+            "name": "マーケットメイカー",
+            "description": "すべての影響力操作を実行する。"
+        },
+        "could-be-wrong": {
+            "name": "市場独占",
+            "description": "いずれかのコモディティの市場を独占する。"
+        },
+        "phase-2": {
+            "name": "フェーズ2",
+            "description": "生産フェーズを解放する。"
+        },
+        "phase-3": {
+            "name": "フェーズ3",
+            "description": "改善フェーズを解放する。"
+        },
+        "phase-4": {
+            "name": "フェーズ4",
+            "description": "市場操作フェーズを解放する。"
+        },
+        "all-commodities": {
+            "name": "デイトレーダー",
+            "description": "すべてのコモディティを解放する。"
+        },
+        "limit-filled": {
+            "name": "指値約定",
+            "description": "指値注文を自動的に約定させる。"
+        },
+        "calm-mode": {
+            "name": "Business and Meetings are Important",
+            "description": "カームモードを有効にする。"
+        },
+        "seein-double": {
+            "name": "I'm Seein' Double! Four Krusties!",
+            "description": "Experience a chromatic aberration glitch."
+        },
+        "explorer": {
+            "name": "Internet Explorer",
+            "description": "すべてのウィンドウタイプを開く。"
+        },
+        "interior-decorator": {
+            "name": "スタイルの目",
+            "description": "4つすべてのテーマを試す。"
+        },
+        "dark-mode": {
+            "name": "ダークモード",
+            "description": "ダークモードに切り替える。"
+        },
+        "polyglot": {
+            "name": "ポリグロット",
+            "description": "4つ以上の言語を試す。"
+        },
+        "tourist": {
+            "name": "観光客",
+            "description": "自己紹介、プロジェクト、履歴書、リンクを訪問する。"
+        },
+        "archivist": {
+            "name": "システム管理者",
+            "description": "3:\\DASに移動する。"
+        },
+        "syslog": {
+            "name": "Syslog",
+            "description": "syslog.txtを読む。"
+        },
+        "readme": {
+            "name": "RTFM",
+            "description": "WELTのマニュアルを読む。"
+        },
+        "hacker": {
+            "name": "I'm In",
+            "description": "最初のターミナルコマンドを実行する。"
+        },
+        "author": {
+            "name": "著者",
+            "description": "エディターでファイルを保存する。"
+        },
+        "programmer": {
+            "name": "プログラマー",
+            "description": "WELTプログラムを実行する。"
+        },
+        "navigator": {
+            "name": "ナビゲーター",
+            "description": "cdを使って5つの異なるディレクトリを訪問する。"
+        },
+        "choo-choo": {
+            "name": "シュッシュッポッポ",
+            "description": "slコマンドを実行する。"
+        },
+        "ls-user": {
+            "name": "Dir /W",
+            "description": "ディレクトリの内容を一覧表示する。"
+        },
+        "tree-hugger": {
+            "name": "木の友",
+            "description": "ディレクトリツリーを表示する。"
+        },
+        "you-are-here": {
+            "name": "現在地",
+            "description": "作業ディレクトリを表示する。"
+        },
+        "open-sesame": {
+            "name": "開けゴマ",
+            "description": "コマンドラインからファイルを開く。"
+        },
+        "red-pen": {
+            "name": "Changes Requested",
+            "description": "エディタでファイルを開く。"
+        },
+        "clean-desk": {
+            "name": "クリーンデスク",
+            "description": "ターミナルをクリアする。"
+        },
+        "self-aware": {
+            "name": "自己認識",
+            "description": "マシンに自分が誰か聞く。"
+        },
+        "rtfm": {
+            "name": "RTFM",
+            "description": "ヘルプテキストを読む。"
+        },
+        "from-nothing": {
+            "name": "Ex Nihilo",
+            "description": "ファイルを作成する。"
+        },
+        "empty-room": {
+            "name": "Tabula Rasa",
+            "description": "ディレクトリを作成する。"
+        },
+        "shredder": {
+            "name": "Shredder",
+            "description": "ファイルを削除する。"
+        },
+        "witness-protection": {
+            "name": "Label Maker",
+            "description": "ファイルの名前を変更する。"
+        },
+        "guest": {
+            "name": "ゲスト",
+            "description": "ゲストブックを開く。"
+        },
+        "signed": {
+            "name": "H.A.G.S.",
+            "description": "ゲストブックに記入ボタンをクリックする。"
+        },
+        "cat-person": {
+            "name": "猫好き",
+            "description": "FelixGPTに5件のメッセージを送る。"
+        },
+        "meow": {
+            "name": "猫使い",
+            "description": "FelixGPTにニャーと言う。"
+        },
+        "pinball-wizard": {
+            "name": "ピンボールの魔術師",
+            "description": "ピンボールで1,000点を獲得する。"
+        },
+        "high-roller": {
+            "name": "ハイローラー",
+            "description": "ピンボールで5,000点を獲得する。"
+        },
+        "target-practice": {
+            "name": "射撃練習",
+            "description": "1回のゲームで4つすべてのターゲットに当てる。"
+        },
+        "bounty-hunter": {
+            "name": "バウンティハンター",
+            "description": "ピンボールで10,000点を獲得する。"
+        },
+        "welt-beginner": {
+            "name": "Hello World",
+            "description": "最初の演習に合格する。"
+        },
+        "welt-intermediate": {
+            "name": "Vorstellung",
+            "description": "演習を3つ合格する。"
+        },
+        "welt-advanced": {
+            "name": "Ding an Sich",
+            "description": "演習を5つ合格する。"
+        },
+        "welt-master": {
+            "name": "ザ・ワールド",
+            "description": "Die Weltに合格する。"
+        },
+        "nibelung": {
+            "name": "ニーベルング",
+            "description": "リングを鍛造する。"
+        },
+        "erlosung": {
+            "name": "Erlösung",
+            "description": "全ての演習に合格する。"
+        },
+        "grund-compiled": {
+            "name": "Grundlegung",
+            "description": "WELTプログラムをGRUNDにコンパイルする。"
+        },
+        "grund-executed": {
+            "name": "Sufficient Reason",
+            "description": "GRUNDプログラムを実行する。"
+        },
+        "ring-overflow": {
+            "name": "イクシオンの輪",
+            "description": "リングバッファをオーバーフローさせる。"
+        },
+        "ring-cycle": {
+            "name": "永劫回帰",
+            "description": "リングの完全な回転を達成する。"
+        },
+        "ring-spin": {
+            "name": "Slötzendämmerung",
+            "description": "満杯のリングの全スロットを上書きする。"
+        },
+        "thermal-protection": {
+            "name": "熱保護",
+            "description": "WELTの熱保護を発動させる。"
+        },
+        "suffering": {
+            "name": "一切皆苦",
+            "description": "悟りを開く。"
+        },
+        "freakgpt": {
+            "name": "Altman Winklevossed Me in Q4 2025",
+            "description": "FreakGPTを使ってリクエストを処理する。"
+        },
+        "keyboard-cat": {
+            "name": "キーボードの上に座る",
+            "description": "FelixGPTにコーディングの助けを求める。"
+        },
+        "popup-enjoyer": {
+            "name": "ナイジェリアの王配",
+            "description": "ボーナスポップアップを5回受け取る。"
+        },
+        "open-source": {
+            "name": "オープンソース",
+            "description": "GitHubでソースコードを見る。"
+        },
+        "link-and-build": {
+            "name": "リンク・アンド・ビルド",
+            "description": "LinkedInプロフィールを訪問する。"
+        },
+        "sliding-into-dms": {
+            "name": "DM突撃",
+            "description": "メールリンクをクリックする。"
+        },
+        "connections": {
+            "name": "コネクション",
+            "description": "GitHubプロフィールを訪問する。"
+        },
+        "beyond-the-binary": {
+            "name": "Beyond the Binary",
+            "description": "回答を拒否する。"
+        },
+        "y2k-survivor": {
+            "name": "Y2Kサバイバー",
+            "description": "セッションを30分間維持する。"
+        },
+        "big-spender": {
+            "name": "金の動き",
+            "description": "正規化セッションコストを$0.001まで上げる。"
+        },
+        "whale": {
+            "name": "札束追い",
+            "description": "正規化セッションコストを$0.002まで上げる。"
+        },
+        "leviathan": {
+            "name": "リヴァイアサン",
+            "description": "正規化セッションコストを$0.003まで上げる。"
+        },
+        "qa-inspector": {
+            "name": "俺の環境では動く",
+            "description": "テストレポートバッジをクリックしてCI結果を確認する。"
+        },
+        "first-draft": {
+            "name": "First Thesis",
+            "description": "Complete your first symposium."
+        },
+        "posse-up": {
+            "name": "Quorum",
+            "description": "Win a symposium."
+        },
+        "faction-recruit": {
+            "name": "Faction Recruit",
+            "description": "Unlock your first faction unit."
+        },
+        "full-spiral": {
+            "name": "Full Spiral",
+            "description": "Complete the faction unlock spiral."
+        },
+        "no-drifters": {
+            "name": "Pure Theory",
+            "description": "非常勤ユニットなしでランに勝利する。"
+        },
+        "triple-threat": {
+            "name": "Triple Threat",
+            "description": "Level a unit to Level 3 in a single run."
+        },
+        "ive-been-wrong": {
+            "name": "Bubble Popper",
+            "description": "Prestige for the first time."
+        },
+        "doesnt-matter-what-floor": {
+            "name": "Serial Popper",
+            "description": "Prestige 5 times."
+        },
+        "hindsight-shopper": {
+            "name": "Hindsight Shopper",
+            "description": "Purchase your first Hindsight upgrade."
+        },
+        "tell-them-theyll-be-ok": {
+            "name": "Diamond Hands",
+            "description": "Accumulate 50 Hindsight currency."
+        },
+        "career-starter": {
+            "name": "Career Starter",
+            "description": "Choose your first career path."
+        },
+        "career-switcher": {
+            "name": "Pivot",
+            "description": "Switch careers."
+        },
+        "skill-tree-novice": {
+            "name": "Budding Professional",
+            "description": "Unlock 5 skill tree nodes."
+        },
+        "skill-tree-master": {
+            "name": "Career Completionist",
+            "description": "Unlock 15 skill tree nodes."
+        },
+        "renaissance": {
+            "name": "Renaissance",
+            "description": "Reach level 5 and complete a symposium."
+        },
+        "full-stack": {
+            "name": "Full Stack",
+            "description": "Prestige, win a symposium, and choose a career."
+        },
+        "that-ones-a-person": {
+            "name": "First Hire",
+            "description": "Hire your first employee."
+        },
+        "we-make-nothing": {
+            "name": "Full House",
+            "description": "Fill every slot in the org chart."
+        },
+        "you-dont-get-to-choose": {
+            "name": "Downsizing",
+            "description": "Fire 3 employees."
+        },
+        "reorg": {
+            "name": "Reorg",
+            "description": "Reorganize the org chart."
+        },
+        "greenhorn": {
+            "name": "Postdoc",
+            "description": "Win your first symposium."
+        },
+        "deputy": {
+            "name": "Adjunct",
+            "description": "Win 5 symposia."
+        },
+        "sheriff": {
+            "name": "Lecturer",
+            "description": "Win 15 symposia."
+        },
+        "marshal": {
+            "name": "Department Chair",
+            "description": "Win 50 symposia."
+        },
+        "level-5": {
+            "name": "Level 5",
+            "description": "Reach player level 5."
+        },
+        "level-10": {
+            "name": "Level 10",
+            "description": "Reach player level 10."
+        },
+        "level-20": {
+            "name": "Level 20",
+            "description": "Reach player level 20."
+        },
+        "level-35": {
+            "name": "Level 35",
+            "description": "Reach player level 35."
+        },
+        "level-50": {
+            "name": "Level 50",
+            "description": "Reach player level 50."
+        },
+        "phase-5": {
+            "name": "Phase 5",
+            "description": "Unlock the Human Resources phase."
+        },
+        "win-streak": {
+            "name": "Publish or Perish",
+            "description": "Win 3 symposia in a row."
+        },
+        "serial-pivoter": {
+            "name": "Serial Pivoter",
+            "description": "Switch careers 5 times."
+        },
+        "overqualified": {
+            "name": "Overqualified",
+            "description": "Max out any career branch."
+        },
+        "executive-material": {
+            "name": "Executive Material",
+            "description": "Unlock the Executive career branch."
+        },
+        "pieces-of-paper": {
+            "name": "Completionist",
+            "description": "Buy every Hindsight upgrade."
+        },
+        "through-the-looking-glass": {
+            "name": "It's Gonna Be Ugly for a While",
+            "description": "Ascend for the first time."
+        },
+        "eternal-return": {
+            "name": "People Want to Live Like This",
+            "description": "Ascend 3 times."
+        },
+        "samsara": {
+            "name": "It's All Just the Same Thing, Over and Over",
+            "description": "Ascend 5 times."
+        },
+        "foresight-shopper": {
+            "name": "So That We May Survive",
+            "description": "Purchase a Foresight upgrade."
+        },
+        "oracle-of-delphi": {
+            "name": "It's Certainly No Different Today Than It's Ever Been",
+            "description": "Purchase every Foresight upgrade."
+        },
+        "windfall": {
+            "name": "I Still Need the Money",
+            "description": "Earn 10+ Foresight in a single ascension."
+        },
+        "syndicate-complete": {
+            "name": "Existentialist Canon",
+            "description": "Collect all Existentialist units."
+        },
+        "deputies-complete": {
+            "name": "Idealist Archive",
+            "description": "Collect all Idealist units."
+        },
+        "collective-complete": {
+            "name": "Rationalist Library",
+            "description": "Collect all Rationalist units."
+        },
+        "prospectors-complete": {
+            "name": "Post-Structural Reader",
+            "description": "Collect all Post-Structuralist units."
+        },
+        "tenure-track": {
+            "name": "Tenure Track",
+            "description": "Reach round 10 in a single run."
+        },
+        "associate-prof": {
+            "name": "Associate Professor",
+            "description": "Reach round 15 in a single run."
+        },
+        "full-prof": {
+            "name": "Full Professor",
+            "description": "Reach round 20 in a single run."
+        },
+        "endowed-chair": {
+            "name": "Endowed Chair",
+            "description": "Reach round 25 in a single run."
+        },
+        "dissertation-defense": {
+            "name": "Dissertation Defense",
+            "description": "Defeat your first boss."
+        },
+        "summa-cum-laude": {
+            "name": "Summa Cum Laude",
+            "description": "Defeat a boss without losing any units."
+        },
+        "comprehensive-exams": {
+            "name": "Comprehensive Exams",
+            "description": "Defeat all 4 distinct bosses."
+        },
+        "vertical-integration": {
+            "name": "Vertical Integration",
+            "description": "Have unlocked nodes in all three main career branches."
+        },
+        "exit-interview": {
+            "name": "Exit Interview",
+            "description": "Switch careers during the same session as a prestige."
+        },
+        "phase-6": {
+            "name": "Phase 6",
+            "description": "Unlock the Structured Products Desk."
+        },
+        "its-just-money": {
+            "name": "It's Just Money; It's Made Up",
+            "description": "Mint your first Digital Asset Security."
+        },
+        "be-first": {
+            "name": "Be First, Be Smarter, Or Cheat",
+            "description": "Reach AAA credit rating."
+        },
+        "just-silence": {
+            "name": "I Don't Hear a Thing, Just Silence",
+            "description": "Recover to A+ within 100 ticks of a margin event."
+        },
+        "music-stops": {
+            "name": "The Music Is About to Stop",
+            "description": "Have 6+ active DAS simultaneously."
+        },
+        "it-goes-quickly": {
+            "name": "It Goes Quite Quickly",
+            "description": "Borrow at 90%+ of capacity."
+        },
+        "rainy-day": {
+            "name": "400 Away for a Rainy Day",
+            "description": "Fully repay all debt with 3+ DAS performing."
+        },
+        "three-ways": {
+            "name": "There Are Three Ways to Make a Living in This Business",
+            "description": "Trade, harvest, and deploy a factory in one session."
+        },
+        "killed-this-firm": {
+            "name": "If You Do This You Will Have Killed This Firm",
+            "description": "Hit F credit rating."
+        },
+        "someone-pays": {
+            "name": "Someone Is Going to Have to Pay for This",
+            "description": "Trigger a margin event."
+        },
+        "harvest-100": {
+            "name": "Cookie Clicker",
+            "description": "Harvest 100 times."
+        },
+        "harvest-1000": {
+            "name": "Grandma",
+            "description": "Harvest 1,000 times."
+        },
+        "harvest-10000": {
+            "name": "Farm",
+            "description": "Harvest 10,000 times."
+        },
+        "harvest-50000": {
+            "name": "Mine",
+            "description": "50,000回収穫する。"
+        },
+        "harvest-100000": {
+            "name": "Factory",
+            "description": "100,000回収穫する。"
+        },
+        "harvest-email-500": {
+            "name": "スパム王",
+            "description": "EMAILを500回収穫する。"
+        },
+        "harvest-ads-500": {
+            "name": "インプレッション農家",
+            "description": "ADSを500回収穫する。"
+        },
+        "harvest-dom-500": {
+            "name": "ドメインスクワッター",
+            "description": "DOMを500回収穫する。"
+        },
+        "harvest-bw-500": {
+            "name": "帯域幅の大食い",
+            "description": "BWを500回収穫する。"
+        },
+        "harvest-soft-500": {
+            "name": "Warez配布者",
+            "description": "SOFTを500回収穫する。"
+        },
+        "harvest-vc-500": {
+            "name": "ピッチデッキマシン",
+            "description": "VCを500回収穫する。"
+        },
+        "definitely-not-a-bot": {
+            "name": "You STOLE Fizzy Lifting Drinks",
+            "description": "超人的なクリック速度を達成する。"
+        },
+        "la-pensee-francaise": {
+            "name": "La Pensée Française",
+            "description": "???"
+        },
+        "der-deutsche-idealismus": {
+            "name": "Der Deutsche Idealismus",
+            "description": "???"
+        },
+        "amor-fati": {
+            "name": "運命愛",
+            "description": "一度も負けずにシンポジウムに勝利する。"
+        },
+        "continental-breakfast": {
+            "name": "コンチネンタル・ブレックファスト",
+            "description": "4つの哲学派すべてを編成に入れて勝利する。"
+        },
+        "independent-study": {
+            "name": "自主研究",
+            "description": "非常勤ユニットのみでシンポジウムに勝利する。"
+        },
+        "survey-course": {
+            "name": "概論講座",
+            "description": "各派閥を過半数としてシンポジウムに勝利する。"
+        },
+        "revaluation-of-all-values": {
+            "name": "一切の価値の転換",
+            "description": "???"
+        },
+        "expressionism-in-philosophy": {
+            "name": "哲学における表現主義",
+            "description": "???"
+        },
+        "self-assessment": {
+            "name": "Self-Assessment",
+            "description": "実績ウィンドウを初めて開く。"
+        },
+        "performance-review": {
+            "name": "Performance Review",
+            "description": "実績ウィンドウを10回開く。"
+        },
+        "observer-effect": {
+            "name": "Observer Effect",
+            "description": "実績ウィンドウを50回開く。"
+        },
+        "the-unexamined-life": {
+            "name": "The Unexamined Life",
+            "description": "実績ウィンドウを200回開く。"
+        },
+        "participation-trophy": {
+            "name": "Initiate",
+            "description": "実績を10個獲得する。"
+        },
+        "overachiever": {
+            "name": "Argonaut",
+            "description": "実績を25個獲得する。"
+        },
+        "completionist": {
+            "name": "Olympian",
+            "description": "実績を50個獲得する。"
+        },
+        "herculean": {
+            "name": "Herculean",
+            "description": "実績を100個獲得する。"
+        },
+        "promethean": {
+            "name": "Promethean",
+            "description": "実績を150個獲得する。"
+        },
+        "sisyphean": {
+            "name": "Sisyphean",
+            "description": "実績を200個獲得する。"
+        },
+        "graveyard-shift": {
+            "name": "Graveyard Shift",
+            "description": "深夜0時から午前5時の間に実績を確認する。"
+        },
+        "new-moon": {
+            "name": "New Moon",
+            "description": "新月の間に実績を開く。"
+        },
+        "waxing-crescent": {
+            "name": "Waxing Crescent",
+            "description": "三日月の間に実績を開く。"
+        },
+        "first-quarter": {
+            "name": "First Quarter",
+            "description": "上弦の月の間に実績を開く。"
+        },
+        "waxing-gibbous": {
+            "name": "Waxing Gibbous",
+            "description": "十三夜月の間に実績を開く。"
+        },
+        "full-moon": {
+            "name": "Full Moon",
+            "description": "満月の間に実績を開く。"
+        },
+        "waning-gibbous": {
+            "name": "Waning Gibbous",
+            "description": "十八夜月の間に実績を開く。"
+        },
+        "last-quarter": {
+            "name": "Last Quarter",
+            "description": "下弦の月の間に実績を開く。"
+        },
+        "waning-crescent": {
+            "name": "Waning Crescent",
+            "description": "二十六夜月の間に実績を開く。"
+        },
+        "time-traveler": {
+            "name": "Time Traveler",
+            "description": "ミレニアム以前から訪問する。"
+        },
+        "netscape-navigator": {
+            "name": "Netscape Navigator",
+            "description": "1996年のようにブラウズする。"
+        },
+        "640k-enough": {
+            "name": "640K Ought to Be Enough",
+            "description": "十分に小さな画面で表示する。"
+        },
+        "lingua-franca": {
+            "name": "Lingua Franca",
+            "description": "学者の言語を話す。"
+        },
+        "dial-up-connection": {
+            "name": "Dial-Up Connection",
+            "description": "ヴィンテージ速度で接続する。"
+        },
+        "year-to-remember": {
+            "name": "A Year to Remember",
+            "description": "Pferd approved."
+        },
+        "negative-timestamp": {
+            "name": "fix: miscalculation in date.now()",
+            "description": "Make the system clock E2E tests pass again."
+        },
+        "achievement-achievement": {
+            "name": "Achievement Achievement",
+            "description": "実績を見ながら実績を獲得する。"
+        },
+        "arcana-fool": {
+            "name": "The Fool",
+            "description": "回顧アップグレードを購入せずにプレステージする。"
+        },
+        "arcana-magician": {
+            "name": "The Magician",
+            "description": "最初のマーケットアップグレードを購入する。"
+        },
+        "arcana-priestess": {
+            "name": "The High Priestess",
+            "description": "深夜の新月の間に実績を開く。"
+        },
+        "arcana-empress": {
+            "name": "The Empress",
+            "description": "10以上の工場を稼働させる。"
+        },
+        "arcana-emperor": {
+            "name": "The Emperor",
+            "description": "レベル20に到達する。"
+        },
+        "arcana-hierophant": {
+            "name": "The Hierophant",
+            "description": "1セッションでGrundを10回コンパイルする。"
+        },
+        "arcana-lovers": {
+            "name": "The Lovers",
+            "description": "ちょうど2つの学派でシンポジウムに勝利する。"
+        },
+        "arcana-chariot": {
+            "name": "The Chariot",
+            "description": "5回連続でシンポジウムに勝利する。"
+        },
+        "arcana-strength": {
+            "name": "Strength",
+            "description": "100ティック後にマージンイベントから回復する。"
+        },
+        "arcana-hermit": {
+            "name": "The Hermit",
+            "description": "1セッションで45分過ごす。"
+        },
+        "arcana-fortune": {
+            "name": "Wheel of Fortune",
+            "description": "通算500回の取引を実行する。"
+        },
+        "arcana-justice": {
+            "name": "Justice",
+            "description": "すべてのコモディティを完璧なバランスで保持する。"
+        },
+        "arcana-hanged": {
+            "name": "The Hanged Man",
+            "description": "3つ以上の市場が下落中に実績を開く。"
+        },
+        "arcana-death": {
+            "name": "Death",
+            "description": "3回目のプレステージを行う。"
+        },
+        "arcana-temperance": {
+            "name": "Temperance",
+            "description": "無借金で仕組み商品を作成する。"
+        },
+        "arcana-devil": {
+            "name": "The Devil",
+            "description": "借入能力の95%以上を借り入れる。"
+        },
+        "arcana-tower": {
+            "name": "The Tower",
+            "description": "信用格付けの格下げを経験する。"
+        },
+        "arcana-star": {
+            "name": "The Star",
+            "description": "すべての市場が上昇中に実績を開く。"
+        },
+        "arcana-moon": {
+            "name": "The Moon",
+            "description": "8つの月相実績をすべて獲得する。"
+        },
+        "arcana-sun": {
+            "name": "The Sun",
+            "description": "週末の午後に実績を開く。"
+        },
+        "arcana-judgement": {
+            "name": "Judgement",
+            "description": "合計75個の実績を獲得する。"
+        },
+        "arcana-world": {
+            "name": "The World",
+            "description": "他のすべての大アルカナを獲得する。"
+        },
+        "bsod-trigger": {
+            "name": "Fatal Exception 420",
+            "description": "kernel.weltを破損させてブルースクリーンを引き起こす。"
+        },
+        "display-glitch": {
+            "name": "Waiting for the Gift of Sound and Vision",
+            "description": "display.weltを破損させて画面表示を壊す。"
+        },
+        "clock-glitch": {
+            "name": "Does Anybody Really Know What Time It Is?",
+            "description": "clock.weltを破損させてシステム時計を狂わせる。"
+        },
+        "memory-glitch": {
+            "name": "PC LOAD LETTER",
+            "description": "memory.weltを破損させてメモリ障害エラーを引き起こす。"
+        },
+        "restart-glitch": {
+            "name": "Have You Tried Turning It Off and On Again?",
+            "description": "boot.weltを破損させてシステムを強制再起動する。"
+        },
+        "die-welt-als-wille": {
+            "name": "Die Welt als Wille und Vorstellung",
+            "description": "Pierce the first veil."
+        },
+        "denkwurdigkeiten": {
+            "name": "Denkwürdigkeiten eines Nervenkranken",
+            "description": "Pierce the second veil."
+        },
+        "gotzen-dammerung": {
+            "name": "Götzen-Dämmerung",
+            "description": "Pierce the third veil."
+        },
+        "der-antichrist": {
+            "name": "Der Antichrist",
+            "description": "Pierce the fourth veil and face the truth."
+        },
+        "ecce-homo": {
+            "name": "Ecce Homo",
+            "description": "Defeat T. Pferd and close the veil."
+        },
+        "horse-whisperer": {
+            "name": "Pferdeflüsterer",
+            "description": "Defeat T. Pferd in 3 attempts or fewer."
+        }
+    },
+    "symposium": {
         "factions": {
             "quickdraw": "実存主義者",
             "deputies": "観念論者",
@@ -974,20 +1772,76 @@
                 "矯正不能な"
             ],
             "nouns": {
-                "quickdraw": ["虚無主義者", "不条理主義者", "超人", "深淵の観察者", "狂人"],
-                "deputies": ["体系家", "範疇論者", "学部", "弁証法家", "学者"],
-                "clockwork": ["幾何学者", "決定論者", "論理学者", "公理主義者", "モナド"],
-                "prospectors": ["脱構築者", "遊牧民", "集合体", "リゾーム", "記号遊牧民"],
-                "drifters": ["非常勤講師", "聴講生", "臨時講師", "講師", "助手"]
+                "quickdraw": [
+                    "虚無主義者",
+                    "不条理主義者",
+                    "超人",
+                    "深淵の観察者",
+                    "狂人"
+                ],
+                "deputies": [
+                    "体系家",
+                    "範疇論者",
+                    "学部",
+                    "弁証法家",
+                    "学者"
+                ],
+                "clockwork": [
+                    "幾何学者",
+                    "決定論者",
+                    "論理学者",
+                    "公理主義者",
+                    "モナド"
+                ],
+                "prospectors": [
+                    "脱構築者",
+                    "遊牧民",
+                    "集合体",
+                    "リゾーム",
+                    "記号遊牧民"
+                ],
+                "drifters": [
+                    "非常勤講師",
+                    "聴講生",
+                    "臨時講師",
+                    "講師",
+                    "助手"
+                ]
             }
         },
         "buffs": {
-            "email-rush": { "name": "メールラッシュ", "description": "ラウンド1で全ユニットに+2 ATK" },
-            "ad-revenue": { "name": "広告収入", "description": "ラウンドごとに+2ボーナス思考" },
-            "soft-reroll": { "name": "ソフトウェア支援", "description": "ショップフェーズごとに+1無料リロール" },
-            "bandwidth-armor": { "name": "帯域幅アーマー", "description": "全ユニットに+5 HP" },
-            "dom-expansion": { "name": "DOM拡張", "description": "ショップに+1追加ユニット" },
-            "vc-funding": { "name": "VC資金調達", "description": "+3ボーナス思考で開始" }
+            "email-rush": {
+                "name": "メールラッシュ",
+                "description": "ラウンド1で全ユニットに+2 ATK"
+            },
+            "ad-revenue": {
+                "name": "広告収入",
+                "description": "ラウンドごとに+2ボーナス思考"
+            },
+            "soft-reroll": {
+                "name": "ソフトウェア支援",
+                "description": "ショップフェーズごとに+1無料リロール"
+            },
+            "bandwidth-armor": {
+                "name": "帯域幅アーマー",
+                "description": "全ユニットに+5 HP"
+            },
+            "dom-expansion": {
+                "name": "DOM拡張",
+                "description": "ショップに+1追加ユニット"
+            },
+            "vc-funding": {
+                "name": "VC資金調達",
+                "description": "+3ボーナス思考で開始"
+            }
+        }
+    },
+    "veil": {
+        "retry": {
+            "title": "CONNECTION LOST",
+            "message": "The wire held for {{seconds}} seconds before breaking.",
+            "retry": "Reconnect",
+            "dismiss": "Disconnect"
         }
     }
 }

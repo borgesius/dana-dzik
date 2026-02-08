@@ -235,6 +235,27 @@ export class CollectionManager {
         return this.bossesDefeatedSet.size
     }
 
+    // ── Dev-only setters ────────────────────────────────────────────────────
+
+    public devUnlockAllUnits(): void {
+        for (const unit of ALL_UNITS) {
+            if (!this.hasUnit(unit.id)) {
+                this.addUnit(unit.id)
+            }
+        }
+    }
+
+    public devAddWins(count: number): void {
+        this.wonRuns += count
+        this.completedRuns += count
+        this.onDirty?.()
+    }
+
+    public devSetBossesDefeated(count: number): void {
+        this.totalBossesDefeated = count
+        this.onDirty?.()
+    }
+
     // ── Serialization ────────────────────────────────────────────────────────
 
     public serialize(): AutobattlerSaveData {

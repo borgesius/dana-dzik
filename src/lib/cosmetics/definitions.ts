@@ -89,6 +89,20 @@ export const COSMETIC_DEFINITIONS: CosmeticDefinition[] = [
         },
     },
 
+    {
+        id: "void-static",
+        type: "cursor-trail",
+        name: "Void Static",
+        description: "Glitching particles from beyond the veil",
+        unlockHint: "Pierce the veil",
+        icon: "📡",
+        trailConfig: {
+            colors: ["#00ff80", "#ff4444", "#000000", "#ffffff"],
+            shapes: ["█", "▓", "░"],
+            size: [4, 10],
+        },
+    },
+
     // ── Desktop Wallpapers ────────────────────────────────────────────────
 
     {
@@ -146,6 +160,16 @@ export const COSMETIC_DEFINITIONS: CosmeticDefinition[] = [
         cssClass: "wp-prestige-gold",
     },
 
+    {
+        id: "beyond-the-veil",
+        type: "wallpaper",
+        name: "Beyond the Veil",
+        description: "Dark void with geometric patterns",
+        unlockHint: "Complete all veil encounters",
+        icon: "🕳️",
+        cssClass: "wp-beyond-veil",
+    },
+
     // ── Window Chrome ─────────────────────────────────────────────────────
 
     {
@@ -182,6 +206,15 @@ export const COSMETIC_DEFINITIONS: CosmeticDefinition[] = [
         unlockHint: "Earn 50 or more achievements",
         icon: "📜",
         cssClass: "chrome-vintage",
+    },
+    {
+        id: "dial-up",
+        type: "window-chrome",
+        name: "Dial-Up",
+        description: "Static and noise title bars",
+        unlockHint: "Defeat what lurks beyond the veil",
+        icon: "📡",
+        cssClass: "chrome-dialup",
     },
 ]
 

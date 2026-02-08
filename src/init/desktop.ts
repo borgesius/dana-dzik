@@ -1,12 +1,14 @@
 import { AchievementToast } from "../components/AchievementToast"
 import { CursorTrail } from "../components/CursorTrail"
 import { Desktop } from "../components/Desktop"
+import { attachDevApi, DevPanel } from "../components/DevPanel"
 import { LevelUpPopup } from "../components/LevelUpPopup"
 import { PopupManager } from "../components/PopupManager"
 import { setTerminalInit } from "../components/Terminal"
 import { Widgets } from "../components/Widgets"
+import { getDeployEnv } from "../config/environment"
 import { getAchievementManager } from "../lib/achievements/AchievementManager"
-import { wireAchievements } from "../lib/achievements/wiring"
+import { wireAchievements, wireVeilAchievements } from "../lib/achievements/wiring"
 import { createAudioManager } from "../lib/audio"
 import { getCollectionManager } from "../lib/autobattler/CollectionManager"
 import { isCalmMode } from "../lib/calmMode"
@@ -26,6 +28,7 @@ import { SystemCrashHandler } from "../lib/systemCrash"
 import { getSharedFilesystem } from "../lib/terminal/filesystemBuilder"
 import { diffFilesystem } from "../lib/terminal/filesystemDiff"
 import { getThemeManager } from "../lib/themeManager"
+import { getVeilManager } from "../lib/veil/VeilManager"
 import { isRoutableWindow } from "./core"
 
 export function initDesktop(app: HTMLElement): void {
@@ -36,6 +39,7 @@ export function initDesktop(app: HTMLElement): void {
     wireAchievements(achievements, (cb) => {
         windowManager.onNewWindowOpen(cb)
     })
+    wireVeilAchievements()
     new AchievementToast(achievements)
     new LevelUpPopup()
 
@@ -75,6 +79,7 @@ export function initDesktop(app: HTMLElement): void {
             },
             autobattler: getCollectionManager().serialize(),
             cosmetics: getCosmeticManager().serialize(),
+            veil: getVeilManager().serialize(),
         }
     })
 
@@ -153,6 +158,15 @@ export function initDesktop(app: HTMLElement): void {
         windowManager.closeWindow("terminal")
         windowManager.openWindow("terminal")
     })
+
+    // ── Dev panel (development only) ────────────────────────────────────────
+    if (getDeployEnv() === "development") {
+        const devPanel = new DevPanel(windowManager)
+        attachDevApi(devPanel, windowManager)
+        // Expose toggle for the taskbar DEV badge
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        ;(window as any).__devPanel = devPanel
+    }
 
     addFloatingGifs(desktop)
 }

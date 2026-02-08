@@ -29,6 +29,8 @@ import {
 import { getSharedFilesystem } from "../lib/terminal/filesystemBuilder"
 import { patchFilesystem } from "../lib/terminal/filesystemDiff"
 import { getThemeManager } from "../lib/themeManager"
+import { getVeilManager } from "../lib/veil/VeilManager"
+import { getVeilOverlay } from "../lib/veil/VeilOverlay"
 
 export function isRoutableWindow(id: string): id is RoutableWindow {
     return ROUTABLE_WINDOWS.includes(id as RoutableWindow)
@@ -76,6 +78,17 @@ export function initCore(): void {
     const cosmetics = getCosmeticManager()
     cosmetics.deserialize(savedData.cosmetics)
     cosmetics.setDirtyCallback(() => saveManager.requestSave())
+
+    const veil = getVeilManager()
+    if (savedData.veil) {
+        veil.deserialize(savedData.veil)
+    }
+    veil.setDirtyCallback(() => saveManager.requestSave())
+
+    // Wire overlay launcher
+    const overlay = getVeilOverlay()
+    overlay.textResolver = (key: string) => getLocaleManager().t(key)
+    veil.launchOverlay = (veilId) => overlay.launch(veilId)
 
     // ── Wire cross-system bonus providers ────────────────────────────────────
     const marketGame = getMarketGame()

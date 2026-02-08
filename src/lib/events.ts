@@ -71,6 +71,11 @@ export interface AppEventMap {
     "autobattler:faction-complete": { faction: string }
     "cosmetic:unlocked": { type: string; id: string }
     "glitch:triggered": { type: string }
+    // Veil system events
+    "veil:triggered": { veilId: number }
+    "veil:completed": { veilId: number; attempts: number }
+    "veil:failed": { veilId: number }
+    "veil:boss-defeated": undefined
 }
 
 export function emitAppEvent<K extends keyof AppEventMap>(

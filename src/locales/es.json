@@ -273,13 +273,6 @@
         "created": "Creado: {{name}}",
         "deleted": "Eliminado: {{name}}",
         "renamed": "Renombrado: {{from}} -> {{to}}",
-        "usageTouch": "Uso: touch <nombre_archivo>",
-        "usageMkdir": "Uso: mkdir <nombre_directorio>",
-        "usageRm": "Uso: rm <nombre_archivo>",
-        "usageMv": "Uso: mv <origen> <nuevo_nombre>",
-        "created": "Creado: {{name}}",
-        "deleted": "Eliminado: {{name}}",
-        "renamed": "Renombrado: {{from}} -> {{to}}",
         "usageWelt": "Uso: welt [--grund] <nombre_archivo>",
         "usageWeltGrund": "Uso: welt --grund <nombre_archivo>",
         "usageGrund": "Uso: grund <nombre_archivo>",
@@ -494,15 +487,42 @@
                 "name": "Calendario Privilegiado",
                 "description": "El calendario completo. Secuencia de tendencias futuras visible como barra de pronóstico."
             },
-            "harvest-email": { "name": "EMAIL Harvester", "description": "Automated scraper. +1 EMAIL per harvest click." },
-            "harvest-ads": { "name": "ADS Generator", "description": "Impression bot. +1 ADS per harvest click." },
-            "harvest-dom": { "name": "DOM Registrar", "description": "Bulk registration script. +1 DOM per harvest click." },
-            "harvest-bw": { "name": "BW Allocator", "description": "Bandwidth provisioner. +1 BW per harvest click." },
-            "harvest-soft": { "name": "SOFT Compiler", "description": "License keygen. +1 SOFT per harvest click." },
-            "harvest-vc": { "name": "VC Pipeline", "description": "Pitch deck generator. +1 VC per harvest click." },
-            "autoscript-i": { "name": "Autoscript I", "description": "Automatización básica. +25% rendimiento de cosecha para todas las commodities." },
-            "autoscript-ii": { "name": "Autoscript II", "description": "Automatización avanzada. +50% rendimiento de cosecha para todas las commodities." },
-            "autoscript-iii": { "name": "Autoscript III", "description": "Suite de automatización completa. +75% rendimiento de cosecha para todas las commodities." }
+            "harvest-email": {
+                "name": "EMAIL Harvester",
+                "description": "Automated scraper. +1 EMAIL per harvest click."
+            },
+            "harvest-ads": {
+                "name": "ADS Generator",
+                "description": "Impression bot. +1 ADS per harvest click."
+            },
+            "harvest-dom": {
+                "name": "DOM Registrar",
+                "description": "Bulk registration script. +1 DOM per harvest click."
+            },
+            "harvest-bw": {
+                "name": "BW Allocator",
+                "description": "Bandwidth provisioner. +1 BW per harvest click."
+            },
+            "harvest-soft": {
+                "name": "SOFT Compiler",
+                "description": "License keygen. +1 SOFT per harvest click."
+            },
+            "harvest-vc": {
+                "name": "VC Pipeline",
+                "description": "Pitch deck generator. +1 VC per harvest click."
+            },
+            "autoscript-i": {
+                "name": "Autoscript I",
+                "description": "Automatización básica. +25% rendimiento de cosecha para todas las commodities."
+            },
+            "autoscript-ii": {
+                "name": "Autoscript II",
+                "description": "Automatización avanzada. +50% rendimiento de cosecha para todas las commodities."
+            },
+            "autoscript-iii": {
+                "name": "Autoscript III",
+                "description": "Suite de automatización completa. +75% rendimiento de cosecha para todas las commodities."
+            }
         },
         "influence": {
             "promo-campaign": {
@@ -839,9 +859,18 @@
             "name": "Turista",
             "description": "Visita Acerca de, Proyectos, Currículum y Enlaces."
         },
-        "archivist": { "name": "Sysadmin", "description": "Navega a 3:\\DAS." },
-        "syslog": { "name": "Syslog", "description": "Lee syslog.txt." },
-        "readme": { "name": "RTFM", "description": "Lee el manual de WELT." },
+        "archivist": {
+            "name": "Sysadmin",
+            "description": "Navega a 3:\\DAS."
+        },
+        "syslog": {
+            "name": "Syslog",
+            "description": "Lee syslog.txt."
+        },
+        "readme": {
+            "name": "RTFM",
+            "description": "Lee el manual de WELT."
+        },
         "hacker": {
             "name": "I'm In",
             "description": "Ejecuta tu primer comando de terminal."
@@ -954,8 +983,14 @@
             "name": "Ding an Sich",
             "description": "Pasa 5 ejercicios."
         },
-        "welt-master": { "name": "Za Warudo", "description": "Pasa Die Welt." },
-        "nibelung": { "name": "Nibelung", "description": "Forja el Anillo." },
+        "welt-master": {
+            "name": "Za Warudo",
+            "description": "Pasa Die Welt."
+        },
+        "nibelung": {
+            "name": "Nibelung",
+            "description": "Forja el Anillo."
+        },
         "erlosung": {
             "name": "Erlösung",
             "description": "Pasa todos los ejercicios."
@@ -1037,10 +1072,6 @@
             "description": "Acumula un costo de sesión normalizado de $0.003."
         },
         "qa-inspector": {
-            "name": "Funciona en Mi Máquina",
-            "description": "Haz clic en una insignia de pruebas para ver los resultados de CI."
-        },
-        "qa-inspector": {
             "name": "Inspector de QA",
             "description": "Haz clic en una insignia de pruebas para ver los resultados de CI."
         },
@@ -1048,7 +1079,10 @@
             "name": "First Thesis",
             "description": "Complete your first symposium."
         },
-        "posse-up": { "name": "Quorum", "description": "Win a symposium." },
+        "posse-up": {
+            "name": "Quorum",
+            "description": "Win a symposium."
+        },
         "faction-recruit": {
             "name": "Faction Recruit",
             "description": "Unlock your first faction unit."
@@ -1125,8 +1159,14 @@
             "name": "Postdoc",
             "description": "Win your first symposium."
         },
-        "deputy": { "name": "Adjunct", "description": "Win 5 symposia." },
-        "sheriff": { "name": "Lecturer", "description": "Win 15 symposia." },
+        "deputy": {
+            "name": "Adjunct",
+            "description": "Win 5 symposia."
+        },
+        "sheriff": {
+            "name": "Lecturer",
+            "description": "Win 15 symposia."
+        },
         "marshal": {
             "name": "Department Chair",
             "description": "Win 50 symposia."
@@ -1291,80 +1331,326 @@
             "name": "Someone Is Going to Have to Pay for This",
             "description": "Trigger a margin event."
         },
-        "harvest-100": { "name": "Cookie Clicker", "description": "Harvest 100 times." },
-        "harvest-1000": { "name": "Grandma", "description": "Harvest 1,000 times." },
-        "harvest-10000": { "name": "Farm", "description": "Harvest 10,000 times." },
-        "harvest-50000": { "name": "Mine", "description": "Cosechar 50,000 veces." },
-        "harvest-100000": { "name": "Factory", "description": "Cosechar 100,000 veces." },
-        "harvest-email-500": { "name": "Rey del Spam", "description": "Cosechar EMAIL 500 veces." },
-        "harvest-ads-500": { "name": "Granjero de Impresiones", "description": "Cosechar ADS 500 veces." },
-        "harvest-dom-500": { "name": "Ocupante de Dominios", "description": "Cosechar DOM 500 veces." },
-        "harvest-bw-500": { "name": "Devorador de Ancho de Banda", "description": "Cosechar BW 500 veces." },
-        "harvest-soft-500": { "name": "Distribuidor Warez", "description": "Cosechar SOFT 500 veces." },
-        "harvest-vc-500": { "name": "Máquina de Pitch Deck", "description": "Cosechar VC 500 veces." },
-        "definitely-not-a-bot": { "name": "You STOLE Fizzy Lifting Drinks", "description": "Alcanzar velocidad de clic sobrehumana." },
-        "la-pensee-francaise": { "name": "La Pensée Française", "description": "???" },
-        "der-deutsche-idealismus": { "name": "Der Deutsche Idealismus", "description": "???" },
-        "amor-fati": { "name": "Amor Fati", "description": "Gana un simposio sin perder una sola ronda." },
-        "continental-breakfast": { "name": "Desayuno Continental", "description": "Gana con las 4 escuelas filosóficas en tu formación." },
-        "independent-study": { "name": "Estudio Independiente", "description": "Gana un simposio usando solo unidades Adjuntas." },
-        "survey-course": { "name": "Curso Introductorio", "description": "Gana un simposio con cada facción como mayoría." },
-        "revaluation-of-all-values": { "name": "Transvaloración de Todos los Valores", "description": "???" },
-        "expressionism-in-philosophy": { "name": "Expresionismo en la Filosofía", "description": "???" },
-        "self-assessment": { "name": "Self-Assessment", "description": "Abre la ventana de logros por primera vez." },
-        "performance-review": { "name": "Performance Review", "description": "Abre la ventana de logros 10 veces." },
-        "observer-effect": { "name": "Observer Effect", "description": "Abre la ventana de logros 50 veces." },
-        "the-unexamined-life": { "name": "The Unexamined Life", "description": "Abre la ventana de logros 200 veces." },
-        "participation-trophy": { "name": "Initiate", "description": "Obtén 10 logros." },
-        "overachiever": { "name": "Argonaut", "description": "Obtén 25 logros." },
-        "completionist": { "name": "Olympian", "description": "Obtén 50 logros." },
-        "herculean": { "name": "Herculean", "description": "Obtén 100 logros." },
-        "promethean": { "name": "Promethean", "description": "Obtén 150 logros." },
-        "sisyphean": { "name": "Sisyphean", "description": "Obtén 200 logros." },
-        "graveyard-shift": { "name": "Graveyard Shift", "description": "Revisa tus logros entre medianoche y las 5 AM." },
-        "new-moon": { "name": "New Moon", "description": "Abre logros durante luna nueva." },
-        "waxing-crescent": { "name": "Waxing Crescent", "description": "Abre logros durante cuarto creciente inicial." },
-        "first-quarter": { "name": "First Quarter", "description": "Abre logros durante cuarto creciente." },
-        "waxing-gibbous": { "name": "Waxing Gibbous", "description": "Abre logros durante luna gibosa creciente." },
-        "full-moon": { "name": "Full Moon", "description": "Abre logros durante luna llena." },
-        "waning-gibbous": { "name": "Waning Gibbous", "description": "Abre logros durante luna gibosa menguante." },
-        "last-quarter": { "name": "Last Quarter", "description": "Abre logros durante cuarto menguante." },
-        "waning-crescent": { "name": "Waning Crescent", "description": "Abre logros durante luna menguante." },
-        "time-traveler": { "name": "Time Traveler", "description": "Visita desde antes del milenio." },
-        "netscape-navigator": { "name": "Netscape Navigator", "description": "Navega como si fuera 1996." },
-        "640k-enough": { "name": "640K Ought to Be Enough", "description": "Visualiza en una pantalla suficientemente pequeña." },
-        "lingua-franca": { "name": "Lingua Franca", "description": "Habla el idioma de los eruditos." },
-        "dial-up-connection": { "name": "Dial-Up Connection", "description": "Conéctate a velocidades vintage." },
-        "year-to-remember": { "name": "A Year to Remember", "description": "Pferd approved." },
-        "negative-timestamp": { "name": "fix: miscalculation in date.now()", "description": "Make the system clock E2E tests pass again." },
-        "achievement-achievement": { "name": "Achievement Achievement", "description": "Obtén un logro mientras ves los logros." },
-        "arcana-fool": { "name": "The Fool", "description": "Prestigia sin comprar mejoras de retrospectiva." },
-        "arcana-magician": { "name": "The Magician", "description": "Compra tu primera mejora del mercado." },
-        "arcana-priestess": { "name": "The High Priestess", "description": "Abre logros durante luna nueva en plena noche." },
-        "arcana-empress": { "name": "The Empress", "description": "Ten 10 o más fábricas desplegadas." },
-        "arcana-emperor": { "name": "The Emperor", "description": "Alcanza el nivel 20." },
-        "arcana-hierophant": { "name": "The Hierophant", "description": "Compila Grund 10 veces en una sola sesión." },
-        "arcana-lovers": { "name": "The Lovers", "description": "Gana un simposio con exactamente dos escuelas de pensamiento." },
-        "arcana-chariot": { "name": "The Chariot", "description": "Gana 5 simposios seguidos." },
-        "arcana-strength": { "name": "Strength", "description": "Recupérate de un evento de margen después de 100 ticks." },
-        "arcana-hermit": { "name": "The Hermit", "description": "Pasa 45 minutos en una sola sesión." },
-        "arcana-fortune": { "name": "Wheel of Fortune", "description": "Ejecuta 500 operaciones en total." },
-        "arcana-justice": { "name": "Justice", "description": "Mantén todas las materias primas en equilibrio perfecto." },
-        "arcana-hanged": { "name": "The Hanged Man", "description": "Abre logros mientras tres o más mercados están cayendo." },
-        "arcana-death": { "name": "Death", "description": "Prestigia por tercera vez." },
-        "arcana-temperance": { "name": "Temperance", "description": "Crea un producto estructurado sin deuda." },
-        "arcana-devil": { "name": "The Devil", "description": "Pide prestado al 95% o más de tu capacidad." },
-        "arcana-tower": { "name": "The Tower", "description": "Sufre una degradación de calificación crediticia." },
-        "arcana-star": { "name": "The Star", "description": "Abre logros mientras todos los mercados suben." },
-        "arcana-moon": { "name": "The Moon", "description": "Obtén los ocho logros del ciclo lunar." },
-        "arcana-sun": { "name": "The Sun", "description": "Abre logros en una tarde de fin de semana." },
-        "arcana-judgement": { "name": "Judgement", "description": "Obtén 75 logros en total." },
-        "arcana-world": { "name": "The World", "description": "Obtén todos los demás Arcanos Mayores." },
-        "bsod-trigger": { "name": "Fatal Exception 420", "description": "Corrompe kernel.welt y provoca una Pantalla Azul de la Muerte." },
-        "display-glitch": { "name": "Waiting for the Gift of Sound and Vision", "description": "Corrompe display.welt y provoca corrupción de pantalla." },
-        "clock-glitch": { "name": "Does Anybody Really Know What Time It Is?", "description": "Corrompe clock.welt y descontrola el reloj del sistema." },
-        "memory-glitch": { "name": "PC LOAD LETTER", "description": "Corrompe memory.welt y provoca errores de fallo de memoria." },
-        "restart-glitch": { "name": "Have You Tried Turning It Off and On Again?", "description": "Corrompe boot.welt y fuerza un reinicio del sistema." }
+        "harvest-100": {
+            "name": "Cookie Clicker",
+            "description": "Harvest 100 times."
+        },
+        "harvest-1000": {
+            "name": "Grandma",
+            "description": "Harvest 1,000 times."
+        },
+        "harvest-10000": {
+            "name": "Farm",
+            "description": "Harvest 10,000 times."
+        },
+        "harvest-50000": {
+            "name": "Mine",
+            "description": "Cosechar 50,000 veces."
+        },
+        "harvest-100000": {
+            "name": "Factory",
+            "description": "Cosechar 100,000 veces."
+        },
+        "harvest-email-500": {
+            "name": "Rey del Spam",
+            "description": "Cosechar EMAIL 500 veces."
+        },
+        "harvest-ads-500": {
+            "name": "Granjero de Impresiones",
+            "description": "Cosechar ADS 500 veces."
+        },
+        "harvest-dom-500": {
+            "name": "Ocupante de Dominios",
+            "description": "Cosechar DOM 500 veces."
+        },
+        "harvest-bw-500": {
+            "name": "Devorador de Ancho de Banda",
+            "description": "Cosechar BW 500 veces."
+        },
+        "harvest-soft-500": {
+            "name": "Distribuidor Warez",
+            "description": "Cosechar SOFT 500 veces."
+        },
+        "harvest-vc-500": {
+            "name": "Máquina de Pitch Deck",
+            "description": "Cosechar VC 500 veces."
+        },
+        "definitely-not-a-bot": {
+            "name": "You STOLE Fizzy Lifting Drinks",
+            "description": "Alcanzar velocidad de clic sobrehumana."
+        },
+        "la-pensee-francaise": {
+            "name": "La Pensée Française",
+            "description": "???"
+        },
+        "der-deutsche-idealismus": {
+            "name": "Der Deutsche Idealismus",
+            "description": "???"
+        },
+        "amor-fati": {
+            "name": "Amor Fati",
+            "description": "Gana un simposio sin perder una sola ronda."
+        },
+        "continental-breakfast": {
+            "name": "Desayuno Continental",
+            "description": "Gana con las 4 escuelas filosóficas en tu formación."
+        },
+        "independent-study": {
+            "name": "Estudio Independiente",
+            "description": "Gana un simposio usando solo unidades Adjuntas."
+        },
+        "survey-course": {
+            "name": "Curso Introductorio",
+            "description": "Gana un simposio con cada facción como mayoría."
+        },
+        "revaluation-of-all-values": {
+            "name": "Transvaloración de Todos los Valores",
+            "description": "???"
+        },
+        "expressionism-in-philosophy": {
+            "name": "Expresionismo en la Filosofía",
+            "description": "???"
+        },
+        "self-assessment": {
+            "name": "Self-Assessment",
+            "description": "Abre la ventana de logros por primera vez."
+        },
+        "performance-review": {
+            "name": "Performance Review",
+            "description": "Abre la ventana de logros 10 veces."
+        },
+        "observer-effect": {
+            "name": "Observer Effect",
+            "description": "Abre la ventana de logros 50 veces."
+        },
+        "the-unexamined-life": {
+            "name": "The Unexamined Life",
+            "description": "Abre la ventana de logros 200 veces."
+        },
+        "participation-trophy": {
+            "name": "Initiate",
+            "description": "Obtén 10 logros."
+        },
+        "overachiever": {
+            "name": "Argonaut",
+            "description": "Obtén 25 logros."
+        },
+        "completionist": {
+            "name": "Olympian",
+            "description": "Obtén 50 logros."
+        },
+        "herculean": {
+            "name": "Herculean",
+            "description": "Obtén 100 logros."
+        },
+        "promethean": {
+            "name": "Promethean",
+            "description": "Obtén 150 logros."
+        },
+        "sisyphean": {
+            "name": "Sisyphean",
+            "description": "Obtén 200 logros."
+        },
+        "graveyard-shift": {
+            "name": "Graveyard Shift",
+            "description": "Revisa tus logros entre medianoche y las 5 AM."
+        },
+        "new-moon": {
+            "name": "New Moon",
+            "description": "Abre logros durante luna nueva."
+        },
+        "waxing-crescent": {
+            "name": "Waxing Crescent",
+            "description": "Abre logros durante cuarto creciente inicial."
+        },
+        "first-quarter": {
+            "name": "First Quarter",
+            "description": "Abre logros durante cuarto creciente."
+        },
+        "waxing-gibbous": {
+            "name": "Waxing Gibbous",
+            "description": "Abre logros durante luna gibosa creciente."
+        },
+        "full-moon": {
+            "name": "Full Moon",
+            "description": "Abre logros durante luna llena."
+        },
+        "waning-gibbous": {
+            "name": "Waning Gibbous",
+            "description": "Abre logros durante luna gibosa menguante."
+        },
+        "last-quarter": {
+            "name": "Last Quarter",
+            "description": "Abre logros durante cuarto menguante."
+        },
+        "waning-crescent": {
+            "name": "Waning Crescent",
+            "description": "Abre logros durante luna menguante."
+        },
+        "time-traveler": {
+            "name": "Time Traveler",
+            "description": "Visita desde antes del milenio."
+        },
+        "netscape-navigator": {
+            "name": "Netscape Navigator",
+            "description": "Navega como si fuera 1996."
+        },
+        "640k-enough": {
+            "name": "640K Ought to Be Enough",
+            "description": "Visualiza en una pantalla suficientemente pequeña."
+        },
+        "lingua-franca": {
+            "name": "Lingua Franca",
+            "description": "Habla el idioma de los eruditos."
+        },
+        "dial-up-connection": {
+            "name": "Dial-Up Connection",
+            "description": "Conéctate a velocidades vintage."
+        },
+        "year-to-remember": {
+            "name": "A Year to Remember",
+            "description": "Pferd approved."
+        },
+        "negative-timestamp": {
+            "name": "fix: miscalculation in date.now()",
+            "description": "Make the system clock E2E tests pass again."
+        },
+        "achievement-achievement": {
+            "name": "Achievement Achievement",
+            "description": "Obtén un logro mientras ves los logros."
+        },
+        "arcana-fool": {
+            "name": "The Fool",
+            "description": "Prestigia sin comprar mejoras de retrospectiva."
+        },
+        "arcana-magician": {
+            "name": "The Magician",
+            "description": "Compra tu primera mejora del mercado."
+        },
+        "arcana-priestess": {
+            "name": "The High Priestess",
+            "description": "Abre logros durante luna nueva en plena noche."
+        },
+        "arcana-empress": {
+            "name": "The Empress",
+            "description": "Ten 10 o más fábricas desplegadas."
+        },
+        "arcana-emperor": {
+            "name": "The Emperor",
+            "description": "Alcanza el nivel 20."
+        },
+        "arcana-hierophant": {
+            "name": "The Hierophant",
+            "description": "Compila Grund 10 veces en una sola sesión."
+        },
+        "arcana-lovers": {
+            "name": "The Lovers",
+            "description": "Gana un simposio con exactamente dos escuelas de pensamiento."
+        },
+        "arcana-chariot": {
+            "name": "The Chariot",
+            "description": "Gana 5 simposios seguidos."
+        },
+        "arcana-strength": {
+            "name": "Strength",
+            "description": "Recupérate de un evento de margen después de 100 ticks."
+        },
+        "arcana-hermit": {
+            "name": "The Hermit",
+            "description": "Pasa 45 minutos en una sola sesión."
+        },
+        "arcana-fortune": {
+            "name": "Wheel of Fortune",
+            "description": "Ejecuta 500 operaciones en total."
+        },
+        "arcana-justice": {
+            "name": "Justice",
+            "description": "Mantén todas las materias primas en equilibrio perfecto."
+        },
+        "arcana-hanged": {
+            "name": "The Hanged Man",
+            "description": "Abre logros mientras tres o más mercados están cayendo."
+        },
+        "arcana-death": {
+            "name": "Death",
+            "description": "Prestigia por tercera vez."
+        },
+        "arcana-temperance": {
+            "name": "Temperance",
+            "description": "Crea un producto estructurado sin deuda."
+        },
+        "arcana-devil": {
+            "name": "The Devil",
+            "description": "Pide prestado al 95% o más de tu capacidad."
+        },
+        "arcana-tower": {
+            "name": "The Tower",
+            "description": "Sufre una degradación de calificación crediticia."
+        },
+        "arcana-star": {
+            "name": "The Star",
+            "description": "Abre logros mientras todos los mercados suben."
+        },
+        "arcana-moon": {
+            "name": "The Moon",
+            "description": "Obtén los ocho logros del ciclo lunar."
+        },
+        "arcana-sun": {
+            "name": "The Sun",
+            "description": "Abre logros en una tarde de fin de semana."
+        },
+        "arcana-judgement": {
+            "name": "Judgement",
+            "description": "Obtén 75 logros en total."
+        },
+        "arcana-world": {
+            "name": "The World",
+            "description": "Obtén todos los demás Arcanos Mayores."
+        },
+        "bsod-trigger": {
+            "name": "Fatal Exception 420",
+            "description": "Corrompe kernel.welt y provoca una Pantalla Azul de la Muerte."
+        },
+        "display-glitch": {
+            "name": "Waiting for the Gift of Sound and Vision",
+            "description": "Corrompe display.welt y provoca corrupción de pantalla."
+        },
+        "clock-glitch": {
+            "name": "Does Anybody Really Know What Time It Is?",
+            "description": "Corrompe clock.welt y descontrola el reloj del sistema."
+        },
+        "memory-glitch": {
+            "name": "PC LOAD LETTER",
+            "description": "Corrompe memory.welt y provoca errores de fallo de memoria."
+        },
+        "restart-glitch": {
+            "name": "Have You Tried Turning It Off and On Again?",
+            "description": "Corrompe boot.welt y fuerza un reinicio del sistema."
+        },
+        "die-welt-als-wille": {
+            "name": "Die Welt als Wille und Vorstellung",
+            "description": "Pierce the first veil."
+        },
+        "denkwurdigkeiten": {
+            "name": "Denkwürdigkeiten eines Nervenkranken",
+            "description": "Pierce the second veil."
+        },
+        "gotzen-dammerung": {
+            "name": "Götzen-Dämmerung",
+            "description": "Pierce the third veil."
+        },
+        "der-antichrist": {
+            "name": "Der Antichrist",
+            "description": "Pierce the fourth veil and face the truth."
+        },
+        "ecce-homo": {
+            "name": "Ecce Homo",
+            "description": "Defeat T. Pferd and close the veil."
+        },
+        "horse-whisperer": {
+            "name": "Pferdeflüsterer",
+            "description": "Defeat T. Pferd in 3 attempts or fewer."
+        }
     },
     "symposium": {
         "factions": {
@@ -1486,20 +1772,76 @@
                 "Incorregible"
             ],
             "nouns": {
-                "quickdraw": ["Nihilistas", "Absurdistas", "Superhombres", "Contempladores del Abismo", "Locos"],
-                "deputies": ["Sistematizadores", "Categoristas", "Facultad", "Dialécticos", "Académicos"],
-                "clockwork": ["Geómetras", "Deterministas", "Lógicos", "Axiomáticos", "Mónadas"],
-                "prospectors": ["Deconstructores", "Nómadas", "Ensamblajes", "Rizomas", "Semionautas"],
-                "drifters": ["Adjuntos", "Oyentes", "Interinos", "Docentes", "Becarios"]
+                "quickdraw": [
+                    "Nihilistas",
+                    "Absurdistas",
+                    "Superhombres",
+                    "Contempladores del Abismo",
+                    "Locos"
+                ],
+                "deputies": [
+                    "Sistematizadores",
+                    "Categoristas",
+                    "Facultad",
+                    "Dialécticos",
+                    "Académicos"
+                ],
+                "clockwork": [
+                    "Geómetras",
+                    "Deterministas",
+                    "Lógicos",
+                    "Axiomáticos",
+                    "Mónadas"
+                ],
+                "prospectors": [
+                    "Deconstructores",
+                    "Nómadas",
+                    "Ensamblajes",
+                    "Rizomas",
+                    "Semionautas"
+                ],
+                "drifters": [
+                    "Adjuntos",
+                    "Oyentes",
+                    "Interinos",
+                    "Docentes",
+                    "Becarios"
+                ]
             }
         },
         "buffs": {
-            "email-rush": { "name": "Aluvión de Emails", "description": "+2 ATK para todas las unidades en la ronda 1" },
-            "ad-revenue": { "name": "Ingresos Publicitarios", "description": "+2 Pensamientos bonus por ronda" },
-            "soft-reroll": { "name": "Asistencia de Software", "description": "+1 relanzamiento gratis por fase de tienda" },
-            "bandwidth-armor": { "name": "Armadura de Ancho de Banda", "description": "+5 HP para todas las unidades" },
-            "dom-expansion": { "name": "Expansión DOM", "description": "La tienda ofrece +1 unidad extra" },
-            "vc-funding": { "name": "Financiación VC", "description": "Empieza con +3 Pensamientos bonus" }
+            "email-rush": {
+                "name": "Aluvión de Emails",
+                "description": "+2 ATK para todas las unidades en la ronda 1"
+            },
+            "ad-revenue": {
+                "name": "Ingresos Publicitarios",
+                "description": "+2 Pensamientos bonus por ronda"
+            },
+            "soft-reroll": {
+                "name": "Asistencia de Software",
+                "description": "+1 relanzamiento gratis por fase de tienda"
+            },
+            "bandwidth-armor": {
+                "name": "Armadura de Ancho de Banda",
+                "description": "+5 HP para todas las unidades"
+            },
+            "dom-expansion": {
+                "name": "Expansión DOM",
+                "description": "La tienda ofrece +1 unidad extra"
+            },
+            "vc-funding": {
+                "name": "Financiación VC",
+                "description": "Empieza con +3 Pensamientos bonus"
+            }
+        }
+    },
+    "veil": {
+        "retry": {
+            "title": "CONNECTION LOST",
+            "message": "The wire held for {{seconds}} seconds before breaking.",
+            "retry": "Reconnect",
+            "dismiss": "Disconnect"
         }
     }
 }

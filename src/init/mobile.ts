@@ -3,7 +3,7 @@ import { LevelUpPopup } from "../components/LevelUpPopup"
 import { MobilePhone } from "../components/mobile/MobilePhone"
 import { MobilePopupManager } from "../components/mobile/MobilePopupManager"
 import { getAchievementManager } from "../lib/achievements/AchievementManager"
-import { wireAchievements } from "../lib/achievements/wiring"
+import { wireAchievements, wireVeilAchievements } from "../lib/achievements/wiring"
 import { createAudioManager } from "../lib/audio"
 import { getCollectionManager } from "../lib/autobattler/CollectionManager"
 import { isCalmMode } from "../lib/calmMode"
@@ -22,6 +22,7 @@ import { SystemCrashHandler } from "../lib/systemCrash"
 import { getSharedFilesystem } from "../lib/terminal/filesystemBuilder"
 import { diffFilesystem } from "../lib/terminal/filesystemDiff"
 import { getThemeManager } from "../lib/themeManager"
+import { getVeilManager } from "../lib/veil/VeilManager"
 import { isRoutableWindow } from "./core"
 
 export function initMobile(app: HTMLElement): void {
@@ -31,6 +32,7 @@ export function initMobile(app: HTMLElement): void {
     wireAchievements(achievements, (cb) => {
         phone.onAppOpen(cb)
     })
+    wireVeilAchievements()
     new AchievementToast(achievements)
     new LevelUpPopup()
 
@@ -64,6 +66,7 @@ export function initMobile(app: HTMLElement): void {
             },
             autobattler: getCollectionManager().serialize(),
             cosmetics: getCosmeticManager().serialize(),
+            veil: getVeilManager().serialize(),
         }
     })
 
