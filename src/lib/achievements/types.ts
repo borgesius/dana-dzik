@@ -195,6 +195,8 @@ export type AchievementId =
     | "overachiever"
     | "completionist"
     | "sisyphean"
+    | "herculean"
+    | "promethean"
     // Meta: time/date novelties (hidden)
     | "graveyard-shift"
     // Meta: lunar cycle (tiered, hidden)

@@ -1357,20 +1357,28 @@
             "description": "Open the achievements window 200 times."
         },
         "participation-trophy": {
-            "name": "High Achiever",
+            "name": "Initiate",
             "description": "Earn 10 achievements."
         },
         "overachiever": {
-            "name": "Overachiever",
+            "name": "Argonaut",
             "description": "Earn 25 achievements."
         },
         "completionist": {
-            "name": "Completionist",
+            "name": "Olympian",
             "description": "Earn 50 achievements."
+        },
+        "herculean": {
+            "name": "Herculean",
+            "description": "Earn 100 achievements."
+        },
+        "promethean": {
+            "name": "Promethean",
+            "description": "Earn 150 achievements."
         },
         "sisyphean": {
             "name": "Sisyphean",
-            "description": "Earn 100 achievements."
+            "description": "Earn 200 achievements."
         },
         "graveyard-shift": {
             "name": "Graveyard Shift",

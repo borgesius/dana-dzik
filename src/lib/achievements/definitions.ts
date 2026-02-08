@@ -1176,7 +1176,7 @@ export const ACHIEVEMENTS: AchievementDef[] = [
     {
         id: "participation-trophy",
         category: "milestones",
-        icon: "🏅",
+        icon: "🫒",
         hidden: false,
         tieredGroup: "collector",
         tier: 1,
@@ -1184,7 +1184,7 @@ export const ACHIEVEMENTS: AchievementDef[] = [
     {
         id: "overachiever",
         category: "milestones",
-        icon: "⭐",
+        icon: "🏺",
         hidden: false,
         tieredGroup: "collector",
         tier: 2,
@@ -1192,10 +1192,26 @@ export const ACHIEVEMENTS: AchievementDef[] = [
     {
         id: "completionist",
         category: "milestones",
-        icon: "🏆",
+        icon: "⚡",
         hidden: false,
         tieredGroup: "collector",
         tier: 3,
+    },
+    {
+        id: "herculean",
+        category: "milestones",
+        icon: "💪",
+        hidden: true,
+        tieredGroup: "collector",
+        tier: 4,
+    },
+    {
+        id: "promethean",
+        category: "milestones",
+        icon: "🔥",
+        hidden: true,
+        tieredGroup: "collector",
+        tier: 5,
     },
     {
         id: "sisyphean",
@@ -1203,7 +1219,7 @@ export const ACHIEVEMENTS: AchievementDef[] = [
         icon: "🪨",
         hidden: true,
         tieredGroup: "collector",
-        tier: 4,
+        tier: 6,
     },
 
     // ── Meta: Time/Date Novelties (hidden) ────────────────────────────────
