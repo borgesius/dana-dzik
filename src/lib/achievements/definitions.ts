@@ -517,6 +517,30 @@ export const ACHIEVEMENTS: AchievementDef[] = [
         icon: "🎁",
         hidden: true,
     },
+    {
+        id: "open-source",
+        category: "social",
+        icon: "📂",
+        hidden: false,
+    },
+    {
+        id: "link-and-build",
+        category: "social",
+        icon: "🔍",
+        hidden: false,
+    },
+    {
+        id: "sliding-into-dms",
+        category: "social",
+        icon: "✉️",
+        hidden: false,
+    },
+    {
+        id: "connections",
+        category: "social",
+        icon: "🤝",
+        hidden: false,
+    },
 
     // ── Pinball ──────────────────────────────────────────────────────────────
     {

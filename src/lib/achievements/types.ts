@@ -90,6 +90,10 @@ export type AchievementId =
     | "meow"
     | "popup-enjoyer"
     | "beyond-the-binary"
+    | "open-source"
+    | "link-and-build"
+    | "sliding-into-dms"
+    | "connections"
     // Pinball
     | "pinball-wizard"
     | "high-roller"

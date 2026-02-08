@@ -45,6 +45,7 @@ export function wireAchievements(
     wirePopupEvents(mgr)
     wireFelixEvents(mgr)
     wireGuestbookEvents(mgr)
+    wireLinkEvents(mgr)
     wireWeltEvents(mgr)
     wireCalmMode(mgr)
     wireGlitchEvents(mgr)
@@ -553,6 +554,19 @@ function wireGuestbookEvents(mgr: AchievementManager): void {
         if (target.closest(".sign-btn")) {
             mgr.earn("signed")
         }
+    })
+}
+
+function wireLinkEvents(mgr: AchievementManager): void {
+    document.addEventListener("click", (e) => {
+        const target = e.target as HTMLElement
+        const link = target.closest(".link-btn") as HTMLElement | null
+        if (!link) return
+
+        if (link.classList.contains("repo")) mgr.earn("open-source")
+        if (link.classList.contains("github")) mgr.earn("connections")
+        if (link.classList.contains("linkedin")) mgr.earn("link-and-build")
+        if (link.classList.contains("email")) mgr.earn("sliding-into-dms")
     })
 }
 

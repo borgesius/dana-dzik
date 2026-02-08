@@ -1017,6 +1017,22 @@
             "name": "Nigerian Prince-Consort",
             "description": "Claim 5 bonus popups."
         },
+        "open-source": {
+            "name": "Open Source",
+            "description": "View the source code on GitHub."
+        },
+        "link-and-build": {
+            "name": "Link and Build",
+            "description": "Visit the LinkedIn profile."
+        },
+        "sliding-into-dms": {
+            "name": "Sliding Into DMs",
+            "description": "Click the email link."
+        },
+        "connections": {
+            "name": "Connections",
+            "description": "Visit the GitHub profile."
+        },
         "beyond-the-binary": {
             "name": "Beyond the Binary",
             "description": "Escape the Matrix."
