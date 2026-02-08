@@ -1,3 +1,13 @@
+## [2.0.0](https://github.com/borgesius/dana-dzik/compare/v1.40.0...v2.0.0) (2026-02-08)
+
+### ⚠ BREAKING CHANGES
+
+* **releaserc:** fix major release trigger (#40)
+
+### Continuous Integration
+
+* **releaserc:** fix major release trigger ([#40](https://github.com/borgesius/dana-dzik/issues/40)) ([c105ef9](https://github.com/borgesius/dana-dzik/commit/c105ef9d6c76dc81eb86629733d0b44f25254daf))
+
 ## [1.40.0](https://github.com/borgesius/dana-dzik/compare/v1.39.0...v1.40.0) (2026-02-08)
 
 ### ⚠ BREAKING CHANGES
