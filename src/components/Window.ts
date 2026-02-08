@@ -141,6 +141,8 @@ export class Window {
             renderResumeWindow()
         } else if (this.config.contentType === "customize") {
             renderCustomizeWindow()
+        } else if (this.config.contentType === "finder") {
+            this.initFinder()
         }
     }
 
@@ -150,6 +152,15 @@ export class Window {
         ) as HTMLElement
         if (container) {
             new FileExplorer(container, "3:\\Users\\Dana\\Desktop\\WELT")
+        }
+    }
+
+    private initFinder(): void {
+        const container = this.element.querySelector(
+            "#finder-content"
+        ) as HTMLElement
+        if (container) {
+            new FileExplorer(container, "C:\\")
         }
     }
 

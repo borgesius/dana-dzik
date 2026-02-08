@@ -48,6 +48,8 @@ export function getWindowContent(contentType: RoutableWindow): string {
             return getAutobattlerContent()
         case "customize":
             return getCustomizeContent()
+        case "finder":
+            return `<div id="finder-content"></div>`
         default:
             return "<p>Content not found</p>"
     }

@@ -1,3 +1,10 @@
+# [1.39.0](https://github.com/borgesius/dana-dzik/compare/v1.38.0...v1.39.0) (2026-02-08)
+
+
+### Features
+
+* **nav:** my computer ([#29](https://github.com/borgesius/dana-dzik/issues/29)) ([4885772](https://github.com/borgesius/dana-dzik/commit/4885772f57bd0b6b6d5653dfb517581861368291))
+
 # [1.38.0](https://github.com/borgesius/dana-dzik/compare/v1.37.0...v1.38.0) (2026-02-07)
 
 
