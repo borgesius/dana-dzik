@@ -421,7 +421,7 @@ const EXECUTIVE_NODES: CareerNodeDef[] = [
 /** Base education entry — always shown on resume; bonus applied passively. */
 export const EDUCATION_STARTER_NODE: CareerNodeDef = {
     id: "edu-hard-knocks",
-    name: "Hard Knocks at the School of Life",
+    name: "Hard Knocks",
     company: "The School of Life",
     dateRange: "1997 – Present",
     bullets: [],
