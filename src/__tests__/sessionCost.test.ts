@@ -39,10 +39,15 @@ describe("SessionCostTracker", () => {
 
     async function createTracker(
         bigSpenderThreshold = 1,
-        whaleThreshold = 2
+        whaleThreshold = 2,
+        leviathanThreshold = 3
     ): Promise<SessionCostTracker> {
         const mod = await import("../lib/sessionCost")
-        return new mod.SessionCostTracker(bigSpenderThreshold, whaleThreshold)
+        return new mod.SessionCostTracker(
+            bigSpenderThreshold,
+            whaleThreshold,
+            leviathanThreshold
+        )
     }
 
     it("starts with zero cost", async () => {
@@ -197,7 +202,8 @@ describe("SessionCostTracker", () => {
         it("exports cost thresholds", async () => {
             const mod = await import("../lib/sessionCost")
             expect(mod.BIG_SPENDER_THRESHOLD).toBe(0.001)
-            expect(mod.WHALE_THRESHOLD).toBe(0.0025)
+            expect(mod.WHALE_THRESHOLD).toBe(0.002)
+            expect(mod.LEVIATHAN_THRESHOLD).toBe(0.003)
         })
 
         it("uses correct Vercel bandwidth pricing", () => {

@@ -16,6 +16,8 @@ import "./styles/widgets.css"
 import "./styles/windows.css"
 import "./styles/mobile.css"
 import "./styles/achievements.css"
+import "./styles/autobattler.css"
+import "./styles/chrome-variants.css"
 
 import { initCore, initServices } from "./init/core"
 import { initDesktop } from "./init/desktop"

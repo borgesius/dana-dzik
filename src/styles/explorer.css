@@ -85,7 +85,7 @@
 }
 
 .explorer-row:hover .explorer-row-type {
-    color: #c0c0c0;
+    color: var(--theme-explorer-hover-text);
 }
 
 .explorer-context-menu {

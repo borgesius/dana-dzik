@@ -38,3 +38,14 @@ export function formatMoney(value: number): string {
 
     return negative ? `-${formatted}` : formatted
 }
+
+/**
+ * Format a commodity quantity for display.
+ * Integers show without decimals; fractional values show up to 2 dp with
+ * trailing zeros stripped.
+ */
+export function formatQuantity(value: number): string {
+    if (Number.isInteger(value)) return value.toString()
+    // Up to 2 decimal places, strip trailing zeros
+    return parseFloat(value.toFixed(2)).toString()
+}

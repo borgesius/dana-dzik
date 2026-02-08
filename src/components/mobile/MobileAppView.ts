@@ -7,7 +7,14 @@ import { getLocaleManager } from "../../lib/localeManager"
 import { initNowPlaying } from "../../lib/nowPlaying"
 import { initPhotoSlideshows } from "../../lib/photoSlideshow"
 import { initSiteStats } from "../../lib/siteStats"
-import { getWindowContent } from "../../lib/windowContent"
+import {
+    getWindowContent,
+    renderAchievementsWindow,
+    renderAutobattlerWindow,
+    renderCareerTreeWindow,
+    renderCustomizeWindow,
+    renderResumeWindow,
+} from "../../lib/windowContent"
 import { FileExplorer } from "../FileExplorer"
 
 const APP_TITLES: Record<string, string> = {
@@ -20,6 +27,10 @@ const APP_TITLES: Record<string, string> = {
     felixgpt: "FelixGPT",
     stats: "Stats",
     explorer: "Files",
+    achievements: "Achievements",
+    autobattler: "Frontier",
+    customize: "Customize",
+    "career-tree": "Career Tree",
 }
 
 export class MobileAppView {
@@ -167,6 +178,16 @@ export class MobileAppView {
             initSiteStats()
         } else if (contentType === "explorer") {
             this.initExplorer()
+        } else if (contentType === "achievements") {
+            renderAchievementsWindow()
+        } else if (contentType === "autobattler") {
+            renderAutobattlerWindow()
+        } else if (contentType === "resume") {
+            renderResumeWindow()
+        } else if (contentType === "career-tree") {
+            renderCareerTreeWindow()
+        } else if (contentType === "customize") {
+            renderCustomizeWindow()
         }
     }
 

@@ -1,11 +1,12 @@
 import { formatMoney } from "../../lib/formatMoney"
 import { getLocaleManager } from "../../lib/localeManager"
 import type { MarketEngine } from "../../lib/marketGame/MarketEngine"
-import { UPGRADES } from "../../lib/marketGame/types"
+import { PHASE_THRESHOLDS, UPGRADES } from "../../lib/marketGame/types"
 
 export class UpgradesSection {
     private element: HTMLElement
     private listEl: HTMLElement
+    private lockedEl: HTMLElement
     private game: MarketEngine
     private playSound: (type: string) => void
 
@@ -14,7 +15,10 @@ export class UpgradesSection {
         this.playSound = playSound
         this.listEl = document.createElement("div")
         this.listEl.className = "upgrades-list"
+        this.lockedEl = document.createElement("div")
+        this.lockedEl.className = "phase-locked-teaser"
         this.element = this.createElement()
+        this.updateVisibility()
         this.render()
     }
 
@@ -25,22 +29,38 @@ export class UpgradesSection {
     private createElement(): HTMLElement {
         const section = document.createElement("div")
         section.className = "upgrades-section"
-        section.style.display = this.game.isPhaseUnlocked(3) ? "block" : "none"
 
         const heading = document.createElement("h3")
         heading.textContent = getLocaleManager().t(
             "commodityExchange.ui.improvements"
         )
         section.appendChild(heading)
+        section.appendChild(this.lockedEl)
         section.appendChild(this.listEl)
 
         return section
     }
 
     public updateVisibility(): void {
-        this.element.style.display = this.game.isPhaseUnlocked(3)
-            ? "block"
-            : "none"
+        const unlocked = this.game.isPhaseUnlocked(3)
+        const prevUnlocked = this.game.isPhaseUnlocked(2)
+        if (unlocked) {
+            this.element.style.display = "block"
+            this.listEl.style.display = ""
+            this.lockedEl.style.display = "none"
+        } else if (prevUnlocked) {
+            // Show locked teaser only after previous phase is unlocked
+            this.element.style.display = "block"
+            this.listEl.style.display = "none"
+            const lm = getLocaleManager()
+            this.lockedEl.style.display = ""
+            this.lockedEl.textContent = lm.t(
+                "commodityExchange.ui.phaseEarningsHint",
+                { threshold: formatMoney(PHASE_THRESHOLDS.upgrades) }
+            )
+        } else {
+            this.element.style.display = "none"
+        }
     }
 
     public render(): void {

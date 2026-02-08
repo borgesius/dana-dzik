@@ -176,10 +176,10 @@ describe("market balance", () => {
     })
 
     describe("volatility hierarchy", () => {
-        it("VC has the highest volatility", () => {
-            const vc = COMMODITIES.find((c) => c.id === "VC")!
+        it("EMAIL has the highest volatility", () => {
+            const email = COMMODITIES.find((c) => c.id === "EMAIL")!
             const maxVol = Math.max(...COMMODITIES.map((c) => c.volatility))
-            expect(vc.volatility).toBe(maxVol)
+            expect(email.volatility).toBe(maxVol)
         })
 
         it("all commodities have distinct volatility values", () => {

@@ -1,4 +1,6 @@
+import { getAchievementManager } from "../achievements/AchievementManager"
 import { emitAppEvent } from "../events"
+import { getLocaleManager } from "../localeManager"
 import {
     type Severity,
     validateSystemFile,
@@ -96,7 +98,12 @@ export class Editor {
         const node = resolved ? getNode(fs, resolved) : null
 
         if (node && node.type === "directory") {
-            callbacks.print(`Cannot edit a directory: ${filename}`, "error")
+            callbacks.print(
+                getLocaleManager().t("terminalEditor.cannotEditDir", {
+                    filename,
+                }),
+                "error"
+            )
             callbacks.onExit()
             return
         }
@@ -145,11 +152,13 @@ export class Editor {
         const btnGroup = document.createElement("div")
         btnGroup.className = "editor-btn-group"
 
+        const lm = getLocaleManager()
+
         if (isExerciseFile(this.filename)) {
             this.freakBtnEl = document.createElement("button")
             this.freakBtnEl.className = "editor-freakgpt-btn"
-            this.freakBtnEl.textContent = "\u{1F525} FreakGPT"
-            this.freakBtnEl.title = "the gpt that gets a little freaky"
+            this.freakBtnEl.textContent = lm.t("terminalEditor.freakgpt")
+            this.freakBtnEl.title = lm.t("terminalEditor.freakgptTooltip")
             this.freakBtnEl.addEventListener("click", () => {
                 void this.runFreakGPT()
             })
@@ -158,11 +167,18 @@ export class Editor {
 
         const felixBtn = document.createElement("button")
         felixBtn.className = "editor-felix-btn"
-        felixBtn.textContent = "\u{1F431} FelixGPT"
-        felixBtn.title = "meow"
-        felixBtn.addEventListener("click", () => {
-            this.runFelixGPT()
-        })
+        const felixLocked = !getAchievementManager().hasEarned("posse-up")
+        if (felixLocked) {
+            felixBtn.textContent = lm.t("terminalEditor.felixgptLocked")
+            felixBtn.title = lm.t("terminalEditor.felixgptLockedTooltip")
+            felixBtn.disabled = true
+        } else {
+            felixBtn.textContent = lm.t("terminalEditor.felixgpt")
+            felixBtn.title = lm.t("terminalEditor.felixgptTooltip")
+            felixBtn.addEventListener("click", () => {
+                this.runFelixGPT()
+            })
+        }
         btnGroup.appendChild(felixBtn)
 
         bodyEl.appendChild(btnGroup)
@@ -182,7 +198,7 @@ export class Editor {
 
         const statusRight = document.createElement("span")
         statusRight.className = "editor-status-right"
-        statusRight.textContent = "^S Save  ^Q Quit"
+        statusRight.textContent = lm.t("terminalEditor.shortcuts")
         statusEl.appendChild(statusRight)
 
         this.containerEl.appendChild(statusEl)
@@ -275,7 +291,7 @@ export class Editor {
 
         this.confirmingQuit = true
         this.showStatusMessage(
-            "Unsaved changes! ^Q again to discard, ^S to save",
+            getLocaleManager().t("terminalEditor.unsavedChanges"),
             "warning"
         )
     }
@@ -285,8 +301,14 @@ export class Editor {
     }
 
     private updateHeader(): void {
-        const dirtyMarker = this.isDirty() ? " [modified]" : ""
-        this.headerEl.textContent = `EDIT - ${this.filename}${dirtyMarker}`
+        const lm = getLocaleManager()
+        const dirtyMarker = this.isDirty()
+            ? lm.t("terminalEditor.modified")
+            : ""
+        this.headerEl.textContent = lm.t("terminalEditor.title", {
+            filename: this.filename,
+            dirtyMarker,
+        })
     }
 
     private updateGutter(): void {
@@ -306,7 +328,10 @@ export class Editor {
         const line = linesBefore.length
         const col = linesBefore[linesBefore.length - 1].length + 1
 
-        this.statusLeftEl.textContent = `Ln ${line}, Col ${col}`
+        this.statusLeftEl.textContent = getLocaleManager().t(
+            "terminalEditor.position",
+            { line, col }
+        )
     }
 
     private showStatusMessage(
@@ -354,19 +379,17 @@ export class Editor {
         if (typeof document !== "undefined") {
             emitAppEvent("freak:used")
         }
+        const lm = getLocaleManager()
         if (this.freakBtnEl) {
             this.freakBtnEl.disabled = true
-            this.freakBtnEl.textContent = "\u{1F525} Generating..."
+            this.freakBtnEl.textContent = lm.t("terminalEditor.generating")
         }
 
         this.textareaEl.value = ""
         this.updateGutter()
         this.updateHeader()
 
-        this.showStatusMessage(
-            "\u{1F525} FreakGPT: Hey there, gorgeous. \u{1F60F}",
-            "info"
-        )
+        this.showStatusMessage(lm.t("terminalEditor.freakGreet"), "info")
         await this.sleep(500)
 
         if (this.filename === "exercise4.welt") {
@@ -382,13 +405,10 @@ export class Editor {
         this.freakGenerating = false
         this.textareaEl.readOnly = false
         if (this.freakBtnEl) {
-            this.freakBtnEl.textContent = "\u{1F525} FreakGPT"
+            this.freakBtnEl.textContent = lm.t("terminalEditor.freakgpt")
             this.freakBtnEl.disabled = false
         }
-        this.showStatusMessage(
-            "\u{1F525} FreakGPT: All done, hot stuff. \u{1F618}",
-            "info"
-        )
+        this.showStatusMessage(lm.t("terminalEditor.freakDone"), "info")
         this.textareaEl.focus()
     }
 
@@ -486,7 +506,7 @@ export class Editor {
 
             if (i === essayStart) {
                 this.showStatusMessage(
-                    "\u{1F525} FreakGPT: Adding some context... \u{1F914}",
+                    getLocaleManager().t("terminalEditor.freakContext"),
                     "info"
                 )
                 await this.sleep(500)
@@ -523,6 +543,7 @@ export class Editor {
     }
 
     private save(): void {
+        const lm = getLocaleManager()
         const content = this.textareaEl.value
         const dirPath = this.filePath.slice(0, -1)
         const dirPathStr = formatPath(dirPath)
@@ -532,7 +553,7 @@ export class Editor {
             const result = createFile(this.fs, dirPathStr, fileName, content)
             if (!result.success) {
                 this.showStatusMessage(
-                    `Save failed: ${result.error}`,
+                    lm.t("terminalEditor.saveFailed", { error: result.error }),
                     "warning"
                 )
                 return
@@ -543,7 +564,7 @@ export class Editor {
             const result = writeFile(this.fs, pathStr, content)
             if (!result.success) {
                 this.showStatusMessage(
-                    `Save failed: ${result.error}`,
+                    lm.t("terminalEditor.saveFailed", { error: result.error }),
                     "warning"
                 )
                 return
@@ -553,7 +574,9 @@ export class Editor {
         this.originalContent = content
         this.confirmingQuit = false
         const lineCount = content.split("\n").length
-        this.showStatusMessage(`Saved ${this.filename} (${lineCount} lines)`)
+        this.showStatusMessage(
+            lm.t("terminalEditor.saved", { filename: this.filename, lineCount })
+        )
         this.updateHeader()
 
         emitAppEvent("terminal:file-saved", {

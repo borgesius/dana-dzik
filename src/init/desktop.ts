@@ -1,17 +1,25 @@
 import { AchievementToast } from "../components/AchievementToast"
 import { CursorTrail } from "../components/CursorTrail"
 import { Desktop } from "../components/Desktop"
+import { LevelUpPopup } from "../components/LevelUpPopup"
 import { PopupManager } from "../components/PopupManager"
 import { setTerminalInit } from "../components/Terminal"
 import { Widgets } from "../components/Widgets"
 import { getAchievementManager } from "../lib/achievements/AchievementManager"
 import { wireAchievements } from "../lib/achievements/wiring"
 import { createAudioManager } from "../lib/audio"
+import { getCollectionManager } from "../lib/autobattler/CollectionManager"
 import { isCalmMode } from "../lib/calmMode"
+import { getCosmeticManager } from "../lib/cosmetics/CosmeticManager"
+import { wireCosmeticUnlocks } from "../lib/cosmetics/wiring"
 import { onAppEvent } from "../lib/events"
 import { GlitchManager } from "../lib/glitchEffects"
 import { getLocaleManager } from "../lib/localeManager"
 import { getMarketGame } from "../lib/marketGame/MarketEngine"
+import { getPrestigeManager } from "../lib/prestige/PrestigeManager"
+import { getCareerManager } from "../lib/progression/CareerManager"
+import { getProgressionManager } from "../lib/progression/ProgressionManager"
+import { wireProgression } from "../lib/progression/wiring"
 import { Router } from "../lib/router"
 import { type SaveData, saveManager } from "../lib/saveManager"
 import { SystemCrashHandler } from "../lib/systemCrash"
@@ -29,6 +37,13 @@ export function initDesktop(app: HTMLElement): void {
         windowManager.onNewWindowOpen(cb)
     })
     new AchievementToast(achievements)
+    new LevelUpPopup()
+
+    wireProgression(getProgressionManager(), (cb) => {
+        windowManager.onNewWindowOpen(cb)
+    })
+
+    wireCosmeticUnlocks()
 
     getThemeManager().on("themeChanged", () => saveManager.requestSave())
     getThemeManager().on("colorSchemeChanged", () => saveManager.requestSave())
@@ -41,7 +56,7 @@ export function initDesktop(app: HTMLElement): void {
             parseInt(localStorage.getItem("pinball-high-score") || "0", 10) || 0
 
         return {
-            version: 1,
+            version: 3,
             savedAt: Date.now(),
             game: getMarketGame().serialize(),
             pinball: { highScore: pinballHighScore },
@@ -53,6 +68,13 @@ export function initDesktop(app: HTMLElement): void {
             },
             filesystem: diffFilesystem(getSharedFilesystem()),
             achievements: achievements.serialize(),
+            prestige: getPrestigeManager().serialize(),
+            progression: {
+                ...getProgressionManager().serialize(),
+                ...getCareerManager().serialize(),
+            },
+            autobattler: getCollectionManager().serialize(),
+            cosmetics: getCosmeticManager().serialize(),
         }
     })
 
@@ -73,6 +95,28 @@ export function initDesktop(app: HTMLElement): void {
     new CursorTrail()
     createAudioManager()
     new GlitchManager()
+
+    // ── Cosmetic system: apply active wallpaper and chrome ────────────────
+    const applyCosmetics = (): void => {
+        const cm = getCosmeticManager()
+
+        // Wallpaper: apply CSS class to body
+        document.body.classList.forEach((cls) => {
+            if (cls.startsWith("wp-") || cls.startsWith("chrome-")) {
+                document.body.classList.remove(cls)
+            }
+        })
+        const wpId = cm.getActive("wallpaper")
+        if (wpId !== "default") {
+            document.body.classList.add(`wp-${wpId}`)
+        }
+        const chromeId = cm.getActive("window-chrome")
+        if (chromeId !== "default") {
+            document.body.classList.add(`chrome-${chromeId}`)
+        }
+    }
+    applyCosmetics()
+    getCosmeticManager().onChange(() => applyCosmetics())
     new SystemCrashHandler()
     new Widgets(app)
 

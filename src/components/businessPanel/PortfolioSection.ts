@@ -1,4 +1,4 @@
-import { formatMoney } from "../../lib/formatMoney"
+import { formatMoney, formatQuantity } from "../../lib/formatMoney"
 import { getLocaleManager } from "../../lib/localeManager"
 import type { MarketEngine } from "../../lib/marketGame/MarketEngine"
 
@@ -57,7 +57,7 @@ export class PortfolioSection {
             row.className = "portfolio-row"
             row.innerHTML = `
                 <span class="portfolio-ticker">${commodityId}</span>
-                <span class="portfolio-qty">${holding.quantity}</span>
+                <span class="portfolio-qty">${formatQuantity(holding.quantity)}</span>
                 <span class="portfolio-avg">${formatMoney(avgCost)}</span>
                 <span class="portfolio-pl ${pl >= 0 ? "positive" : "negative"}">${pl >= 0 ? "+" : ""}${formatMoney(pl)}</span>
             `

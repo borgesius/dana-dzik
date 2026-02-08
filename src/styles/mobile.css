@@ -191,6 +191,15 @@ html.is-mobile body {
     margin-top: 4px;
 }
 
+.ios-lock-hint {
+    font-size: 13px;
+    font-style: italic;
+    font-weight: 300;
+    color: rgb(255 255 255 / 45%);
+    text-align: center;
+    letter-spacing: 0.3px;
+}
+
 .ios-slide-to-unlock {
     position: relative;
     width: 260px;

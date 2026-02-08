@@ -21,16 +21,21 @@ export class StravaWidget {
     private widget: HTMLElement
 
     constructor() {
-        this.widget = createWidgetFrame("🏃 Strava", "strava-widget")
-
         const content = document.createElement("div")
         content.className = "widget-content strava"
         content.innerHTML = `
-            <div class="strava-loading">Loading activities...</div>
+            <div class="strava-loading">Expand to load activities</div>
         `
 
+        this.widget = createWidgetFrame("🏃 Strava", "strava-widget", {
+            lazy: true,
+            onFirstExpand: () => {
+                content.innerHTML = `<div class="strava-loading">Loading activities...</div>`
+                void this.fetchStrava(content)
+            },
+        })
+
         this.widget.appendChild(content)
-        void this.fetchStrava(content)
     }
 
     public getElement(): HTMLElement {

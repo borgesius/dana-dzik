@@ -1,4 +1,5 @@
 import { isCalmMode } from "./calmMode"
+import { emitAppEvent } from "./events"
 import { getLocaleManager, type LocaleId } from "./localeManager"
 import { getThemeManager } from "./themeManager"
 
@@ -11,6 +12,7 @@ type GlitchType =
     | "freeze"
     | "tear"
     | "corruption"
+    | "pixelate"
 
 interface GlitchEvent {
     type: GlitchType
@@ -19,24 +21,24 @@ interface GlitchEvent {
 }
 
 const GLITCH_CONFIG = {
-    minInterval: 3000,
-    maxInterval: 15000,
+    minInterval: 15000,
+    maxInterval: 45000,
     minDuration: 50,
     maxDuration: 300,
-    multiGlitchChance: 0.3,
+    multiGlitchChance: 0.1,
 }
 
 const THEME_GLITCH_CONFIG = {
-    flashMinInterval: 30000,
-    flashMaxInterval: 90000,
+    flashMinInterval: 90000,
+    flashMaxInterval: 300000,
     fullSwitchChance: 0.2,
     flashDuration: { min: 200, max: 500 },
     transitionEffectDuration: 100,
 }
 
 const LOCALE_GLITCH_CONFIG = {
-    flashMinInterval: 40000,
-    flashMaxInterval: 120000,
+    flashMinInterval: 120000,
+    flashMaxInterval: 360000,
     flashDuration: { min: 300, max: 700 },
     transitionEffectDuration: 150,
 }
@@ -241,19 +243,24 @@ export class GlitchManager {
     }
 
     private generateRandomGlitchEvent(): GlitchEvent {
-        const types: GlitchType[] = [
-            "shift",
-            "colorSplit",
-            "invert",
-            "noise",
-            "scanlineJump",
-            "freeze",
-            "tear",
-            "corruption",
-        ]
+        const type: GlitchType =
+            Math.random() < 0.01
+                ? "pixelate"
+                : (
+                      [
+                          "shift",
+                          "colorSplit",
+                          "invert",
+                          "noise",
+                          "scanlineJump",
+                          "freeze",
+                          "tear",
+                          "corruption",
+                      ] as GlitchType[]
+                  )[Math.floor(Math.random() * 8)]
 
         return {
-            type: types[Math.floor(Math.random() * types.length)],
+            type,
             duration:
                 GLITCH_CONFIG.minDuration +
                 Math.random() *
@@ -271,6 +278,7 @@ export class GlitchManager {
     }
 
     private applyGlitch(glitch: GlitchEvent): void {
+        emitAppEvent("glitch:triggered", { type: glitch.type })
         const body = document.body
         const desktop = document.querySelector(".desktop-area") as HTMLElement
 
@@ -298,6 +306,9 @@ export class GlitchManager {
                 break
             case "corruption":
                 this.applyCorruption(body, glitch)
+                break
+            case "pixelate":
+                this.applyPixelate(body, glitch)
                 break
         }
     }
@@ -393,5 +404,38 @@ export class GlitchManager {
         setTimeout(() => {
             el.style.filter = ""
         }, glitch.duration * 0.5)
+    }
+
+    private applyPixelate(el: HTMLElement, glitch: GlitchEvent): void {
+        const pixelSize = Math.round(4 + glitch.intensity * 12)
+
+        let svg = document.getElementById(
+            "glitch-pixelate-svg"
+        ) as SVGSVGElement | null
+        if (!svg) {
+            svg = document.createElementNS("http://www.w3.org/2000/svg", "svg")
+            svg.id = "glitch-pixelate-svg"
+            svg.setAttribute("width", "0")
+            svg.setAttribute("height", "0")
+            svg.style.position = "absolute"
+            document.body.appendChild(svg)
+        }
+
+        const half = Math.round(pixelSize / 2)
+        svg.innerHTML = `
+            <filter id="glitch-pixelate">
+                <feFlood x="${half}" y="${half}" height="1" width="1"/>
+                <feComposite width="${pixelSize}" height="${pixelSize}"/>
+                <feTile result="a"/>
+                <feComposite in="SourceGraphic" in2="a" operator="in"/>
+                <feMorphology operator="dilate" radius="${half}"/>
+            </filter>
+        `
+
+        el.style.filter = "url(#glitch-pixelate)"
+
+        setTimeout(() => {
+            el.style.filter = ""
+        }, glitch.duration)
     }
 }

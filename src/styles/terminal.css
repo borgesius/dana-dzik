@@ -64,7 +64,7 @@
 }
 
 .terminal-line.success {
-    color: #41ff41;
+    color: var(--theme-terminal-success);
 }
 
 .terminal-line.info {
@@ -147,8 +147,8 @@
 }
 
 .terminal-exe-entry {
-    color: #41ff41;
-    text-shadow: 0 0 5px #41ff41;
+    color: var(--theme-terminal-success);
+    text-shadow: 0 0 5px var(--theme-terminal-glow);
 }
 
 .sl-animation {
@@ -327,7 +327,7 @@
 }
 
 .editor-status-msg.info {
-    color: #41ff41;
+    color: var(--theme-terminal-success);
 }
 
 .editor-status-msg.warning {

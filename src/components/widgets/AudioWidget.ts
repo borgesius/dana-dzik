@@ -1,3 +1,4 @@
+import { getLocaleManager } from "../../lib/localeManager"
 import { createWidgetFrame } from "./WidgetFrame"
 
 type AudioManagerType = {
@@ -126,12 +127,13 @@ export class AudioWidget {
             const trackIndex = audioManager.getCurrentTrackIndex()
             const playlistLength = audioManager.getPlaylistLength()
 
+            const lm = getLocaleManager()
             if (isPlaying) {
-                statusEl.textContent = "PLAYING"
+                statusEl.textContent = lm.t("widgets.winamp.playing")
                 statusEl.classList.add("playing")
                 visualizer.classList.add("playing")
             } else {
-                statusEl.textContent = "PAUSED"
+                statusEl.textContent = lm.t("widgets.winamp.paused")
                 statusEl.classList.remove("playing")
                 visualizer.classList.remove("playing")
             }
@@ -170,7 +172,9 @@ export class AudioWidget {
             const audioManager = this.getAudioManager()
             if (audioManager) {
                 audioManager.stop()
-                statusEl.textContent = "STOPPED"
+                statusEl.textContent = getLocaleManager().t(
+                    "widgets.winamp.stopped"
+                )
                 statusEl.classList.remove("playing")
                 visualizer.classList.remove("playing")
             }

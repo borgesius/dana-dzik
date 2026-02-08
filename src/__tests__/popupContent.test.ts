@@ -19,7 +19,7 @@ describe("Popup Content", () => {
         })
 
         it("all popups have valid type", () => {
-            const validTypes = ["error", "warning", "winner", "ad"]
+            const validTypes = ["error", "warning", "winner", "ad", "bonus"]
             POPUP_CONTENTS.forEach((popup: PopupContent) => {
                 expect(validTypes).toContain(popup.type)
             })
