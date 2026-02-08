@@ -420,6 +420,56 @@ function wireProgressionEvents(mgr: AchievementManager): void {
 
             // Win streak (3 in a row)
             if (consecutiveWins >= 3) mgr.earn("win-streak")
+
+            // ── Concept achievements ──────────────────────────────────────
+            const locale = getLocaleManager().getCurrentLocale()
+
+            // Locale-sensitive
+            if (detail.majorityFaction === "prospectors" && locale === "fr") {
+                mgr.earn("la-pensee-francaise")
+            }
+            if (detail.majorityFaction === "deputies" && locale === "de") {
+                mgr.earn("der-deutsche-idealismus")
+            }
+
+            // Perfect run (0 losses)
+            if (detail.losses === 0) {
+                mgr.earn("amor-fati")
+            }
+
+            // All 4 factions in lineup
+            const mainFactions = detail.lineupFactions.filter(
+                (f) => f !== "drifters"
+            )
+            if (new Set(mainFactions).size >= 4) {
+                mgr.earn("continental-breakfast")
+            }
+
+            // Only empiricists
+            if (
+                detail.lineupFactions.length > 0 &&
+                detail.lineupFactions.every((f) => f === "drifters")
+            ) {
+                mgr.earn("independent-study")
+            }
+
+            // Survey course (win with each faction as majority)
+            if (detail.majorityFaction) {
+                const factionCount = mgr.addToSet(
+                    "factions-won-with",
+                    detail.majorityFaction
+                )
+                if (factionCount >= 4) mgr.earn("survey-course")
+            }
+
+            // Bridge synergy achievements
+            const factionSet = new Set(detail.lineupFactions)
+            if (factionSet.has("quickdraw") && factionSet.has("deputies")) {
+                mgr.earn("revaluation-of-all-values")
+            }
+            if (factionSet.has("clockwork") && factionSet.has("prospectors")) {
+                mgr.earn("expressionism-in-philosophy")
+            }
         } else {
             consecutiveWins = 0
         }

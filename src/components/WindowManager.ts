@@ -130,7 +130,7 @@ const WINDOW_CONFIGS: Record<RoutableWindow, WindowConfig> = {
     },
     autobattler: {
         id: "autobattler",
-        title: "FRONTIER.exe",
+        title: "SYMPOSIUM.exe",
         icon: icon("autobattler"),
         width: 600,
         height: 550,

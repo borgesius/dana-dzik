@@ -218,7 +218,7 @@ describe("MarketEngine", () => {
 
     describe("upgrades", () => {
         beforeEach(() => {
-            engine.addBonus(200)
+            engine.addBonus(PHASE_THRESHOLDS.upgrades)
         })
 
         it("cannot purchase upgrade before phase 3 unlock", () => {
@@ -248,7 +248,8 @@ describe("MarketEngine", () => {
             eng2.purchaseUpgrade("supply-chain")
             eng2.purchaseUpgrade("quality-assurance")
             eng2.purchaseUpgrade("bulk-orders")
-            expect(eng2.purchaseUpgrade("cpu-overclock")).toBe(false)
+            eng2.purchaseUpgrade("cpu-overclock")
+            expect(eng2.purchaseUpgrade("insider-newsletter")).toBe(false)
         })
     })
 
@@ -429,8 +430,8 @@ describe("MarketEngine", () => {
             expect(FACTORIES.length).toBe(4)
         })
 
-        it("has 9 upgrades", () => {
-            expect(UPGRADES.length).toBe(9)
+        it("has 16 upgrades", () => {
+            expect(UPGRADES.length).toBe(16)
         })
 
         it("has 3 influences", () => {

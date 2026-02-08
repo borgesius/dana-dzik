@@ -34,8 +34,8 @@ export function calculateForesight(totalHindsightSpent: number): number {
 export const FORESIGHT_UPGRADES: ForesightUpgradeDef[] = [
     {
         id: "scrap-reserves",
-        name: "Scrap Reserves",
-        description: "Hacking runs start with +2 scrap permanently",
+        name: "Thought Reserves",
+        description: "Symposia start with +2 Thoughts permanently",
         cost: 4,
         maxPurchases: 3,
     },

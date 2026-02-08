@@ -151,6 +151,15 @@ export type AchievementId =
     | "harvest-100"
     | "harvest-1000"
     | "harvest-10000"
+    // Autobattler (concept / hidden)
+    | "la-pensee-francaise"
+    | "der-deutsche-idealismus"
+    | "amor-fati"
+    | "continental-breakfast"
+    | "independent-study"
+    | "survey-course"
+    | "revaluation-of-all-values"
+    | "expressionism-in-philosophy"
 
 export type TieredGroup =
     | "mogul"
@@ -180,6 +189,7 @@ export type CounterKey =
     | "languages-tried"
     | "themes-tried"
     | "windows-opened"
+    | "factions-won-with"
 
 export interface AchievementSaveData {
     earned: Record<string, number>

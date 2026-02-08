@@ -165,6 +165,11 @@ export class BusinessPanel {
             this.portfolio.render()
             this.tradeControls.render()
         })
+        this.game.on("stateChanged", () => {
+            if (!this.isExpanded) return
+            this.updatePhaseVisibility()
+            this.renderAll()
+        })
     }
 
     public expand(): void {

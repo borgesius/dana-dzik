@@ -164,7 +164,7 @@
         "achievements": "Achievements",
         "pinball": "Pinball",
         "felixgpt": "FelixGPT",
-        "frontier": "FRONTIER",
+        "frontier": "SYMPOSIUM",
         "customize": "Customize",
         "careerDev": "Career Development",
         "about": "About",
@@ -173,7 +173,7 @@
         "links": "Links",
         "guestbook": "Guestbook",
         "locked": "(locked)",
-        "lockedTooltip": "Win a hacking run to unlock",
+        "lockedTooltip": "Win a symposium to unlock",
         "reset": "🔄 Reset",
         "resetTooltip": "Erase all saved progress",
         "resetTitle": "⚠️ Reset All Data",
@@ -306,7 +306,7 @@
         "freakgpt": "🔥 FreakGPT",
         "freakgptTooltip": "the gpt that gets a little freaky",
         "felixgptLocked": "🔒 FelixGPT",
-        "felixgptLockedTooltip": "Win a hacking run to unlock",
+        "felixgptLockedTooltip": "Win a symposium to unlock",
         "felixgpt": "🐱 FelixGPT",
         "felixgptTooltip": "meow",
         "generating": "🔥 Generating...",
@@ -359,7 +359,7 @@
             "unlockAt": "Unlock at ${{threshold}} lifetime earnings",
             "phaseLocked": "🔒 {{name}}",
             "phaseEarningsHint": "Earn {{threshold}} in lifetime earnings to unlock",
-            "phase5Hint": "Requires: 1st Prestige · Level 8 · 3 hacking wins"
+            "phase5Hint": "Requires: 1st Prestige · Level 8 · 3 symposium wins"
         },
         "commodities": {
             "EMAIL": {
@@ -932,21 +932,21 @@
             "description": "Click a test report badge to view CI results."
         },
         "first-draft": {
-            "name": "First Draft",
-            "description": "Complete your first hacking run."
+            "name": "First Thesis",
+            "description": "Complete your first symposium."
         },
-        "posse-up": { "name": "Posse Up", "description": "Win a hacking run." },
+        "posse-up": { "name": "Quorum", "description": "Win a symposium." },
         "faction-recruit": {
-            "name": "Faction Recruit",
+            "name": "Opinionated",
             "description": "Unlock your first faction unit."
         },
         "full-spiral": {
-            "name": "Full Spiral",
-            "description": "Complete the faction unlock spiral."
+            "name": "Sophisticated",
+            "description": "Complete the faction unlock cycle."
         },
         "no-drifters": {
-            "name": "No Drifters",
-            "description": "Win a run without any Drifter units."
+            "name": "Pure Theory",
+            "description": "Win a run without any Adjunct units."
         },
         "triple-threat": {
             "name": "Triple Threat",
@@ -986,11 +986,11 @@
         },
         "renaissance": {
             "name": "Renaissance",
-            "description": "Reach level 5 and complete a hacking run."
+            "description": "Reach level 5 and complete a symposium."
         },
         "full-stack": {
             "name": "Full Stack",
-            "description": "Prestige, win a hacking run, and choose a career."
+            "description": "Prestige, win a symposium, and choose a career."
         },
         "that-ones-a-person": {
             "name": "So That One's a Person",
@@ -1009,12 +1009,15 @@
             "description": "Reorganize the org chart."
         },
         "greenhorn": {
-            "name": "Greenhorn",
-            "description": "Win your first hacking run."
+            "name": "Postdoc",
+            "description": "Win your first symposium."
         },
-        "deputy": { "name": "Deputy", "description": "Win 5 hacking runs." },
-        "sheriff": { "name": "Sheriff", "description": "Win 15 hacking runs." },
-        "marshal": { "name": "Marshal", "description": "Win 50 hacking runs." },
+        "deputy": { "name": "Adjunct", "description": "Win 5 symposia." },
+        "sheriff": { "name": "Lecturer", "description": "Win 15 symposia." },
+        "marshal": {
+            "name": "Department Chair",
+            "description": "Win 50 symposia."
+        },
         "level-5": {
             "name": "Level 5",
             "description": "Reach player level 5."
@@ -1040,8 +1043,8 @@
             "description": "Unlock the Human Resources phase."
         },
         "win-streak": {
-            "name": "Hot Streak",
-            "description": "Win 3 hacking runs in a row."
+            "name": "Publish or Perish",
+            "description": "Win 3 symposia in a row."
         },
         "serial-pivoter": {
             "name": "Serial Pivoter",
@@ -1060,20 +1063,20 @@
             "description": "Buy every Hindsight upgrade."
         },
         "syndicate-complete": {
-            "name": "Syndicate Sweep",
-            "description": "Collect all Quickdraw faction units."
+            "name": "Existentialist Canon",
+            "description": "Collect all Existentialist units."
         },
         "deputies-complete": {
-            "name": "Badge Collector",
-            "description": "Collect all Deputies faction units."
+            "name": "Idealist Archive",
+            "description": "Collect all Idealist units."
         },
         "collective-complete": {
-            "name": "Clockwork Connoisseur",
-            "description": "Collect all Clockwork faction units."
+            "name": "Rationalist Library",
+            "description": "Collect all Rationalist units."
         },
         "prospectors-complete": {
-            "name": "Ghost Town",
-            "description": "Collect all Prospectors faction units."
+            "name": "Post-Structural Reader",
+            "description": "Collect all Post-Structuralist units."
         },
         "vertical-integration": {
             "name": "Vertical Integration",
@@ -1122,6 +1125,201 @@
         "harvest-10000": {
             "name": "Macro Enabled",
             "description": "Harvest 10,000 times."
+        },
+        "la-pensee-francaise": {
+            "name": "La Pensée Française",
+            "description": "???"
+        },
+        "der-deutsche-idealismus": {
+            "name": "Der Deutsche Idealismus",
+            "description": "???"
+        },
+        "amor-fati": {
+            "name": "Amor Fati",
+            "description": "Win a symposium without losing a single round."
+        },
+        "continental-breakfast": {
+            "name": "Continental Breakfast",
+            "description": "Win with all 4 philosophical schools in your lineup."
+        },
+        "independent-study": {
+            "name": "Independent Study",
+            "description": "Win a symposium using only Adjunct units."
+        },
+        "survey-course": {
+            "name": "Survey Course",
+            "description": "Win a symposium with each faction as majority."
+        },
+        "revaluation-of-all-values": {
+            "name": "Revaluation of All Values",
+            "description": "???"
+        },
+        "expressionism-in-philosophy": {
+            "name": "Expressionism in Philosophy",
+            "description": "???"
+        }
+    },
+    "symposium": {
+        "factions": {
+            "quickdraw": "Existentialists",
+            "deputies": "Idealists",
+            "clockwork": "Rationalists",
+            "prospectors": "Post-Structuralists",
+            "drifters": "Adjuncts"
+        },
+        "ui": {
+            "title": "SYMPOSIUM",
+            "subtitle": "Continental Auto-Chess",
+            "startRun": "Start Run",
+            "prepareRun": "Prepare Run",
+            "prepareHint": "Spend commodities for one-time run buffs (optional)",
+            "shop": "Shop",
+            "fight": "Fight!",
+            "victory": "Victory!",
+            "defeat": "Defeat",
+            "draw": "Draw",
+            "reroll": "Reroll (1 💭)",
+            "lineup": "Lineup",
+            "lineupHint": "← front | back → drag to reorder",
+            "bench": "Bench",
+            "empty": "Empty",
+            "back": "Back",
+            "nextRound": "Next Round →",
+            "returnToLobby": "Return to Lobby",
+            "combatLog": "Combat Log ({{count}} actions)",
+            "combatLasted": "Combat lasted {{rounds}} rounds",
+            "rewards": "Rewards",
+            "survivors": "Survivors",
+            "collection": "Collection",
+            "sell": "Sell {{amount}}💭",
+            "sold": "SOLD",
+            "runs": "Runs:",
+            "wins": "Wins:",
+            "bestStreak": "Best Streak:",
+            "collectionLabel": "Collection:",
+            "startCollecting": "Start a run to begin collecting units!",
+            "runComplete": "Run complete! {{wins}}W / {{losses}}L",
+            "runOver": "Run over — {{wins}}W / {{losses}}L",
+            "careerBonuses": "Career bonuses:",
+            "roundOf": "Round {{current}}/{{total}}",
+            "thoughts": "💭 {{amount}} Thoughts",
+            "wl": "W{{wins}} / L{{losses}}"
+        },
+        "units": {
+            "drifter-brawler": "Teaching Assistant",
+            "drifter-scout": "The Sessional",
+            "drifter-medic": "Office Hours",
+            "drifter-heavy": "Red Tape",
+            "qd-sharpshooter": "Iconoclast",
+            "qd-deadeye": "The Übermensch",
+            "qd-dynamiter": "The Dynamitard",
+            "qd-outlaw": "The Nihilist",
+            "qd-kingpin": "Zarathustra",
+            "qd-rifler": "Perspectivist",
+            "qd-ambusher": "Will to Power",
+            "qd-executioner": "The Transvaluator",
+            "dep-barricader": "The Categorist",
+            "dep-marshal": "Transcendental Ego",
+            "dep-trapper": "Dialectician",
+            "dep-warden": "The Systematizer",
+            "dep-judge": "World Spirit",
+            "dep-sentinel": "A Priori",
+            "dep-field-medic": "The Synthesist",
+            "dep-fortress": "The Absolute",
+            "cw-accumulator": "The Monad",
+            "cw-gearsmith": "Conatus",
+            "cw-tesla-coil": "Causa Sui",
+            "cw-overcharger": "The Harmonist",
+            "cw-architect": "Substance",
+            "cw-amplifier": "Adequate Idea",
+            "cw-disruptor": "Natura Naturans",
+            "cw-detonator": "Deus sive Natura",
+            "bp-tunneler": "Différance",
+            "bp-foreman": "Desiring Machine",
+            "bp-rattler": "The Supplement",
+            "bp-necrominer": "The Rhizome",
+            "bp-patriarch": "Body without Organs",
+            "bp-revenant": "Pharmakon",
+            "bp-leech": "Schizoanalyst",
+            "bp-sovereign": "Multiplicity",
+            "bp-shade": "Trace"
+        },
+        "opponents": {
+            "adjectives": [
+                "Tenured",
+                "Emeritus",
+                "Radical",
+                "Dogmatic",
+                "Heretical",
+                "Dialectical",
+                "Apodictic",
+                "Restless",
+                "Notorious",
+                "Incorrigible"
+            ],
+            "nouns": {
+                "quickdraw": [
+                    "Nihilists",
+                    "Absurdists",
+                    "Overmen",
+                    "Abyss-Gazers",
+                    "Madmen"
+                ],
+                "deputies": [
+                    "Systematizers",
+                    "Categorists",
+                    "Faculty",
+                    "Dialecticians",
+                    "Academics"
+                ],
+                "clockwork": [
+                    "Geometers",
+                    "Determinists",
+                    "Logicians",
+                    "Axiomatics",
+                    "Monads"
+                ],
+                "prospectors": [
+                    "Deconstructors",
+                    "Nomads",
+                    "Assemblages",
+                    "Rhizomes",
+                    "Semionauts"
+                ],
+                "drifters": [
+                    "Adjuncts",
+                    "Auditors",
+                    "Sessionals",
+                    "Lecturers",
+                    "TAs"
+                ]
+            }
+        },
+        "buffs": {
+            "email-rush": {
+                "name": "Email Rush",
+                "description": "+2 ATK to all units in round 1"
+            },
+            "ad-revenue": {
+                "name": "Ad Revenue",
+                "description": "+2 bonus Thoughts per round"
+            },
+            "soft-reroll": {
+                "name": "Software Assist",
+                "description": "+1 free reroll per shop phase"
+            },
+            "bandwidth-armor": {
+                "name": "Bandwidth Armor",
+                "description": "+5 HP to all units"
+            },
+            "dom-expansion": {
+                "name": "DOM Expansion",
+                "description": "Shop offers +1 extra unit"
+            },
+            "vc-funding": {
+                "name": "VC Funding",
+                "description": "Start with +3 bonus Thoughts"
+            }
         }
     }
 }

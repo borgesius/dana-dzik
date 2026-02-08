@@ -106,8 +106,8 @@ export const HINDSIGHT_UPGRADES: HindsightUpgradeDef[] = [
     // ── Cross-system boosts (unlocked later) ─────────────────────────────────
     {
         id: "frontier-dispatch",
-        name: "Frontier Dispatch",
-        description: "Hacking runs grant +25% commodity rewards",
+        name: "Faculty Grant",
+        description: "Symposia grant +25% commodity rewards",
         cost: 12,
         maxPurchases: 1,
         category: "cross-system",
@@ -156,8 +156,8 @@ export const HINDSIGHT_UPGRADES: HindsightUpgradeDef[] = [
     },
     {
         id: "scrap-dividend",
-        name: "Scrap Dividend",
-        description: "Market trades have 5% chance to grant hacking Scrap",
+        name: "Thought Dividend",
+        description: "Market trades have 5% chance to grant Thoughts",
         cost: 10,
         maxPurchases: 1,
         category: "cross-system",

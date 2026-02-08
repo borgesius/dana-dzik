@@ -1,4 +1,5 @@
 import { emitAppEvent } from "../events"
+import { getPrestigeManager } from "../prestige/PrestigeManager"
 import {
     type BonusType,
     CAREER_NODE_MAP,
@@ -263,10 +264,14 @@ export class CareerManager {
      * Get total bonus for a specific bonus type, considering dormant multiplier
      * for nodes in inactive career branches.
      */
-    /** Effective dormant multiplier, reduced by switchPenaltyReduction bonuses. */
+    /** Effective dormant multiplier, reduced by switchPenaltyReduction bonuses.
+     *  Career Tenure foresight upgrade raises the base from 0.5 to 0.95. */
     public getDormantMultiplier(): number {
         const reduction = this.getRawBonus("switchPenaltyReduction")
-        return Math.max(0.1, DORMANT_MULTIPLIER - reduction)
+        const base = getPrestigeManager().hasCareerTenure()
+            ? 0.95
+            : DORMANT_MULTIPLIER
+        return Math.max(0.1, base - reduction)
     }
 
     /** Get raw bonus total (without dormancy consideration) for a type. Used for switchPenaltyReduction. */

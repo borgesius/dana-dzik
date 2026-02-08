@@ -46,7 +46,12 @@ export interface AppEventMap {
     "prestige:purchase": { upgradeId: string }
     "prestige:ascension": { count: number; foresight: number }
     "prestige:foresight-purchase": { upgradeId: string }
-    "autobattler:run-complete": { won: boolean; majorityFaction?: string }
+    "autobattler:run-complete": {
+        won: boolean
+        majorityFaction?: string
+        losses: number
+        lineupFactions: string[]
+    }
     "autobattler:unit-unlocked": { unitId: string }
     "autobattler:spiral-complete": undefined
     "career:selected": { branch: string }
