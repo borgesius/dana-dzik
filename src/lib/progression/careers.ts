@@ -416,6 +416,19 @@ const EXECUTIVE_NODES: CareerNodeDef[] = [
 
 const EDUCATION_NODES: CareerNodeDef[] = [
     {
+        id: "edu-hard-knocks",
+        name: "Hard Knocks at the School of Life",
+        company: "The School of Life",
+        dateRange: "1997 – Present",
+        bullets: [],
+        bonusLabel: "+1% Hindsight rate",
+        branch: "education",
+        tier: 0,
+        prerequisites: [],
+        bonusType: "hindsightRate",
+        bonusValue: 0.01,
+    },
+    {
         id: "edu-undergrad",
         name: "B.A. Mathematics & Philosophy",
         company: "University of Chicago · Chicago, IL",
