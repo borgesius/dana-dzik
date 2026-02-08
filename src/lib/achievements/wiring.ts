@@ -11,6 +11,7 @@ import {
     type TradeResult,
     UPGRADES,
 } from "../marketGame/types"
+import { FORESIGHT_UPGRADES } from "../prestige/ascension"
 import { HINDSIGHT_UPGRADES } from "../prestige/constants"
 import { getPrestigeManager } from "../prestige/PrestigeManager"
 import { getCareerManager } from "../progression/CareerManager"
@@ -278,7 +279,19 @@ function wireLocaleManager(mgr: AchievementManager): void {
 function wireMarketGame(mgr: AchievementManager): void {
     const game = getMarketGame()
 
+    // "Three Ways" session tracking
+    let hasTraded = false
+    let hasHarvested = false
+    let hasFactory = false
+    const checkThreeWays = (): void => {
+        if (hasTraded && hasHarvested && hasFactory) {
+            mgr.earn("three-ways")
+        }
+    }
+
     game.on("tradeExecuted", (data) => {
+        hasTraded = true
+        checkThreeWays()
         const trade = data as TradeResult
         mgr.incrementCounter("trades")
         mgr.earn("first-trade")
@@ -358,6 +371,8 @@ function wireMarketGame(mgr: AchievementManager): void {
 
     game.on("factoryDeployed", () => {
         mgr.earn("factory-floor")
+        hasFactory = true
+        checkThreeWays()
 
         const allDeployed = FACTORIES.every(
             (f) => game.getFactoryCount(f.id) > 0
@@ -392,6 +407,9 @@ function wireMarketGame(mgr: AchievementManager): void {
     const AUTOCLICKER_THRESHOLD = 20
 
     game.on("harvestExecuted", (data) => {
+        hasHarvested = true
+        checkThreeWays()
+
         const harvests = game.getTotalHarvests()
 
         // Global tiers
@@ -663,6 +681,24 @@ function wireProgressionEvents(mgr: AchievementManager): void {
         if (allBought) mgr.earn("pieces-of-paper")
     })
 
+    // ── Ascension achievements ──────────────────────────────────────────
+    onAppEvent("prestige:ascension", (detail) => {
+        mgr.earn("through-the-looking-glass")
+        if (detail.count >= 3) mgr.earn("eternal-return")
+        if (detail.count >= 5) mgr.earn("samsara")
+        if (detail.foresight >= 10) mgr.earn("windfall")
+    })
+
+    onAppEvent("prestige:foresight-purchase", () => {
+        mgr.earn("foresight-shopper")
+
+        const prestige = getPrestigeManager()
+        const allForesight = FORESIGHT_UPGRADES.every(
+            (u) => prestige.getForesightUpgradeCount(u.id) >= u.maxPurchases
+        )
+        if (allForesight) mgr.earn("oracle-of-delphi")
+    })
+
     // ── Autobattler achievements ─────────────────────────────────────────
     let consecutiveWins = 0
     let totalAutobattlerWins = 0
@@ -922,6 +958,12 @@ function wirePhase6Achievements(mgr: AchievementManager): void {
         if (game.getDebt() <= 0) mgr.earn("arcana-temperance")
     })
 
+    // "someone-pays" -- Trigger a margin event
+    // "Someone is going to have to pay for this."
+    game.on("marginEvent", () => {
+        mgr.earn("someone-pays")
+    })
+
     // "be-first" -- Reach AAA credit rating
     // "Be first. Be smarter. Or cheat."
     game.on("ratingChanged", (data) => {
@@ -930,6 +972,9 @@ function wirePhase6Achievements(mgr: AchievementManager): void {
             direction: string
         }
         if (rating === "AAA") mgr.earn("be-first")
+
+        // "killed-this-firm" -- Hit F credit rating
+        if (rating === "F") mgr.earn("killed-this-firm")
 
         // XVI - The Tower: experience a credit rating downgrade
         if (direction === "downgrade") mgr.earn("arcana-tower")

@@ -1119,6 +1119,30 @@
             "name": "Completionist",
             "description": "Buy every Hindsight upgrade."
         },
+        "through-the-looking-glass": {
+            "name": "It's Gonna Be Ugly for a While",
+            "description": "Ascend for the first time."
+        },
+        "eternal-return": {
+            "name": "People Want to Live Like This",
+            "description": "Ascend 3 times."
+        },
+        "samsara": {
+            "name": "It's All Just the Same Thing, Over and Over",
+            "description": "Ascend 5 times."
+        },
+        "foresight-shopper": {
+            "name": "So That We May Survive",
+            "description": "Purchase a Foresight upgrade."
+        },
+        "oracle-of-delphi": {
+            "name": "It's Certainly No Different Today Than It's Ever Been",
+            "description": "Purchase every Foresight upgrade."
+        },
+        "windfall": {
+            "name": "I Still Need the Money",
+            "description": "Earn 10+ Foresight in a single ascension."
+        },
         "syndicate-complete": {
             "name": "Existentialist Canon",
             "description": "Collect all Existentialist units."
@@ -1148,7 +1172,7 @@
             "description": "Unlock the Structured Products Desk."
         },
         "its-just-money": {
-            "name": "It's Just Money, It's Made Up",
+            "name": "It's Just Money; It's Made Up",
             "description": "Mint your first Digital Asset Security."
         },
         "be-first": {
@@ -1170,6 +1194,18 @@
         "rainy-day": {
             "name": "400 Away for a Rainy Day",
             "description": "Fully repay all debt with 3+ DAS performing."
+        },
+        "three-ways": {
+            "name": "There Are Three Ways to Make a Living in This Business",
+            "description": "Trade, harvest, and deploy a factory in one session."
+        },
+        "killed-this-firm": {
+            "name": "If You Do This You Will Have Killed This Firm",
+            "description": "Hit F credit rating."
+        },
+        "someone-pays": {
+            "name": "Someone Is Going to Have to Pay for This",
+            "description": "Trigger a margin event."
         },
         "harvest-100": { "name": "Cookie Clicker", "description": "Harvest 100 times." },
         "harvest-1000": { "name": "Grandma", "description": "Harvest 1,000 times." },

@@ -216,6 +216,17 @@ export type AchievementId =
     | "negative-timestamp"
     // Meta: recursive (hidden)
     | "achievement-achievement"
+    // Phase 6: Novelty (Margin Call quotes)
+    | "three-ways"
+    | "killed-this-firm"
+    | "someone-pays"
+    // Ascension
+    | "through-the-looking-glass"
+    | "eternal-return"
+    | "samsara"
+    | "foresight-shopper"
+    | "oracle-of-delphi"
+    | "windfall"
     // Major Arcana (hidden)
     | "arcana-fool"
     | "arcana-magician"
@@ -253,6 +264,7 @@ export type TieredGroup =
     | "introspection"
     | "collector"
     | "lunar"
+    | "ascension"
 
 export interface AchievementDef {
     id: AchievementId

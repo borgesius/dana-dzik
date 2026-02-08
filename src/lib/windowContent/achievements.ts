@@ -17,6 +17,7 @@ const TIERED_GROUP_LABELS: Record<TieredGroup, string> = {
     introspection: "Introspection",
     collector: "Collector",
     lunar: "Lunar Cycle",
+    ascension: "Ascension",
 }
 
 function renderTierStars(group: TieredGroup, defs: AchievementDef[]): string {
