@@ -911,3 +911,43 @@
     border-style: inset;
 }
 
+/* === XP Popup === */
+.xp-popup {
+    position: fixed;
+    pointer-events: none;
+    z-index: 100000;
+    font-family: "MS Sans Serif", Tahoma, sans-serif;
+    font-size: 14px;
+    font-weight: bold;
+    color: #ffdd00;
+    text-shadow:
+        0 0 4px rgb(255 200 0 / 60%),
+        1px 1px 0 rgb(0 0 0 / 60%);
+    white-space: nowrap;
+    opacity: 0;
+    transform: translateY(0);
+    transition: none;
+}
+
+.xp-popup-active {
+    opacity: 1;
+    animation: xp-float 1.2s ease-out forwards;
+}
+
+@keyframes xp-float {
+    0% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+
+    20% {
+        opacity: 1;
+        transform: translateY(-8px) scale(1.1);
+    }
+
+    100% {
+        opacity: 0;
+        transform: translateY(-40px) scale(0.9);
+    }
+}
+

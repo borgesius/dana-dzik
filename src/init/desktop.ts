@@ -3,6 +3,7 @@ import { CursorTrail } from "../components/CursorTrail"
 import { Desktop } from "../components/Desktop"
 import { attachDevApi, DevPanel } from "../components/DevPanel"
 import { LevelUpPopup } from "../components/LevelUpPopup"
+import { XPPopup } from "../components/XPPopup"
 import { PopupManager } from "../components/PopupManager"
 import { setTerminalInit } from "../components/Terminal"
 import { Widgets } from "../components/Widgets"
@@ -47,6 +48,7 @@ export function initDesktop(app: HTMLElement): void {
     wireVeilAchievements()
     new AchievementToast(achievements)
     new LevelUpPopup()
+    new XPPopup()
 
     wireProgression(getProgressionManager(), (cb) => {
         windowManager.onNewWindowOpen(cb)
