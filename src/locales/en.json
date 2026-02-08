@@ -421,15 +421,15 @@
         "upgrades": {
             "batch-processing": {
                 "name": "Batch Processing",
-                "description": "Execute trades in quantities of 5."
+                "description": "Execute buys in quantities of 5."
             },
             "bulk-orders": {
                 "name": "Bulk Order Processing",
-                "description": "Execute trades in quantities of 10."
+                "description": "Execute buys in quantities of 10."
             },
             "block-trading": {
                 "name": "Block Trading",
-                "description": "Institutional-size lots. Execute trades in quantities of 50."
+                "description": "Institutional-size lots. Execute buys in quantities of 50."
             },
             "limit-orders": {
                 "name": "Limit Order System",
