@@ -9,7 +9,7 @@
 
 .chrome-frontier .window.inactive .window-titlebar {
     background: linear-gradient(to bottom, #6b3510 0%, #7a4a2e 40%, #a07850 80%, #6b3510 100%) !important;
-    color: rgb(253 245 230 / 60%) !important;
+    color: rgb(253 245 230 / 75%) !important;
 }
 
 .chrome-frontier .window {
@@ -33,7 +33,7 @@
 
 .chrome-corporate .window.inactive .window-titlebar {
     background: linear-gradient(to bottom, #111111 0%, #1a1a1a 40%, #222222 80%, #111111 100%) !important;
-    color: #666666 !important;
+    color: #888888 !important;
 }
 
 .chrome-corporate .window {
@@ -59,7 +59,7 @@
 
 .chrome-vintage .window.inactive .window-titlebar {
     background: linear-gradient(to bottom, #5a3510 0%, #6b5510 40%, #a08040 80%, #5a3510 100%) !important;
-    color: rgb(245 230 200 / 50%) !important;
+    color: rgb(245 230 200 / 70%) !important;
 }
 
 .chrome-vintage .window {
