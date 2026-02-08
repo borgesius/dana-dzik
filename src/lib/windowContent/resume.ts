@@ -9,6 +9,7 @@ import {
     getNodesForBranch,
     SKILLS_STARTER_NODE,
 } from "../progression/careers"
+import { renderCareerTreeWindow } from "./careerTree"
 
 // ── Base resume entries (always shown, even before unlock) ──────────────────
 
@@ -18,11 +19,99 @@ const BASE_EDUCATION: CareerNodeDef[] = [
     EDUCATION_STARTER_NODE,
 ]
 
+const RESUME_CAREER_TREE_ID = "resume-career-tree"
+
+let pendingCareerTab = false
+
+/**
+ * Request that the resume window switch to the Career Development tab.
+ * Works whether the window is already open or about to be rendered.
+ */
+export function requestResumeCareerTab(): void {
+    pendingCareerTab = true
+    // If already rendered, switch immediately
+    const tab = document.querySelector<HTMLElement>(
+        '.resume-tab[data-tab="career"]'
+    )
+    if (tab) {
+        tab.click()
+        pendingCareerTab = false
+    }
+}
+
 export function getResumeContent(): string {
-    return `<div id="resume-content" class="resume-content"></div>`
+    return `<div id="resume-wrapper" class="resume-tabs-wrapper"></div>`
 }
 
 export function renderResumeWindow(): void {
+    const wrapper = document.getElementById("resume-wrapper")
+    if (!wrapper) return
+
+    const lm = getLocaleManager()
+
+    wrapper.innerHTML = `
+        <div class="resume-tab-bar">
+            <button class="resume-tab active" data-tab="resume">${lm.t("resume.tabResume")}</button>
+            <button class="resume-tab" data-tab="career">${lm.t("resume.tabCareer")}</button>
+        </div>
+        <div id="resume-content" class="resume-content resume-tab-pane active"></div>
+        <div id="${RESUME_CAREER_TREE_ID}" class="career-tree-content resume-tab-pane"></div>
+    `
+
+    // Render the default (resume) tab
+    renderResumeTab()
+
+    // Wire up tab switching
+    wireResumeTabs(wrapper)
+
+    // If a career-tab request was made before the window rendered, honour it
+    if (pendingCareerTab) {
+        const careerTab = wrapper.querySelector<HTMLElement>(
+            '.resume-tab[data-tab="career"]'
+        )
+        if (careerTab) careerTab.click()
+        pendingCareerTab = false
+    }
+}
+
+// ── Tab switching ───────────────────────────────────────────────────────────
+
+function wireResumeTabs(wrapper: HTMLElement): void {
+    const tabs = wrapper.querySelectorAll<HTMLElement>(".resume-tab")
+    const resumePane = wrapper.querySelector("#resume-content") as HTMLElement
+    const careerPane = wrapper.querySelector(
+        `#${RESUME_CAREER_TREE_ID}`
+    ) as HTMLElement
+
+    let careerRendered = false
+
+    tabs.forEach((tab) => {
+        tab.addEventListener("click", () => {
+            const target = tab.dataset.tab
+
+            // Update active tab
+            tabs.forEach((t) => t.classList.remove("active"))
+            tab.classList.add("active")
+
+            // Show correct pane
+            if (target === "career") {
+                resumePane.classList.remove("active")
+                careerPane.classList.add("active")
+                if (!careerRendered) {
+                    renderCareerTreeWindow(RESUME_CAREER_TREE_ID)
+                    careerRendered = true
+                }
+            } else {
+                careerPane.classList.remove("active")
+                resumePane.classList.add("active")
+            }
+        })
+    })
+}
+
+// ── Resume tab content ──────────────────────────────────────────────────────
+
+function renderResumeTab(): void {
     const container = document.getElementById("resume-content")
     if (!container) return
 

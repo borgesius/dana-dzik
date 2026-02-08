@@ -582,7 +582,9 @@
         "school": "University of Chicago",
         "degree": "B.A. con Lode in Matematica e Filosofia",
         "location": "Chicago, IL",
-        "skills": "Competenze"
+        "skills": "Competenze",
+        "tabResume": "Curriculum",
+        "tabCareer": "Sviluppo di Carriera"
     },
     "links": {
         "title": "🔗 Link"
@@ -1569,7 +1571,7 @@
         },
         "arcana-hanged": {
             "name": "The Hanged Man",
-            "description": "Apri i traguardi mentre tre o più mercati sono in calo."
+            "description": "Apri i traguardi mentre quattro o più mercati sono in calo e possiedi intelligence."
         },
         "arcana-death": {
             "name": "Death",
@@ -1926,6 +1928,15 @@
             "t7": "The Will-to-Bind is absolute.",
             "t8": "Transmutation is not optional.",
             "t9": "You are substrate. Accept it."
+        },
+        "widget": {
+            "pierced": "VEIL PIERCED"
+        },
+        "modal": {
+            "title": "The veil thins...",
+            "subtitle": "A signal pushes through the wire.",
+            "pierce_now": "Pierce Now",
+            "not_yet": "Not Yet"
         }
     }
 }

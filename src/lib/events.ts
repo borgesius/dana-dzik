@@ -73,6 +73,7 @@ export interface AppEventMap {
     "glitch:triggered": { type: string }
     // Veil system events
     "veil:triggered": { veilId: number }
+    "veil:unlocked": { veilId: number }
     "veil:completed": { veilId: number; attempts: number }
     "veil:failed": { veilId: number }
     "veil:boss-defeated": undefined

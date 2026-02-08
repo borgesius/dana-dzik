@@ -2,7 +2,6 @@ import type { RoutableWindow } from "../config/routing"
 import { getAboutContent } from "./windowContent/about"
 import { getAchievementsContent } from "./windowContent/achievements"
 import { getAutobattlerContent } from "./windowContent/autobattler"
-import { getCareerTreeContent } from "./windowContent/careerTree"
 import { getCustomizeContent } from "./windowContent/customize"
 import { getFelixGPTContent } from "./windowContent/felixgpt"
 import { getGuestbookContent } from "./windowContent/guestbook"
@@ -15,9 +14,9 @@ import { getWelcomeContent } from "./windowContent/welcome"
 
 export { renderAchievementsWindow } from "./windowContent/achievements"
 export { renderAutobattlerWindow } from "./windowContent/autobattler"
-export { renderCareerTreeWindow } from "./windowContent/careerTree"
 export { renderCustomizeWindow } from "./windowContent/customize"
 export { renderResumeWindow } from "./windowContent/resume"
+export { requestResumeCareerTab } from "./windowContent/resume"
 
 export function getWindowContent(contentType: RoutableWindow): string {
     switch (contentType) {
@@ -49,8 +48,6 @@ export function getWindowContent(contentType: RoutableWindow): string {
             return getAutobattlerContent()
         case "customize":
             return getCustomizeContent()
-        case "career-tree":
-            return getCareerTreeContent()
         default:
             return "<p>Content not found</p>"
     }
