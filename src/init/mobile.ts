@@ -3,7 +3,10 @@ import { LevelUpPopup } from "../components/LevelUpPopup"
 import { MobilePhone } from "../components/mobile/MobilePhone"
 import { MobilePopupManager } from "../components/mobile/MobilePopupManager"
 import { getAchievementManager } from "../lib/achievements/AchievementManager"
-import { wireAchievements, wireVeilAchievements } from "../lib/achievements/wiring"
+import {
+    wireAchievements,
+    wireVeilAchievements,
+} from "../lib/achievements/wiring"
 import { createAudioManager } from "../lib/audio"
 import { getCollectionManager } from "../lib/autobattler/CollectionManager"
 import { isCalmMode } from "../lib/calmMode"

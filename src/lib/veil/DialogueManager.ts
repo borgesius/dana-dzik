@@ -1,5 +1,5 @@
-import type { DialogueNode, DialogueTree, VeilId } from "./types"
 import { getDialogueForVeil } from "./dialogues"
+import type { DialogueNode, DialogueTree, VeilId } from "./types"
 
 const DEFAULT_TYPING_SPEED = 30 // ms per character
 
@@ -55,7 +55,8 @@ export class DialogueManager {
         // Speaker label
         const speaker = document.createElement("div")
         speaker.className = "veil-dialogue-speaker"
-        speaker.textContent = node.speaker === "you" ? "> YOU" : `> ${node.speaker}`
+        speaker.textContent =
+            node.speaker === "you" ? "> YOU" : `> ${node.speaker}`
         if (node.speaker === "T. PFERD") {
             speaker.classList.add("veil-speaker-pferd")
         } else if (node.speaker === "???") {
@@ -112,10 +113,7 @@ export class DialogueManager {
         nodeEl.addEventListener("click", skipHandler)
     }
 
-    private onTypingComplete(
-        node: DialogueNode,
-        choicesEl: HTMLElement
-    ): void {
+    private onTypingComplete(node: DialogueNode, choicesEl: HTMLElement): void {
         this.isTyping = false
 
         // Handle spooky effects (fire-and-continue)
@@ -215,7 +213,10 @@ export class DialogueManager {
 
         // Briefly corrupt the dialogue text
         this.container.classList.add("veil-text-corrupt")
-        setTimeout(() => this.container.classList.remove("veil-text-corrupt"), 1500)
+        setTimeout(
+            () => this.container.classList.remove("veil-text-corrupt"),
+            1500
+        )
     }
 
     /** Plan reveal: deeper red, screen shake, ambient dread */

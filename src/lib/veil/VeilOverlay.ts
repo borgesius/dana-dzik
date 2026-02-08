@@ -1,7 +1,7 @@
-import type { VeilId } from "./types"
-import { LEVEL_CONFIGS } from "./levels"
 import { CubeRunner } from "./CubeRunner"
 import { DialogueManager } from "./DialogueManager"
+import { LEVEL_CONFIGS } from "./levels"
+import type { VeilId } from "./types"
 import { getVeilManager } from "./VeilManager"
 
 const TRANSITION_IN_MS = 2000

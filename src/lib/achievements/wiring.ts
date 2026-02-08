@@ -19,8 +19,8 @@ import { getNodesForBranch } from "../progression/careers"
 import { FILE_EFFECTS } from "../systemCrash/constants"
 import { getThemeManager } from "../themeManager"
 import {
-    getAchievementManager,
     type AchievementManager,
+    getAchievementManager,
 } from "./AchievementManager"
 import type { CounterKey } from "./types"
 
@@ -563,7 +563,7 @@ function wireGuestbookEvents(mgr: AchievementManager): void {
 function wireLinkEvents(mgr: AchievementManager): void {
     document.addEventListener("click", (e) => {
         const target = e.target as HTMLElement
-        const link = target.closest(".link-btn") as HTMLElement | null
+        const link = target.closest(".link-btn")
         if (!link) return
 
         if (link.classList.contains("repo")) mgr.earn("open-source")

@@ -1,5 +1,5 @@
-import type { LevelConfig, ObstacleType } from "./types"
 import { BOSS_TAUNTS } from "./levels"
+import type { LevelConfig, ObstacleType } from "./types"
 
 export type RunnerState = "countdown" | "playing" | "won" | "dead"
 
@@ -150,10 +150,7 @@ export class CubeRunner {
             ? this.glueWalls.leftNarrow * laneWidth
             : 0
         return (
-            ROAD_LEFT +
-            offset +
-            laneWidth * (lane + 0.5) +
-            this.laneShiftOffset
+            ROAD_LEFT + offset + laneWidth * (lane + 0.5) + this.laneShiftOffset
         )
     }
 
@@ -425,8 +422,7 @@ export class CubeRunner {
         const lane =
             minLane + Math.floor(Math.random() * (maxStartLane - minLane + 1))
 
-        const reverse =
-            this.config.reverseObstacles && Math.random() < 0.2
+        const reverse = this.config.reverseObstacles && Math.random() < 0.2
 
         this.obstacles.push({
             lane,
@@ -535,10 +531,7 @@ export class CubeRunner {
             : 0
         const roadLeft = ROAD_LEFT + offset + this.laneShiftOffset
         const roadRight =
-            ROAD_LEFT +
-            offset +
-            laneWidth * activeLanes +
-            this.laneShiftOffset
+            ROAD_LEFT + offset + laneWidth * activeLanes + this.laneShiftOffset
 
         // Perspective road edges
         ctx.strokeStyle = this.isBossMode
@@ -584,10 +577,7 @@ export class CubeRunner {
         }
     }
 
-    private renderObstacle(
-        ctx: CanvasRenderingContext2D,
-        obs: Obstacle
-    ): void {
+    private renderObstacle(ctx: CanvasRenderingContext2D, obs: Obstacle): void {
         if (obs.depth < 0 || obs.depth > 1) return
 
         const scale = this.depthToScale(obs.depth)
@@ -627,12 +617,7 @@ export class CubeRunner {
         ctx.lineWidth = Math.max(1, 2 * scale)
 
         // Front face
-        ctx.strokeRect(
-            screenX - obsW / 2,
-            y - obsH,
-            obsW,
-            obsH
-        )
+        ctx.strokeRect(screenX - obsW / 2, y - obsH, obsW, obsH)
 
         // Top face (perspective lines to back)
         const backScale = this.depthToScale(obs.depth + 0.03)
@@ -651,14 +636,8 @@ export class CubeRunner {
 
         // Back top edge
         ctx.beginPath()
-        ctx.moveTo(
-            screenX - backW / 2,
-            backY - obsH * (backScale / scale)
-        )
-        ctx.lineTo(
-            screenX + backW / 2,
-            backY - obsH * (backScale / scale)
-        )
+        ctx.moveTo(screenX - backW / 2, backY - obsH * (backScale / scale))
+        ctx.lineTo(screenX + backW / 2, backY - obsH * (backScale / scale))
         ctx.stroke()
 
         ctx.globalAlpha = 1
@@ -749,7 +728,11 @@ export class CubeRunner {
             .replace("veil.taunt.", "")
             .replace(/_/g, " ")
             .toUpperCase()
-        ctx.fillText(displayText, taunt.x, HORIZON_Y + 50 + (this.tauntIndex % 3) * 40)
+        ctx.fillText(
+            displayText,
+            taunt.x,
+            HORIZON_Y + 50 + (this.tauntIndex % 3) * 40
+        )
     }
 
     private renderHUD(ctx: CanvasRenderingContext2D): void {
