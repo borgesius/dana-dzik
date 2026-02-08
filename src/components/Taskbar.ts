@@ -214,19 +214,11 @@ export class Taskbar {
             item.className = "start-menu-item"
             const text = lm.t(textKey)
 
-            const isLocked =
-                windowId === "felixgpt" && this.windowManager.isFelixGPTLocked()
-            if (isLocked) {
-                item.innerHTML = `<span style="font-size: 20px">🔒</span><span style="opacity: 0.5">${text} ${lm.t("taskbar.locked")}</span>`
-                item.title = lm.t("taskbar.lockedTooltip")
-                item.style.cursor = "not-allowed"
-            } else {
-                item.innerHTML = `<span style="font-size: 20px">${icon}</span><span>${text}</span>`
-                item.addEventListener("click", () => {
-                    this.windowManager.openWindow(windowId)
-                    this.closeStartMenu()
-                })
-            }
+            item.innerHTML = `<span style="font-size: 20px">${icon}</span><span>${text}</span>`
+            item.addEventListener("click", () => {
+                this.windowManager.openWindow(windowId)
+                this.closeStartMenu()
+            })
             left.appendChild(item)
         })
         body.appendChild(left)

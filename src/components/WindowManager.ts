@@ -177,15 +177,7 @@ export class WindowManager {
      * Opens a window by ID. If already open, focuses it instead.
      * @param windowId - The ID of the window to open
      */
-    /** Check if FelixGPT is gated (requires posse-up achievement) */
-    public isFelixGPTLocked(): boolean {
-        return !getAchievementManager().hasEarned("posse-up")
-    }
-
     public openWindow(windowId: RoutableWindow): void {
-        if (windowId === "felixgpt" && this.isFelixGPTLocked()) {
-            return
-        }
 
         if (this.windows.has(windowId)) {
             this.focusWindow(windowId)
