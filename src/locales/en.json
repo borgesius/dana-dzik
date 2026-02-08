@@ -1179,23 +1179,23 @@
             "description": "Fully repay all debt with 3+ DAS performing."
         },
         "harvest-100": {
-            "name": "Carpal Tunnel",
+            "name": "Cookie Clicker",
             "description": "Harvest 100 times."
         },
         "harvest-1000": {
-            "name": "Repetitive Strain",
+            "name": "Grandma",
             "description": "Harvest 1,000 times."
         },
         "harvest-10000": {
-            "name": "Macro Enabled",
+            "name": "Farm",
             "description": "Harvest 10,000 times."
         },
         "harvest-50000": {
-            "name": "Industrial Scraping",
+            "name": "Mine",
             "description": "Harvest 50,000 times."
         },
         "harvest-100000": {
-            "name": "Mechanical Turk",
+            "name": "Factory",
             "description": "Harvest 100,000 times."
         },
         "harvest-email-500": {
