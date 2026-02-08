@@ -242,8 +242,24 @@ export class Window {
 
         const onMouseMove = (e: MouseEvent): void => {
             if (!this.isDragging) return
-            this.element.style.left = `${e.clientX - this.dragOffset.x}px`
-            this.element.style.top = `${e.clientY - this.dragOffset.y}px`
+
+            let newLeft = e.clientX - this.dragOffset.x
+            let newTop = e.clientY - this.dragOffset.y
+
+            // Prevent dragging the titlebar above the desktop area (behind toolbars)
+            newTop = Math.max(0, newTop)
+
+            // Keep at least 100px of the window visible horizontally
+            const parent = this.element.parentElement
+            if (parent) {
+                const minVisible = 100
+                const maxLeft = parent.clientWidth - minVisible
+                newLeft = Math.max(-this.element.offsetWidth + minVisible, newLeft)
+                newLeft = Math.min(maxLeft, newLeft)
+            }
+
+            this.element.style.left = `${newLeft}px`
+            this.element.style.top = `${newTop}px`
         }
 
         const onMouseUp = (): void => {
