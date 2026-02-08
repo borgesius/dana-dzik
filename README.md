@@ -184,7 +184,7 @@ Cron at 2 AM UTC. Full pipeline: lint, typecheck, build, unit tests, E2E. Upload
 
 ### Release ([`.github/workflows/release.yml`](.github/workflows/release.yml))
 
-Runs on push to main. semantic-release with Angular preset. Generates changelog, bumps version in package.json, creates GitHub release. feat → minor, fix/perf/revert → patch, everything else skipped.
+Runs on push to main. semantic-release with Conventional Commits preset. Generates changelog, bumps version in package.json, creates GitHub release. Breaking changes (`!`) → major, feat → minor, fix/perf/revert → patch, everything else skipped.
 
 - [`.releaserc.json`](.releaserc.json) — semantic-release config
 
