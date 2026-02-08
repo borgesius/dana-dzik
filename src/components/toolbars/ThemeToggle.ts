@@ -51,7 +51,8 @@ export function createThemeToggle(): HTMLElement {
             option.classList.add("active")
         }
 
-        option.textContent = `${THEME_ICONS[themeId]} ${THEME_NAMES[themeId]}`
+        option.textContent = THEME_ICONS[themeId]
+        option.title = THEME_NAMES[themeId]
 
         option.addEventListener("click", (e) => {
             e.stopPropagation()
