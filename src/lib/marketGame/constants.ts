@@ -27,5 +27,7 @@ export const MEAN_REVERSION_STRENGTH = 0.005
 export const STARTING_CASH = 0.1
 export const BULK_ORDER_QUANTITY = 10
 
-/** Base units generated per harvest click (before upgrades). */
-export const HARVEST_BASE_OUTPUT = 1
+/** Fraction of harvestQuantity produced per click at each upgrade tier. */
+export const HARVEST_BASE_FRACTION = 0.05
+export const HARVEST_UPGRADE_BONUS = 0.45
+export const HARVEST_AUTOSCRIPT_BONUS = 0.50

@@ -52,6 +52,18 @@ export type AchievementId =
     | "author"
     | "navigator"
     | "choo-choo"
+    | "ls-user"
+    | "tree-hugger"
+    | "you-are-here"
+    | "open-sesame"
+    | "red-pen"
+    | "clean-desk"
+    | "self-aware"
+    | "rtfm"
+    | "from-nothing"
+    | "empty-room"
+    | "shredder"
+    | "witness-protection"
     // Coding
     | "programmer"
     | "grund-compiled"
@@ -151,6 +163,17 @@ export type AchievementId =
     | "harvest-100"
     | "harvest-1000"
     | "harvest-10000"
+    | "harvest-50000"
+    | "harvest-100000"
+    // Per-commodity harvest
+    | "harvest-email-500"
+    | "harvest-ads-500"
+    | "harvest-dom-500"
+    | "harvest-bw-500"
+    | "harvest-soft-500"
+    | "harvest-vc-500"
+    // Autoclicker
+    | "definitely-not-a-bot"
     // Autobattler (concept / hidden)
     | "la-pensee-francaise"
     | "der-deutsche-idealismus"
@@ -170,6 +193,7 @@ export type TieredGroup =
     | "wrangler"
     | "rank"
     | "harvester"
+    | "commodity-harvester"
 
 export interface AchievementDef {
     id: AchievementId
@@ -190,6 +214,12 @@ export type CounterKey =
     | "themes-tried"
     | "windows-opened"
     | "factions-won-with"
+    | "harvest-EMAIL"
+    | "harvest-ADS"
+    | "harvest-DOM"
+    | "harvest-BW"
+    | "harvest-SOFT"
+    | "harvest-VC"
 
 export interface AchievementSaveData {
     earned: Record<string, number>

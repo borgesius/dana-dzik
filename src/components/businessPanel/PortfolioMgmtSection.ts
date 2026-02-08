@@ -1,4 +1,4 @@
-import { formatMoney } from "../../lib/formatMoney"
+import { formatMoney, formatQuantity } from "../../lib/formatMoney"
 import { COMMODITIES, type CommodityId } from "../../lib/marketGame/commodities"
 import type { MarketEngine } from "../../lib/marketGame/MarketEngine"
 import {
@@ -103,7 +103,7 @@ export class PortfolioMgmtSection {
                         <span class="desk-das-status desk-${healthClass}">${Math.round(health * 100)}%</span>
                     </div>
                     <div class="desk-das-detail">
-                        ${das.lockedQuantity}x ${commodityName} @ ${formatMoney(das.securitizationPrice)}
+                        ${formatQuantity(das.lockedQuantity)}x ${commodityName} @ ${formatMoney(das.securitizationPrice)}
                     </div>
                     <button class="desk-btn desk-unwind-btn" data-unwind="${das.id}">Unwind</button>
                 </div>`
@@ -131,11 +131,11 @@ export class PortfolioMgmtSection {
                                         ?.name ?? cId
                                 const qty =
                                     snapshot.holdings[cId]?.quantity ?? 0
-                                return `<option value="${cId}">${name} (${qty} avail)</option>`
+                                return `<option value="${cId}">${name} (${formatQuantity(qty)} avail)</option>`
                             })
                             .join("")}
                     </select>
-                    <input type="number" class="desk-qty-input" placeholder="Qty" min="${DAS_MIN_QUANTITY}" step="1" />
+                    <input type="number" class="desk-qty-input" placeholder="Qty" min="${DAS_MIN_QUANTITY}" step="any" />
                     <button class="desk-btn desk-securitize-btn">Securitize</button>
                 </div>`
             }
@@ -231,7 +231,7 @@ export class PortfolioMgmtSection {
                     ".desk-qty-input"
                 ) as HTMLInputElement
                 const cId = select?.value as CommodityId
-                const qty = parseInt(qtyInput?.value ?? "0")
+                const qty = parseFloat(qtyInput?.value ?? "0")
                 if (
                     cId &&
                     qty >= DAS_MIN_QUANTITY &&

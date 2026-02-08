@@ -11,6 +11,8 @@ export interface CommodityDef {
     trendMinTicks: number
     /** Max ticks a trend lasts for this commodity (lower = faster oscillation) */
     trendMaxTicks: number
+    /** Units produced per base harvest click (scales with upgrades). Equalises $/click across commodities. */
+    harvestQuantity: number
 }
 
 export const COMMODITIES: CommodityDef[] = [
@@ -23,6 +25,7 @@ export const COMMODITIES: CommodityDef[] = [
         unlockThreshold: 0,
         trendMinTicks: 6,
         trendMaxTicks: 15,
+        harvestQuantity: 40,       // 40 × $0.05 = $2.00
     },
     {
         id: "ADS",
@@ -33,6 +36,7 @@ export const COMMODITIES: CommodityDef[] = [
         unlockThreshold: 0,
         trendMinTicks: 8,
         trendMaxTicks: 20,
+        harvestQuantity: 8,        // 8 × $0.25 = $2.00
     },
     {
         id: "DOM",
@@ -43,6 +47,7 @@ export const COMMODITIES: CommodityDef[] = [
         unlockThreshold: 10,
         trendMinTicks: 10,
         trendMaxTicks: 28,
+        harvestQuantity: 1,        // 1 × $2.00 = $2.00
     },
     {
         id: "BW",
@@ -53,6 +58,7 @@ export const COMMODITIES: CommodityDef[] = [
         unlockThreshold: 50,
         trendMinTicks: 12,
         trendMaxTicks: 36,
+        harvestQuantity: 0.25,     // 0.25 × $8.00 = $2.00
     },
     {
         id: "SOFT",
@@ -63,6 +69,7 @@ export const COMMODITIES: CommodityDef[] = [
         unlockThreshold: 250,
         trendMinTicks: 18,
         trendMaxTicks: 50,
+        harvestQuantity: 0.08,     // 0.08 × $25.00 = $2.00
     },
     {
         id: "VC",
@@ -73,5 +80,6 @@ export const COMMODITIES: CommodityDef[] = [
         unlockThreshold: 2000,
         trendMinTicks: 40,
         trendMaxTicks: 100,
+        harvestQuantity: 0.02,     // 0.02 × $100.00 = $2.00
     },
 ]

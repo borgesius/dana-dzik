@@ -266,6 +266,13 @@
         "opening": "[Opening {{filename}}...]",
         "usageEdit": "Usage: edit <filename>",
         "accessDenied": "Access denied: {{filename}} is read-only",
+        "usageTouch": "Usage: touch <filename>",
+        "usageMkdir": "Usage: mkdir <dirname>",
+        "usageRm": "Usage: rm <filename>",
+        "usageMv": "Usage: mv <source> <newname>",
+        "created": "Created: {{name}}",
+        "deleted": "Deleted: {{name}}",
+        "renamed": "Renamed: {{from}} -> {{to}}",
         "usageWelt": "Usage: welt [--grund] <filename>",
         "usageWeltGrund": "Usage: welt --grund <filename>",
         "usageGrund": "Usage: grund <filename>",
@@ -836,6 +843,54 @@
             "name": "Choo Choo",
             "description": "Run the sl command."
         },
+        "ls-user": {
+            "name": "Dir /W",
+            "description": "List directory contents."
+        },
+        "tree-hugger": {
+            "name": "Tree Hugger",
+            "description": "View the directory tree."
+        },
+        "you-are-here": {
+            "name": "You Are Here",
+            "description": "Print your working directory."
+        },
+        "open-sesame": {
+            "name": "Open Sesame",
+            "description": "Open a file from the command line."
+        },
+        "red-pen": {
+            "name": "Changes Requested",
+            "description": "Open a file in the editor."
+        },
+        "clean-desk": {
+            "name": "Clean Desk Policy",
+            "description": "Clear the terminal."
+        },
+        "self-aware": {
+            "name": "Self-Aware",
+            "description": "Ask the machine who you are."
+        },
+        "rtfm": {
+            "name": "RTFM",
+            "description": "Read the help text."
+        },
+        "from-nothing": {
+            "name": "Ex Nihilo",
+            "description": "Create a file."
+        },
+        "empty-room": {
+            "name": "Tabula Rasa",
+            "description": "Create a directory."
+        },
+        "shredder": {
+            "name": "Shredder",
+            "description": "Delete a file."
+        },
+        "witness-protection": {
+            "name": "Label Maker",
+            "description": "Rename a file."
+        },
         "guest": { "name": "Guest", "description": "Open the guestbook." },
         "signed": {
             "name": "H.A.G.S.",
@@ -1134,6 +1189,42 @@
         "harvest-10000": {
             "name": "Macro Enabled",
             "description": "Harvest 10,000 times."
+        },
+        "harvest-50000": {
+            "name": "Industrial Scraping",
+            "description": "Harvest 50,000 times."
+        },
+        "harvest-100000": {
+            "name": "Mechanical Turk",
+            "description": "Harvest 100,000 times."
+        },
+        "harvest-email-500": {
+            "name": "Spam King",
+            "description": "Harvest EMAIL 500 times."
+        },
+        "harvest-ads-500": {
+            "name": "Impression Farmer",
+            "description": "Harvest ADS 500 times."
+        },
+        "harvest-dom-500": {
+            "name": "Domain Squatter",
+            "description": "Harvest DOM 500 times."
+        },
+        "harvest-bw-500": {
+            "name": "Bandwidth Hog",
+            "description": "Harvest BW 500 times."
+        },
+        "harvest-soft-500": {
+            "name": "Warez Distributor",
+            "description": "Harvest SOFT 500 times."
+        },
+        "harvest-vc-500": {
+            "name": "Pitch Deck Machine",
+            "description": "Harvest VC 500 times."
+        },
+        "definitely-not-a-bot": {
+            "name": "You STOLE Fizzy Lifting Drinks",
+            "description": "Achieve superhuman clicking speed."
         },
         "la-pensee-francaise": {
             "name": "La Pensée Française",
