@@ -13,6 +13,7 @@ export const ROUTABLE_WINDOWS = [
     "achievements",
     "autobattler",
     "customize",
+    "finder",
 ] as const
 
 export type RoutableWindow = (typeof ROUTABLE_WINDOWS)[number]
