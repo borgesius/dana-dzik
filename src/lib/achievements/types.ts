@@ -183,6 +183,35 @@ export type AchievementId =
     | "survey-course"
     | "revaluation-of-all-values"
     | "expressionism-in-philosophy"
+    // Meta: achievements window opens (tiered)
+    | "self-assessment"
+    | "performance-review"
+    | "observer-effect"
+    | "the-unexamined-life"
+    // Meta: total achievements earned (tiered)
+    | "participation-trophy"
+    | "overachiever"
+    | "completionist"
+    | "sisyphean"
+    // Meta: time/date novelties (hidden)
+    | "graveyard-shift"
+    // Meta: lunar cycle (tiered, hidden)
+    | "new-moon"
+    | "waxing-crescent"
+    | "first-quarter"
+    | "waxing-gibbous"
+    | "full-moon"
+    | "waning-gibbous"
+    | "last-quarter"
+    | "waning-crescent"
+    // Meta: spoofable environment (hidden)
+    | "time-traveler"
+    | "netscape-navigator"
+    | "640k-enough"
+    | "lingua-franca"
+    | "dial-up-connection"
+    // Meta: recursive (hidden)
+    | "achievement-achievement"
 
 export type TieredGroup =
     | "mogul"
@@ -194,6 +223,9 @@ export type TieredGroup =
     | "rank"
     | "harvester"
     | "commodity-harvester"
+    | "introspection"
+    | "collector"
+    | "lunar"
 
 export interface AchievementDef {
     id: AchievementId
@@ -220,6 +252,7 @@ export type CounterKey =
     | "harvest-BW"
     | "harvest-SOFT"
     | "harvest-VC"
+    | "achievements-opened"
 
 export interface AchievementSaveData {
     earned: Record<string, number>

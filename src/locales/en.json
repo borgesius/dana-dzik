@@ -1257,6 +1257,98 @@
         "expressionism-in-philosophy": {
             "name": "Expressionism in Philosophy",
             "description": "???"
+        },
+        "self-assessment": {
+            "name": "Self-Assessment",
+            "description": "Open the achievements window for the first time."
+        },
+        "performance-review": {
+            "name": "Performance Review",
+            "description": "Open the achievements window 10 times."
+        },
+        "observer-effect": {
+            "name": "Observer Effect",
+            "description": "Open the achievements window 50 times."
+        },
+        "the-unexamined-life": {
+            "name": "The Unexamined Life",
+            "description": "Open the achievements window 200 times."
+        },
+        "participation-trophy": {
+            "name": "Participation Trophy",
+            "description": "Earn 10 achievements."
+        },
+        "overachiever": {
+            "name": "Overachiever",
+            "description": "Earn 25 achievements."
+        },
+        "completionist": {
+            "name": "Completionist",
+            "description": "Earn 50 achievements."
+        },
+        "sisyphean": {
+            "name": "Sisyphean",
+            "description": "Earn 100 achievements."
+        },
+        "graveyard-shift": {
+            "name": "Graveyard Shift",
+            "description": "Check your achievements between midnight and 5 AM."
+        },
+        "new-moon": {
+            "name": "New Moon",
+            "description": "Open achievements during a new moon."
+        },
+        "waxing-crescent": {
+            "name": "Waxing Crescent",
+            "description": "Open achievements during a waxing crescent."
+        },
+        "first-quarter": {
+            "name": "First Quarter",
+            "description": "Open achievements during a first quarter moon."
+        },
+        "waxing-gibbous": {
+            "name": "Waxing Gibbous",
+            "description": "Open achievements during a waxing gibbous."
+        },
+        "full-moon": {
+            "name": "Full Moon",
+            "description": "Open achievements during a full moon."
+        },
+        "waning-gibbous": {
+            "name": "Waning Gibbous",
+            "description": "Open achievements during a waning gibbous."
+        },
+        "last-quarter": {
+            "name": "Last Quarter",
+            "description": "Open achievements during a last quarter moon."
+        },
+        "waning-crescent": {
+            "name": "Waning Crescent",
+            "description": "Open achievements during a waning crescent."
+        },
+        "time-traveler": {
+            "name": "Time Traveler",
+            "description": "Visit from before the millennium."
+        },
+        "netscape-navigator": {
+            "name": "Netscape Navigator",
+            "description": "Browse like it's 1996."
+        },
+        "640k-enough": {
+            "name": "640K Ought to Be Enough",
+            "description": "View on a sufficiently small screen."
+        },
+        "lingua-franca": {
+            "name": "Lingua Franca",
+            "description": "Speak the language of scholars."
+        },
+        "dial-up-connection": {
+            "name": "Dial-Up Connection",
+            "description": "Connect at vintage speeds."
+        },
+        "achievement-achievement": {
+            "name": "Achievement Achievement",
+            "description": "Earn an achievement while viewing achievements."
         }
     },
     "symposium": {
