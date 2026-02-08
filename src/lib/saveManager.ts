@@ -303,6 +303,7 @@ class SaveManagerImpl {
             clearTimeout(this.debounceTimer)
             this.debounceTimer = null
         }
+        this.gatherFn = null
         localStorage.removeItem(SAVE_KEY)
         for (const key of LEGACY_KEYS) {
             localStorage.removeItem(key)
