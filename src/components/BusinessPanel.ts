@@ -96,8 +96,8 @@ export class BusinessPanel {
         const expandBtn = document.createElement("button")
         expandBtn.className = "business-panel-expand"
         expandBtn.textContent = this.isWideMode
-            ? "\u25B8\u25C2"
-            : "\u25C2\u25B8"
+            ? "Narrow \u25B8"
+            : "\u25C2 Expand"
         expandBtn.addEventListener("click", () => this.toggleWideMode())
         this.expandBtn = expandBtn
         controls.appendChild(expandBtn)
@@ -241,8 +241,8 @@ export class BusinessPanel {
         this.element.classList.toggle("expanded", this.isWideMode)
         if (this.expandBtn) {
             this.expandBtn.textContent = this.isWideMode
-                ? "\u25B8\u25C2"
-                : "\u25C2\u25B8"
+                ? "Narrow \u25B8"
+                : "\u25C2 Expand"
         }
         localStorage.setItem(EXPANDED_STORAGE_KEY, String(this.isWideMode))
     }

@@ -186,12 +186,22 @@
 
 .business-panel.expanded .business-panel-content {
     flex-direction: row;
+    overflow-y: hidden;
 }
 
 .business-panel.expanded .panel-col-left,
 .business-panel.expanded .panel-col-right {
     flex: 1;
     min-width: 0;
+    overflow-y: auto;
+}
+
+.business-panel.expanded .upgrades-list {
+    max-height: none;
+}
+
+.business-panel.expanded .portfolio-list {
+    max-height: none;
 }
 
 .business-panel-header {
@@ -232,12 +242,12 @@
 .business-panel-expand {
     background: var(--theme-surface-primary);
     border: 2px outset var(--theme-border-light);
-    width: 18px;
     height: 18px;
-    font-size: 10px;
+    font-size: 11px;
     line-height: 1;
     cursor: pointer;
-    padding: 0;
+    padding: 2px 8px;
+    white-space: nowrap;
     display: none;
 }
 
