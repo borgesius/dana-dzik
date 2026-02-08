@@ -82,6 +82,12 @@ export interface AutobattlerSaveData {
     currentStreak: number
     unlockedFactions: string[]
     spiralProgress: Record<string, boolean>
+    /** Personal bests */
+    highestRound?: number
+    bestWinLoss?: { wins: number; losses: number }
+    totalBossesDefeated?: number
+    /** Set of defeated boss IDs for Comprehensive Exams achievement */
+    bossesDefeatedSet?: string[]
 }
 
 export function createEmptyAutobattlerData(): AutobattlerSaveData {
@@ -93,5 +99,8 @@ export function createEmptyAutobattlerData(): AutobattlerSaveData {
         currentStreak: 0,
         unlockedFactions: [],
         spiralProgress: {},
+        highestRound: 0,
+        totalBossesDefeated: 0,
+        bossesDefeatedSet: [],
     }
 }

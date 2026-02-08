@@ -125,7 +125,6 @@ export interface CombatLogEntry {
 
 export interface RunState {
     round: number
-    totalRounds: number
     scrap: number
     lineup: CombatUnit[]
     bench: CombatUnit[]
@@ -133,6 +132,10 @@ export interface RunState {
     losses: number
     phase: "shop" | "arrange" | "combat" | "reward" | "finished"
     runRewards: RunReward[]
+    /** Whether the current round is a boss round */
+    isBossRound: boolean
+    /** ID of the current boss (if boss round) */
+    currentBossId?: string
 }
 
 export interface RunReward {
@@ -155,4 +158,23 @@ export interface OpponentDef {
     name: string
     faction: FactionId
     units: { unitId: string; level: number }[]
+    /** If this is a boss opponent */
+    isBoss?: boolean
+    /** Boss identifier for tracking */
+    bossId?: string
+}
+
+// ── Run summary ─────────────────────────────────────────────────────────────
+
+export interface RunSummary {
+    highestRound: number
+    wins: number
+    losses: number
+    bossesDefeated: string[]
+    majorityFaction?: string
+    bestUnit?: { unitDefId: string; combatsSurvived: number }
+    totalScrapEarned: number
+    totalScrapSpent: number
+    unitsBought: number
+    unitsSold: number
 }

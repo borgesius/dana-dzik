@@ -624,6 +624,17 @@ const WARNING_POPUPS: PopupContent[] = [
             { text: "Dismiss", className: "" },
         ],
     },
+    {
+        type: "warning",
+        title: "Helpful Tip",
+        headline:
+            "Why don't you click, drag and use keyboard arrows on danadzik.com?",
+        body: "There is more here than meets the eye. Try it.",
+        buttons: [
+            { text: "OK", className: "primary" },
+            { text: "No", className: "" },
+        ],
+    },
 ]
 
 const AD_POPUPS: PopupContent[] = [

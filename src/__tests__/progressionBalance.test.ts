@@ -17,7 +17,6 @@ import {
     DAS_BASE_YIELD,
     DAS_DEFAULT_THRESHOLD,
     DAS_SAME_COMMODITY_DECAY,
-    DEFAULT_TOTAL_ROUNDS,
     DORMANT_MULTIPLIER,
     getAchievementXP,
     getBuffCost,
@@ -102,8 +101,8 @@ describe("autobattler economy", () => {
         expect(SELL_REFUND_MULT[1]).toBeGreaterThan(SELL_REFUND_MULT[0])
     })
 
-    it("total rounds matches ROUND_PARAMS length", () => {
-        expect(ROUND_PARAMS.length).toBe(DEFAULT_TOTAL_ROUNDS)
+    it("base round params are defined for initial rounds", () => {
+        expect(ROUND_PARAMS.length).toBeGreaterThanOrEqual(5)
     })
 })
 
@@ -172,7 +171,7 @@ describe("cross-system reward proportionality", () => {
     it("autobattler buff minimum cost is achievable early game", () => {
         // Buff costs are wealth-scaled with a minimum of BUFF_MIN_COST units.
         // Verify the min cost is reachable within a few runs of winning commodities.
-        const avgWinsPerRun = Math.ceil(DEFAULT_TOTAL_ROUNDS * 0.6) // ~60% win rate
+        const avgWinsPerRun = Math.ceil(8 * 0.6) // ~60% win rate over ~8 rounds avg run
         const commoditiesPerRun = avgWinsPerRun // 1 commodity per win
         const runsNeeded = Math.ceil(BUFF_MIN_COST / commoditiesPerRun)
         expect(runsNeeded).toBeLessThanOrEqual(

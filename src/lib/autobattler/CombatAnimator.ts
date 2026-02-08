@@ -1,6 +1,6 @@
 import { createCombatUnit } from "./combat"
 import type { CombatLogEntry, CombatResult, CombatUnit } from "./types"
-import { renderUnitCard } from "./UnitCard"
+import { renderUnitCard, unitDisplayName } from "./UnitCard"
 import { UNIT_MAP } from "./units"
 
 const ACTION_DELAY_MS = 350
@@ -171,7 +171,15 @@ export class CombatAnimator {
     }
 
     private formatLogEntry(entry: CombatLogEntry): string {
-        return `R${entry.round}: ${entry.description}`
+        // Translate unit def IDs to display names for user-facing text
+        let desc = entry.description
+        // Replace known unit IDs with display names
+        for (const [id, def] of UNIT_MAP) {
+            if (desc.includes(id)) {
+                desc = desc.split(id).join(unitDisplayName(def))
+            }
+        }
+        return `R${entry.round}: ${desc}`
     }
 
     private logEntryClass(entry: CombatLogEntry): string {

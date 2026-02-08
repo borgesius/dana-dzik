@@ -1,5 +1,5 @@
-import { createCombatUnit } from "./combat"
-import type { CombatUnit, ShopOffer } from "./types"
+import { type CombatBonuses, createCombatUnit } from "./combat"
+import type { CombatUnit, FactionId, ShopOffer } from "./types"
 import { ALL_UNITS, UNIT_MAP } from "./units"
 
 export const INITIAL_SCRAP = 5
@@ -9,6 +9,7 @@ export const REROLL_COST = 1
 export const SELL_REFUND_MULT = [1, 2, 5]
 export const SHOP_SIZE = 3
 export const BASE_LINE_SLOTS = 5
+export const MAX_BENCH_SIZE = 4
 
 /** Provider for dynamic line slot count based on player level */
 let lineSlotProvider: (() => number) | null = null
@@ -30,16 +31,32 @@ function getShopPool(unlockedUnitIds: Set<string>): string[] {
     ).map((u) => u.id)
 }
 
+/**
+ * Generate shop offers, optionally weighted toward a preferred faction.
+ * @param preferredFaction If provided, 30% chance each slot offers a unit from this faction.
+ */
 export function generateShopOffers(
     unlockedUnitIds: Set<string>,
-    count: number = SHOP_SIZE
+    count: number = SHOP_SIZE,
+    preferredFaction?: FactionId
 ): ShopOffer[] {
     const pool = getShopPool(unlockedUnitIds)
     if (pool.length === 0) return []
 
+    // Build a faction-specific pool if requested
+    const factionPool = preferredFaction
+        ? pool.filter((id) => {
+              const def = UNIT_MAP.get(id)
+              return def?.faction === preferredFaction
+          })
+        : []
+
     const offers: ShopOffer[] = []
     for (let i = 0; i < count; i++) {
-        const unitId = pool[Math.floor(Math.random() * pool.length)]
+        // 30% chance to offer from preferred faction (if pool exists)
+        const useFaction = factionPool.length > 0 && Math.random() < 0.3
+        const pickPool = useFaction ? factionPool : pool
+        const unitId = pickPool[Math.floor(Math.random() * pickPool.length)]
         const def = UNIT_MAP.get(unitId)
         offers.push({
             unitDefId: unitId,
@@ -68,7 +85,11 @@ export function createInitialShopState(
     }
 }
 
-export function buyUnit(state: ShopState, offerIndex: number): boolean {
+export function buyUnit(
+    state: ShopState,
+    offerIndex: number,
+    combatBonuses?: CombatBonuses
+): boolean {
     const offer = state.offers[offerIndex]
     if (!offer || offer.sold) return false
     if (state.scrap < offer.cost) return false
@@ -76,16 +97,24 @@ export function buyUnit(state: ShopState, offerIndex: number): boolean {
     state.scrap -= offer.cost
     offer.sold = true
 
-    const unit = createCombatUnit(offer.unitDefId)
+    const unit = createCombatUnit(offer.unitDefId, 1, combatBonuses)
 
-    if (tryCombine(unit, state.lineup) || tryCombine(unit, state.bench)) {
+    if (
+        tryCombine(unit, state.lineup, combatBonuses) ||
+        tryCombine(unit, state.bench, combatBonuses)
+    ) {
         return true
     }
 
     if (state.lineup.length < getMaxLineSlots()) {
         state.lineup.push(unit)
-    } else {
+    } else if (state.bench.length < MAX_BENCH_SIZE) {
         state.bench.push(unit)
+    } else {
+        // No room -- refund and fail
+        state.scrap += offer.cost
+        offer.sold = false
+        return false
     }
     return true
 }
@@ -113,11 +142,16 @@ export function sellUnit(
 
 export function rerollShop(
     state: ShopState,
-    unlockedUnitIds: Set<string>
+    unlockedUnitIds: Set<string>,
+    preferredFaction?: FactionId
 ): boolean {
     if (state.scrap < REROLL_COST) return false
     state.scrap -= REROLL_COST
-    state.offers = generateShopOffers(unlockedUnitIds)
+    state.offers = generateShopOffers(
+        unlockedUnitIds,
+        SHOP_SIZE,
+        preferredFaction
+    )
     return true
 }
 
@@ -145,6 +179,10 @@ export function moveUnit(
         return false
     }
 
+    if (to === "bench" && from !== "bench" && toList.length >= MAX_BENCH_SIZE) {
+        return false
+    }
+
     const [unit] = fromList.splice(fromIndex, 1)
     toIndex = Math.min(toIndex, toList.length)
     toList.splice(toIndex, 0, unit)
@@ -155,7 +193,11 @@ export function moveUnit(
  * Try to combine a unit with matching units in a list.
  * Three copies of the same unit at the same level combine into one unit at level + 1.
  */
-function tryCombine(newUnit: CombatUnit, list: CombatUnit[]): boolean {
+function tryCombine(
+    newUnit: CombatUnit,
+    list: CombatUnit[],
+    combatBonuses?: CombatBonuses
+): boolean {
     const matches = list.filter(
         (u) => u.unitDefId === newUnit.unitDefId && u.level === newUnit.level
     )
@@ -166,8 +208,12 @@ function tryCombine(newUnit: CombatUnit, list: CombatUnit[]): boolean {
         const def = UNIT_MAP.get(target.unitDefId)
         if (def) {
             const levelMult = 1 + (target.level - 1) * 0.5
-            target.currentATK = Math.floor(def.baseATK * levelMult)
-            target.maxHP = Math.floor(def.baseHP * levelMult)
+            const factionAtkBonus =
+                combatBonuses?.factionATK?.[def.faction] ?? 0
+            const atkMult = 1 + (combatBonuses?.atkBonus ?? 0) + factionAtkBonus
+            const hpMult = 1 + (combatBonuses?.hpBonus ?? 0)
+            target.currentATK = Math.floor(def.baseATK * levelMult * atkMult)
+            target.maxHP = Math.floor(def.baseHP * levelMult * hpMult)
             target.currentHP = target.maxHP
         }
 
@@ -222,8 +268,30 @@ export function moveLineupToBench(
     lineupIndex: number
 ): boolean {
     if (lineupIndex < 0 || lineupIndex >= state.lineup.length) return false
+    if (state.bench.length >= MAX_BENCH_SIZE) return false
 
     const [unit] = state.lineup.splice(lineupIndex, 1)
     state.bench.push(unit)
     return true
+}
+
+/** Get the most-represented non-drifter faction in the lineup */
+export function getMajorityLineupFaction(
+    lineup: CombatUnit[]
+): FactionId | undefined {
+    const counts = new Map<FactionId, number>()
+    for (const unit of lineup) {
+        if (unit.faction !== "drifters") {
+            counts.set(unit.faction, (counts.get(unit.faction) ?? 0) + 1)
+        }
+    }
+    let best: FactionId | undefined
+    let bestCount = 0
+    for (const [faction, count] of counts) {
+        if (count > bestCount) {
+            bestCount = count
+            best = faction
+        }
+    }
+    return best
 }

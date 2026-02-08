@@ -779,6 +779,76 @@ const TOKEN_UNITS: UnitDef[] = [
     },
 ]
 
+// ── Boss units ──────────────────────────────────────────────────────────────
+// Special units used only by boss opponents, not available in shop.
+
+const BOSS_UNITS: UnitDef[] = [
+    {
+        id: "boss-gadfly",
+        name: "The Gadfly",
+        faction: "quickdraw",
+        tier: 3,
+        baseATK: 10,
+        baseHP: 12,
+        ability: {
+            trigger: "onDeath",
+            effect: { type: "heal", target: "self", amount: 0 },
+            description: "Eternal Return: respawns once at 50% HP",
+        },
+        shopCost: 0,
+    },
+    {
+        id: "boss-noumenon",
+        name: "The Noumenon",
+        faction: "deputies",
+        tier: 3,
+        baseATK: 6,
+        baseHP: 20,
+        ability: {
+            trigger: "roundStart",
+            effect: {
+                type: "buff",
+                target: "allAllies",
+                stat: "shield",
+                amount: 2,
+            },
+            description:
+                "Categorical Shield: all allies gain +2 Shield each round",
+        },
+        shopCost: 0,
+    },
+    {
+        id: "boss-automaton",
+        name: "The Automaton",
+        faction: "clockwork",
+        tier: 3,
+        baseATK: 7,
+        baseHP: 14,
+        ability: {
+            trigger: "roundStart",
+            effect: { type: "summon", unitId: "bp-shade", position: "back" },
+            description:
+                "Sufficient Reason: clones the weakest ally each round",
+        },
+        shopCost: 0,
+    },
+    {
+        id: "boss-simulacrum",
+        name: "The Simulacrum",
+        faction: "prospectors",
+        tier: 3,
+        baseATK: 8,
+        baseHP: 16,
+        ability: {
+            trigger: "onDeath",
+            effect: { type: "damage", target: "allEnemies", amount: 2 },
+            description:
+                "Deconstruction: splits into two half-stat copies on death",
+        },
+        shopCost: 0,
+    },
+]
+
 // ── Exports ──────────────────────────────────────────────────────────────────
 
 export const ALL_UNITS: UnitDef[] = [
@@ -788,6 +858,7 @@ export const ALL_UNITS: UnitDef[] = [
     ...CLOCKWORK_UNITS,
     ...PROSPECTOR_UNITS,
     ...TOKEN_UNITS,
+    ...BOSS_UNITS,
 ]
 
 export const UNIT_MAP: ReadonlyMap<string, UnitDef> = new Map(

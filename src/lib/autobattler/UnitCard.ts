@@ -161,10 +161,18 @@ export function renderUnitCard(unit: CombatUnit, options: CardOptions): string {
                     ? `draggable="true" data-drag-source="${options.source}" data-drag-idx="${options.index}"`
                     : ""
             const refund = getSellRefund(unit)
+            const crossBonusText = def?.ability.crossBonus?.description ?? ""
+            const factionBonusText = def?.ability.factionBonus
+                ? `+${def.ability.factionBonus.perAlly}/ally`
+                : ""
             return `
                 <div class="uc-card uc-owned ${lvlCls}" ${dragAttr}
                     style="--uc-faction-color: ${fc}"
-                    title="${abilityText}"
+                    data-ability="${abilityText}"
+                    data-faction-bonus="${factionBonusText}"
+                    data-cross-bonus="${crossBonusText}"
+                    data-unit-name="${def ? unitDisplayName(def) : unit.unitDefId}"
+                    data-unit-level="${unit.level}"
                     data-source="${options.source}" data-idx="${options.index}">
                     ${options.slotLabel ? `<div class="uc-slot-label">${options.slotLabel}</div>` : ""}
                     <div class="uc-header">
