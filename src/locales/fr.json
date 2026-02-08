@@ -832,7 +832,12 @@
     "arcana-moon": { "name": "The Moon", "description": "Obtenez les huit succès du cycle lunaire." },
     "arcana-sun": { "name": "The Sun", "description": "Ouvrez les succès un après-midi de week-end." },
     "arcana-judgement": { "name": "Judgement", "description": "Obtenez 75 succès au total." },
-    "arcana-world": { "name": "The World", "description": "Obtenez tous les autres Arcanes Majeurs." }
+    "arcana-world": { "name": "The World", "description": "Obtenez tous les autres Arcanes Majeurs." },
+    "bsod-trigger": { "name": "Fatal Exception 420", "description": "Corrompez kernel.welt et déclenchez un Écran Bleu de la Mort." },
+    "display-glitch": { "name": "Waiting for the Gift of Sound and Vision", "description": "Corrompez display.welt et déclenchez une corruption d'affichage." },
+    "clock-glitch": { "name": "Does Anybody Really Know What Time It Is?", "description": "Corrompez clock.welt et dérégler l'horloge système." },
+    "memory-glitch": { "name": "PC LOAD LETTER", "description": "Corrompez memory.welt et déclenchez des erreurs de mémoire." },
+    "restart-glitch": { "name": "Have You Tried Turning It Off and On Again?", "description": "Corrompez boot.welt et forcez un redémarrage du système." }
   },
     "symposium": {
         "factions": {
@@ -881,10 +886,10 @@
             "wl": "V{{wins}} / D{{losses}}"
         },
         "units": {
-            "drifter-brawler": "Chargé de TD",
-            "drifter-scout": "Le Vacataire",
-            "drifter-medic": "Heures de Bureau",
-            "drifter-heavy": "Paperasserie",
+            "drifter-brawler": "Le Correcteur",
+            "drifter-scout": "Le Candidat",
+            "drifter-medic": "Le Directeur",
+            "drifter-heavy": "Le Bureaucrate",
             "qd-sharpshooter": "Iconoclaste",
             "qd-deadeye": "The Übermensch",
             "qd-dynamiter": "Le Dynamitard",

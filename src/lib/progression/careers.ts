@@ -7,6 +7,10 @@ export type BonusType =
     | "tradeProfit"
     | "xpRate"
     | "autobattlerATK"
+    | "autobattlerATK_clockwork"
+    | "autobattlerATK_quickdraw"
+    | "autobattlerATK_deputies"
+    | "autobattlerATK_prospectors"
     | "autobattlerHP"
     | "startingCash"
     | "popupBonus"
@@ -56,7 +60,7 @@ const ENGINEERING_NODES: CareerNodeDef[] = [
         id: "eng-staff",
         name: "Staff Abstraction Architect",
         company: "Abstraction Labs · Palo Alto, CA",
-        dateRange: "2024 – 2026",
+        dateRange: "Q3 '99 – IPO",
         bullets: [
             "Designed abstractions that abstract other abstractions, achieving O(n²) meeting complexity",
             "Introduced a microservice for each CRUD operation, improving team headcount justification by 300%",
@@ -66,14 +70,14 @@ const ENGINEERING_NODES: CareerNodeDef[] = [
         branch: "engineering",
         tier: 1,
         prerequisites: [],
-        bonusType: "autobattlerATK",
+        bonusType: "autobattlerATK_clockwork",
         bonusValue: 0.1,
     },
     {
         id: "eng-principal",
-        name: "Principal Yak Shaving Engineer",
+        name: "Principal Navel Optics Engineer",
         company: "YakStack Inc. · Remote",
-        dateRange: "2026 – 2028",
+        dateRange: "Post-IPO – Pre-Crash",
         bullets: [
             "Established company-wide policy that every task requires exactly one prerequisite task, recursively",
             "Reduced production incidents by 90% by shipping 90% less code",
@@ -90,7 +94,7 @@ const ENGINEERING_NODES: CareerNodeDef[] = [
         id: "eng-distinguished",
         name: "Distinguished Thought Compiler",
         company: "Vibes Engineering Corp · The Cloud",
-        dateRange: "2028 – ∞",
+        dateRange: "Series D – Acqui-hire",
         bullets: [
             "Converted vibes into production incidents at unprecedented scale",
             "Maintained a 1:1 ratio of Slack messages to lines of code shipped",
@@ -107,7 +111,7 @@ const ENGINEERING_NODES: CareerNodeDef[] = [
         id: "eng-fellow",
         name: "Fellow of Applied Overthinking",
         company: "Institute for Recursive Contemplation · Distributed",
-        dateRange: "2030 – ∞",
+        dateRange: "Pre-Revenue – Post-Relevance",
         bullets: [
             "Thought about thinking about code for two calendar years before writing any",
             "Published a monograph on why the previous monograph was wrong",
@@ -124,7 +128,7 @@ const ENGINEERING_NODES: CareerNodeDef[] = [
         id: "eng-emeritus",
         name: "Architect Emeritus of Deprecated Systems",
         company: "Legacy Systems Preservation Society · /dev/null",
-        dateRange: "2032 – ∞",
+        dateRange: "Y2K – /dev/null",
         bullets: [
             "Mass-migrated zero services to the new framework, citing 'philosophical objections'",
             "Maintained sole custody of a cron job that no one dares restart",
@@ -147,7 +151,7 @@ const TRADING_NODES: CareerNodeDef[] = [
         id: "trade-analyst",
         name: "Quantitative Vibes Analyst",
         company: "Gut Feelings Capital · New York, NY",
-        dateRange: "2022 – 2024",
+        dateRange: "FY '99 – Margin Call",
         bullets: [
             "Applied rigorous quantitative methodology to gut feelings, achieving market-rate returns",
             "Developed proprietary 'vibes-based' trading algorithm; backtested against horoscopes",
@@ -164,7 +168,7 @@ const TRADING_NODES: CareerNodeDef[] = [
         id: "trade-quant",
         name: "Senior Derivatives Sommelier",
         company: "Tannin & Tranche LLC · Greenwich, CT",
-        dateRange: "2024 – 2026",
+        dateRange: "Pre-Bubble – Mid-Bubble",
         bullets: [
             "Tasted the tannins in a credit default swap and correctly identified the vintage",
             "Structured a CDO so complex that the compliance team preemptively resigned",
@@ -181,7 +185,7 @@ const TRADING_NODES: CareerNodeDef[] = [
         id: "trade-pm",
         name: "Portfolio Manager (Unlicensed)",
         company: "Other People's Money Partners · Cayman Islands",
-        dateRange: "2026 – 2027",
+        dateRange: "OPM Era – Indictment",
         bullets: [
             "Managed other people's money with the confidence of someone who definitely shouldn't be",
             "Achieved 40% returns by redefining what counts as a 'return'",
@@ -198,24 +202,24 @@ const TRADING_NODES: CareerNodeDef[] = [
         id: "trade-md",
         name: "Managing Director of Managed Directing",
         company: "Recursive Management Group · Everywhere",
-        dateRange: "2027 – Present",
+        dateRange: "Q4 '00 – Restructuring",
         bullets: [
             "Managed the directors who manage the managers who manage the associates",
             "Increased org chart depth by 4 levels with zero increase in productive output",
             "Pioneered 'trickle-across economics' — lateral delegation at scale",
         ],
-        bonusLabel: "+20% Hindsight earned per prestige",
+        bonusLabel: "+10% symposium Idealist stats",
         branch: "trading",
         tier: 4,
         prerequisites: ["trade-pm"],
-        bonusType: "hindsightRate",
-        bonusValue: 0.2,
+        bonusType: "autobattlerATK_deputies",
+        bonusValue: 0.1,
     },
     {
         id: "trade-partner",
         name: "Senior Partner, Infinite Leverage",
         company: "Leverage Squared Capital · Offshore",
-        dateRange: "2029 – ∞",
+        dateRange: "Leveraged – Overleveraged",
         bullets: [
             "Leveraged the leverage to leverage additional leverage",
             "Achieved infinite returns by dividing by zero and calling it 'alpha'",
@@ -238,7 +242,7 @@ const GROWTH_NODES: CareerNodeDef[] = [
         id: "growth-hacker",
         name: "Growth Hacker (Legally Distinct)",
         company: "DripForce · Austin, TX",
-        dateRange: "2022 – 2023",
+        dateRange: "Beta – Pivot",
         bullets: [
             "Clarified to legal that it's not spam if you call it a 'drip campaign'",
             "A/B tested 47 shades of blue for the CTA button; winner was orange",
@@ -255,7 +259,7 @@ const GROWTH_NODES: CareerNodeDef[] = [
         id: "growth-head",
         name: "Head of Organic Disruption",
         company: "Disruptive Organics Inc. · Brooklyn, NY",
-        dateRange: "2023 – 2025",
+        dateRange: "Series B – Rebrand",
         bullets: [
             "Disrupted the organic disruption of previous disruptions, organically",
             "Coined the term 'growth-aware mindfulness' and it somehow stuck",
@@ -272,51 +276,51 @@ const GROWTH_NODES: CareerNodeDef[] = [
         id: "growth-vp",
         name: "VP of Engagement & Retention Theater",
         company: "Metrics Unlimited · San Francisco, CA",
-        dateRange: "2025 – 2027",
+        dateRange: "Pre-Churn – Post-Churn",
         bullets: [
             "DAUs went up. Do not ask how. Do not look at the denominator",
             "Shipped a 'we miss you' email campaign that sent 3 emails per day",
             "Introduced gamification to the onboarding flow; no one has finished onboarding since",
         ],
-        bonusLabel: "+15% symposium Existentialist stats",
+        bonusLabel: "+10% symposium Existentialist stats",
         branch: "growth",
         tier: 3,
         prerequisites: ["growth-head"],
-        bonusType: "autobattlerATK",
-        bonusValue: 0.15,
+        bonusType: "autobattlerATK_quickdraw",
+        bonusValue: 0.1,
     },
     {
         id: "growth-cmo",
         name: "Chief Thought Leader",
         company: "LinkedIn · Your Feed",
-        dateRange: "2027 – Present",
+        dateRange: "Viral '01 – Thought Exit",
         bullets: [
             "Has opinions about your opinions about opinions; published them as a carousel",
             "Keynoted at 12 conferences on the topic of 'authentic personal branding'",
             "Achieved inbox zero by auto-replying 'let's take this offline' to all emails",
         ],
-        bonusLabel: "+25% XP from all sources",
+        bonusLabel: "+15% symposium unit HP",
         branch: "growth",
         tier: 4,
         prerequisites: ["growth-vp"],
-        bonusType: "xpRate",
-        bonusValue: 0.25,
+        bonusType: "autobattlerHP",
+        bonusValue: 0.15,
     },
     {
         id: "growth-cvo",
         name: "Chief Virality Officer",
         company: "Contagion Media Holdings · Going Viral",
-        dateRange: "2029 – ∞",
+        dateRange: "Post-Pivot – Heat Death",
         bullets: [
             "Made a product go viral by removing all features except the share button",
             "Wrote a thread about writing threads that became the most-threaded thread",
             "Personally responsible for the phrase 'engagement-driven engagement'",
         ],
-        bonusLabel: "+15% symposium unit HP",
+        bonusLabel: "+15% XP from all sources",
         branch: "growth",
         tier: 5,
         prerequisites: ["growth-cmo"],
-        bonusType: "autobattlerHP",
+        bonusType: "xpRate",
         bonusValue: 0.15,
     },
 ]
@@ -329,41 +333,41 @@ const EXECUTIVE_NODES: CareerNodeDef[] = [
         id: "exec-pm",
         name: "Product Manager (No Technical Background)",
         company: "Stealth Startup · Palo Alto, CA",
-        dateRange: "2022 – 2024",
+        dateRange: "Stealth – Launch (Soft)",
         bullets: [
             "Had strong opinions about sprint velocity; could not define the word 'sprint'",
             "Increased Jira ticket count by 200%, directly correlating with team morale decrease",
             "Wrote a PRD so comprehensive it was longer than the codebase it described",
         ],
-        bonusLabel: "+5% factory output",
+        bonusLabel: "+10% pinball high score bonus",
         branch: "executive",
         tier: 1,
         prerequisites: [],
-        bonusType: "factoryOutput",
-        bonusValue: 0.05,
+        bonusType: "pinballBonus",
+        bonusValue: 0.1,
     },
     {
         id: "exec-director",
         name: "Director of Cross-Functional Alignment",
         company: "Alignment Solutions Group · Denver, CO",
-        dateRange: "2024 – 2026",
+        dateRange: "Reorg I – Reorg III",
         bullets: [
             "Aligned the alignments until everything was aligned, then realigned",
             "Introduced a weekly meeting to discuss which meetings could be emails",
             "Created a cross-functional task force to investigate cross-functional inefficiencies",
         ],
-        bonusLabel: "+10% pinball high score bonus",
+        bonusLabel: "+10% symposium Post-Structuralist stats",
         branch: "executive",
         tier: 2,
         prerequisites: ["exec-pm"],
-        bonusType: "pinballBonus",
+        bonusType: "autobattlerATK_prospectors",
         bonusValue: 0.1,
     },
     {
         id: "exec-vp",
         name: "SVP of Operational Excellence & Synergy",
         company: "Synergy Dynamics Corp · Multiple Offices",
-        dateRange: "2026 – 2028",
+        dateRange: "Synergy Era – Dissolution",
         bullets: [
             "Reported directly to several people who also reported to each other",
             "Reduced operational costs by 15% through a strategic initiative called 'layoffs'",
@@ -380,7 +384,7 @@ const EXECUTIVE_NODES: CareerNodeDef[] = [
         id: "exec-ceo",
         name: "CEO / Founder / Visionary / Podcast Host",
         company: "Self-Employed · Everywhere & Nowhere",
-        dateRange: "2028 – Present",
+        dateRange: "Founded – Unfounded",
         bullets: [
             "Business card ran out of room; now hands out a pamphlet",
             "Founded a company whose product is founding companies",
@@ -397,7 +401,7 @@ const EXECUTIVE_NODES: CareerNodeDef[] = [
         id: "exec-chairman",
         name: "Executive Chairman (Non-Executive)",
         company: "Board of Boards LLC · Abstracted",
-        dateRange: "2030 – ∞",
+        dateRange: "Advisory – ∞ (Vesting)",
         bullets: [
             "Chairs a board that oversees other boards that oversee advisory councils",
             "Title contains both 'Executive' and 'Non-Executive'; no one has questioned this",
@@ -414,20 +418,22 @@ const EXECUTIVE_NODES: CareerNodeDef[] = [
 
 // ── Education Sub-tree (shared) ──────────────────────────────────────────────
 
+/** Base education entry — always shown on resume; bonus applied passively. */
+export const EDUCATION_STARTER_NODE: CareerNodeDef = {
+    id: "edu-hard-knocks",
+    name: "Hard Knocks at the School of Life",
+    company: "The School of Life",
+    dateRange: "1997 – Present",
+    bullets: [],
+    bonusLabel: "+1% Hindsight rate",
+    branch: "education",
+    tier: 0,
+    prerequisites: [],
+    bonusType: "hindsightRate",
+    bonusValue: 0.01,
+}
+
 const EDUCATION_NODES: CareerNodeDef[] = [
-    {
-        id: "edu-hard-knocks",
-        name: "Hard Knocks at the School of Life",
-        company: "The School of Life",
-        dateRange: "1997 – Present",
-        bullets: [],
-        bonusLabel: "+1% Hindsight rate",
-        branch: "education",
-        tier: 0,
-        prerequisites: [],
-        bonusType: "hindsightRate",
-        bonusValue: 0.01,
-    },
     {
         id: "edu-undergrad",
         name: "B.A. Mathematics & Philosophy",
@@ -445,7 +451,7 @@ const EDUCATION_NODES: CareerNodeDef[] = [
         id: "edu-honors",
         name: "Honors Thesis (Read by Three People)",
         company: "University of Chicago · Chicago, IL",
-        dateRange: "2018",
+        dateRange: "Fall '18 – Defended Barely",
         bullets: [
             "One of the three readers was contractually obligated",
             "Explored the intersection of two fields that do not intersect",
@@ -461,7 +467,7 @@ const EDUCATION_NODES: CareerNodeDef[] = [
         id: "edu-grad-cert",
         name: "Graduate Certificate in Applied Disruption",
         company: "Stanford Online · Technically Enrolled",
-        dateRange: "2019",
+        dateRange: "Enrolled Q1 – Completed Q∞",
         bullets: [
             "Completed a certificate program about completing certificate programs",
             "Final project was a pitch deck for a pitch deck generator",
@@ -477,7 +483,7 @@ const EDUCATION_NODES: CareerNodeDef[] = [
         id: "edu-phd",
         name: "Ph.D. in Speculative Systems",
         company: "University of Nowhere · Defended Remotely",
-        dateRange: "2020 – 2024",
+        dateRange: "ABD – TBD",
         bullets: [
             "Dissertation titled 'On the Impossibility of Finishing Dissertations'",
             "Advisor described work as 'technically a contribution'",
@@ -662,22 +668,23 @@ export const CAREER_BRANCHES: {
     {
         id: "engineering",
         name: "Engineering",
-        description: "WELT affinity, Clockwork faction synergy",
+        description: "WELT affinity, Rationalist faction synergy, unit HP",
     },
     {
         id: "trading",
         name: "Trading / Finance",
-        description: "Trade profit, factory output, Hindsight bonuses",
+        description: "Trade profit, factory output, Idealist faction synergy",
     },
     {
         id: "growth",
         name: "Growth / Marketing",
-        description: "XP rate, popup bonuses, Quickdraw faction synergy",
+        description: "XP rate, Existentialist faction synergy, unit HP",
     },
     {
         id: "executive",
         name: "Executive",
-        description: "Factory output, pinball bonuses, trade profit",
+        description:
+            "Pinball, trade profit, Post-Structuralist faction synergy",
     },
 ]
 
@@ -724,9 +731,9 @@ export const MASTERY_DEFS: MasteryDef[] = [
     {
         id: "mastery-atk",
         name: "Combat Training",
-        description: "+1 ATK to symposium units per rank (max 10)",
+        description: "+3% symposium ATK per rank (max 10)",
         bonusType: "autobattlerATK",
-        bonusPerRank: 1,
+        bonusPerRank: 0.03,
         maxRanks: 10,
     },
     {

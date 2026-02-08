@@ -16,6 +16,7 @@ import { HINDSIGHT_UPGRADES } from "../prestige/constants"
 import { getPrestigeManager } from "../prestige/PrestigeManager"
 import { getCareerManager } from "../progression/CareerManager"
 import { getNodesForBranch } from "../progression/careers"
+import { FILE_EFFECTS } from "../systemCrash/constants"
 import { getThemeManager } from "../themeManager"
 import type { AchievementManager } from "./AchievementManager"
 import type { CounterKey } from "./types"
@@ -47,6 +48,7 @@ export function wireAchievements(
     wireWeltEvents(mgr)
     wireCalmMode(mgr)
     wireGlitchEvents(mgr)
+    wireSystemCrashEvents(mgr)
     wireSessionTimer(mgr)
     wireSessionCost(mgr)
     wireQAReports(mgr)
@@ -612,6 +614,29 @@ function wireWeltEvents(mgr: AchievementManager): void {
 function wireGlitchEvents(mgr: AchievementManager): void {
     onAppEvent("glitch:triggered", (detail) => {
         if (detail.type === "colorSplit") mgr.earn("seein-double")
+    })
+}
+
+const EFFECT_ACHIEVEMENT_MAP: Record<string, string> = {
+    bsod: "bsod-trigger",
+    "display-corrupt": "display-glitch",
+    "clock-haywire": "clock-glitch",
+    "memory-fault": "memory-glitch",
+    restart: "restart-glitch",
+}
+
+function wireSystemCrashEvents(mgr: AchievementManager): void {
+    onAppEvent("system-file-modified", (detail) => {
+        const { filename, severity } = detail
+        if (severity === "none" || severity === "minor") return
+
+        const effect = FILE_EFFECTS[filename.toLowerCase()]
+        if (!effect) return
+
+        const achievementId = EFFECT_ACHIEVEMENT_MAP[effect]
+        if (achievementId) {
+            mgr.earn(achievementId as never)
+        }
     })
 }
 

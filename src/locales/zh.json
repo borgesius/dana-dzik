@@ -825,7 +825,12 @@
     "arcana-moon": { "name": "The Moon", "description": "获得全部八个月相成就。" },
     "arcana-sun": { "name": "The Sun", "description": "在周末下午打开成就。" },
     "arcana-judgement": { "name": "Judgement", "description": "共获得75个成就。" },
-    "arcana-world": { "name": "The World", "description": "获得所有其他大阿尔卡纳。" }
+    "arcana-world": { "name": "The World", "description": "获得所有其他大阿尔卡纳。" },
+    "bsod-trigger": { "name": "Fatal Exception 420", "description": "破坏kernel.welt并触发蓝屏死机。" },
+    "display-glitch": { "name": "Waiting for the Gift of Sound and Vision", "description": "破坏display.welt并触发显示损坏。" },
+    "clock-glitch": { "name": "Does Anybody Really Know What Time It Is?", "description": "破坏clock.welt并使系统时钟失控。" },
+    "memory-glitch": { "name": "PC LOAD LETTER", "description": "破坏memory.welt并触发内存故障错误。" },
+    "restart-glitch": { "name": "Have You Tried Turning It Off and On Again?", "description": "破坏boot.welt并强制系统重启。" }
   },
   "symposium": {
         "factions": {
@@ -874,10 +879,10 @@
             "wl": "{{wins}}胜 / {{losses}}负"
         },
         "units": {
-            "drifter-brawler": "助教",
-            "drifter-scout": "临时工",
-            "drifter-medic": "办公时间",
-            "drifter-heavy": "官僚主义",
+            "drifter-brawler": "评分员",
+            "drifter-scout": "候选人",
+            "drifter-medic": "导师",
+            "drifter-heavy": "官僚",
             "qd-sharpshooter": "偶像破坏者",
             "qd-deadeye": "The Übermensch",
             "qd-dynamiter": "炸药手",

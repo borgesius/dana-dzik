@@ -411,9 +411,12 @@ export class OrgChart {
 
     /**
      * Fire the most expensive employee. Used when cash goes negative.
-     * Returns the fired employee or null if no employees exist.
+     * Returns the fired employee + whether they were a VP, or null.
      */
-    public fireMostExpensive(): Employee | null {
+    public fireMostExpensive(): {
+        employee: Employee
+        wasVP: boolean
+    } | null {
         let maxSalary = -1
         let maxVP = -1
         let maxIC = -1
@@ -467,7 +470,10 @@ export class OrgChart {
         }
 
         if (maxVP === -1) return null
-        return this.fire(maxVP, maxIC)
+        const wasVP = maxIC === -1
+        const employee = this.fire(maxVP, maxIC)
+        if (!employee) return null
+        return { employee, wasVP }
     }
 
     // ── Reorganization ──────────────────────────────────────────────────

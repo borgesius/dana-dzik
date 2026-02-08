@@ -5,7 +5,7 @@ import type { UnitDef } from "./types"
 const DRIFTER_UNITS: UnitDef[] = [
     {
         id: "drifter-brawler",
-        name: "Teaching Assistant",
+        name: "The Grader",
         faction: "drifters",
         tier: 1,
         baseATK: 3,
@@ -19,7 +19,7 @@ const DRIFTER_UNITS: UnitDef[] = [
     },
     {
         id: "drifter-scout",
-        name: "The Sessional",
+        name: "The Candidate",
         faction: "drifters",
         tier: 1,
         baseATK: 2,
@@ -33,7 +33,7 @@ const DRIFTER_UNITS: UnitDef[] = [
     },
     {
         id: "drifter-medic",
-        name: "Office Hours",
+        name: "The Advisor",
         faction: "drifters",
         tier: 1,
         baseATK: 1,
@@ -47,7 +47,7 @@ const DRIFTER_UNITS: UnitDef[] = [
     },
     {
         id: "drifter-heavy",
-        name: "Red Tape",
+        name: "The Bureaucrat",
         faction: "drifters",
         tier: 2,
         baseATK: 4,

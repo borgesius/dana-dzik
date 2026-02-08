@@ -1,4 +1,5 @@
-import { getEmployeeSalary } from "./employees"
+import { isCalmMode } from "../calmMode"
+import { type Employee, getEmployeeSalary } from "./employees"
 import { OrgChart } from "./orgChart"
 import {
     BULK_ORDER_QUANTITY,
@@ -121,11 +122,24 @@ export class MarketEngine {
      */
     public prestigeProvider: ((key: string) => number) | null = null
 
+    /** Calm-mode slows the market tick rate by this factor. */
+    private static readonly CALM_TICK_MULTIPLIER = 1.1
+
     constructor(seed?: number) {
         this.rng = new SeededRng(seed)
         this.initMarkets()
         this.initUnlockedCommodities()
         this.nextEventTicks = this.rng.nextInt(EVENT_MIN_TICKS, EVENT_MAX_TICKS)
+
+        // Re-seat the tick interval when calm mode is toggled
+        if (typeof document !== "undefined") {
+            document.addEventListener("calm-mode:changed", () => {
+                if (this.tickInterval) {
+                    this.stop()
+                    this.start()
+                }
+            })
+        }
     }
 
     // -----------------------------------------------------------------------
@@ -181,7 +195,10 @@ export class MarketEngine {
 
     public start(): void {
         if (this.tickInterval) return
-        this.tickInterval = setInterval(() => this.tick(), TICK_INTERVAL_MS)
+        const interval = isCalmMode()
+            ? TICK_INTERVAL_MS * MarketEngine.CALM_TICK_MULTIPLIER
+            : TICK_INTERVAL_MS
+        this.tickInterval = setInterval(() => this.tick(), interval)
     }
 
     public stop(): void {
@@ -223,8 +240,14 @@ export class MarketEngine {
                 drift = -state.trendStrength * c.volatility
             }
 
+            const trendVis = this.bonusProvider?.("trendVisibility") ?? 0
+            const noiseMult = Math.max(0.2, 1 - trendVis)
             const noise =
-                (this.rng.next() - 0.5) * 2 * c.volatility * state.price
+                (this.rng.next() - 0.5) *
+                2 *
+                c.volatility *
+                state.price *
+                noiseMult
             const meanReversion =
                 (c.basePrice - state.price) * MEAN_REVERSION_STRENGTH
 
@@ -515,8 +538,12 @@ export class MarketEngine {
 
         // Graceful payroll shedding: if salary exceeds cash, shed most expensive
         while (this.cash < 0 && this.orgChart.getEmployeeCount() > 0) {
-            const fired = this.orgChart.fireMostExpensive()
-            if (fired) {
+            const result = this.orgChart.fireMostExpensive()
+            if (result) {
+                const {
+                    employee: fired,
+                    wasVP,
+                }: { employee: Employee; wasVP: boolean } = result
                 this.emit("employeeFired", fired)
                 this.emit("moraleEvent", {
                     type: "quit",
@@ -524,7 +551,8 @@ export class MarketEngine {
                     message: `${fired.name} has been laid off due to budget constraints`,
                 })
                 // Refund this tick's salary since they were just let go
-                this.cash += getEmployeeSalary(fired)
+                const refund = getEmployeeSalary(fired) * (wasVP ? 1.5 : 1)
+                this.cash += refund
             } else {
                 break
             }
@@ -1313,6 +1341,14 @@ export class MarketEngine {
         }
     }
 
+    /**
+     * Total net worth: cash + holdings at market price + performing securities.
+     * Use this as a cross-system "wealth scale" metric.
+     */
+    public getNetWorth(): number {
+        return this.calculatePortfolioValue()
+    }
+
     public calculatePortfolioValue(): number {
         let value = Math.max(0, this.cash)
 
@@ -1737,8 +1773,8 @@ export class MarketEngine {
 
             // Graceful payroll shedding: fire most expensive while cash < 0
             while (this.cash < 0 && this.orgChart.getEmployeeCount() > 0) {
-                const fired = this.orgChart.fireMostExpensive()
-                if (fired) {
+                const result = this.orgChart.fireMostExpensive()
+                if (result) {
                     employeesFired++
                 } else {
                     break

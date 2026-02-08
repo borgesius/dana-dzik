@@ -184,7 +184,6 @@ body {
     font-weight: bold;
 }
 
-
 .toolbar-button:active {
     border-style: inset;
 }
@@ -453,32 +452,71 @@ body {
 }
 
 @keyframes cost-blink {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0; }
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0;
+    }
 }
 
 /* ── Cosmetic Wallpapers ──────────────────────────────────────────────── */
 
 .wp-quickdraw-sunset .desktop {
-    background: linear-gradient(135deg, #8b2500 0%, #cd661d 30%, #ff8c00 60%, #ffd700 100%) !important;
+    background: linear-gradient(
+        135deg,
+        #8b2500 0%,
+        #cd661d 30%,
+        #ff8c00 60%,
+        #ffd700 100%
+    ) !important;
 }
 
 .wp-deputies-badge .desktop {
-    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 30%, #4169e1 60%, #b0c4de 100%) !important;
+    background: linear-gradient(
+        135deg,
+        #1a1a2e 0%,
+        #16213e 30%,
+        #4169e1 60%,
+        #b0c4de 100%
+    ) !important;
 }
 
 .wp-clockwork-gears .desktop {
     background:
-        repeating-conic-gradient(rgb(184 115 51 / 15%) 0% 25%, transparent 0% 50%) 0 0 / 40px 40px,
-        linear-gradient(135deg, #5c4033 0%, #b87333 50%, #daa520 100%) !important;
+        repeating-conic-gradient(
+                rgb(184 115 51 / 15%) 0% 25%,
+                transparent 0% 50%
+            )
+            0 0 / 40px 40px,
+        linear-gradient(
+            135deg,
+            #5c4033 0%,
+            #b87333 50%,
+            #daa520 100%
+        ) !important;
 }
 
 .wp-prospectors-mine .desktop {
-    background: linear-gradient(135deg, #1a0033 0%, #2d1b4e 30%, #2e8b57 60%, #00ff7f 100%) !important;
+    background: linear-gradient(
+        135deg,
+        #1a0033 0%,
+        #2d1b4e 30%,
+        #2e8b57 60%,
+        #00ff7f 100%
+    ) !important;
 }
 
 .wp-prestige-gold .desktop {
-    background: linear-gradient(135deg, #462300 0%, #b8860b 30%, #ffd700 60%, #fffacd 100%) !important;
+    background: linear-gradient(
+        135deg,
+        #462300 0%,
+        #b8860b 30%,
+        #ffd700 60%,
+        #fffacd 100%
+    ) !important;
 }
 
 /* ── Customization Window ─────────────────────────────────────────────── */

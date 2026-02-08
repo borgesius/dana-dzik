@@ -6,7 +6,7 @@ const CHART_GRID = "#1a3a1a"
 const CHART_LINE = "#00ff00"
 const CHART_MA_LINE = "#ffff00"
 const CHART_TEXT = "#00cc00"
-const CHART_FONT = '10px "Courier New", monospace'
+const CHART_FONT = '12px "Courier New", monospace'
 const CHART_BULL_ARROW = "#00ff00"
 const CHART_BEAR_ARROW = "#ff4444"
 const CHART_FLAT_ARROW = "#888888"
@@ -310,15 +310,14 @@ export class ChartRenderer {
         const ticks = this.options.trendTicksRemaining
         if (ticks == null) return
 
-        // Convert ticks to approximate seconds (each tick ≈ 2.5s)
-        const seconds = Math.round(ticks * 2.5)
-        const label = `~${seconds}s`
+        // Each tick = 1 market day
+        const label = `~${ticks}d`
 
         // Position just below the trend arrow
         const x = chartRight - 15
         const y = chartTop + 24
 
-        ctx.font = '9px "Courier New", monospace'
+        ctx.font = '11px "Courier New", monospace'
         ctx.fillStyle = CHART_COUNTDOWN
         ctx.textAlign = "center"
         ctx.fillText(label, x, y)

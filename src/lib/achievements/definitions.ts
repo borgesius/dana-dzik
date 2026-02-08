@@ -161,6 +161,43 @@ export const ACHIEVEMENTS: AchievementDef[] = [
         icon: "👀",
         hidden: true,
     },
+
+    // ── System File Glitches (hidden) ─────────────────────────────────────
+    {
+        id: "bsod-trigger",
+        category: "terminal",
+        icon: "🟦",
+        hidden: true,
+        desktopOnly: true,
+    },
+    {
+        id: "display-glitch",
+        category: "terminal",
+        icon: "📺",
+        hidden: true,
+        desktopOnly: true,
+    },
+    {
+        id: "clock-glitch",
+        category: "terminal",
+        icon: "⏰",
+        hidden: true,
+        desktopOnly: true,
+    },
+    {
+        id: "memory-glitch",
+        category: "terminal",
+        icon: "🧠",
+        hidden: true,
+        desktopOnly: true,
+    },
+    {
+        id: "restart-glitch",
+        category: "terminal",
+        icon: "🔌",
+        hidden: true,
+        desktopOnly: true,
+    },
     {
         id: "explorer",
         category: "exploration",
