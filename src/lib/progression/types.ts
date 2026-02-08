@@ -10,6 +10,14 @@ export interface CareerHistoryEntry {
 
 // ── Progression save data ────────────────────────────────────────────────────
 
+export interface ExplorationSaveData {
+    seenWindows: string[]
+    seenThemes: string[]
+    seenLocales: string[]
+    awardedPinballThresholds: number[]
+    guestbookSigned: boolean
+}
+
 export interface ProgressionSaveData {
     totalXP: number
     level: number
@@ -27,6 +35,8 @@ export interface ProgressionSaveData {
     skillNodes?: string[]
     /** Mastery ranks: masteryId -> count */
     masteryRanks?: Record<string, number>
+    /** Persistent exploration XP guards */
+    exploration?: ExplorationSaveData
 }
 
 export function createEmptyProgressionData(): ProgressionSaveData {

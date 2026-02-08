@@ -41,7 +41,7 @@ export function xpToNextLevel(totalXP: number): {
 
 export const XP_REWARDS = {
     // Market game
-    trade: 2,
+    trade: 1,
     phaseUnlock: 25,
 
     // Pinball
