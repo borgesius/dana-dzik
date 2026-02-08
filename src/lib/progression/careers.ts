@@ -419,7 +419,7 @@ const EDUCATION_NODES: CareerNodeDef[] = [
         id: "edu-undergrad",
         name: "B.A. Mathematics & Philosophy",
         company: "University of Chicago · Chicago, IL",
-        dateRange: "2014 – 2018",
+        dateRange: "2015 – 2019",
         bullets: ["Fourth week, am I right?"],
         bonusLabel: "+5% GRUND compilation tolerance",
         branch: "education",
