@@ -77,14 +77,14 @@ export function resolveCombat(
     const opponent = opponentLineup.map((u) => ({ ...u }))
 
     const log: CombatLogEntry[] = []
+    const handledDeaths = new Set<string>()
     let round = 0
 
     // ── Combat start abilities ───────────────────────────────────────────
     triggerAbilities("combatStart", player, opponent, log, 0, "player")
     triggerAbilities("combatStart", opponent, player, log, 0, "opponent")
 
-    removeDeadUnits(player, opponent, log, 0)
-    removeDeadUnits(opponent, player, log, 0)
+    processDeaths(player, opponent, log, 0, handledDeaths)
 
     while (
         player.filter(isAlive).length > 0 &&
@@ -96,8 +96,7 @@ export function resolveCombat(
         // ── Round start abilities ────────────────────────────────────────
         triggerAbilities("roundStart", player, opponent, log, round, "player")
         triggerAbilities("roundStart", opponent, player, log, round, "opponent")
-        removeDeadUnits(player, opponent, log, round)
-        removeDeadUnits(opponent, player, log, round)
+        processDeaths(player, opponent, log, round, handledDeaths)
 
         if (
             player.filter(isAlive).length === 0 ||
@@ -156,7 +155,7 @@ export function resolveCombat(
         }
 
         if (!isAlive(oFront)) {
-            handleDeath(oFront, opponent, player, log, round, "opponent")
+            handleDeath(oFront, opponent, player, log, round, "opponent", handledDeaths)
             const newOFront = opponent.find(isAlive)
             if (newOFront) {
                 triggerAbilities(
@@ -219,7 +218,7 @@ export function resolveCombat(
             }
 
             if (!isAlive(pTarget)) {
-                handleDeath(pTarget, player, opponent, log, round, "player")
+                handleDeath(pTarget, player, opponent, log, round, "player", handledDeaths)
                 const newPFront = player.find(isAlive)
                 if (newPFront) {
                     triggerAbilities(
@@ -234,8 +233,7 @@ export function resolveCombat(
             }
         }
 
-        removeDeadUnits(player, opponent, log, round)
-        removeDeadUnits(opponent, player, log, round)
+        processDeaths(player, opponent, log, round, handledDeaths)
     }
 
     const playerAlive = player.filter(isAlive)
@@ -450,8 +448,12 @@ function handleDeath(
     enemyTeam: CombatUnit[],
     log: CombatLogEntry[],
     round: number,
-    side?: "player" | "opponent"
+    side: "player" | "opponent" | undefined,
+    handledDeaths: Set<string>
 ): void {
+    if (handledDeaths.has(deadUnit.instanceId)) return
+    handledDeaths.add(deadUnit.instanceId)
+
     log.push({ round, description: `${deadUnit.unitDefId} dies` })
 
     // Trigger onDeath (with faction scaling + cross bonus)
@@ -470,23 +472,52 @@ function handleDeath(
     }
 }
 
-function removeDeadUnits(
-    team: CombatUnit[],
-    _enemies: CombatUnit[],
-    _log: CombatLogEntry[],
-    _round: number
+/**
+ * After an ability phase (combatStart / roundStart / attack chain), find dead
+ * units on both teams whose deaths haven't been handled yet, fire their
+ * onDeath / onAllyDeath chains, then remove them. Loops until no new deaths
+ * occur so chain reactions resolve fully.
+ */
+function processDeaths(
+    player: CombatUnit[],
+    opponent: CombatUnit[],
+    log: CombatLogEntry[],
+    round: number,
+    handledDeaths: Set<string>
 ): void {
-    let i = 0
-    while (i < team.length) {
-        if (!isAlive(team[i]) && team[i].currentHP <= 0) {
-            const dead = team[i]
-            // Only handle death if it hasn't been handled yet
-            if (dead.currentHP < 0) {
-                dead.currentHP = 0
-            }
+    let hadDeaths = true
+    while (hadDeaths) {
+        hadDeaths = false
+
+        // Collect unhandled dead from each team (snapshot before mutating)
+        const deadPlayers = player.filter(
+            (u) => !isAlive(u) && !handledDeaths.has(u.instanceId)
+        )
+        const deadOpponents = opponent.filter(
+            (u) => !isAlive(u) && !handledDeaths.has(u.instanceId)
+        )
+
+        for (const dead of deadPlayers) {
+            handleDeath(dead, player, opponent, log, round, "player", handledDeaths)
+            hadDeaths = true
+        }
+        for (const dead of deadOpponents) {
+            handleDeath(dead, opponent, player, log, round, "opponent", handledDeaths)
+            hadDeaths = true
+        }
+
+        // Splice all dead units out of both teams
+        spliceDeadUnits(player)
+        spliceDeadUnits(opponent)
+    }
+}
+
+/** Remove dead units from a team array (no side-effects). */
+function spliceDeadUnits(team: CombatUnit[]): void {
+    for (let i = team.length - 1; i >= 0; i--) {
+        if (!isAlive(team[i])) {
+            if (team[i].currentHP < 0) team[i].currentHP = 0
             team.splice(i, 1)
-        } else {
-            i++
         }
     }
 }
