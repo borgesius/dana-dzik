@@ -4,13 +4,13 @@ import {
     CAREER_BRANCHES,
     CAREER_NODE_MAP,
     type CareerNodeDef,
+    ENGINEERING_STARTER_NODE,
     getNodesForBranch,
 } from "../progression/careers"
 
 // ── Base resume entries (always shown, even before unlock) ──────────────────
 
-const BASE_EXPERIENCE: CareerNodeDef =
-    CAREER_NODE_MAP.get("eng-senior") ?? ({} as CareerNodeDef)
+const BASE_EXPERIENCE: CareerNodeDef = ENGINEERING_STARTER_NODE
 const BASE_EDUCATION: CareerNodeDef =
     CAREER_NODE_MAP.get("edu-undergrad") ?? ({} as CareerNodeDef)
 

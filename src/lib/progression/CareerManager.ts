@@ -4,6 +4,7 @@ import {
     CAREER_NODE_MAP,
     CAREER_SWITCH_LEVEL_PENALTY,
     DORMANT_MULTIPLIER,
+    ENGINEERING_STARTER_NODE,
     MASTERY_MAP,
     skillPointsForLevel,
 } from "./careers"
@@ -312,6 +313,15 @@ export class CareerManager {
             }
         }
 
+        // Passive bonus from starting role (Senior SWE at Volley).
+        // The player already holds this position, so its bonus is free.
+        if (
+            ENGINEERING_STARTER_NODE.bonusType === bonusType &&
+            this.careerHistory.some((e) => e.branch === "engineering")
+        ) {
+            total += ENGINEERING_STARTER_NODE.bonusValue
+        }
+
         return total
     }
 
@@ -370,6 +380,10 @@ export class CareerManager {
         if (data.skillPoints) {
             for (const [branch, spData] of Object.entries(data.skillPoints)) {
                 const nodes = new Set(spData.unlockedNodes ?? [])
+                // Migration: eng-senior was removed from the unlockable tree;
+                // its bonus is now applied passively. Drop it so it doesn't
+                // count as a spent skill point in old saves.
+                nodes.delete("eng-senior")
                 this.unlockedNodes.set(branch, nodes)
             }
         }
