@@ -1,5 +1,5 @@
 import { emitAppEvent } from "../events"
-import { levelFromXP, xpToNextLevel } from "./constants"
+import { levelFromXP, xpForLevel, xpToNextLevel } from "./constants"
 import type { ProgressionSaveData } from "./types"
 import { createEmptyProgressionData } from "./types"
 
@@ -75,6 +75,13 @@ export class ProgressionManager {
 
     public getLevel(): number {
         return this.level
+    }
+
+    /** Dev-only: directly set level and corresponding XP */
+    public devSetLevel(level: number): void {
+        this.totalXP = xpForLevel(level) + 1
+        this.level = level
+        this.onDirty?.()
     }
 
     public getLevelProgress(): {

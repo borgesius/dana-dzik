@@ -281,9 +281,18 @@ export class Taskbar {
             envSwitcher.innerHTML = `<a href="${getStagingUrl()}" class="env-link">Staging ↗</a>`
         } else {
             envSwitcher.innerHTML =
-                `<span class="env-badge env-dev">DEV</span> · ` +
+                `<span class="env-badge env-dev" style="cursor:pointer" title="Toggle Dev Panel (Ctrl+Shift+D)">DEV</span> · ` +
                 `<a href="${getProductionUrl()}" class="env-link">Production ↗</a> · ` +
                 `<a href="${getStagingUrl()}" class="env-link">Staging ↗</a>`
+            const devBadge = envSwitcher.querySelector(".env-dev")
+            devBadge?.addEventListener("click", (e) => {
+                e.stopPropagation()
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                const panel = (window as any).__devPanel
+                if (panel && typeof panel.toggle === "function") {
+                    panel.toggle()
+                }
+            })
         }
         footer.appendChild(envSwitcher)
 

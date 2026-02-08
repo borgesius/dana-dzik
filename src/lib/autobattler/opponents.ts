@@ -185,6 +185,7 @@ const FALLBACK_ADJECTIVES = [
     "Restless",
     "Notorious",
     "Incorrigible",
+    "Instrumental",
 ]
 
 const FALLBACK_NOUNS: Record<FactionId, string[]> = {

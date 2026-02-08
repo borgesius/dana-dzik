@@ -138,6 +138,28 @@ export class PrestigeManager {
         return this.purchasedUpgrades.get(upgradeId) ?? 0
     }
 
+    // ── Dev-only setters ────────────────────────────────────────────────────
+
+    public devSetPrestigeCount(n: number): void {
+        this.count = n
+        this.onDirty?.()
+    }
+
+    public devAddHindsight(amount: number): void {
+        this.currency += amount
+        this.onDirty?.()
+    }
+
+    public devSetAscensionCount(n: number): void {
+        this.ascensionCount = n
+        this.onDirty?.()
+    }
+
+    public devAddForesight(amount: number): void {
+        this.foresight += amount
+        this.onDirty?.()
+    }
+
     // ── Getters ──────────────────────────────────────────────────────────────
 
     public getCount(): number {

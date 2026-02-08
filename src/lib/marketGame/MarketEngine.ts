@@ -1067,6 +1067,20 @@ export class MarketEngine {
         this.emit("portfolioChanged")
     }
 
+    /** Dev-only: add cash directly */
+    public devAddCash(amount: number): void {
+        this.cash += amount
+        if (amount > 0) this.lifetimeEarnings += amount
+        this.emit("stateChanged")
+    }
+
+    /** Dev-only: unlock all phases */
+    public devUnlockAllPhases(): void {
+        for (let i = 1; i <= 6; i++) {
+            this.unlockPhase(i)
+        }
+    }
+
     public getCash(): number {
         return this.cash
     }

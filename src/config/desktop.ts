@@ -95,4 +95,12 @@ export const DESKTOP_ITEMS: DesktopItemConfig[] = [
         windowId: "autobattler",
         fileType: "executable",
     },
+    {
+        id: "career-development",
+        filename: "Career Development.exe",
+        label: "Career Development",
+        icon: "📋",
+        windowId: "career-tree",
+        fileType: "executable",
+    },
 ]

@@ -251,6 +251,13 @@ export type AchievementId =
     | "foresight-shopper"
     | "oracle-of-delphi"
     | "windfall"
+    // Veil (hidden, dead Germans themed)
+    | "die-welt-als-wille"
+    | "denkwurdigkeiten"
+    | "gotzen-dammerung"
+    | "der-antichrist"
+    | "ecce-homo"
+    | "horse-whisperer"
     // Major Arcana (hidden)
     | "arcana-fool"
     | "arcana-magician"
@@ -319,6 +326,7 @@ export type CounterKey =
     | "achievements-opened"
     | "grund-compiles"
     | "bosses-defeated"
+    | "veil-attempts"
 
 export interface AchievementSaveData {
     earned: Record<string, number>

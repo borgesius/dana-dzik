@@ -11,9 +11,11 @@ import {
     createEmptyPrestigeData,
     createEmptyProgressionData,
 } from "./progression/types"
+import type { VeilSaveData } from "./veil/types"
+import { createEmptyVeilData } from "./veil/types"
 
 const SAVE_KEY = "save"
-const SAVE_VERSION = 3
+const SAVE_VERSION = 4
 const MAX_SAVE_BYTES = 256 * 1024
 const WARN_SAVE_BYTES = 200 * 1024
 const DEBOUNCE_MS = 2000
@@ -49,6 +51,7 @@ export interface SaveData {
     progression: ProgressionSaveData
     autobattler: AutobattlerSaveData
     cosmetics?: CosmeticSaveData
+    veil?: VeilSaveData
 }
 
 type SaveCallback = () => SaveData
@@ -79,6 +82,7 @@ function createEmptySaveData(): SaveData {
         prestige: createEmptyPrestigeData(),
         progression: createEmptyProgressionData(),
         autobattler: createEmptyAutobattlerData(),
+        veil: createEmptyVeilData(),
     }
 }
 
@@ -160,12 +164,21 @@ function migrateV2ToV3(data: SaveData): void {
     }
 }
 
+function migrateV3ToV4(data: SaveData): void {
+    if (!data.veil) {
+        data.veil = createEmptyVeilData()
+    }
+}
+
 function migrate(data: SaveData): SaveData {
     if (data.version < 2) {
         migrateV1ToV2(data)
     }
     if (data.version < 3) {
         migrateV2ToV3(data)
+    }
+    if (data.version < 4) {
+        migrateV3ToV4(data)
     }
     data.version = SAVE_VERSION
     return data

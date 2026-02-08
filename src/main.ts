@@ -18,6 +18,8 @@ import "./styles/mobile.css"
 import "./styles/achievements.css"
 import "./styles/autobattler.css"
 import "./styles/chrome-variants.css"
+import "./styles/dev-panel.css"
+import "./styles/veil.css"
 
 import { initCore, initServices } from "./init/core"
 import { initDesktop } from "./init/desktop"

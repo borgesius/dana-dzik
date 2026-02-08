@@ -7,6 +7,7 @@ import { getLocaleManager } from "../localeManager"
 import { getMarketGame } from "../marketGame/MarketEngine"
 import { getPrestigeManager } from "../prestige/PrestigeManager"
 import { getThemeManager } from "../themeManager"
+import { getVeilManager } from "../veil/VeilManager"
 import { getCareerManager } from "./CareerManager"
 import { getAchievementXP, XP_REWARDS } from "./constants"
 import type { ProgressionManager } from "./ProgressionManager"
@@ -27,6 +28,7 @@ export function wireProgression(
     wireCrossSystemHooks()
     wirePhase5Unlock(mgr)
     wirePhase6Unlock(mgr)
+    wireVeilTrigger(mgr)
 }
 
 function wireAchievements(mgr: ProgressionManager): void {
@@ -315,4 +317,36 @@ function wirePhase6Unlock(mgr: ProgressionManager): void {
 
     // Check on init
     checkPhase6()
+}
+
+/**
+ * Wire Veil trigger: check on each market tick if a veil should fire.
+ * Also wire progression providers for gate checking.
+ */
+function wireVeilTrigger(mgr: ProgressionManager): void {
+    const veil = getVeilManager()
+    const game = getMarketGame()
+    const prestige = getPrestigeManager()
+    const collection = getCollectionManager()
+
+    // Wire providers so VeilManager can check gates
+    veil.levelProvider = () => mgr.getLevel()
+    veil.prestigeCountProvider = () => prestige.getCount()
+    veil.autobattlerWinsProvider = () => collection.getWonRuns()
+    veil.bossesDefeatedProvider = () => collection.getTotalBossesDefeated()
+    veil.spiralCompleteProvider = () => collection.isSpiralComplete()
+    veil.phase5UnlockedProvider = () => game.isPhaseUnlocked(5)
+
+    // Check trigger on each market tick
+    game.on("marketTick", () => {
+        const veilId = veil.checkTrigger()
+        if (veilId !== null) {
+            veil.triggerVeil(veilId)
+        }
+    })
+
+    // XP reward for completing veils
+    onAppEvent("veil:completed", () => {
+        mgr.addXP(XP_REWARDS.phaseUnlock) // Reuse phase unlock XP (25)
+    })
 }

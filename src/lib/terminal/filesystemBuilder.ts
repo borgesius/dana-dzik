@@ -208,6 +208,15 @@ Commands:
                         },
                     },
                 },
+                "stable_log.txt": {
+                    name: "stable_log.txt",
+                    type: "file",
+                    content: `STABLE MANAGEMENT LOG
+[REDACTED] Processing facility operational.
+Batch #0047: Input 140 units, output 138 units adhesive.
+Two units unaccounted for. Investigation pending.
+[END LOG]`,
+                },
             },
         },
         DAS: {

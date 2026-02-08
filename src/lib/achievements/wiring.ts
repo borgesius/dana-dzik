@@ -18,7 +18,10 @@ import { getCareerManager } from "../progression/CareerManager"
 import { getNodesForBranch } from "../progression/careers"
 import { FILE_EFFECTS } from "../systemCrash/constants"
 import { getThemeManager } from "../themeManager"
-import type { AchievementManager } from "./AchievementManager"
+import {
+    getAchievementManager,
+    type AchievementManager,
+} from "./AchievementManager"
 import type { CounterKey } from "./types"
 
 const TOURIST_WINDOWS: RoutableWindow[] = [
@@ -1102,5 +1105,30 @@ function wirePhase6Achievements(mgr: AchievementManager): void {
         if (game.getDebt() <= 0 && game.getSecurities().length >= 3) {
             mgr.earn("rainy-day")
         }
+    })
+}
+
+// ── Veil achievements ────────────────────────────────────────────────────
+
+export function wireVeilAchievements(): void {
+    const mgr = getAchievementManager()
+
+    onAppEvent("veil:completed", (detail) => {
+        const { veilId, attempts } = detail
+
+        // Per-tier achievements (dead Germans)
+        if (veilId === 0) mgr.earn("die-welt-als-wille")
+        if (veilId === 1) mgr.earn("denkwurdigkeiten")
+        if (veilId === 2) mgr.earn("gotzen-dammerung")
+        if (veilId === 3) mgr.earn("der-antichrist")
+        if (veilId === 4) {
+            mgr.earn("ecce-homo")
+            // Horse Whisperer: boss in under 3 attempts
+            if (attempts <= 3) mgr.earn("horse-whisperer")
+        }
+    })
+
+    onAppEvent("veil:failed", () => {
+        mgr.incrementCounter("veil-attempts")
     })
 }

@@ -295,7 +295,7 @@ export class EmployeesSection {
                 </div>
                 <div class="hr-emp-salary">-${formatMoney(salary)}/tick</div>
                 ${raiseHtml}
-                <button class="hr-fire-btn" data-fire-vp="${vpIndex}" data-fire-ic="${icIndex}">✕</button>
+                <button class="hr-fire-btn" data-fire-vp="${vpIndex}" data-fire-ic="${icIndex}" title="Off to gluier pastures">✕</button>
             </div>
         `
     }

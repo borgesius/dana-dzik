@@ -1,0 +1,428 @@
+/* ── Veil Overlay ─────────────────────────────────────────────────────────── */
+
+.veil-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 200001;
+    background: #000;
+    opacity: 0;
+    transition: opacity 0.8s ease-in;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.veil-overlay.veil-active {
+    opacity: 1;
+}
+
+.veil-overlay.veil-exit {
+    opacity: 0;
+    transition: opacity 1.2s ease-out;
+}
+
+/* ── Static transition layer ─────────────────────────────────────────────── */
+
+.veil-static-layer {
+    position: absolute;
+    inset: 0;
+    background: #000;
+    z-index: 1;
+    animation: veil-static 0.15s steps(4) infinite, veil-static-fade 2s ease-in forwards;
+}
+
+@keyframes veil-static {
+    0% {
+        background: repeating-linear-gradient(
+            0deg,
+            rgba(255, 255, 255, 0.03) 0px,
+            transparent 2px,
+            transparent 4px
+        );
+    }
+    25% {
+        background: repeating-linear-gradient(
+            0deg,
+            transparent 0px,
+            rgba(255, 255, 255, 0.05) 1px,
+            transparent 3px
+        );
+    }
+    50% {
+        background: repeating-linear-gradient(
+            0deg,
+            rgba(255, 255, 255, 0.02) 0px,
+            transparent 1px,
+            transparent 5px
+        );
+    }
+    75% {
+        background: repeating-linear-gradient(
+            0deg,
+            transparent 0px,
+            rgba(255, 255, 255, 0.04) 2px,
+            transparent 4px
+        );
+    }
+}
+
+@keyframes veil-static-fade {
+    0% { opacity: 1; }
+    60% { opacity: 0.8; }
+    100% { opacity: 0; }
+}
+
+/* ── Canvas ──────────────────────────────────────────────────────────────── */
+
+.veil-canvas {
+    max-width: 100vw;
+    max-height: 100vh;
+    width: 800px;
+    height: 600px;
+    image-rendering: pixelated;
+    opacity: 0;
+    transition: opacity 0.5s ease-in;
+    /* CRT curvature effect */
+    border-radius: 8px;
+    box-shadow:
+        0 0 60px rgba(0, 255, 255, 0.15),
+        inset 0 0 40px rgba(0, 0, 0, 0.5);
+}
+
+.veil-canvas.veil-canvas-active {
+    opacity: 1;
+}
+
+/* Scanline overlay via pseudo-element */
+.veil-overlay::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    pointer-events: none;
+    background: repeating-linear-gradient(
+        0deg,
+        transparent 0px,
+        rgba(0, 0, 0, 0.15) 1px,
+        transparent 2px,
+        transparent 4px
+    );
+}
+
+/* ── Dialogue ────────────────────────────────────────────────────────────── */
+
+.veil-dialogue-container {
+    width: 90%;
+    max-width: 640px;
+    max-height: 80vh;
+    overflow-y: auto;
+    opacity: 0;
+    transition: opacity 0.6s ease-in;
+    z-index: 3;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(0, 255, 128, 0.3) transparent;
+}
+
+.veil-dialogue-container.veil-dialogue-active {
+    opacity: 1;
+}
+
+.veil-dialogue {
+    font-family: "Courier New", Courier, monospace;
+    color: #00ff80;
+    font-size: 15px;
+    line-height: 1.6;
+}
+
+.veil-dialogue-node {
+    margin-bottom: 16px;
+    padding: 12px 0;
+    border-bottom: 1px solid rgba(0, 255, 128, 0.1);
+    cursor: pointer;
+}
+
+.veil-dialogue-speaker {
+    font-size: 12px;
+    font-weight: bold;
+    letter-spacing: 2px;
+    margin-bottom: 6px;
+    color: rgba(0, 255, 128, 0.5);
+}
+
+.veil-speaker-pferd {
+    color: #ff4444;
+}
+
+.veil-speaker-unknown {
+    color: rgba(0, 255, 128, 0.3);
+    animation: veil-speaker-flicker 3s ease-in-out infinite;
+}
+
+@keyframes veil-speaker-flicker {
+    0%, 95%, 100% { opacity: 1; }
+    96% { opacity: 0.3; }
+    97% { opacity: 0.8; }
+    98% { opacity: 0.2; }
+}
+
+.veil-dialogue-text {
+    min-height: 1.6em;
+}
+
+/* Typing cursor */
+.veil-dialogue-text::after {
+    content: "█";
+    animation: veil-cursor-blink 0.6s steps(1) infinite;
+    color: #00ff80;
+}
+
+@keyframes veil-cursor-blink {
+    0%, 49% { opacity: 1; }
+    50%, 100% { opacity: 0; }
+}
+
+/* ── Dialogue choices ────────────────────────────────────────────────────── */
+
+.veil-dialogue-choices {
+    margin-top: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.veil-dialogue-choice-btn {
+    background: transparent;
+    border: 1px solid rgba(0, 255, 128, 0.3);
+    color: #00ff80;
+    font-family: "Courier New", Courier, monospace;
+    font-size: 14px;
+    padding: 8px 16px;
+    text-align: left;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+}
+
+.veil-dialogue-choice-btn:hover {
+    border-color: #00ff80;
+    background: rgba(0, 255, 128, 0.1);
+}
+
+.veil-dialogue-choice-btn:focus {
+    outline: 1px solid #00ff80;
+    outline-offset: 2px;
+}
+
+.veil-choice-boss {
+    border-color: rgba(255, 68, 68, 0.5);
+    color: #ff4444;
+}
+
+.veil-choice-boss:hover {
+    border-color: #ff4444;
+    background: rgba(255, 68, 68, 0.1);
+}
+
+/* ── Retry prompt ────────────────────────────────────────────────────────── */
+
+.veil-retry {
+    text-align: center;
+    z-index: 3;
+    opacity: 0;
+    transition: opacity 0.4s ease-in;
+}
+
+.veil-retry.veil-retry-active {
+    opacity: 1;
+}
+
+.veil-retry-title {
+    font-family: "Courier New", Courier, monospace;
+    font-size: 48px;
+    font-weight: bold;
+    color: #ff4444;
+    margin-bottom: 40px;
+    text-shadow: 0 0 30px rgba(255, 68, 68, 0.5);
+    letter-spacing: 8px;
+}
+
+.veil-retry-buttons {
+    display: flex;
+    gap: 24px;
+    justify-content: center;
+}
+
+.veil-retry-btn {
+    background: transparent;
+    border: 2px solid;
+    font-family: "Courier New", Courier, monospace;
+    font-size: 18px;
+    padding: 12px 32px;
+    cursor: pointer;
+    letter-spacing: 2px;
+    transition: background 0.2s, transform 0.1s;
+}
+
+.veil-retry-btn:active {
+    transform: scale(0.97);
+}
+
+.veil-btn-retry {
+    border-color: #00ffff;
+    color: #00ffff;
+}
+
+.veil-btn-retry:hover {
+    background: rgba(0, 255, 255, 0.1);
+}
+
+.veil-btn-exit {
+    border-color: rgba(255, 255, 255, 0.3);
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.veil-btn-exit:hover {
+    background: rgba(255, 255, 255, 0.05);
+    color: rgba(255, 255, 255, 0.8);
+}
+
+/* ── Glow pulse (ambient) ────────────────────────────────────────────────── */
+
+@keyframes veil-glow-pulse {
+    0%, 100% { box-shadow: 0 0 40px rgba(0, 255, 255, 0.1); }
+    50% { box-shadow: 0 0 80px rgba(0, 255, 255, 0.25); }
+}
+
+/* ── Spooky effects (veil 3 reveal + boss) ───────────────────────────────── */
+
+/* Red flicker on vampire horse reveal */
+.veil-spooky-reveal {
+    animation: veil-red-flicker 0.15s steps(2) 8;
+}
+
+@keyframes veil-red-flicker {
+    0%, 100% { background: #000; }
+    50% { background: #1a0000; }
+}
+
+.veil-spooky-reveal .veil-dialogue {
+    color: #ff3333;
+    transition: color 0.3s;
+}
+
+.veil-spooky-reveal .veil-dialogue-speaker {
+    color: #ff0000;
+    text-shadow: 0 0 10px rgba(255, 0, 0, 0.8);
+}
+
+/* Static burst overlay */
+.veil-static-burst {
+    position: absolute;
+    inset: 0;
+    z-index: 10;
+    pointer-events: none;
+    animation: veil-burst 0.1s steps(3) 8;
+    mix-blend-mode: screen;
+}
+
+@keyframes veil-burst {
+    0% {
+        background: repeating-linear-gradient(
+            0deg,
+            rgba(255, 0, 0, 0.1) 0px,
+            transparent 2px,
+            transparent 3px
+        );
+    }
+    33% {
+        background: repeating-linear-gradient(
+            0deg,
+            transparent 0px,
+            rgba(255, 255, 255, 0.15) 1px,
+            transparent 2px
+        );
+    }
+    66% {
+        background: repeating-linear-gradient(
+            0deg,
+            rgba(255, 0, 0, 0.08) 0px,
+            transparent 1px,
+            transparent 4px
+        );
+    }
+}
+
+/* Text corruption glitch */
+.veil-text-corrupt .veil-dialogue-text {
+    animation: veil-text-glitch 0.08s steps(1) 15;
+}
+
+@keyframes veil-text-glitch {
+    0%, 80% { transform: none; opacity: 1; }
+    20% { transform: skewX(-5deg) translateX(3px); opacity: 0.8; }
+    40% { transform: skewX(3deg) translateX(-2px); opacity: 0.6; }
+    60% { transform: skewX(-2deg); opacity: 0.9; }
+}
+
+/* Deep dread - plan reveal */
+.veil-spooky-dread {
+    background: #0a0000 !important;
+    transition: background 1s;
+}
+
+.veil-spooky-dread .veil-dialogue {
+    color: #cc4444;
+    text-shadow: 0 0 4px rgba(255, 0, 0, 0.3);
+}
+
+/* Screen shake */
+.veil-shake {
+    animation: veil-shake-anim 0.08s steps(1) 8;
+}
+
+@keyframes veil-shake-anim {
+    0%, 100% { transform: translate(0, 0); }
+    12% { transform: translate(-4px, 2px); }
+    25% { transform: translate(3px, -3px); }
+    37% { transform: translate(-2px, -1px); }
+    50% { transform: translate(4px, 1px); }
+    62% { transform: translate(-3px, 3px); }
+    75% { transform: translate(2px, -2px); }
+    87% { transform: translate(-1px, 1px); }
+}
+
+/* Boss veil (4) ambient - red-tinted canvas glow */
+.veil-overlay.veil-boss-mode .veil-canvas {
+    box-shadow:
+        0 0 80px rgba(255, 0, 0, 0.2),
+        0 0 160px rgba(255, 0, 0, 0.1),
+        inset 0 0 40px rgba(0, 0, 0, 0.5);
+    animation: veil-boss-pulse 2s ease-in-out infinite;
+}
+
+@keyframes veil-boss-pulse {
+    0%, 100% {
+        box-shadow:
+            0 0 80px rgba(255, 0, 0, 0.2),
+            0 0 160px rgba(255, 0, 0, 0.1),
+            inset 0 0 40px rgba(0, 0, 0, 0.5);
+    }
+    50% {
+        box-shadow:
+            0 0 120px rgba(255, 0, 0, 0.35),
+            0 0 200px rgba(255, 0, 0, 0.15),
+            inset 0 0 60px rgba(0, 0, 0, 0.5);
+    }
+}
+
+/* Boss mode scanlines turn red */
+.veil-overlay.veil-boss-mode::before {
+    background: repeating-linear-gradient(
+        0deg,
+        transparent 0px,
+        rgba(255, 0, 0, 0.08) 1px,
+        transparent 2px,
+        transparent 4px
+    );
+}

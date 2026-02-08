@@ -1427,6 +1427,43 @@ export const ACHIEVEMENTS: AchievementDef[] = [
     },
 
     // ── Major Arcana (hidden) ─────────────────────────────────────────────
+    // ── Veil (hidden) ──────────────────────────────────────────────────────
+    {
+        id: "die-welt-als-wille",
+        category: "arcana",
+        icon: "🕳️",
+        hidden: true,
+    },
+    {
+        id: "denkwurdigkeiten",
+        category: "arcana",
+        icon: "📡",
+        hidden: true,
+    },
+    {
+        id: "gotzen-dammerung",
+        category: "arcana",
+        icon: "🔨",
+        hidden: true,
+    },
+    {
+        id: "der-antichrist",
+        category: "arcana",
+        icon: "🐴",
+        hidden: true,
+    },
+    {
+        id: "ecce-homo",
+        category: "arcana",
+        icon: "🩸",
+        hidden: true,
+    },
+    {
+        id: "horse-whisperer",
+        category: "arcana",
+        icon: "🏇",
+        hidden: true,
+    },
     {
         id: "arcana-fool",
         category: "arcana",

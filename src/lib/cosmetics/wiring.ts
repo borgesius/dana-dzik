@@ -68,4 +68,25 @@ export function wireCosmeticUnlocks(): void {
             cm.unlock("window-chrome", "vintage")
         }
     })
+
+    // ── Veil rewards ──────────────────────────────────────────────────────
+
+    // Cursor trail: Void Static (complete first veil)
+    onAppEvent("veil:completed", (detail) => {
+        if (detail.veilId === 0) {
+            cm.unlock("cursor-trail", "void-static")
+        }
+    })
+
+    // Wallpaper: Beyond the Veil (complete all 4 pre-boss veils)
+    onAppEvent("veil:completed", (detail) => {
+        if (detail.veilId === 3) {
+            cm.unlock("wallpaper", "beyond-the-veil")
+        }
+    })
+
+    // Window chrome: Dial-Up (defeat boss)
+    onAppEvent("veil:boss-defeated", () => {
+        cm.unlock("window-chrome", "dial-up")
+    })
 }
