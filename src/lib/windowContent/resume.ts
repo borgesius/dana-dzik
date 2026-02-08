@@ -156,10 +156,12 @@ function renderResumeTab(): void {
     let experienceHtml = ""
 
     for (const branchId of allBranches) {
-        const nodes = getNodesForBranch(branchId)
-        const unlocked = nodes
-            .filter((n) => career.isNodeUnlocked(n.id))
-            .sort((a, b) => b.tier - a.tier)
+        // Use unlock order from career manager (most recent first)
+        const unlockedIds = career.getUnlockedNodesForBranch(branchId)
+        const unlocked = [...unlockedIds]
+            .reverse()
+            .map((id) => CAREER_NODE_MAP.get(id))
+            .filter((n): n is CareerNodeDef => n !== undefined)
 
         for (const node of unlocked) {
             shownNodeIds.add(node.id)
@@ -183,10 +185,12 @@ function renderResumeTab(): void {
     // ── Education section ───────────────────────────────────────────────
     html += `<hr /><h2>${lm.t("resume.education")}</h2>`
 
-    const eduNodes = getNodesForBranch("education")
-    const unlockedEdu = eduNodes
-        .filter((n) => career.isNodeUnlocked(n.id))
-        .sort((a, b) => b.tier - a.tier)
+    // Use unlock order from career manager (most recent first)
+    const unlockedEduIds = career.getUnlockedNodesForBranch("education")
+    const unlockedEdu = [...unlockedEduIds]
+        .reverse()
+        .map((id) => CAREER_NODE_MAP.get(id))
+        .filter((n): n is CareerNodeDef => n !== undefined)
 
     let educationHtml = ""
     const shownEduIds = new Set<string>()
@@ -262,11 +266,11 @@ function renderSkillsSection(): string {
         </div>
     `
 
-    // Show unlocked skill nodes
-    const skillNodes = getNodesForBranch("skills")
-    const unlockedSkills = skillNodes
-        .filter((n) => career.isNodeUnlocked(n.id))
-        .sort((a, b) => a.tier - b.tier)
+    // Show unlocked skill nodes (in order unlocked)
+    const unlockedSkillIds = career.getUnlockedNodesForBranch("skills")
+    const unlockedSkills = unlockedSkillIds
+        .map((id) => CAREER_NODE_MAP.get(id))
+        .filter((n): n is CareerNodeDef => n !== undefined)
 
     for (const node of unlockedSkills) {
         html += `
