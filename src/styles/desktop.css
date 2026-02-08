@@ -462,6 +462,75 @@ body {
     }
 }
 
+/* ── Deploy Widget ───────────────────────────────────────────────────── */
+
+.toolbar-deploy {
+    position: relative;
+    padding: 4px 8px;
+    font-size: 13px;
+    font-family: "Courier New", monospace;
+    background: var(--theme-weather-bg);
+    border: 1px solid var(--theme-weather-border);
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.toolbar-deploy-tooltip {
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--theme-tooltip-bg);
+    border: var(--theme-tooltip-border);
+    padding: 12px 16px;
+    font-size: 12px;
+    font-family: "Courier New", monospace;
+    color: var(--theme-tooltip-text);
+    white-space: nowrap;
+    z-index: 8000;
+    box-shadow: var(--theme-tooltip-shadow);
+    min-width: 220px;
+    text-align: center;
+    pointer-events: none;
+}
+
+.deploy-title {
+    font-weight: bold;
+    font-size: 13px;
+    margin-bottom: 6px;
+}
+
+.deploy-divider {
+    border-top: 1px solid var(--theme-border-dark);
+    margin: 4px 0;
+}
+
+.deploy-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 2px 0;
+}
+
+.deploy-label {
+    color: var(--theme-tooltip-text);
+}
+
+.deploy-value {
+    font-weight: bold;
+    text-align: right;
+}
+
+.deploy-commit-link {
+    color: var(--theme-link-color, #4a9eff);
+    text-decoration: none;
+    pointer-events: auto;
+}
+
+.deploy-commit-link:hover {
+    text-decoration: underline;
+}
+
 /* ── Cosmetic Wallpapers ──────────────────────────────────────────────── */
 
 .wp-quickdraw-sunset .desktop {

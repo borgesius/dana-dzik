@@ -10,6 +10,7 @@ import { getThemeManager } from "../lib/themeManager"
 import { BusinessPanel } from "./BusinessPanel"
 import { createColorSchemeToggle } from "./toolbars/ColorSchemeToggle"
 import { CostWidget } from "./toolbars/CostWidget"
+import { DeployWidget } from "./toolbars/DeployWidget"
 import { createLanguageToggle } from "./toolbars/LanguageToggle"
 import { MarketTicker } from "./toolbars/MarketTicker"
 import { QAReportsWidget } from "./toolbars/QAReportsWidget"
@@ -81,6 +82,7 @@ export class Toolbars {
         toolbar.appendChild(this.weatherWidget.getElement())
         toolbar.appendChild(this.qaWidget.getElement())
         toolbar.appendChild(new CostWidget().getElement())
+        toolbar.appendChild(new DeployWidget().getElement())
 
         const spacer = document.createElement("div")
         spacer.style.flex = "1"
