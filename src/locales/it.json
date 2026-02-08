@@ -385,6 +385,8 @@
       "insider-newsletter": { "name": "Newsletter Riservata", "description": "Preavviso di eventi che muovono il mercato. 10 secondi di anticipo." },
       "analyst-reports": { "name": "Report degli Analisti", "description": "Indicatori numerici di forza del trend." },
       "moving-average": { "name": "Media Mobile", "description": "Strumenti di analisi tecnica per grafici dei prezzi." },
+      "confidential-tip": { "name": "Soffiata Riservata", "description": "Un amico al fondo. Conto alla rovescia del trend visibile sui grafici." },
+      "material-advantage": { "name": "Vantaggio Materiale", "description": "Informazioni materiali non pubbliche. Prezzo obiettivo stimato sui grafici." },
       "harvest-email": { "name": "EMAIL Harvester", "description": "Automated scraper. +1 EMAIL per harvest click." },
       "harvest-ads": { "name": "ADS Generator", "description": "Impression bot. +1 ADS per harvest click." },
       "harvest-dom": { "name": "DOM Registrar", "description": "Bulk registration script. +1 DOM per harvest click." },
@@ -441,7 +443,8 @@
     "education": "Istruzione",
     "school": "University of Chicago",
     "degree": "B.A. con Lode in Matematica e Filosofia",
-    "location": "Chicago, IL"
+    "location": "Chicago, IL",
+    "skills": "Competenze"
   },
   "links": {
     "title": "🔗 Link"

@@ -23,7 +23,7 @@ export interface CareerNodeDef {
     dateRange: string // fake date range for the resume
     bullets: string[] // satirical resume bullet points
     bonusLabel: string // human-readable bonus description
-    branch: CareerBranch | "education"
+    branch: CareerBranch | "education" | "skills"
     tier: number // 1-4, higher = deeper in tree
     prerequisites: string[] // node IDs
     bonusType: BonusType
@@ -492,6 +492,149 @@ const EDUCATION_NODES: CareerNodeDef[] = [
     },
 ]
 
+// ── Skills Sub-tree (shared) ─────────────────────────────────────────────────
+
+/** Starting skills — not part of the unlockable tree; displayed on the resume
+ *  and its bonus is applied passively. */
+export const SKILLS_STARTER_NODE: CareerNodeDef = {
+    id: "skill-base",
+    name: "TypeScript, Node.js, React, PostgreSQL, GitHub Actions, AWS, Kubernetes",
+    company: "",
+    dateRange: "",
+    bullets: [],
+    bonusLabel: "+5% factory output",
+    branch: "skills",
+    tier: 0,
+    prerequisites: [],
+    bonusType: "factoryOutput",
+    // I was going to make this 0.05, but then I realized the base value is
+    // a magic number not exposed to the user... :think:
+    bonusValue: 0.0,
+}
+
+const SKILLS_NODES: CareerNodeDef[] = [
+    // ── Chain A: Communication ───────────────────────────────────────────
+    {
+        id: "skill-comms",
+        name: "Professional Communication",
+        company: "Every Job Ever",
+        dateRange: "",
+        bullets: [],
+        bonusLabel: "+5% popup bonus cash",
+        branch: "skills",
+        tier: 1,
+        prerequisites: [],
+        bonusType: "popupBonus",
+        bonusValue: 0.05,
+    },
+    {
+        id: "skill-passive-email",
+        name: "Passive-Aggressive Email Mastery",
+        company: "Per My Last Email LLC",
+        dateRange: "",
+        bullets: [],
+        bonusLabel: "+5% trade profit",
+        branch: "skills",
+        tier: 2,
+        prerequisites: ["skill-comms"],
+        bonusType: "tradeProfit",
+        bonusValue: 0.05,
+    },
+    {
+        id: "skill-read-receipts",
+        name: "Weaponized Read Receipts",
+        company: "Seen ✓✓ Deloitte",
+        dateRange: "",
+        bullets: [],
+        bonusLabel: "+10% popup bonus cash",
+        branch: "skills",
+        tier: 3,
+        prerequisites: ["skill-passive-email"],
+        bonusType: "popupBonus",
+        bonusValue: 0.1,
+    },
+    // ── Chain B: Engineering Rigor ────────────────────────────────────────
+    {
+        id: "skill-code-review",
+        name: "Code Review",
+        company: "Your Local Codeowners",
+        dateRange: "",
+        bullets: [],
+        bonusLabel: "+5% GRUND compilation tolerance",
+        branch: "skills",
+        tier: 1,
+        prerequisites: [],
+        bonusType: "grundBonus",
+        bonusValue: 0.05,
+    },
+    {
+        id: "skill-nitpicking",
+        name: "PR Review Nitpicking",
+        company: "My Teammate's SEV-1",
+        dateRange: "",
+        bullets: [],
+        bonusLabel: "+5% factory output",
+        branch: "skills",
+        tier: 2,
+        prerequisites: ["skill-code-review"],
+        bonusType: "factoryOutput",
+        bonusValue: 0.05,
+    },
+    {
+        id: "skill-assassination",
+        name: "Assassination",
+        company: "Redacted",
+        dateRange: "",
+        bullets: [],
+        bonusLabel: "+10% symposium ATK",
+        branch: "skills",
+        tier: 3,
+        prerequisites: ["skill-nitpicking"],
+        bonusType: "autobattlerATK",
+        bonusValue: 0.1,
+    },
+    // ── Chain C: Analytics ────────────────────────────────────────────────
+    {
+        id: "skill-sql",
+        name: "SQL Queries",
+        company: "SELECT * FROM experience",
+        dateRange: "",
+        bullets: [],
+        bonusLabel: "+5% XP from all sources",
+        branch: "skills",
+        tier: 1,
+        prerequisites: [],
+        bonusType: "xpRate",
+        bonusValue: 0.05,
+    },
+    {
+        id: "skill-dashboards",
+        name: "Dashboard Theology",
+        company: "Church of Grafana",
+        dateRange: "",
+        bullets: [],
+        bonusLabel: "+5% Hindsight rate",
+        branch: "skills",
+        tier: 2,
+        prerequisites: ["skill-sql"],
+        bonusType: "hindsightRate",
+        bonusValue: 0.05,
+    },
+    {
+        id: "skill-divination",
+        name: "Divination",
+        company: "The Oracle at Delphi (Remote)",
+        dateRange: "",
+        bullets: [],
+        bonusLabel: "+10% pinball high score bonus",
+        branch: "skills",
+        tier: 3,
+        prerequisites: ["skill-dashboards"],
+        bonusType: "pinballBonus",
+        bonusValue: 0.1,
+    },
+]
+
 // ── Exports ──────────────────────────────────────────────────────────────────
 
 export const ALL_CAREER_NODES: CareerNodeDef[] = [
@@ -500,6 +643,7 @@ export const ALL_CAREER_NODES: CareerNodeDef[] = [
     ...GROWTH_NODES,
     ...EXECUTIVE_NODES,
     ...EDUCATION_NODES,
+    ...SKILLS_NODES,
 ]
 
 export const CAREER_NODE_MAP: ReadonlyMap<string, CareerNodeDef> = new Map(
@@ -507,7 +651,7 @@ export const CAREER_NODE_MAP: ReadonlyMap<string, CareerNodeDef> = new Map(
 )
 
 export function getNodesForBranch(
-    branch: CareerBranch | "education"
+    branch: CareerBranch | "education" | "skills"
 ): CareerNodeDef[] {
     return ALL_CAREER_NODES.filter((n) => n.branch === branch)
 }

@@ -24,6 +24,7 @@ export interface ProgressionSaveData {
         }
     >
     educationNodes: string[]
+    skillNodes?: string[]
     /** Mastery ranks: masteryId -> count */
     masteryRanks?: Record<string, number>
 }

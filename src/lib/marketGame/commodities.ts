@@ -7,6 +7,10 @@ export interface CommodityDef {
     basePrice: number
     volatility: number
     unlockThreshold: number
+    /** Min ticks a trend lasts for this commodity (lower = faster oscillation) */
+    trendMinTicks: number
+    /** Max ticks a trend lasts for this commodity (lower = faster oscillation) */
+    trendMaxTicks: number
 }
 
 export const COMMODITIES: CommodityDef[] = [
@@ -15,47 +19,59 @@ export const COMMODITIES: CommodityDef[] = [
         name: "Email Databases",
         description: "Verified opt-in addresses. Updated daily.",
         basePrice: 0.05,
-        volatility: 0.08,
+        volatility: 0.10,
         unlockThreshold: 0,
+        trendMinTicks: 6,
+        trendMaxTicks: 15,
     },
     {
         id: "ADS",
         name: "Banner Impressions",
         description: "Premium 468x60 ad placements.",
         basePrice: 0.25,
-        volatility: 0.065,
+        volatility: 0.08,
         unlockThreshold: 0,
+        trendMinTicks: 8,
+        trendMaxTicks: 20,
     },
     {
         id: "DOM",
         name: ".com Domains",
         description: "Pre-registered premium domain names.",
         basePrice: 2.0,
-        volatility: 0.05,
+        volatility: 0.055,
         unlockThreshold: 10,
+        trendMinTicks: 10,
+        trendMaxTicks: 28,
     },
     {
         id: "BW",
         name: "Bandwidth",
         description: "Dedicated T1 line capacity. 1.544 Mbps.",
         basePrice: 8.0,
-        volatility: 0.035,
+        volatility: 0.04,
         unlockThreshold: 50,
+        trendMinTicks: 12,
+        trendMaxTicks: 36,
     },
     {
         id: "SOFT",
         name: "Software Licenses",
         description: "Enterprise volume licensing. Shrinkwrap ready.",
         basePrice: 25.0,
-        volatility: 0.025,
+        volatility: 0.03,
         unlockThreshold: 250,
+        trendMinTicks: 18,
+        trendMaxTicks: 50,
     },
     {
         id: "VC",
         name: "Venture Capital",
         description: "Pre-IPO investment securities. Limited availability.",
         basePrice: 100.0,
-        volatility: 0.1,
+        volatility: 0.04,
         unlockThreshold: 2000,
+        trendMinTicks: 40,
+        trendMaxTicks: 100,
     },
 ]

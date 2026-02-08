@@ -6,6 +6,7 @@ import {
     type CareerNodeDef,
     ENGINEERING_STARTER_NODE,
     getNodesForBranch,
+    SKILLS_STARTER_NODE,
 } from "../progression/careers"
 
 // ── Base resume entries (always shown, even before unlock) ──────────────────
@@ -92,8 +93,8 @@ export function renderResumeWindow(): void {
 
     html += educationHtml
 
-    // ── Skills summary (active bonuses) ─────────────────────────────────
-    html += renderSkillsSummary()
+    // ── Skills section ────────────────────────────────────────────────────
+    html += renderSkillsSection()
 
     container.innerHTML = html
 }
@@ -118,30 +119,29 @@ function renderResumeEntry(node: CareerNodeDef, isDormant: boolean): string {
     `
 }
 
-// ── Skills summary (all active bonuses) ─────────────────────────────────────
+// ── Skills section (base skills + unlockable skill nodes) ───────────────────
 
-function renderSkillsSummary(): string {
+function renderSkillsSection(): string {
     const career = getCareerManager()
-    const allNodes = [
-        ...CAREER_BRANCHES.flatMap((b) => getNodesForBranch(b.id)),
-        ...getNodesForBranch("education"),
-    ]
-
-    const activeNodes = allNodes.filter((n) => career.isNodeUnlocked(n.id))
-    if (activeNodes.length === 0) return ""
-
-    const activeCareer = career.getActiveCareer()
+    const lm = getLocaleManager()
 
     let html = `
         <hr />
-        <h2>Skills &amp; Proficiencies</h2>
+        <h2>${lm.t("resume.skills")}</h2>
         <ul class="resume-skills-list">
     `
 
-    for (const node of activeNodes) {
-        const isDormant =
-            node.branch !== activeCareer && node.branch !== "education"
-        html += `<li class="${isDormant ? "dormant" : ""}">${node.bonusLabel}${isDormant ? " (50%)" : ""}</li>`
+    // Always show the base skills line
+    html += `<li>${SKILLS_STARTER_NODE.name}</li>`
+
+    // Show unlocked skill nodes
+    const skillNodes = getNodesForBranch("skills")
+    const unlockedSkills = skillNodes
+        .filter((n) => career.isNodeUnlocked(n.id))
+        .sort((a, b) => a.tier - b.tier)
+
+    for (const node of unlockedSkills) {
+        html += `<li>${node.name} <span class="resume-skill-bonus">(${node.bonusLabel})</span></li>`
     }
 
     html += `</ul>`
