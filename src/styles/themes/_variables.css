@@ -192,4 +192,5 @@
 
     /* === Terminal Semantic === */
     --theme-terminal-success: #41ff41;
+    --theme-terminal-placeholder: #00882a;
 }

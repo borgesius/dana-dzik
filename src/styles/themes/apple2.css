@@ -20,7 +20,7 @@
     --theme-window-border-style: solid;
     --theme-window-title-bg: #1a8a1a;
     --theme-window-title-text: #33ff33;
-    --theme-window-title-inactive: #0d440d;
+    --theme-window-title-inactive: #1a6a1a;
     --theme-window-btn-bg: #000000;
     --theme-window-btn-border: 1px solid #33ff33;
     --theme-window-shadow: 0 0 10px rgb(51 255 51 / 15%);
@@ -74,7 +74,7 @@
     --theme-terminal-input-border: #1a8a1a;
     --theme-terminal-scrollbar-track: #0a0a0a;
     --theme-terminal-scrollbar-thumb: #33ff33;
-    --theme-terminal-dim: #1a8a1a;
+    --theme-terminal-dim: #33aa33;
     --theme-terminal-error: #ff3333;
     --theme-terminal-info: #33ff33;
     --theme-terminal-dir: #33ff33;
@@ -93,7 +93,7 @@
     --theme-surface-secondary: #0a0a0a;
     --theme-surface-elevated: #0d440d;
     --theme-text-on-surface: #33ff33;
-    --theme-text-secondary: #1a8a1a;
+    --theme-text-secondary: #33aa33;
     --theme-link: #33ff33;
     --theme-accent: #33ff33;
     --theme-accent-text: #000000;
@@ -120,6 +120,7 @@
     --theme-qa-badge-border: #1a8a1a;
     --theme-weather-bg: #0d440d;
     --theme-weather-border: #1a8a1a;
+    --theme-terminal-placeholder: #33aa33;
 
     /* Phosphor glow on all text */
     text-shadow: 0 0 4px rgb(51 255 51 / 60%);

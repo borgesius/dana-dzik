@@ -106,7 +106,7 @@
 }
 
 .terminal-input::placeholder {
-    color: #00662a;
+    color: var(--theme-terminal-placeholder);
 }
 
 .terminal-cursor {

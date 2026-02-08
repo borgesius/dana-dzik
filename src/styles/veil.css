@@ -285,7 +285,7 @@
 }
 
 .veil-speaker-unknown {
-    color: rgb(0 255 128 / 30%);
+    color: rgb(0 255 128 / 50%);
     animation: veil-speaker-flicker 3s ease-in-out infinite;
 }
 
@@ -738,7 +738,7 @@
 
 /* Locked items */
 .veil-item-locked {
-    color: rgb(255 255 255 / 25%);
+    color: rgb(255 255 255 / 45%);
 }
 
 .veil-item-locked .veil-item-status {
@@ -862,7 +862,7 @@
 
 .veil-unlock-modal-subtitle {
     font-size: 11px;
-    color: rgb(255 255 255 / 40%);
+    color: rgb(255 255 255 / 55%);
     margin-bottom: 20px;
 }
 
@@ -899,8 +899,8 @@
 }
 
 .veil-modal-btn-later {
-    border-color: rgb(255 255 255 / 25%);
-    color: rgb(255 255 255 / 40%);
+    border-color: rgb(255 255 255 / 35%);
+    color: rgb(255 255 255 / 55%);
 }
 
 .veil-modal-btn-later:hover {
