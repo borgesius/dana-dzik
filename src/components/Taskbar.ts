@@ -287,11 +287,11 @@ export class Taskbar {
             const devBadge = envSwitcher.querySelector(".env-dev")
             devBadge?.addEventListener("click", (e) => {
                 e.stopPropagation()
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                const panel = (window as any).__devPanel
-                if (panel && typeof panel.toggle === "function") {
-                    panel.toggle()
-                }
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access
+                const panel = (window as any).__devPanel as
+                    | { toggle?: () => void }
+                    | undefined
+                panel?.toggle?.()
             })
         }
         footer.appendChild(envSwitcher)

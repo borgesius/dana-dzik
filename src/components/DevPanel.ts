@@ -893,14 +893,14 @@ export function attachDevApi(
                 console.error("[__dev] Invalid JSON")
             }
         },
-        state: () => {
+        state: (): unknown => {
             const raw = localStorage.getItem("save")
-            return raw ? JSON.parse(raw) : null
+            return raw ? (JSON.parse(raw) as unknown) : null
         },
         togglePanel: () => panel.toggle(),
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access
     ;(window as any).__dev = api
     console.log(
         "%c[DevPanel] Dev cheats loaded. Use window.__dev for console access.",

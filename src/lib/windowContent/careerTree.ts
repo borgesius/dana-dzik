@@ -14,8 +14,10 @@ export function getCareerTreeContent(): string {
     return `<div id="career-tree-content" class="career-tree-content"></div>`
 }
 
-export function renderCareerTreeWindow(): void {
-    const container = document.getElementById("career-tree-content")
+export function renderCareerTreeWindow(
+    containerId = "career-tree-content"
+): void {
+    const container = document.getElementById(containerId)
     if (!container) return
 
     const career = getCareerManager()
@@ -60,7 +62,7 @@ export function renderCareerTreeWindow(): void {
     }
 
     container.innerHTML = html
-    wireCareerTreeButtons(container, career)
+    wireCareerTreeButtons(container, career, containerId)
 }
 
 // ── Branch rendering ────────────────────────────────────────────────────────

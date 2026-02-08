@@ -67,7 +67,7 @@ describe("SaveManager", () => {
         it("creates empty save data when nothing stored", async () => {
             const { saveManager } = await loadSaveManagerModule()
             const data = saveManager.load()
-            expect(data.version).toBe(3)
+            expect(data.version).toBe(4)
             expect(data.pinball.highScore).toBe(0)
             expect(data.preferences.theme).toBe("win95")
             expect(data.preferences.colorScheme).toBe("system")
@@ -147,7 +147,7 @@ describe("SaveManager", () => {
             localStorage.setItem("save", "not-valid-json{{")
             const { saveManager } = await loadSaveManagerModule()
             const data = saveManager.load()
-            expect(data.version).toBe(3)
+            expect(data.version).toBe(4)
             expect(data.pinball.highScore).toBe(0)
         })
 
@@ -195,7 +195,7 @@ describe("SaveManager", () => {
             const { saveManager } = await loadSaveManagerModule()
             const loaded = saveManager.load()
 
-            expect(loaded.version).toBe(3)
+            expect(loaded.version).toBe(4)
             expect(loaded.filesystem.modified["3:\\DAS\\memory.welt"]).toBe(
                 "modified content"
             )
@@ -261,7 +261,7 @@ describe("SaveManager", () => {
             localStorage.setItem("save", JSON.stringify(v2Data))
             const { saveManager } = await loadSaveManagerModule()
             const data = saveManager.load()
-            expect(data.version).toBe(3)
+            expect(data.version).toBe(4)
             expect(data.pinball.highScore).toBe(42)
             expect(data.achievements.earned["first-trade"]).toBe(99999)
             expect(data.prestige.count).toBe(0)
