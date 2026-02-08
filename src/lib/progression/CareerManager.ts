@@ -7,8 +7,11 @@ import {
     DORMANT_MULTIPLIER,
     ENGINEERING_STARTER_NODE,
     MASTERY_MAP,
+    masteryCost,
+    nodeCost,
     skillPointsForLevel,
     SKILLS_STARTER_NODE,
+    totalMasteryCost,
 } from "./careers"
 import { getProgressionManager } from "./ProgressionManager"
 import type {
@@ -170,12 +173,21 @@ export class CareerManager {
     private getSpentPoints(): number {
         let count = 0
         for (const nodes of this.unlockedNodes.values()) {
-            count += nodes.size
+            for (const nodeId of nodes) {
+                const def = CAREER_NODE_MAP.get(nodeId)
+                count += def ? nodeCost(def.tier) : 1
+            }
         }
-        count += this.educationNodes.size
-        count += this.skillNodes.size
+        for (const nodeId of this.educationNodes) {
+            const def = CAREER_NODE_MAP.get(nodeId)
+            count += def ? nodeCost(def.tier) : 1
+        }
+        for (const nodeId of this.skillNodes) {
+            const def = CAREER_NODE_MAP.get(nodeId)
+            count += def ? nodeCost(def.tier) : 1
+        }
         for (const ranks of this.masteryRanks.values()) {
-            count += ranks
+            count += totalMasteryCost(ranks)
         }
         return count
     }
@@ -186,8 +198,7 @@ export class CareerManager {
         const def = CAREER_NODE_MAP.get(nodeId)
         if (!def) return false
 
-        // Must have available points
-        if (this.getAvailableSkillPoints() <= 0) return false
+        if (this.getAvailableSkillPoints() < nodeCost(def.tier)) return false
 
         if (this.isNodeUnlocked(nodeId)) return false
 
@@ -246,9 +257,9 @@ export class CareerManager {
     public canPurchaseMastery(masteryId: string): boolean {
         const def = MASTERY_MAP.get(masteryId)
         if (!def) return false
-        if (this.getAvailableSkillPoints() <= 0) return false
         const current = this.masteryRanks.get(masteryId) ?? 0
         if (def.maxRanks > 0 && current >= def.maxRanks) return false
+        if (this.getAvailableSkillPoints() < masteryCost(current)) return false
         return true
     }
 

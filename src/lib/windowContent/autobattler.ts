@@ -26,6 +26,7 @@ import { saveManager } from "../saveManager"
 
 let activeRun: RunManager | null = null
 let activeAnimator: CombatAnimator | null = null
+let lastProcessedRewardIndex = 0
 
 // ── Drag state ──────────────────────────────────────────────────────────────
 
@@ -282,6 +283,7 @@ function renderPrepareRun(container: HTMLElement): void {
 function startNewRun(buffs: RunBuff[] = []): void {
     const unlockedIds = getCollectionManager().getUnlockedUnitIds()
     activeRun = new RunManager(unlockedIds, buffs)
+    lastProcessedRewardIndex = 0
 
     const career = getCareerManager()
     const clockworkATK = career.getBonus("autobattlerATK_clockwork")
@@ -804,8 +806,10 @@ function renderCombatPhase(container: HTMLElement): void {
     if (!result) return
     const updatedState = activeRun.getState()
 
-    // Process rewards
-    for (const reward of updatedState.runRewards) {
+    // Process only NEW rewards (avoid re-applying rewards from previous rounds)
+    const newRewards = updatedState.runRewards.slice(lastProcessedRewardIndex)
+    lastProcessedRewardIndex = updatedState.runRewards.length
+    for (const reward of newRewards) {
         if (reward.type === "xp" && typeof reward.value === "number") {
             getProgressionManager().addXP(reward.value)
         }
@@ -1004,6 +1008,7 @@ function renderResultPhase(container: HTMLElement): void {
 
     container.querySelector(".ab-return-btn")?.addEventListener("click", () => {
         activeRun = null
+        lastProcessedRewardIndex = 0
         renderLobbyView(container)
     })
 }
