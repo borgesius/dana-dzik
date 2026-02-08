@@ -244,10 +244,7 @@ export class MarketEngine {
      * Pop the next trend segment from the queue and apply it to the market
      * state. Pushes the completed segment to history (trimmed to ~1 year).
      */
-    private advanceTrendFromQueue(
-        state: MarketState,
-        def: CommodityDef
-    ): void {
+    private advanceTrendFromQueue(state: MarketState, def: CommodityDef): void {
         // Push completed segment to history (if there was one active)
         if (this.trendOriginalDuration.has(state.commodityId)) {
             const origDuration =
@@ -684,8 +681,7 @@ export class MarketEngine {
         const market = this.markets.get(commodityId)
         if (!market) return null
 
-        const qty =
-            quantity ?? this.getDefaultTradeQuantity()
+        const qty = quantity ?? this.getDefaultTradeQuantity()
         const totalCost = market.price * qty
 
         if (this.cash < totalCost) return null
@@ -1701,8 +1697,7 @@ export class MarketEngine {
         const trendSchedules: Record<string, TrendScheduleSaveData> = {}
         for (const [id, state] of this.markets) {
             const origDuration =
-                this.trendOriginalDuration.get(id) ??
-                state.trendTicksRemaining
+                this.trendOriginalDuration.get(id) ?? state.trendTicksRemaining
             const ticksElapsed = origDuration - state.trendTicksRemaining
             trendSchedules[id] = {
                 queue: state.trendQueue.map((s) => ({ ...s })),
@@ -1815,10 +1810,7 @@ export class MarketEngine {
                 if (!state) continue
                 state.trendQueue = []
                 state.trendHistory = []
-                this.trendOriginalDuration.set(
-                    c.id,
-                    state.trendTicksRemaining
-                )
+                this.trendOriginalDuration.set(c.id, state.trendTicksRemaining)
                 this.fillTrendQueue(c.id, c)
             }
         }
