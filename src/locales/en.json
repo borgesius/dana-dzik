@@ -442,6 +442,14 @@
                 "name": "Moving Average Overlay",
                 "description": "Technical analysis tools for price chart."
             },
+            "confidential-tip": {
+                "name": "Confidential Tip",
+                "description": "A friend at the fund. Trend duration countdown visible on charts."
+            },
+            "material-advantage": {
+                "name": "Material Advantage",
+                "description": "Material non-public information. Estimated price target on charts."
+            },
             "harvest-email": {
                 "name": "EMAIL Harvester",
                 "description": "Automated scraper. +1 EMAIL per harvest click."
@@ -528,7 +536,8 @@
         "education": "Education",
         "school": "University of Chicago",
         "degree": "B.A. with Honors in Mathematics and Philosophy",
-        "location": "Chicago, IL"
+        "location": "Chicago, IL",
+        "skills": "Skills"
     },
     "links": {
         "title": "🔗 Links"

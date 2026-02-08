@@ -385,6 +385,8 @@
       "insider-newsletter": { "name": "内部通讯", "description": "市场动向事件提前通知。10秒领先时间。" },
       "analyst-reports": { "name": "分析师报告", "description": "趋势强度数值指标。" },
       "moving-average": { "name": "移动平均线叠加", "description": "价格图表技术分析工具。" },
+      "confidential-tip": { "name": "机密消息", "description": "基金内部的朋友。图表上显示趋势倒计时。" },
+      "material-advantage": { "name": "重大优势", "description": "重大非公开信息。图表上显示估计目标价格。" },
       "harvest-email": { "name": "EMAIL Harvester", "description": "Automated scraper. +1 EMAIL per harvest click." },
       "harvest-ads": { "name": "ADS Generator", "description": "Impression bot. +1 ADS per harvest click." },
       "harvest-dom": { "name": "DOM Registrar", "description": "Bulk registration script. +1 DOM per harvest click." },
@@ -441,7 +443,8 @@
     "education": "教育背景",
     "school": "芝加哥大学",
     "degree": "数学与哲学荣誉学士学位",
-    "location": "伊利诺伊州芝加哥"
+    "location": "伊利诺伊州芝加哥",
+    "skills": "技能"
   },
   "links": {
     "title": "🔗 链接"

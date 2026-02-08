@@ -442,6 +442,14 @@
                 "name": "Media Móvil",
                 "description": "Herramientas de análisis técnico para gráficos."
             },
+            "confidential-tip": {
+                "name": "Soplo Confidencial",
+                "description": "Un amigo en el fondo. Cuenta regresiva de tendencia visible en gráficos."
+            },
+            "material-advantage": {
+                "name": "Ventaja Material",
+                "description": "Información material no pública. Precio objetivo estimado en gráficos."
+            },
             "harvest-email": { "name": "EMAIL Harvester", "description": "Automated scraper. +1 EMAIL per harvest click." },
             "harvest-ads": { "name": "ADS Generator", "description": "Impression bot. +1 ADS per harvest click." },
             "harvest-dom": { "name": "DOM Registrar", "description": "Bulk registration script. +1 DOM per harvest click." },
@@ -507,7 +515,8 @@
         "education": "Educación",
         "school": "Universidad de Chicago",
         "degree": "Licenciatura con Honores en Matemáticas y Filosofía",
-        "location": "Chicago, IL"
+        "location": "Chicago, IL",
+        "skills": "Habilidades"
     },
     "links": {
         "title": "🔗 Enlaces"

@@ -8,6 +8,7 @@ import {
     ENGINEERING_STARTER_NODE,
     MASTERY_MAP,
     skillPointsForLevel,
+    SKILLS_STARTER_NODE,
 } from "./careers"
 import { getProgressionManager } from "./ProgressionManager"
 import type {
@@ -33,6 +34,7 @@ export class CareerManager {
     private careerHistory: CareerHistoryEntry[] = []
     private unlockedNodes: Map<string, Set<string>> = new Map() // branch -> node IDs
     private educationNodes: Set<string> = new Set()
+    private skillNodes: Set<string> = new Set()
     private masteryRanks: Map<string, number> = new Map() // masteryId -> rank count
     private onDirty: (() => void) | null = null
     private eventListeners: Map<CareerEventType, CareerCallback[]> = new Map()
@@ -171,6 +173,7 @@ export class CareerManager {
             count += nodes.size
         }
         count += this.educationNodes.size
+        count += this.skillNodes.size
         for (const ranks of this.masteryRanks.values()) {
             count += ranks
         }
@@ -192,8 +195,12 @@ export class CareerManager {
             if (!this.isNodeUnlocked(preReq)) return false
         }
 
-        // For career nodes, must be in the active career OR education
-        if (def.branch !== "education" && def.branch !== this.activeCareer) {
+        // For career nodes, must be in the active career OR education/skills
+        if (
+            def.branch !== "education" &&
+            def.branch !== "skills" &&
+            def.branch !== this.activeCareer
+        ) {
             return false
         }
 
@@ -207,6 +214,8 @@ export class CareerManager {
 
         if (def.branch === "education") {
             this.educationNodes.add(nodeId)
+        } else if (def.branch === "skills") {
+            this.skillNodes.add(nodeId)
         } else {
             const nodes = this.unlockedNodes.get(def.branch) ?? new Set()
             nodes.add(nodeId)
@@ -225,6 +234,9 @@ export class CareerManager {
 
         if (def.branch === "education") {
             return this.educationNodes.has(nodeId)
+        }
+        if (def.branch === "skills") {
+            return this.skillNodes.has(nodeId)
         }
         return this.unlockedNodes.get(def.branch)?.has(nodeId) ?? false
     }
@@ -283,6 +295,12 @@ export class CareerManager {
                 total += def.bonusValue
             }
         }
+        for (const nodeId of this.skillNodes) {
+            const def = CAREER_NODE_MAP.get(nodeId)
+            if (def && def.bonusType === bonusType) {
+                total += def.bonusValue
+            }
+        }
         return total
     }
 
@@ -310,6 +328,14 @@ export class CareerManager {
             }
         }
 
+        // Skill nodes are always at full power
+        for (const nodeId of this.skillNodes) {
+            const def = CAREER_NODE_MAP.get(nodeId)
+            if (def && def.bonusType === bonusType) {
+                total += def.bonusValue
+            }
+        }
+
         // Mastery bonuses
         for (const [masteryId, ranks] of this.masteryRanks) {
             const mDef = MASTERY_MAP.get(masteryId)
@@ -327,6 +353,11 @@ export class CareerManager {
             total += ENGINEERING_STARTER_NODE.bonusValue
         }
 
+        // Passive bonus from base skills (always active).
+        if (SKILLS_STARTER_NODE.bonusType === bonusType) {
+            total += SKILLS_STARTER_NODE.bonusValue
+        }
+
         return total
     }
 
@@ -341,10 +372,13 @@ export class CareerManager {
     }
 
     public getUnlockedNodesForBranch(
-        branch: CareerBranch | "education"
+        branch: CareerBranch | "education" | "skills"
     ): string[] {
         if (branch === "education") {
             return [...this.educationNodes]
+        }
+        if (branch === "skills") {
+            return [...this.skillNodes]
         }
         return [...(this.unlockedNodes.get(branch) ?? [])]
     }
@@ -372,6 +406,7 @@ export class CareerManager {
             careerHistory: this.careerHistory,
             skillPoints,
             educationNodes: [...this.educationNodes],
+            skillNodes: [...this.skillNodes],
             masteryRanks,
         }
     }
@@ -381,6 +416,7 @@ export class CareerManager {
         this.careerHistory = data.careerHistory ?? []
         this.unlockedNodes.clear()
         this.educationNodes.clear()
+        this.skillNodes.clear()
 
         if (data.skillPoints) {
             for (const [branch, spData] of Object.entries(data.skillPoints)) {
@@ -396,6 +432,12 @@ export class CareerManager {
         if (data.educationNodes) {
             for (const nodeId of data.educationNodes) {
                 this.educationNodes.add(nodeId)
+            }
+        }
+
+        if (data.skillNodes) {
+            for (const nodeId of data.skillNodes) {
+                this.skillNodes.add(nodeId)
             }
         }
 

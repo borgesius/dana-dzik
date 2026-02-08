@@ -48,6 +48,9 @@ export function renderCareerTreeWindow(): void {
     // ── Education tree ──────────────────────────────────────────────────
     html += renderBranch(career, "education", "Education", true, false)
 
+    // ── Skills tree ──────────────────────────────────────────────────────
+    html += renderBranch(career, "skills", "Skills", true, false)
+
     // ── Mastery section (unlocks after all career tree nodes purchased) ─
     html += renderMasterySection(career)
 
@@ -64,7 +67,7 @@ export function renderCareerTreeWindow(): void {
 
 function renderBranch(
     career: CareerManager,
-    branchId: CareerBranch | "education",
+    branchId: CareerBranch | "education" | "skills",
     label: string,
     isActive: boolean,
     isLocked: boolean
@@ -79,7 +82,7 @@ function renderBranch(
             <div class="ct-branch-header">
                 <span class="ct-branch-name">${isLocked ? "🔒 " : ""}${label}</span>
                 <span class="ct-branch-progress">${unlockedCount}/${nodes.length}</span>
-                ${isActive && branchId !== "education" ? '<span class="ct-branch-active-badge">ACTIVE</span>' : ""}
+                ${isActive && branchId !== "education" && branchId !== "skills" ? '<span class="ct-branch-active-badge">ACTIVE</span>' : ""}
             </div>
     `
 
@@ -110,6 +113,7 @@ function renderNode(
     const isDormant =
         isUnlocked &&
         node.branch !== "education" &&
+        node.branch !== "skills" &&
         node.branch !== activeCareer
 
     let statusClass = "ct-locked"

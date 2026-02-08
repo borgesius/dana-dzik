@@ -262,8 +262,8 @@ export class MarketEngine {
         }
         state.trendStrength = 0.3 + this.rng.next() * 0.7
         state.trendTicksRemaining = this.rng.nextInt(
-            TREND_MIN_TICKS,
-            TREND_MAX_TICKS
+            def.trendMinTicks,
+            def.trendMaxTicks
         )
 
         const priceFraction = state.price / def.basePrice
@@ -1044,6 +1044,40 @@ export class MarketEngine {
 
     public canShowTrendStrength(): boolean {
         return this.hasUpgrade("analyst-reports")
+    }
+
+    public canShowTrendDuration(): boolean {
+        return this.hasUpgrade("confidential-tip")
+    }
+
+    public getTrendTicksRemaining(commodityId: CommodityId): number {
+        return this.markets.get(commodityId)?.trendTicksRemaining ?? 0
+    }
+
+    public canShowPriceTarget(): boolean {
+        return this.hasUpgrade("material-advantage")
+    }
+
+    public getPriceTarget(commodityId: CommodityId): number | null {
+        const state = this.markets.get(commodityId)
+        if (!state) return null
+        const def = COMMODITIES.find((c) => c.id === commodityId)
+        if (!def) return null
+
+        let direction = 0
+        if (state.trend === "bull") direction = 1
+        else if (state.trend === "bear") direction = -1
+
+        const driftPerTick =
+            direction * state.trendStrength * def.volatility * state.price
+        const estimatedDrift = driftPerTick * state.trendTicksRemaining
+
+        let target = state.price + estimatedDrift
+        const floor = def.basePrice * PRICE_FLOOR_FACTOR
+        const ceiling = def.basePrice * PRICE_CEILING_FACTOR
+        target = Math.max(floor, Math.min(ceiling, target))
+
+        return target
     }
 
     public getSnapshot(): GameSnapshot {

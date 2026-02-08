@@ -8,6 +8,8 @@ export type UpgradeId =
     | "insider-newsletter"
     | "analyst-reports"
     | "moving-average"
+    | "confidential-tip"
+    | "material-advantage"
     | "harvest-email"
     | "harvest-ads"
     | "harvest-dom"
@@ -94,6 +96,22 @@ export const UPGRADES: UpgradeDef[] = [
         description: "Technical analysis tools for price chart.",
         category: "intelligence",
         cost: 25,
+    },
+    {
+        id: "confidential-tip",
+        name: "Confidential Tip",
+        description:
+            "A friend at the fund. Trend duration countdown visible on charts.",
+        category: "intelligence",
+        cost: 55,
+    },
+    {
+        id: "material-advantage",
+        name: "Material Advantage",
+        description:
+            "Material non-public information. Estimated price target on charts.",
+        category: "intelligence",
+        cost: 70,
     },
 
     // ── Automation (per-commodity harvest upgrades) ──────────────────────────

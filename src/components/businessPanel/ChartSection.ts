@@ -110,12 +110,21 @@ export class ChartSection {
             : 0
         const maData = this.game.getMovingAverage(this.selectedCommodity, 20)
 
+        const trendTicksRemaining = this.game.canShowTrendDuration()
+            ? this.game.getTrendTicksRemaining(this.selectedCommodity)
+            : null
+        const priceTarget = this.game.canShowPriceTarget()
+            ? this.game.getPriceTarget(this.selectedCommodity)
+            : null
+
         this.chartRenderer.render(this.selectedCommodity, history, {
             showMovingAverage: maData.length > 0,
             showTrendArrow: showTrend,
             trendDirection: showTrend ? trend : null,
             trendStrength,
             movingAverageData: maData,
+            trendTicksRemaining,
+            priceTarget,
         })
     }
 }
