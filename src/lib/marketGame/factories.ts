@@ -18,7 +18,7 @@ export interface FactoryDef {
     conversionInput?: { commodity: CommodityId; quantity: number }
 }
 
-export const FACTORY_COST_SCALING = 1.18
+export const FACTORY_COST_SCALING = 1.22
 
 export const FACTORIES: FactoryDef[] = [
     {
@@ -27,10 +27,10 @@ export const FACTORIES: FactoryDef[] = [
         description:
             "Harvests verified email addresses 24/7. Results may vary.",
         produces: "EMAIL",
-        cost: 3,
+        cost: 5,
         minOutput: 0,
         maxOutput: 2,
-        ticksPerCycle: 1,
+        ticksPerCycle: 2,
     },
     {
         id: "banner-exchange",
@@ -38,10 +38,10 @@ export const FACTORIES: FactoryDef[] = [
         description:
             "Rotating ad network. Impressions generated automatically.",
         produces: "ADS",
-        cost: 8,
+        cost: 15,
         minOutput: 0,
         maxOutput: 2,
-        ticksPerCycle: 2,
+        ticksPerCycle: 3,
         conversionInput: { commodity: "EMAIL", quantity: 6 },
     },
     {
@@ -49,7 +49,7 @@ export const FACTORIES: FactoryDef[] = [
         name: "Co-Location Rack",
         description: "Dedicated server hosting. Uptime not guaranteed.",
         produces: "BW",
-        cost: 80,
+        cost: 150,
         minOutput: 0,
         maxOutput: 1,
         ticksPerCycle: 3,
@@ -60,7 +60,7 @@ export const FACTORIES: FactoryDef[] = [
         name: "Offshore Dev Team",
         description: "24-hour development cycle. Quality assurance pending.",
         produces: "SOFT",
-        cost: 200,
+        cost: 400,
         minOutput: 0,
         maxOutput: 1,
         ticksPerCycle: 5,

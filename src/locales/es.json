@@ -426,9 +426,17 @@
             }
         },
         "upgrades": {
+            "batch-processing": {
+                "name": "Procesamiento por Lotes",
+                "description": "Ejecutar operaciones en cantidades de 5."
+            },
             "bulk-orders": {
                 "name": "Procesamiento de Órdenes en Lote",
                 "description": "Ejecutar operaciones en cantidades de 10."
+            },
+            "block-trading": {
+                "name": "Trading de Bloques",
+                "description": "Lotes institucionales. Ejecutar operaciones en cantidades de 50."
             },
             "limit-orders": {
                 "name": "Sistema de Órdenes Límite",
@@ -440,11 +448,19 @@
             },
             "cpu-overclock": {
                 "name": "CPU Overclock",
-                "description": "Aumentar velocidad del ciclo de producción. Puede causar inestabilidad."
+                "description": "Reducir ciclo de producción en 1 tick. Puede causar inestabilidad."
+            },
+            "overclock-ii": {
+                "name": "Overclock II",
+                "description": "Reducción adicional del ciclo. Total -2 ticks por ciclo."
             },
             "quality-assurance": {
                 "name": "Control de Calidad",
-                "description": "Reducir varianza de producción. Rendimiento mínimo garantizado."
+                "description": "Reducir varianza de producción. Rendimiento mínimo 25% del máximo."
+            },
+            "quality-assurance-ii": {
+                "name": "Control de Calidad II",
+                "description": "Tolerancias más estrictas. Rendimiento mínimo 50% del máximo."
             },
             "supply-chain": {
                 "name": "Integración de Cadena de Suministro",
@@ -484,7 +500,9 @@
             "harvest-bw": { "name": "BW Allocator", "description": "Bandwidth provisioner. +1 BW per harvest click." },
             "harvest-soft": { "name": "SOFT Compiler", "description": "License keygen. +1 SOFT per harvest click." },
             "harvest-vc": { "name": "VC Pipeline", "description": "Pitch deck generator. +1 VC per harvest click." },
-            "autoscript": { "name": "Autoscript", "description": "Global automation. +1 unit per harvest click for ALL commodities." }
+            "autoscript-i": { "name": "Autoscript I", "description": "Automatización básica. +25% rendimiento de cosecha para todas las commodities." },
+            "autoscript-ii": { "name": "Autoscript II", "description": "Automatización avanzada. +50% rendimiento de cosecha para todas las commodities." },
+            "autoscript-iii": { "name": "Autoscript III", "description": "Suite de automatización completa. +75% rendimiento de cosecha para todas las commodities." }
         },
         "influence": {
             "promo-campaign": {

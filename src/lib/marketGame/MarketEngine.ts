@@ -2,6 +2,9 @@ import { isCalmMode } from "../calmMode"
 import { type Employee, getEmployeeSalary } from "./employees"
 import { OrgChart } from "./orgChart"
 import {
+    AUTOSCRIPT_TIER_BONUS,
+    BATCH_ORDER_QUANTITY,
+    BLOCK_ORDER_QUANTITY,
     BULK_ORDER_QUANTITY,
     COMMODITIES,
     type CommodityDef,
@@ -27,7 +30,6 @@ import {
     type GameEventCallback,
     type GameEventType,
     type GameSnapshot,
-    HARVEST_AUTOSCRIPT_BONUS,
     HARVEST_BASE_FRACTION,
     HARVEST_UPGRADE_BONUS,
     type Holding,
@@ -60,8 +62,6 @@ import {
     STARTING_CASH,
     TICK_INTERVAL_MS,
     type TradeResult,
-    TREND_MAX_TICKS,
-    TREND_MIN_TICKS,
     type TrendDirection,
     type TrendScheduleSaveData,
     type TrendSegment,
@@ -402,9 +402,16 @@ export class MarketEngine {
             const counter = (this.factoryTickCounters.get(fDef.id) ?? 0) + 1
             this.factoryTickCounters.set(fDef.id, counter)
 
-            let effectiveCycle = this.hasUpgrade("cpu-overclock")
-                ? Math.max(1, fDef.ticksPerCycle - 1)
-                : fDef.ticksPerCycle
+            let overclockReduction = 0
+            if (this.hasUpgrade("overclock-ii")) {
+                overclockReduction = 2
+            } else if (this.hasUpgrade("cpu-overclock")) {
+                overclockReduction = 1
+            }
+            let effectiveCycle = Math.max(
+                1,
+                fDef.ticksPerCycle - overclockReduction
+            )
 
             const speedMult =
                 this.prestigeProvider?.("productionSpeedMultiplier") ?? 1
@@ -420,9 +427,12 @@ export class MarketEngine {
 
             let totalProduced = 0
             for (let i = 0; i < count; i++) {
-                const minOut = this.hasUpgrade("quality-assurance")
-                    ? Math.ceil(fDef.maxOutput * 0.4)
-                    : fDef.minOutput
+                let minOut = fDef.minOutput
+                if (this.hasUpgrade("quality-assurance-ii")) {
+                    minOut = Math.ceil(fDef.maxOutput * 0.5)
+                } else if (this.hasUpgrade("quality-assurance")) {
+                    minOut = Math.ceil(fDef.maxOutput * 0.25)
+                }
                 const produced = this.rng.nextInt(minOut, fDef.maxOutput)
                 totalProduced += produced
             }
@@ -675,8 +685,7 @@ export class MarketEngine {
         if (!market) return null
 
         const qty =
-            quantity ??
-            (this.hasUpgrade("bulk-orders") ? BULK_ORDER_QUANTITY : 1)
+            quantity ?? this.getDefaultTradeQuantity()
         const totalCost = market.price * qty
 
         if (this.cash < totalCost) return null
@@ -709,8 +718,7 @@ export class MarketEngine {
         if (!market) return null
 
         const qty = Math.min(
-            quantity ??
-                (this.hasUpgrade("bulk-orders") ? BULK_ORDER_QUANTITY : 1),
+            quantity ?? this.getDefaultTradeQuantity(),
             holding.quantity
         )
         const tradeBonus = this.bonusProvider?.("tradeProfit") ?? 0
@@ -767,8 +775,8 @@ export class MarketEngine {
 
     /**
      * Compute how many units a single harvest click produces for a commodity.
-     * Starts tiny (5% of harvestQuantity ≈ $0.10/click), scales up fast with
-     * per-commodity upgrade (50% ≈ $1/click) and autoscript (100% ≈ $2/click).
+     * Starts tiny (5% of harvestQuantity ≈ $0.10/click), scales up with
+     * per-commodity upgrade (+45%) and autoscript tiers (+25/50/75%).
      */
     public getHarvestOutput(commodityId: CommodityId): number {
         let fraction = HARVEST_BASE_FRACTION
@@ -779,9 +787,13 @@ export class MarketEngine {
             fraction += HARVEST_UPGRADE_BONUS
         }
 
-        // Global autoscript upgrade — tops it off
-        if (this.ownedUpgrades.has("autoscript")) {
-            fraction += HARVEST_AUTOSCRIPT_BONUS
+        // Tiered autoscript upgrades (highest tier wins)
+        if (this.ownedUpgrades.has("autoscript-iii")) {
+            fraction += AUTOSCRIPT_TIER_BONUS[2]
+        } else if (this.ownedUpgrades.has("autoscript-ii")) {
+            fraction += AUTOSCRIPT_TIER_BONUS[1]
+        } else if (this.ownedUpgrades.has("autoscript-i")) {
+            fraction += AUTOSCRIPT_TIER_BONUS[0]
         }
 
         const def = COMMODITIES.find((c) => c.id === commodityId)
@@ -906,6 +918,14 @@ export class MarketEngine {
 
     public hasUpgrade(upgradeId: UpgradeId): boolean {
         return this.ownedUpgrades.has(upgradeId)
+    }
+
+    /** Return the default trade quantity based on highest bulk-tier upgrade. */
+    private getDefaultTradeQuantity(): number {
+        if (this.hasUpgrade("block-trading")) return BLOCK_ORDER_QUANTITY
+        if (this.hasUpgrade("bulk-orders")) return BULK_ORDER_QUANTITY
+        if (this.hasUpgrade("batch-processing")) return BATCH_ORDER_QUANTITY
+        return 1
     }
 
     // -----------------------------------------------------------------------

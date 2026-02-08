@@ -389,11 +389,15 @@
       "offshore-dev": { "name": "オフショア開発チーム", "description": "24時間開発サイクル。品質保証は保留中。" }
     },
     "upgrades": {
+      "batch-processing": { "name": "バッチ処理", "description": "5単位で取引を実行。" },
       "bulk-orders": { "name": "一括注文処理", "description": "10単位で取引を実行。" },
+      "block-trading": { "name": "ブロック取引", "description": "機関投資家規模のロット。50単位で取引を実行。" },
       "limit-orders": { "name": "指値注文システム", "description": "目標価格を設定。保有分は自動的に売却。" },
       "trend-analysis": { "name": "トレンド分析パッケージ", "description": "価格チャートに方向性インジケーターを表示。" },
-      "cpu-overclock": { "name": "CPUオーバークロック", "description": "生産サイクル速度を向上。不安定になる可能性あり。" },
-      "quality-assurance": { "name": "品質保証", "description": "生産のばらつきを軽減。最低収量保証。" },
+      "cpu-overclock": { "name": "CPUオーバークロック", "description": "生産サイクルを1ティック短縮。不安定になる可能性あり。" },
+      "overclock-ii": { "name": "オーバークロック II", "description": "さらなるサイクル短縮。合計-2ティック/サイクル。" },
+      "quality-assurance": { "name": "品質保証", "description": "生産のばらつきを軽減。最低収量は最大の25%。" },
+      "quality-assurance-ii": { "name": "品質保証 II", "description": "より厳格な基準。最低収量は最大の50%。" },
       "supply-chain": { "name": "サプライチェーン統合", "description": "余剰コモディティをプレミアム商品に変換。" },
       "insider-newsletter": { "name": "インサイダーニュースレター", "description": "市場を動かすイベントの事前通知。10秒のリードタイム。" },
       "analyst-reports": { "name": "アナリストレポート", "description": "トレンド強度の数値インジケーター。" },
@@ -408,7 +412,9 @@
       "harvest-bw": { "name": "BW Allocator", "description": "Bandwidth provisioner. +1 BW per harvest click." },
       "harvest-soft": { "name": "SOFT Compiler", "description": "License keygen. +1 SOFT per harvest click." },
       "harvest-vc": { "name": "VC Pipeline", "description": "Pitch deck generator. +1 VC per harvest click." },
-      "autoscript": { "name": "Autoscript", "description": "Global automation. +1 unit per harvest click for ALL commodities." }
+      "autoscript-i": { "name": "Autoscript I", "description": "基本自動化。全コモディティの収穫量+25%。" },
+      "autoscript-ii": { "name": "Autoscript II", "description": "高度な自動化。全コモディティの収穫量+50%。" },
+      "autoscript-iii": { "name": "Autoscript III", "description": "完全自動化スイート。全コモディティの収穫量+75%。" }
     },
     "influence": {
       "promo-campaign": { "name": "プロモーションキャンペーン", "description": "選択したコモディティの人工的な需要を生成。" },

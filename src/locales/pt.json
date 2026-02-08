@@ -389,11 +389,15 @@
       "offshore-dev": { "name": "Equipe de Desenvolvimento Offshore", "description": "Ciclo de desenvolvimento de 24 horas. Garantia de qualidade pendente." }
     },
     "upgrades": {
+      "batch-processing": { "name": "Processamento em Lote", "description": "Executar operações em quantidades de 5." },
       "bulk-orders": { "name": "Processamento de Pedidos em Lote", "description": "Executar operações em quantidades de 10." },
+      "block-trading": { "name": "Trading de Blocos", "description": "Lotes institucionais. Executar operações em quantidades de 50." },
       "limit-orders": { "name": "Sistema de Ordens Limitadas", "description": "Definir preço-alvo. Posições vendidas automaticamente." },
       "trend-analysis": { "name": "Pacote de Análise de Tendências", "description": "Indicadores direcionais nos gráficos de preços." },
-      "cpu-overclock": { "name": "CPU Overclock", "description": "Aumentar velocidade do ciclo de produção. Pode causar instabilidade." },
-      "quality-assurance": { "name": "Garantia de Qualidade", "description": "Reduzir variância de produção. Rendimento mínimo garantido." },
+      "cpu-overclock": { "name": "CPU Overclock", "description": "Reduzir ciclo de produção em 1 tick. Pode causar instabilidade." },
+      "overclock-ii": { "name": "Overclock II", "description": "Redução adicional do ciclo. Total -2 ticks por ciclo." },
+      "quality-assurance": { "name": "Garantia de Qualidade", "description": "Reduzir variância de produção. Rendimento mínimo 25% do máximo." },
+      "quality-assurance-ii": { "name": "Garantia de Qualidade II", "description": "Tolerâncias mais apertadas. Rendimento mínimo 50% do máximo." },
       "supply-chain": { "name": "Integração de Cadeia de Suprimentos", "description": "Converter commodities excedentes em bens premium." },
       "insider-newsletter": { "name": "Newsletter Privilegiada", "description": "Aviso antecipado de eventos de mercado. 10 segundos de vantagem." },
       "analyst-reports": { "name": "Relatórios de Analistas", "description": "Indicadores numéricos de força de tendência." },
@@ -408,7 +412,9 @@
       "harvest-bw": { "name": "BW Allocator", "description": "Bandwidth provisioner. +1 BW per harvest click." },
       "harvest-soft": { "name": "SOFT Compiler", "description": "License keygen. +1 SOFT per harvest click." },
       "harvest-vc": { "name": "VC Pipeline", "description": "Pitch deck generator. +1 VC per harvest click." },
-      "autoscript": { "name": "Autoscript", "description": "Global automation. +1 unit per harvest click for ALL commodities." }
+      "autoscript-i": { "name": "Autoscript I", "description": "Automação básica. +25% rendimento de colheita para todas as commodities." },
+      "autoscript-ii": { "name": "Autoscript II", "description": "Automação avançada. +50% rendimento de colheita para todas as commodities." },
+      "autoscript-iii": { "name": "Autoscript III", "description": "Suite de automação completa. +75% rendimento de colheita para todas as commodities." }
     },
     "influence": {
       "promo-campaign": { "name": "Campanha Promocional", "description": "Gerar demanda artificial para a commodity selecionada." },
