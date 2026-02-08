@@ -106,7 +106,7 @@
 .winamp-widget .widget-btn {
     background: linear-gradient(180deg, #5a9a5a 0%, #3a7a3a 100%);
     border-color: #2a5a2a;
-    color: #002200;
+    color: #ccffcc;
 }
 
 .winamp-widget .widget-btn:hover {

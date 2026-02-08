@@ -11,6 +11,7 @@ export interface ThemeLabels {
     minimizeButton: string
     maximizeButton: string
     searchPlaceholder: string
+    searchUrl: string
     clockPrefix: string
     terminalPrompt: string
     windowTitleSuffix: string
@@ -40,6 +41,7 @@ const LABEL_MAPS: Record<ThemeId, ThemeLabels> = {
         minimizeButton: "\u2014",
         maximizeButton: "\u25A1",
         searchPlaceholder: "Ask Jeeves",
+        searchUrl: "http://localhost:3000/?q=",
         clockPrefix: "",
         terminalPrompt: "3:\\>",
         windowTitleSuffix: "",
@@ -65,6 +67,7 @@ const LABEL_MAPS: Record<ThemeId, ThemeLabels> = {
         minimizeButton: "",
         maximizeButton: "",
         searchPlaceholder: "Sherlock",
+        searchUrl: "http://localhost:3000/?q=",
         clockPrefix: "",
         terminalPrompt: "% ",
         windowTitleSuffix: "",
@@ -90,6 +93,7 @@ const LABEL_MAPS: Record<ThemeId, ThemeLabels> = {
         minimizeButton: "-",
         maximizeButton: "+",
         searchPlaceholder: "SEARCH:",
+        searchUrl: "http://localhost:3000/?q=",
         clockPrefix: "TIME: ",
         terminalPrompt: "] ",
         windowTitleSuffix: "",
@@ -115,6 +119,7 @@ const LABEL_MAPS: Record<ThemeId, ThemeLabels> = {
         minimizeButton: "_",
         maximizeButton: "\u25A0",
         searchPlaceholder: "?",
+        searchUrl: "http://localhost:3000/?q=",
         clockPrefix: "TI$=",
         terminalPrompt: "READY.\n",
         windowTitleSuffix: "",

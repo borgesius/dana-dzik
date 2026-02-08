@@ -827,7 +827,7 @@
 }
 
 .entry-date {
-    color: #666666;
+    color: var(--theme-text-secondary);
     font-size: 10px;
 }
 
@@ -944,7 +944,7 @@
 }
 
 .chat-input input::placeholder {
-    color: #666688;
+    color: #8888aa;
 }
 
 .chat-input button {

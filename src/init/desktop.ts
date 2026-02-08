@@ -6,6 +6,7 @@ import { LevelUpPopup } from "../components/LevelUpPopup"
 import { PopupManager } from "../components/PopupManager"
 import { setTerminalInit } from "../components/Terminal"
 import { Widgets } from "../components/Widgets"
+import { XPPopup } from "../components/XPPopup"
 import { getDeployEnv } from "../config/environment"
 import { getAchievementManager } from "../lib/achievements/AchievementManager"
 import {
@@ -47,6 +48,7 @@ export function initDesktop(app: HTMLElement): void {
     wireVeilAchievements()
     new AchievementToast(achievements)
     new LevelUpPopup()
+    new XPPopup()
 
     wireProgression(getProgressionManager(), (cb) => {
         windowManager.onNewWindowOpen(cb)

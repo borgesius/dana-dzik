@@ -13,10 +13,14 @@ import { PrestigeSection } from "./businessPanel/PrestigeSection"
 import { TradeControls } from "./businessPanel/TradeControls"
 import { UpgradesSection } from "./businessPanel/UpgradesSection"
 
+const EXPANDED_STORAGE_KEY = "businessPanelExpanded"
+
 export class BusinessPanel {
     private element: HTMLElement
     private game: MarketEngine
     private isExpanded = false
+    private isWideMode = false
+    private expandBtn: HTMLButtonElement | null = null
 
     private newsTickerEl: HTMLElement | null = null
     private chart: ChartSection
@@ -31,6 +35,7 @@ export class BusinessPanel {
 
     constructor() {
         this.game = getMarketGame()
+        this.isWideMode = localStorage.getItem(EXPANDED_STORAGE_KEY) === "true"
         this.chart = new ChartSection(this.game)
         this.tradeControls = new TradeControls(
             this.game,
@@ -59,6 +64,9 @@ export class BusinessPanel {
             this.playSound(type)
         )
         this.element = this.createElement()
+        if (this.isWideMode) {
+            this.element.classList.add("expanded")
+        }
         this.setupEventListeners()
 
         this.chart.setOnCommodityChange(() => {
@@ -82,11 +90,25 @@ export class BusinessPanel {
         title.textContent = lm.t("commodityExchange.ui.title")
         header.appendChild(title)
 
+        const controls = document.createElement("div")
+        controls.className = "business-panel-header-controls"
+
+        const expandBtn = document.createElement("button")
+        expandBtn.className = "business-panel-expand"
+        expandBtn.textContent = this.isWideMode
+            ? "Narrow \u25B8"
+            : "\u25C2 Expand"
+        expandBtn.addEventListener("click", () => this.toggleWideMode())
+        this.expandBtn = expandBtn
+        controls.appendChild(expandBtn)
+
         const closeBtn = document.createElement("button")
         closeBtn.className = "business-panel-close"
         closeBtn.textContent = lm.t("commodityExchange.ui.close")
         closeBtn.addEventListener("click", () => this.collapse())
-        header.appendChild(closeBtn)
+        controls.appendChild(closeBtn)
+
+        header.appendChild(controls)
 
         panel.appendChild(header)
 
@@ -104,13 +126,13 @@ export class BusinessPanel {
         leftCol.className = "panel-col-left"
         leftCol.appendChild(this.chart.getElement())
         leftCol.appendChild(this.tradeControls.getElement())
+        leftCol.appendChild(this.portfolio.getElement())
+        leftCol.appendChild(this.factories.getElement())
         leftCol.appendChild(this.influence.getElement())
         content.appendChild(leftCol)
 
         const rightCol = document.createElement("div")
         rightCol.className = "panel-col-right"
-        rightCol.appendChild(this.portfolio.getElement())
-        rightCol.appendChild(this.factories.getElement())
         rightCol.appendChild(this.upgrades.getElement())
         rightCol.appendChild(this.employees.getElement())
         rightCol.appendChild(this.portfolioMgmt.getElement())
@@ -214,6 +236,17 @@ export class BusinessPanel {
         this.prestige.render()
     }
 
+    private toggleWideMode(): void {
+        this.isWideMode = !this.isWideMode
+        this.element.classList.toggle("expanded", this.isWideMode)
+        if (this.expandBtn) {
+            this.expandBtn.textContent = this.isWideMode
+                ? "Narrow \u25B8"
+                : "\u25C2 Expand"
+        }
+        localStorage.setItem(EXPANDED_STORAGE_KEY, String(this.isWideMode))
+    }
+
     private updatePhaseVisibility(): void {
         this.factories.updateVisibility()
         this.upgrades.updateVisibility()
@@ -221,6 +254,12 @@ export class BusinessPanel {
         this.employees.updateVisibility()
         this.portfolioMgmt.updateVisibility()
         this.prestige.updateVisibility()
+
+        if (this.expandBtn) {
+            this.expandBtn.style.display = this.game.isPhaseUnlocked(2)
+                ? "block"
+                : "none"
+        }
     }
 
     private updateNewsTicker(text: string): void {

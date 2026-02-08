@@ -50,7 +50,7 @@
     --theme-surface-secondary: #383838;
     --theme-surface-elevated: #505050;
     --theme-text-on-surface: #e0e0e0;
-    --theme-text-secondary: #999999;
+    --theme-text-secondary: #aaaaaa;
     --theme-link: #6699ff;
     --theme-border-light: #606060;
     --theme-border-dark: #202020;
@@ -134,7 +134,7 @@
     --theme-surface-primary: #3a3a3a;
     --theme-surface-secondary: #333333;
     --theme-text-on-surface: #e0e0e0;
-    --theme-text-secondary: #888888;
+    --theme-text-secondary: #999999;
     --theme-link: #6699ff;
     --theme-accent: #2060b0;
     --theme-border-light: #555555;
@@ -153,6 +153,7 @@
     --theme-color-danger: #ff4444;
     --theme-color-warning: #ffcc33;
     --theme-terminal-success: #e0e0e0;
+    --theme-terminal-placeholder: #666666;
     --theme-weather-bg: #2a3040;
     --theme-weather-border: #555555;
 }
@@ -206,7 +207,7 @@
     --theme-terminal-input-border: #ccccbb;
     --theme-terminal-scrollbar-track: #f0f0e8;
     --theme-terminal-scrollbar-thumb: #1a5a1a;
-    --theme-terminal-dim: #669966;
+    --theme-terminal-dim: #4a7a4a;
     --theme-terminal-cursor: #1a5a1a;
     --theme-explorer-bg: #f0f0e8;
     --theme-explorer-list-bg: #fffff0;
@@ -216,7 +217,7 @@
     --theme-surface-primary: #f0f0e8;
     --theme-surface-secondary: #e8e8d8;
     --theme-text-on-surface: #1a5a1a;
-    --theme-text-secondary: #669966;
+    --theme-text-secondary: #4a7a4a;
     --theme-link: #1a5a1a;
     --theme-accent: #1a5a1a;
     --theme-accent-text: #fffff0;
@@ -238,6 +239,7 @@
     --theme-color-danger: #cc0000;
     --theme-color-warning: #8b7500;
     --theme-terminal-success: #1a5a1a;
+    --theme-terminal-placeholder: #4a7a4a;
     --theme-weather-bg: #e0e8d0;
     --theme-weather-border: #888877;
 }
@@ -299,12 +301,12 @@
     --theme-surface-primary: #e8e0ff;
     --theme-surface-secondary: #d8d0f0;
     --theme-text-on-surface: #40318d;
-    --theme-text-secondary: #8878b0;
+    --theme-text-secondary: #6050a0;
     --theme-link: #6050a0;
     --theme-accent: #8878b0;
     --theme-accent-text: #ffffff;
     --theme-border-light: #d0c8e8;
-    --theme-border-dark: #8878b0;
+    --theme-border-dark: #6a5a9a;
     --theme-tooltip-bg: #f5f0ff;
     --theme-tooltip-border: 2px solid #8878b0;
     --theme-tooltip-text: #40318d;
@@ -321,6 +323,7 @@
     --theme-color-danger: #cc0000;
     --theme-color-warning: #8b7500;
     --theme-terminal-success: #40318d;
+    --theme-terminal-placeholder: #6050a0;
     --theme-weather-bg: #d8d0f0;
     --theme-weather-border: #8878b0;
 }

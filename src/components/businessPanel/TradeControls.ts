@@ -1,4 +1,8 @@
-import { formatMoney, formatQuantity } from "../../lib/formatMoney"
+import {
+    formatMoney,
+    formatQuantity,
+    formatQuantityFixed,
+} from "../../lib/formatMoney"
 import { getLocaleManager } from "../../lib/localeManager"
 import type { MarketEngine } from "../../lib/marketGame/MarketEngine"
 import type { CommodityId } from "../../lib/marketGame/types"
@@ -34,6 +38,7 @@ export class TradeControls {
         const qty = holding?.quantity ?? 0
         const lm = getLocaleManager()
         const harvestOutput = this.game.getHarvestOutput(commodity)
+        const harvestDecimals = this.game.getHarvestDecimals(commodity)
 
         const canBuy = cash >= price
         const canSell = qty > 0
@@ -45,7 +50,7 @@ export class TradeControls {
                 <span class="trade-holding">${lm.t("commodityExchange.ui.qty")}: ${formatQuantity(qty)}</span>
             </div>
             <div class="trade-buttons">
-                <button class="toolbar-button trade-btn harvest-btn">${lm.t(`commodityExchange.ui.harvest_${commodity}`) || lm.t("commodityExchange.ui.harvest")} (${formatQuantity(harvestOutput)})</button>
+                <button class="toolbar-button trade-btn harvest-btn">${lm.t(`commodityExchange.ui.harvest_${commodity}`) || lm.t("commodityExchange.ui.harvest")} (${formatQuantityFixed(harvestOutput, harvestDecimals)})</button>
                 <button class="toolbar-button trade-btn buy-btn" ${canBuy ? "" : "disabled"}>${lm.t("commodityExchange.ui.buy")}</button>
                 <button class="toolbar-button trade-btn sell-btn" ${canSell ? "" : "disabled"}>${lm.t("commodityExchange.ui.sell")}</button>
                 <button class="toolbar-button trade-btn sell-all-btn" ${canSell ? "" : "disabled"}>${lm.t("commodityExchange.ui.sellAll")}</button>

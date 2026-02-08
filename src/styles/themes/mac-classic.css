@@ -137,6 +137,7 @@
 
     /* Terminal success on white bg */
     --theme-terminal-success: #228b22;
+    --theme-terminal-placeholder: #888888;
 }
 
 /* Mac-style pinstripe title bar lines */

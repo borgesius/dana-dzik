@@ -97,7 +97,7 @@ const ENGINEERING_NODES: CareerNodeDef[] = [
         dateRange: "Series D – Acqui-hire",
         bullets: [
             "Converted vibes into production incidents at scale",
-            "Slack messages sent and lines of code shipped held at a steady 100:1 ratio",
+            "Slack messages sent and lines of code shipped held at a steady 1:1 ratio",
             "Voted 'Most Distinguished' three years running by a committee I chair",
         ],
         bonusLabel: "+15% symposium unit HP",
