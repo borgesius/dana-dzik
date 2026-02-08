@@ -1,6 +1,6 @@
 export const POPUP_CONFIG = {
-    gameSessionDurationMs: 180_000,
-    windowSessionDurationMs: 15_000,
-    windowTriggerChance: 0.2,
-    maxConcurrent: 2,
+    gameSessionDurationMs: 120_000,
+    windowSessionDurationMs: 10_000,
+    windowTriggerChance: 0.08,
+    maxConcurrent: 1,
 } as const

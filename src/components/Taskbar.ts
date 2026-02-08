@@ -100,6 +100,9 @@ export class Taskbar {
         const systemTray = this.createSystemTray()
         this.element.appendChild(systemTray)
 
+        const themeToggle = this.createThemeToggle()
+        systemTray.appendChild(themeToggle)
+
         const levelWidget = new LevelWidget()
         systemTray.appendChild(levelWidget.getElement())
 
@@ -367,6 +370,35 @@ export class Taskbar {
     private closeStartMenu(): void {
         this.startMenuOpen = false
         this.startMenu.classList.remove("open")
+    }
+
+    private createThemeToggle(): HTMLElement {
+        const THEME_ICONS: Record<string, string> = {
+            win95: "🪟",
+            "mac-classic": "🍎",
+            apple2: "🖥️",
+            c64: "📺",
+        }
+
+        const tm = getThemeManager()
+        const btn = document.createElement("button")
+        btn.className = "tray-theme-toggle"
+        btn.textContent = THEME_ICONS[tm.getCurrentTheme()] ?? "🎨"
+        btn.title = tm.getCurrentTheme()
+
+        btn.addEventListener("click", () => {
+            const themes = tm.getThemeIds()
+            const current = themes.indexOf(tm.getCurrentTheme())
+            const next = themes[(current + 1) % themes.length]
+            tm.setTheme(next)
+        })
+
+        tm.on("themeChanged", () => {
+            btn.textContent = THEME_ICONS[tm.getCurrentTheme()] ?? "🎨"
+            btn.title = tm.getCurrentTheme()
+        })
+
+        return btn
     }
 
     private createQuickLaunch(): HTMLElement {

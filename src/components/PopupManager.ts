@@ -10,13 +10,13 @@ import {
 } from "../lib/popupContent"
 
 const POPUP_LEVEL_INTERVALS: Record<number, number> = {
-    1: 25000,
-    2: 18000,
-    3: 12000,
+    1: 60000,
+    2: 45000,
+    3: 30000,
 }
 
-const DEFAULT_SPAWN_INTERVAL = 20000
-const SPAWN_JITTER = 8000
+const DEFAULT_SPAWN_INTERVAL = 60000
+const SPAWN_JITTER = 20000
 const BONUS_POPUP_CHANCE = 0.25
 const RECOVERY_POPUP_CHANCE = 0.6
 
