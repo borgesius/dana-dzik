@@ -1246,27 +1246,27 @@
         },
         "harvest-email-500": {
             "name": "Spam King",
-            "description": "Harvest EMAIL 500 times."
+            "description": "Scrape EMAIL 500 times."
         },
         "harvest-ads-500": {
             "name": "Impression Farmer",
-            "description": "Harvest ADS 500 times."
+            "description": "Click ADS 500 times."
         },
         "harvest-dom-500": {
             "name": "Domain Squatter",
-            "description": "Harvest DOM 500 times."
+            "description": "Squat DOM 500 times."
         },
         "harvest-bw-500": {
             "name": "Bandwidth Hog",
-            "description": "Harvest BW 500 times."
+            "description": "Leech BW 500 times."
         },
         "harvest-soft-500": {
             "name": "Warez Distributor",
-            "description": "Harvest SOFT 500 times."
+            "description": "Pirate SOFT 500 times."
         },
         "harvest-vc-500": {
             "name": "Pitch Deck Machine",
-            "description": "Harvest VC 500 times."
+            "description": "Pitch VC 500 times."
         },
         "definitely-not-a-bot": {
             "name": "You STOLE Fizzy Lifting Drinks",
