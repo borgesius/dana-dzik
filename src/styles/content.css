@@ -341,7 +341,12 @@
 .resume-entry {
     margin: 12px 0;
     padding: 8px 10px;
-    border-left: 3px solid var(--theme-color-success);
+    border-left: 3px solid var(--theme-border-light);
+    background: transparent;
+}
+
+.resume-entry.active-job {
+    border-left-color: var(--theme-color-success);
     background: rgb(34 139 34 / 5%);
 }
 

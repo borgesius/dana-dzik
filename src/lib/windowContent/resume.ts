@@ -137,6 +137,21 @@ function renderResumeTab(): void {
         ),
     ]
 
+    // Determine the active job (highest-tier unlocked node in active career)
+    let activeJobId: string | null = null
+    if (activeCareer) {
+        const activeNodes = getNodesForBranch(activeCareer)
+            .filter((n) => career.isNodeUnlocked(n.id))
+            .sort((a, b) => b.tier - a.tier)
+        if (activeNodes.length > 0) {
+            activeJobId = activeNodes[0].id
+        }
+    }
+    // If no career nodes unlocked, the base experience is the active job
+    if (!activeJobId) {
+        activeJobId = BASE_EXPERIENCE.id
+    }
+
     const shownNodeIds = new Set<string>()
     let experienceHtml = ""
 
@@ -150,14 +165,17 @@ function renderResumeTab(): void {
             shownNodeIds.add(node.id)
             const isDormant =
                 node.branch !== activeCareer && node.branch !== "education"
-            experienceHtml += renderResumeEntry(node, isDormant)
+            const isActiveJob = node.id === activeJobId
+            experienceHtml += renderResumeEntry(node, isDormant, isActiveJob)
         }
     }
 
     // Always show the base Volley entry if it hasn't appeared via unlock
     if (!shownNodeIds.has(BASE_EXPERIENCE.id) && BASE_EXPERIENCE.id) {
+        const isActiveJob = BASE_EXPERIENCE.id === activeJobId
         experienceHtml =
-            renderResumeEntry(BASE_EXPERIENCE, false) + experienceHtml
+            renderResumeEntry(BASE_EXPERIENCE, false, isActiveJob) +
+            experienceHtml
     }
 
     html += experienceHtml
@@ -195,9 +213,21 @@ function renderResumeTab(): void {
 
 // ── Render a single resume entry (read-only) ────────────────────────────────
 
-function renderResumeEntry(node: CareerNodeDef, isDormant: boolean): string {
+function renderResumeEntry(
+    node: CareerNodeDef,
+    isDormant: boolean,
+    isActiveJob: boolean = false
+): string {
+    const classes = [
+        "resume-entry",
+        isDormant ? "dormant" : "",
+        isActiveJob ? "active-job" : "",
+    ]
+        .filter(Boolean)
+        .join(" ")
+
     return `
-        <div class="resume-entry ${isDormant ? "dormant" : ""}">
+        <div class="${classes}">
             <div class="resume-entry-header">
                 <strong class="resume-entry-title">${node.name}</strong>
                 <span class="resume-entry-dates">${node.dateRange}</span>
