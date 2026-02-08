@@ -7,7 +7,6 @@ import type {
     FactionId,
     UnitDef,
 } from "./types"
-import { unitDisplayName } from "./UnitCard"
 import { UNIT_MAP } from "./units"
 
 const MAX_COMBAT_ROUNDS = 30
@@ -51,13 +50,6 @@ export function createCombatUnit(
 
 function getUnitDef(unit: CombatUnit): UnitDef | undefined {
     return UNIT_MAP.get(unit.unitDefId)
-}
-
-/** Localized display name for a unit def ID (falls back to the slug) */
-function uName(id: string): string {
-    const def = UNIT_MAP.get(id)
-    if (!def) return id
-    return unitDisplayName(def)
 }
 
 function isAlive(unit: CombatUnit): boolean {
@@ -141,7 +133,7 @@ export function resolveCombat(
         const pDmgDealt = dealDamage(oFront, pDmg)
         log.push({
             round,
-            description: `${uName(pFront.unitDefId)} attacks ${uName(oFront.unitDefId)} for ${pDmgDealt}`,
+            description: `${pFront.unitDefId} attacks ${oFront.unitDefId} for ${pDmgDealt}`,
         })
 
         if (pDmgDealt > 0) {
@@ -204,7 +196,7 @@ export function resolveCombat(
             const oDmgDealt = dealDamage(pTarget, oDmg)
             log.push({
                 round,
-                description: `${uName(oAttacker.unitDefId)} attacks ${uName(pTarget.unitDefId)} for ${oDmgDealt}`,
+                description: `${oAttacker.unitDefId} attacks ${pTarget.unitDefId} for ${oDmgDealt}`,
             })
 
             if (oDmgDealt > 0) {
@@ -359,7 +351,7 @@ function applyEffect(
                 dealDamage(t, amount)
                 log.push({
                     round,
-                    description: `${uName(owner.unitDefId)} ability deals ${amount} to ${uName(t.unitDefId)}`,
+                    description: `${owner.unitDefId} ability deals ${amount} to ${t.unitDefId}`,
                 })
             }
             break
@@ -395,7 +387,7 @@ function applyEffect(
             const sideTag = side ? ` [${side}]` : ""
             log.push({
                 round,
-                description: `${uName(owner.unitDefId)} summons ${uName(effect.unitId)}${sideTag}`,
+                description: `${owner.unitDefId} summons ${effect.unitId}${sideTag}`,
             })
             break
         }
@@ -460,7 +452,7 @@ function handleDeath(
     round: number,
     side?: "player" | "opponent"
 ): void {
-    log.push({ round, description: `${uName(deadUnit.unitDefId)} dies` })
+    log.push({ round, description: `${deadUnit.unitDefId} dies` })
 
     // Trigger onDeath (with faction scaling + cross bonus)
     const def = getUnitDef(deadUnit)

@@ -11,6 +11,7 @@ const TIERED_GROUP_LABELS: Record<TieredGroup, string> = {
     industrialist: "Industrialist",
     phases: "Phase Progression",
     wrangler: "Academic",
+    depth: "Depth",
     rank: "Rank",
     harvester: "Harvester",
     "commodity-harvester": "Commodity Specialist",

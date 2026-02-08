@@ -24,7 +24,7 @@ export {
     getBuffCost,
     RUN_BUFFS,
 } from "../lib/autobattler/runBuffs"
-export { DEFAULT_TOTAL_ROUNDS } from "../lib/autobattler/RunManager"
+export { WIN_THRESHOLD } from "../lib/autobattler/RunManager"
 export {
     BASE_LINE_SLOTS,
     INITIAL_SCRAP,

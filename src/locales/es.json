@@ -1199,6 +1199,34 @@
             "name": "Post-Structural Reader",
             "description": "Collect all Post-Structuralist units."
         },
+        "tenure-track": {
+            "name": "Tenure Track",
+            "description": "Reach round 10 in a single run."
+        },
+        "associate-prof": {
+            "name": "Associate Professor",
+            "description": "Reach round 15 in a single run."
+        },
+        "full-prof": {
+            "name": "Full Professor",
+            "description": "Reach round 20 in a single run."
+        },
+        "endowed-chair": {
+            "name": "Endowed Chair",
+            "description": "Reach round 25 in a single run."
+        },
+        "dissertation-defense": {
+            "name": "Dissertation Defense",
+            "description": "Defeat your first boss."
+        },
+        "summa-cum-laude": {
+            "name": "Summa Cum Laude",
+            "description": "Defeat a boss without losing any units."
+        },
+        "comprehensive-exams": {
+            "name": "Comprehensive Exams",
+            "description": "Defeat all 4 distinct bosses."
+        },
         "vertical-integration": {
             "name": "Vertical Integration",
             "description": "Have unlocked nodes in all three main career branches."
@@ -1366,7 +1394,24 @@
             "careerBonuses": "Bonificaciones de carrera:",
             "roundOf": "Ronda {{current}}/{{total}}",
             "thoughts": "💭 {{amount}} Pensamientos",
-            "wl": "V{{wins}} / D{{losses}}"
+            "wl": "V{{wins}} / D{{losses}}",
+            "benchOf": "Bench ({{count}}/{{max}})",
+            "opponentPreview": "Next Opponent",
+            "bossFight": "BOSS FIGHT",
+            "runSummary": "Run Summary",
+            "personalBests": "Personal Bests",
+            "highestRound": "Highest Round:",
+            "bossesDefeated": "Bosses Defeated:",
+            "bestUnit": "Best Unit:",
+            "scrapEarned": "Thoughts Earned:",
+            "scrapSpent": "Thoughts Spent:",
+            "unitsBought": "Units Recruited:",
+            "unitsSold": "Units Released:",
+            "majorityFaction": "Primary School:",
+            "noBosses": "None yet",
+            "combatsSurvived": "{{count}} combats survived",
+            "round": "Round {{current}}",
+            "bossRound": "BOSS ROUND {{current}}"
         },
         "units": {
             "drifter-brawler": "El Corrector",
@@ -1405,7 +1450,11 @@
             "bp-revenant": "Pharmakon",
             "bp-leech": "Esquizoanalista",
             "bp-sovereign": "Multiplicidad",
-            "bp-shade": "Huella"
+            "bp-shade": "Huella",
+            "boss-gadfly": "The Gadfly",
+            "boss-noumenon": "The Noumenon",
+            "boss-automaton": "The Automaton",
+            "boss-simulacrum": "The Simulacrum"
         },
         "opponents": {
             "adjectives": [

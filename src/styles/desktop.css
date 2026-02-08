@@ -486,16 +486,26 @@ body {
 
 .wp-clockwork-gears .desktop {
     background:
-        repeating-conic-gradient(
-                rgb(184 115 51 / 15%) 0% 25%,
-                transparent 0% 50%
-            )
-            0 0 / 40px 40px,
+        repeating-linear-gradient(
+                0deg,
+                rgb(100 149 237 / 8%) 0,
+                rgb(100 149 237 / 8%) 1px,
+                transparent 1px,
+                transparent 32px
+            ),
+        repeating-linear-gradient(
+                90deg,
+                rgb(100 149 237 / 8%) 0,
+                rgb(100 149 237 / 8%) 1px,
+                transparent 1px,
+                transparent 32px
+            ),
         linear-gradient(
             135deg,
-            #5c4033 0%,
-            #b87333 50%,
-            #daa520 100%
+            #0a1628 0%,
+            #1a2a4a 40%,
+            #2a4a7a 70%,
+            #3a6aaa 100%
         ) !important;
 }
 

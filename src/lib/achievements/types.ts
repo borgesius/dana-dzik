@@ -136,6 +136,15 @@ export type AchievementId =
     | "deputy"
     | "sheriff"
     | "marshal"
+    // Autobattler (tiered - Depth)
+    | "tenure-track"
+    | "associate-prof"
+    | "full-prof"
+    | "endowed-chair"
+    // Autobattler (Boss)
+    | "dissertation-defense"
+    | "summa-cum-laude"
+    | "comprehensive-exams"
     // Milestones (tiered - Rank)
     | "level-5"
     | "level-10"
@@ -145,7 +154,7 @@ export type AchievementId =
     // Milestones (tiered - Phases extension)
     | "phase-5"
     | "phase-6"
-    // Phase 6: Structured Products Desk (Margin Call quotes)
+    // Phase 6: Structured Products Desk
     | "its-just-money"
     | "be-first"
     | "just-silence"
@@ -269,6 +278,7 @@ export type TieredGroup =
     | "industrialist"
     | "phases"
     | "wrangler"
+    | "depth"
     | "rank"
     | "harvester"
     | "commodity-harvester"
@@ -304,6 +314,7 @@ export type CounterKey =
     | "harvest-VC"
     | "achievements-opened"
     | "grund-compiles"
+    | "bosses-defeated"
 
 export interface AchievementSaveData {
     earned: Record<string, number>

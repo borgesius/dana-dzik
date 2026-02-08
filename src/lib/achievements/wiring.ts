@@ -816,8 +816,36 @@ function wireProgressionEvents(mgr: AchievementManager): void {
             if (factionSet.has("clockwork") && factionSet.has("prospectors")) {
                 mgr.earn("expressionism-in-philosophy")
             }
+            // Escalation milestones
+            if (detail.highestRound >= 10) mgr.earn("tenure-track")
+            if (detail.highestRound >= 15) mgr.earn("associate-prof")
+            if (detail.highestRound >= 20) mgr.earn("full-prof")
+            if (detail.highestRound >= 25) mgr.earn("endowed-chair")
         } else {
             consecutiveWins = 0
+
+            // Escalation milestones (awarded on loss too)
+            if (detail.highestRound >= 10) mgr.earn("tenure-track")
+            if (detail.highestRound >= 15) mgr.earn("associate-prof")
+            if (detail.highestRound >= 20) mgr.earn("full-prof")
+            if (detail.highestRound >= 25) mgr.earn("endowed-chair")
+        }
+    })
+
+    // ── Boss defeat achievements ────────────────────────────────────────
+    onAppEvent("autobattler:boss-defeated", (detail) => {
+        // First boss
+        mgr.earn("dissertation-defense")
+
+        // Perfect boss (no units lost)
+        if (detail.noUnitsLost) {
+            mgr.earn("summa-cum-laude")
+        }
+
+        // All 4 bosses (use addToSet to track unique boss IDs)
+        const uniqueCount = mgr.addToSet("bosses-defeated", detail.bossId)
+        if (uniqueCount >= 4) {
+            mgr.earn("comprehensive-exams")
         }
     })
 

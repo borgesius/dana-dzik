@@ -30,7 +30,7 @@ export const RUN_BUFFS: RunBuff[] = [
     {
         id: "email-rush",
         name: "Email Rush",
-        description: "+1 ATK to all units each round",
+        description: "+1 ATK to all units in combat",
         commodityId: "EMAIL",
         icon: "⚔️",
     },

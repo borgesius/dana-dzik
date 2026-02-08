@@ -634,7 +634,7 @@ export const ACHIEVEMENTS: AchievementDef[] = [
     {
         id: "syndicate-complete",
         category: "autobattler",
-        icon: "🔫",
+        icon: "⚡",
         hidden: false,
     },
     {
@@ -646,13 +646,13 @@ export const ACHIEVEMENTS: AchievementDef[] = [
     {
         id: "collective-complete",
         category: "autobattler",
-        icon: "⚙️",
+        icon: "♾️",
         hidden: false,
     },
     {
         id: "prospectors-complete",
         category: "autobattler",
-        icon: "💀",
+        icon: "🌀",
         hidden: false,
     },
 
@@ -780,6 +780,60 @@ export const ACHIEVEMENTS: AchievementDef[] = [
         hidden: false,
         tieredGroup: "wrangler",
         tier: 4,
+    },
+
+    // ── Autobattler (tiered - Depth) ──────────────────────────────────────
+    {
+        id: "tenure-track",
+        category: "autobattler",
+        icon: "📖",
+        hidden: false,
+        tieredGroup: "depth",
+        tier: 1,
+    },
+    {
+        id: "associate-prof",
+        category: "autobattler",
+        icon: "📖",
+        hidden: false,
+        tieredGroup: "depth",
+        tier: 2,
+    },
+    {
+        id: "full-prof",
+        category: "autobattler",
+        icon: "📖",
+        hidden: false,
+        tieredGroup: "depth",
+        tier: 3,
+    },
+    {
+        id: "endowed-chair",
+        category: "autobattler",
+        icon: "📖",
+        hidden: false,
+        tieredGroup: "depth",
+        tier: 4,
+    },
+
+    // ── Autobattler (Boss) ────────────────────────────────────────────────
+    {
+        id: "dissertation-defense",
+        category: "autobattler",
+        icon: "🛡️",
+        hidden: false,
+    },
+    {
+        id: "summa-cum-laude",
+        category: "autobattler",
+        icon: "🏅",
+        hidden: true,
+    },
+    {
+        id: "comprehensive-exams",
+        category: "autobattler",
+        icon: "📋",
+        hidden: false,
     },
 
     // ── Milestones (tiered - Rank) ───────────────────────────────────────

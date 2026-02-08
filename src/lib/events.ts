@@ -52,6 +52,11 @@ export interface AppEventMap {
         majorityFaction?: string
         losses: number
         lineupFactions: string[]
+        highestRound: number
+    }
+    "autobattler:boss-defeated": {
+        bossId: string
+        noUnitsLost: boolean
     }
     "autobattler:unit-unlocked": { unitId: string }
     "autobattler:spiral-complete": undefined

@@ -37,6 +37,12 @@ export class CollectionManager {
     private eventListeners: Map<CollectionEventType, CollectionCallback[]> =
         new Map()
 
+    // ── Personal bests ──────────────────────────────────────────────────────
+    private highestRound: number = 0
+    private bestWinLoss: { wins: number; losses: number } | null = null
+    private totalBossesDefeated: number = 0
+    private bossesDefeatedSet: Set<string> = new Set()
+
     // ── Events ───────────────────────────────────────────────────────────────
 
     public on(event: CollectionEventType, callback: CollectionCallback): void {
@@ -126,7 +132,8 @@ export class CollectionManager {
         won: boolean,
         majorityFaction?: string,
         losses: number = 0,
-        lineupFactions: string[] = []
+        lineupFactions: string[] = [],
+        highestRound: number = 0
     ): void {
         this.completedRuns++
         if (won) {
@@ -138,12 +145,55 @@ export class CollectionManager {
         } else {
             this.currentStreak = 0
         }
+
+        // Update personal bests
+        if (highestRound > this.highestRound) {
+            this.highestRound = highestRound
+        }
+
+        // Best W-L: highest wins, then fewest losses as tiebreaker
+        const wins = won ? highestRound - losses : highestRound - losses
+        if (
+            !this.bestWinLoss ||
+            wins > this.bestWinLoss.wins ||
+            (wins === this.bestWinLoss.wins && losses < this.bestWinLoss.losses)
+        ) {
+            // Recalculate from the run's actual W-L
+            // We need the actual wins count, not highestRound
+        }
+
         emitAppEvent("autobattler:run-complete", {
             won,
             majorityFaction,
             losses,
             lineupFactions,
+            highestRound,
         })
+        this.onDirty?.()
+    }
+
+    /**
+     * Record a boss defeat for personal bests / achievement tracking.
+     * Returns the number of unique bosses defeated.
+     */
+    public recordBossDefeated(bossId: string): number {
+        this.totalBossesDefeated++
+        this.bossesDefeatedSet.add(bossId)
+        this.onDirty?.()
+        return this.bossesDefeatedSet.size
+    }
+
+    /**
+     * Update the best W-L record (called with actual win/loss counts).
+     */
+    public updateBestWinLoss(wins: number, losses: number): void {
+        if (
+            !this.bestWinLoss ||
+            wins > this.bestWinLoss.wins ||
+            (wins === this.bestWinLoss.wins && losses < this.bestWinLoss.losses)
+        ) {
+            this.bestWinLoss = { wins, losses }
+        }
         this.onDirty?.()
     }
 
@@ -169,6 +219,22 @@ export class CollectionManager {
         return [...this.unlockedFactions]
     }
 
+    public getHighestRound(): number {
+        return this.highestRound
+    }
+
+    public getBestWinLoss(): { wins: number; losses: number } | null {
+        return this.bestWinLoss
+    }
+
+    public getTotalBossesDefeated(): number {
+        return this.totalBossesDefeated
+    }
+
+    public getUniqueBossesDefeated(): number {
+        return this.bossesDefeatedSet.size
+    }
+
     // ── Serialization ────────────────────────────────────────────────────────
 
     public serialize(): AutobattlerSaveData {
@@ -192,6 +258,10 @@ export class CollectionManager {
             currentStreak: this.currentStreak,
             unlockedFactions: [...this.unlockedFactions],
             spiralProgress: spiral,
+            highestRound: this.highestRound,
+            bestWinLoss: this.bestWinLoss ?? undefined,
+            totalBossesDefeated: this.totalBossesDefeated,
+            bossesDefeatedSet: [...this.bossesDefeatedSet],
         }
     }
 
@@ -199,6 +269,7 @@ export class CollectionManager {
         this.collection.clear()
         this.unlockedFactions.clear()
         this.spiralProgress.clear()
+        this.bossesDefeatedSet.clear()
 
         if (data.collection) {
             for (const entry of data.collection) {
@@ -220,6 +291,16 @@ export class CollectionManager {
         if (data.spiralProgress) {
             for (const [k, v] of Object.entries(data.spiralProgress)) {
                 this.spiralProgress.set(k, v)
+            }
+        }
+
+        // Personal bests
+        this.highestRound = data.highestRound ?? 0
+        this.bestWinLoss = data.bestWinLoss ?? null
+        this.totalBossesDefeated = data.totalBossesDefeated ?? 0
+        if (data.bossesDefeatedSet) {
+            for (const id of data.bossesDefeatedSet) {
+                this.bossesDefeatedSet.add(id)
             }
         }
     }
