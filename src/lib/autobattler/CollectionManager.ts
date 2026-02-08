@@ -122,7 +122,12 @@ export class CollectionManager {
 
     // ── Run tracking ─────────────────────────────────────────────────────────
 
-    public recordRunComplete(won: boolean, majorityFaction?: string): void {
+    public recordRunComplete(
+        won: boolean,
+        majorityFaction?: string,
+        losses: number = 0,
+        lineupFactions: string[] = []
+    ): void {
         this.completedRuns++
         if (won) {
             this.wonRuns++
@@ -133,7 +138,12 @@ export class CollectionManager {
         } else {
             this.currentStreak = 0
         }
-        emitAppEvent("autobattler:run-complete", { won, majorityFaction })
+        emitAppEvent("autobattler:run-complete", {
+            won,
+            majorityFaction,
+            losses,
+            lineupFactions,
+        })
         this.onDirty?.()
     }
 

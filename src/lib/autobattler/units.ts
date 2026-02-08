@@ -1,11 +1,11 @@
 import type { UnitDef } from "./types"
 
-// ── Drifters (neutral, starting units) ───────────────────────────────────────
+// ── Adjuncts (neutral, starting units) ────────────────────────────────────────
 
 const DRIFTER_UNITS: UnitDef[] = [
     {
         id: "drifter-brawler",
-        name: "Drifter Brawler",
+        name: "Teaching Assistant",
         faction: "drifters",
         tier: 1,
         baseATK: 3,
@@ -19,7 +19,7 @@ const DRIFTER_UNITS: UnitDef[] = [
     },
     {
         id: "drifter-scout",
-        name: "Drifter Scout",
+        name: "The Sessional",
         faction: "drifters",
         tier: 1,
         baseATK: 2,
@@ -33,7 +33,7 @@ const DRIFTER_UNITS: UnitDef[] = [
     },
     {
         id: "drifter-medic",
-        name: "Drifter Medic",
+        name: "Office Hours",
         faction: "drifters",
         tier: 1,
         baseATK: 1,
@@ -47,7 +47,7 @@ const DRIFTER_UNITS: UnitDef[] = [
     },
     {
         id: "drifter-heavy",
-        name: "Drifter Heavy",
+        name: "Red Tape",
         faction: "drifters",
         tier: 2,
         baseATK: 4,
@@ -61,12 +61,12 @@ const DRIFTER_UNITS: UnitDef[] = [
     },
 ]
 
-// ── Quickdraw Syndicate (Aggro) ──────────────────────────────────────────────
+// ── Existentialists (Aggro) ──────────────────────────────────────────────────
 
 const QUICKDRAW_UNITS: UnitDef[] = [
     {
         id: "qd-sharpshooter",
-        name: "Quickdraw Sharpshooter",
+        name: "Iconoclast",
         faction: "quickdraw",
         tier: 1,
         baseATK: 4,
@@ -75,14 +75,14 @@ const QUICKDRAW_UNITS: UnitDef[] = [
             trigger: "combatStart",
             effect: { type: "damage", target: "frontEnemy", amount: 3 },
             description:
-                "On combat start: deal 3 (+1/Quickdraw) to enemy front",
+                "On combat start: deal 3 (+1/Existentialist) to enemy front",
             factionBonus: { perAlly: 1 },
         },
         shopCost: 2,
     },
     {
         id: "qd-deadeye",
-        name: "Quickdraw Deadeye",
+        name: "The Übermensch",
         faction: "quickdraw",
         tier: 2,
         baseATK: 5,
@@ -91,7 +91,7 @@ const QUICKDRAW_UNITS: UnitDef[] = [
             trigger: "onFirstAttack",
             effect: { type: "doubleDamage" },
             description:
-                "First attack: double damage. BRIDGE 2+ Deputies: +2 Shield",
+                "First attack: double damage. BRIDGE 2+ Idealists: +2 Shield",
             crossBonus: {
                 faction: "deputies",
                 minAllies: 2,
@@ -101,14 +101,15 @@ const QUICKDRAW_UNITS: UnitDef[] = [
                     stat: "shield",
                     amount: 2,
                 },
-                description: "With 2+ Deputies: gain +2 Shield on first attack",
+                description:
+                    "With 2+ Idealists: gain +2 Shield on first attack",
             },
         },
         shopCost: 3,
     },
     {
         id: "qd-dynamiter",
-        name: "Dynamite Runner",
+        name: "The Dynamitard",
         faction: "quickdraw",
         tier: 1,
         baseATK: 3,
@@ -116,14 +117,14 @@ const QUICKDRAW_UNITS: UnitDef[] = [
         ability: {
             trigger: "onDeath",
             effect: { type: "damage", target: "allEnemies", amount: 2 },
-            description: "On death: deal 2 (+1/Quickdraw) to all enemies",
+            description: "On death: deal 2 (+1/Existentialist) to all enemies",
             factionBonus: { perAlly: 1 },
         },
         shopCost: 2,
     },
     {
         id: "qd-outlaw",
-        name: "Quickdraw Outlaw",
+        name: "The Nihilist",
         faction: "quickdraw",
         tier: 2,
         baseATK: 6,
@@ -132,7 +133,7 @@ const QUICKDRAW_UNITS: UnitDef[] = [
             trigger: "onEnemyEnterFront",
             effect: { type: "damage", target: "frontEnemy", amount: 2 },
             description:
-                "Enemy enters front: deal 2 (+1/Quickdraw). BRIDGE 1+ Deputy: +1 Shield",
+                "Enemy enters front: deal 2 (+1/Existentialist). BRIDGE 1+ Idealist: +1 Shield",
             factionBonus: { perAlly: 1 },
             crossBonus: {
                 faction: "deputies",
@@ -143,14 +144,14 @@ const QUICKDRAW_UNITS: UnitDef[] = [
                     stat: "shield",
                     amount: 1,
                 },
-                description: "With 1+ Deputy: also gain +1 Shield",
+                description: "With 1+ Idealist: also gain +1 Shield",
             },
         },
         shopCost: 4,
     },
     {
         id: "qd-kingpin",
-        name: "Syndicate Kingpin",
+        name: "Zarathustra",
         faction: "quickdraw",
         tier: 3,
         baseATK: 8,
@@ -164,14 +165,14 @@ const QUICKDRAW_UNITS: UnitDef[] = [
                 amount: 2,
             },
             description:
-                "On combat start: all allies gain +2 (+1/Quickdraw) ATK",
+                "On combat start: all allies gain +2 (+1/Existentialist) ATK",
             factionBonus: { perAlly: 1 },
         },
         shopCost: 5,
     },
     {
         id: "qd-rifler",
-        name: "Quickdraw Rifler",
+        name: "Perspectivist",
         faction: "quickdraw",
         tier: 2,
         baseATK: 7,
@@ -180,14 +181,14 @@ const QUICKDRAW_UNITS: UnitDef[] = [
             trigger: "combatStart",
             effect: { type: "damage", target: "backEnemy", amount: 2 },
             description:
-                "On combat start: deal 2 (+1/Quickdraw) to enemy back line",
+                "On combat start: deal 2 (+1/Existentialist) to enemy back line",
             factionBonus: { perAlly: 1 },
         },
         shopCost: 3,
     },
     {
         id: "qd-ambusher",
-        name: "Quickdraw Ambusher",
+        name: "Will to Power",
         faction: "quickdraw",
         tier: 2,
         baseATK: 5,
@@ -196,7 +197,7 @@ const QUICKDRAW_UNITS: UnitDef[] = [
             trigger: "onDealDamage",
             effect: { type: "damage", target: "randomEnemy", amount: 2 },
             description:
-                "On deal damage: hit random enemy for 2 (+1/Quickdraw). BRIDGE 1+ Deputy: +1 Shield",
+                "On deal damage: hit random enemy for 2 (+1/Existentialist). BRIDGE 1+ Idealist: +1 Shield",
             factionBonus: { perAlly: 1 },
             crossBonus: {
                 faction: "deputies",
@@ -207,14 +208,14 @@ const QUICKDRAW_UNITS: UnitDef[] = [
                     stat: "shield",
                     amount: 1,
                 },
-                description: "With 1+ Deputy: gain +1 Shield on hit",
+                description: "With 1+ Idealist: gain +1 Shield on hit",
             },
         },
         shopCost: 4,
     },
     {
         id: "qd-executioner",
-        name: "Syndicate Executioner",
+        name: "The Transvaluator",
         faction: "quickdraw",
         tier: 3,
         baseATK: 6,
@@ -223,19 +224,19 @@ const QUICKDRAW_UNITS: UnitDef[] = [
             trigger: "onFirstAttack",
             effect: { type: "damage", target: "allEnemies", amount: 3 },
             description:
-                "First attack: also deal 3 (+1/Quickdraw) to all enemies",
+                "First attack: also deal 3 (+1/Existentialist) to all enemies",
             factionBonus: { perAlly: 1 },
         },
         shopCost: 5,
     },
 ]
 
-// ── Iron Deputies (Control) ──────────────────────────────────────────────────
+// ── Idealists (Control) ──────────────────────────────────────────────────────
 
 const DEPUTY_UNITS: UnitDef[] = [
     {
         id: "dep-barricader",
-        name: "Deputy Barricader",
+        name: "The Categorist",
         faction: "deputies",
         tier: 1,
         baseATK: 2,
@@ -248,14 +249,14 @@ const DEPUTY_UNITS: UnitDef[] = [
                 stat: "shield",
                 amount: 1,
             },
-            description: "Round start: all allies gain +1 (+1/Deputy) Shield",
+            description: "Round start: all allies gain +1 (+1/Idealist) Shield",
             factionBonus: { perAlly: 1 },
         },
         shopCost: 2,
     },
     {
         id: "dep-marshal",
-        name: "Iron Marshal",
+        name: "Transcendental Ego",
         faction: "deputies",
         tier: 2,
         baseATK: 3,
@@ -264,20 +265,21 @@ const DEPUTY_UNITS: UnitDef[] = [
             trigger: "onTakeDamage",
             effect: { type: "buff", target: "self", stat: "shield", amount: 2 },
             description:
-                "On taking damage: +2 (+1/Deputy) Shield. BRIDGE 2+ QD: deal 1 to front",
+                "On taking damage: +2 (+1/Idealist) Shield. BRIDGE 2+ EX: deal 1 to front",
             factionBonus: { perAlly: 1 },
             crossBonus: {
                 faction: "quickdraw",
                 minAllies: 2,
                 effect: { type: "damage", target: "frontEnemy", amount: 1 },
-                description: "With 2+ Quickdraw: also deal 1 to front enemy",
+                description:
+                    "With 2+ Existentialists: also deal 1 to front enemy",
             },
         },
         shopCost: 3,
     },
     {
         id: "dep-trapper",
-        name: "Deputy Trapper",
+        name: "Dialectician",
         faction: "deputies",
         tier: 1,
         baseATK: 2,
@@ -285,14 +287,14 @@ const DEPUTY_UNITS: UnitDef[] = [
         ability: {
             trigger: "onEnemyEnterFront",
             effect: { type: "damage", target: "frontEnemy", amount: 3 },
-            description: "Enemy enters front: deal 3 (+1/Deputy) damage",
+            description: "Enemy enters front: deal 3 (+1/Idealist) damage",
             factionBonus: { perAlly: 1 },
         },
         shopCost: 2,
     },
     {
         id: "dep-warden",
-        name: "Fort Warden",
+        name: "The Systematizer",
         faction: "deputies",
         tier: 2,
         baseATK: 3,
@@ -301,20 +303,21 @@ const DEPUTY_UNITS: UnitDef[] = [
             trigger: "roundStart",
             effect: { type: "heal", target: "self", amount: 3 },
             description:
-                "Round start: heal self 3 (+1/Deputy). BRIDGE 1+ QD: heal front for 1",
+                "Round start: heal self 3 (+1/Idealist). BRIDGE 1+ EX: heal front for 1",
             factionBonus: { perAlly: 1 },
             crossBonus: {
                 faction: "quickdraw",
                 minAllies: 1,
                 effect: { type: "heal", target: "allAllies", amount: 1 },
-                description: "With 1+ Quickdraw: also heal frontliner for 1",
+                description:
+                    "With 1+ Existentialist: also heal frontliner for 1",
             },
         },
         shopCost: 4,
     },
     {
         id: "dep-judge",
-        name: "Hanging Judge",
+        name: "World Spirit",
         faction: "deputies",
         tier: 3,
         baseATK: 4,
@@ -322,14 +325,14 @@ const DEPUTY_UNITS: UnitDef[] = [
         ability: {
             trigger: "onAllyDeath",
             effect: { type: "buff", target: "self", stat: "atk", amount: 3 },
-            description: "On ally death: gain +3 (+1/Deputy) ATK",
+            description: "On ally death: gain +3 (+1/Idealist) ATK",
             factionBonus: { perAlly: 1 },
         },
         shopCost: 5,
     },
     {
         id: "dep-sentinel",
-        name: "Deputy Sentinel",
+        name: "A Priori",
         faction: "deputies",
         tier: 2,
         baseATK: 2,
@@ -342,14 +345,14 @@ const DEPUTY_UNITS: UnitDef[] = [
                 stat: "shield",
                 amount: 3,
             },
-            description: "Combat start: gain +3 (+1/Deputy) Shield",
+            description: "Combat start: gain +3 (+1/Idealist) Shield",
             factionBonus: { perAlly: 1 },
         },
         shopCost: 3,
     },
     {
         id: "dep-field-medic",
-        name: "Field Surgeon",
+        name: "The Synthesist",
         faction: "deputies",
         tier: 2,
         baseATK: 2,
@@ -358,7 +361,7 @@ const DEPUTY_UNITS: UnitDef[] = [
             trigger: "onTakeDamage",
             effect: { type: "heal", target: "allAllies", amount: 1 },
             description:
-                "On taking damage: heal all allies 1 (+1/Deputy). BRIDGE 1+ QD: also +1 ATK to self",
+                "On taking damage: heal all allies 1 (+1/Idealist). BRIDGE 1+ EX: also +1 ATK to self",
             factionBonus: { perAlly: 1 },
             crossBonus: {
                 faction: "quickdraw",
@@ -369,14 +372,15 @@ const DEPUTY_UNITS: UnitDef[] = [
                     stat: "atk",
                     amount: 1,
                 },
-                description: "With 1+ Quickdraw: also gain +1 ATK when hit",
+                description:
+                    "With 1+ Existentialist: also gain +1 ATK when hit",
             },
         },
         shopCost: 4,
     },
     {
         id: "dep-fortress",
-        name: "Iron Fortress",
+        name: "The Absolute",
         faction: "deputies",
         tier: 3,
         baseATK: 3,
@@ -389,19 +393,19 @@ const DEPUTY_UNITS: UnitDef[] = [
                 stat: "hp",
                 amount: 2,
             },
-            description: "Round start: all allies gain +2 (+1/Deputy) max HP",
+            description: "Round start: all allies gain +2 (+1/Idealist) max HP",
             factionBonus: { perAlly: 1 },
         },
         shopCost: 5,
     },
 ]
 
-// ── Clockwork Collective (Engine) ────────────────────────────────────────────
+// ── Rationalists (Engine) ────────────────────────────────────────────────────
 
 const CLOCKWORK_UNITS: UnitDef[] = [
     {
         id: "cw-accumulator",
-        name: "Clockwork Accumulator",
+        name: "The Monad",
         faction: "clockwork",
         tier: 1,
         baseATK: 1,
@@ -409,14 +413,14 @@ const CLOCKWORK_UNITS: UnitDef[] = [
         ability: {
             trigger: "onTakeDamage",
             effect: { type: "buff", target: "self", stat: "atk", amount: 1 },
-            description: "On taking damage: gain +1 (+1/Clockwork) ATK",
+            description: "On taking damage: gain +1 (+1/Rationalist) ATK",
             factionBonus: { perAlly: 1 },
         },
         shopCost: 2,
     },
     {
         id: "cw-gearsmith",
-        name: "Gearsmith",
+        name: "Conatus",
         faction: "clockwork",
         tier: 1,
         baseATK: 2,
@@ -425,7 +429,7 @@ const CLOCKWORK_UNITS: UnitDef[] = [
             trigger: "onAllyAbility",
             effect: { type: "buff", target: "self", stat: "atk", amount: 1 },
             description:
-                "Ally ability: +1 (+1/Clockwork) ATK. BRIDGE 2+ BP: summons trigger this",
+                "Ally ability: +1 (+1/Rationalist) ATK. BRIDGE 2+ PS: summons trigger this",
             factionBonus: { perAlly: 1 },
             crossBonus: {
                 faction: "prospectors",
@@ -436,14 +440,15 @@ const CLOCKWORK_UNITS: UnitDef[] = [
                     stat: "atk",
                     amount: 0,
                 },
-                description: "With 2+ Prospectors: summons also trigger this",
+                description:
+                    "With 2+ Post-Structuralists: summons also trigger this",
             },
         },
         shopCost: 2,
     },
     {
         id: "cw-tesla-coil",
-        name: "Tesla Coil",
+        name: "Causa Sui",
         faction: "clockwork",
         tier: 2,
         baseATK: 2,
@@ -451,14 +456,14 @@ const CLOCKWORK_UNITS: UnitDef[] = [
         ability: {
             trigger: "roundStart",
             effect: { type: "damage", target: "randomEnemy", amount: 2 },
-            description: "Round start: deal 2 (+1/Clockwork) to random enemy",
+            description: "Round start: deal 2 (+1/Rationalist) to random enemy",
             factionBonus: { perAlly: 1 },
         },
         shopCost: 3,
     },
     {
         id: "cw-overcharger",
-        name: "Overcharger",
+        name: "The Harmonist",
         faction: "clockwork",
         tier: 2,
         baseATK: 3,
@@ -472,7 +477,7 @@ const CLOCKWORK_UNITS: UnitDef[] = [
                 amount: 1,
             },
             description:
-                "Deal damage: random ally +1 ATK. BRIDGE 1+ BP: buff 2 allies",
+                "Deal damage: random ally +1 ATK. BRIDGE 1+ PS: buff 2 allies",
             crossBonus: {
                 faction: "prospectors",
                 minAllies: 1,
@@ -483,14 +488,14 @@ const CLOCKWORK_UNITS: UnitDef[] = [
                     amount: 1,
                 },
                 description:
-                    "With 1+ Prospector: buff a second random ally +1 ATK",
+                    "With 1+ Post-Structuralist: buff a second random ally +1 ATK",
             },
         },
         shopCost: 4,
     },
     {
         id: "cw-architect",
-        name: "Grand Architect",
+        name: "Substance",
         faction: "clockwork",
         tier: 3,
         baseATK: 3,
@@ -503,14 +508,14 @@ const CLOCKWORK_UNITS: UnitDef[] = [
                 stat: "atk",
                 amount: 1,
             },
-            description: "Round start: all allies gain +1 (+1/Clockwork) ATK",
+            description: "Round start: all allies gain +1 (+1/Rationalist) ATK",
             factionBonus: { perAlly: 1 },
         },
         shopCost: 5,
     },
     {
         id: "cw-amplifier",
-        name: "Clockwork Amplifier",
+        name: "Adequate Idea",
         faction: "clockwork",
         tier: 2,
         baseATK: 2,
@@ -524,7 +529,7 @@ const CLOCKWORK_UNITS: UnitDef[] = [
                 amount: 1,
             },
             description:
-                "Ally ability: gain +1 (+1/Clockwork) Shield. BRIDGE 1+ BP: also +1 ATK",
+                "Ally ability: gain +1 (+1/Rationalist) Shield. BRIDGE 1+ PS: also +1 ATK",
             factionBonus: { perAlly: 1 },
             crossBonus: {
                 faction: "prospectors",
@@ -536,14 +541,14 @@ const CLOCKWORK_UNITS: UnitDef[] = [
                     amount: 1,
                 },
                 description:
-                    "With 1+ Prospector: also gain +1 ATK on ally ability",
+                    "With 1+ Post-Structuralist: also gain +1 ATK on ally ability",
             },
         },
         shopCost: 3,
     },
     {
         id: "cw-disruptor",
-        name: "Clockwork Disruptor",
+        name: "Natura Naturans",
         faction: "clockwork",
         tier: 2,
         baseATK: 3,
@@ -551,14 +556,14 @@ const CLOCKWORK_UNITS: UnitDef[] = [
         ability: {
             trigger: "roundStart",
             effect: { type: "damage", target: "allEnemies", amount: 1 },
-            description: "Round start: deal 1 (+1/Clockwork) to all enemies",
+            description: "Round start: deal 1 (+1/Rationalist) to all enemies",
             factionBonus: { perAlly: 1 },
         },
         shopCost: 4,
     },
     {
         id: "cw-detonator",
-        name: "Clockwork Detonator",
+        name: "Deus sive Natura",
         faction: "clockwork",
         tier: 3,
         baseATK: 2,
@@ -566,19 +571,19 @@ const CLOCKWORK_UNITS: UnitDef[] = [
         ability: {
             trigger: "onDeath",
             effect: { type: "damage", target: "allEnemies", amount: 5 },
-            description: "On death: deal 5 (+2/Clockwork) to all enemies",
+            description: "On death: deal 5 (+2/Rationalist) to all enemies",
             factionBonus: { perAlly: 2 },
         },
         shopCost: 5,
     },
 ]
 
-// ── Bone Prospectors (Swarm) ─────────────────────────────────────────────────
+// ── Post-Structuralists (Swarm) ──────────────────────────────────────────────
 
 const PROSPECTOR_UNITS: UnitDef[] = [
     {
         id: "bp-tunneler",
-        name: "Bone Tunneler",
+        name: "Différance",
         faction: "prospectors",
         tier: 1,
         baseATK: 2,
@@ -587,7 +592,7 @@ const PROSPECTOR_UNITS: UnitDef[] = [
             trigger: "onDeath",
             effect: { type: "summon", unitId: "bp-shade", position: "back" },
             description:
-                "On death: summon a 1/1 Shade. BRIDGE 2+ CW: Shade is 2/1",
+                "On death: summon a 1/1 Trace. BRIDGE 2+ RA: Trace is 2/1",
             crossBonus: {
                 faction: "clockwork",
                 minAllies: 2,
@@ -597,14 +602,14 @@ const PROSPECTOR_UNITS: UnitDef[] = [
                     position: "back",
                     atkBonus: 1,
                 },
-                description: "With 2+ Clockwork: summoned Shade has +1 ATK",
+                description: "With 2+ Rationalists: summoned Trace has +1 ATK",
             },
         },
         shopCost: 1,
     },
     {
         id: "bp-foreman",
-        name: "Bone Foreman",
+        name: "Desiring Machine",
         faction: "prospectors",
         tier: 2,
         baseATK: 3,
@@ -612,14 +617,14 @@ const PROSPECTOR_UNITS: UnitDef[] = [
         ability: {
             trigger: "onAllyDeath",
             effect: { type: "buff", target: "self", stat: "atk", amount: 2 },
-            description: "On ally death: gain +2 (+1/Prospector) ATK",
+            description: "On ally death: gain +2 (+1/Post-Struct) ATK",
             factionBonus: { perAlly: 1 },
         },
         shopCost: 3,
     },
     {
         id: "bp-rattler",
-        name: "Rattlesnake Ghost",
+        name: "The Supplement",
         faction: "prospectors",
         tier: 1,
         baseATK: 3,
@@ -627,14 +632,14 @@ const PROSPECTOR_UNITS: UnitDef[] = [
         ability: {
             trigger: "onDeath",
             effect: { type: "damage", target: "frontEnemy", amount: 3 },
-            description: "On death: deal 3 (+1/Prospector) to enemy front",
+            description: "On death: deal 3 (+1/Post-Struct) to enemy front",
             factionBonus: { perAlly: 1 },
         },
         shopCost: 2,
     },
     {
         id: "bp-necrominer",
-        name: "Necrominer",
+        name: "The Rhizome",
         faction: "prospectors",
         tier: 2,
         baseATK: 2,
@@ -643,7 +648,7 @@ const PROSPECTOR_UNITS: UnitDef[] = [
             trigger: "onAllyDeath",
             effect: { type: "summon", unitId: "bp-shade", position: "back" },
             description:
-                "Ally death: summon 1/1 Shade. BRIDGE 1+ CW: Shade gets +1 ATK",
+                "Ally death: summon 1/1 Trace. BRIDGE 1+ RA: Trace gets +1 ATK",
             crossBonus: {
                 faction: "clockwork",
                 minAllies: 1,
@@ -653,14 +658,14 @@ const PROSPECTOR_UNITS: UnitDef[] = [
                     position: "back",
                     atkBonus: 1,
                 },
-                description: "With 1+ Clockwork: summoned Shade has +1 ATK",
+                description: "With 1+ Rationalist: summoned Trace has +1 ATK",
             },
         },
         shopCost: 3,
     },
     {
         id: "bp-patriarch",
-        name: "Bone Patriarch",
+        name: "Body without Organs",
         faction: "prospectors",
         tier: 3,
         baseATK: 4,
@@ -669,7 +674,7 @@ const PROSPECTOR_UNITS: UnitDef[] = [
             trigger: "roundStart",
             effect: { type: "summon", unitId: "bp-shade", position: "back" },
             description:
-                "Round start: summon 1/1 Shade. BRIDGE 2+ CW: Shade gets +1/+1",
+                "Round start: summon 1/1 Trace. BRIDGE 2+ RA: Trace gets +1/+1",
             crossBonus: {
                 faction: "clockwork",
                 minAllies: 2,
@@ -680,14 +685,14 @@ const PROSPECTOR_UNITS: UnitDef[] = [
                     atkBonus: 1,
                     hpBonus: 1,
                 },
-                description: "With 2+ Clockwork: summoned Shade has +1/+1",
+                description: "With 2+ Rationalists: summoned Trace has +1/+1",
             },
         },
         shopCost: 5,
     },
     {
         id: "bp-revenant",
-        name: "Bone Revenant",
+        name: "Pharmakon",
         faction: "prospectors",
         tier: 2,
         baseATK: 3,
@@ -700,14 +705,14 @@ const PROSPECTOR_UNITS: UnitDef[] = [
                 stat: "atk",
                 amount: 2,
             },
-            description: "On death: all allies gain +2 (+1/Prospector) ATK",
+            description: "On death: all allies gain +2 (+1/Post-Struct) ATK",
             factionBonus: { perAlly: 1 },
         },
         shopCost: 3,
     },
     {
         id: "bp-leech",
-        name: "Bone Leech",
+        name: "Schizoanalyst",
         faction: "prospectors",
         tier: 2,
         baseATK: 4,
@@ -716,7 +721,7 @@ const PROSPECTOR_UNITS: UnitDef[] = [
             trigger: "onDealDamage",
             effect: { type: "heal", target: "self", amount: 2 },
             description:
-                "On deal damage: heal self 2 (+1/Prospector). BRIDGE 1+ CW: also +1 ATK",
+                "On deal damage: heal self 2 (+1/Post-Struct). BRIDGE 1+ RA: also +1 ATK",
             factionBonus: { perAlly: 1 },
             crossBonus: {
                 faction: "clockwork",
@@ -727,14 +732,14 @@ const PROSPECTOR_UNITS: UnitDef[] = [
                     stat: "atk",
                     amount: 1,
                 },
-                description: "With 1+ Clockwork: also gain +1 ATK on hit",
+                description: "With 1+ Rationalist: also gain +1 ATK on hit",
             },
         },
         shopCost: 4,
     },
     {
         id: "bp-sovereign",
-        name: "Bone Sovereign",
+        name: "Multiplicity",
         faction: "prospectors",
         tier: 3,
         baseATK: 3,
@@ -748,7 +753,7 @@ const PROSPECTOR_UNITS: UnitDef[] = [
                 atkBonus: 1,
                 hpBonus: 1,
             },
-            description: "Ally death: summon 2/2 Shade (+1/+0 per Prospector)",
+            description: "Ally death: summon 2/2 Trace (+1/+0 per Post-Struct)",
             factionBonus: { perAlly: 1 },
         },
         shopCost: 5,
@@ -760,7 +765,7 @@ const PROSPECTOR_UNITS: UnitDef[] = [
 const TOKEN_UNITS: UnitDef[] = [
     {
         id: "bp-shade",
-        name: "Shade",
+        name: "Trace",
         faction: "prospectors",
         tier: 1,
         baseATK: 1,

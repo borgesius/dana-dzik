@@ -14,6 +14,7 @@ import {
     renderUnitCard,
 } from "../autobattler/UnitCard"
 import { getUnitsForFaction, UNIT_MAP } from "../autobattler/units"
+import { getLocaleManager } from "../localeManager"
 import { getMarketGame } from "../marketGame/MarketEngine"
 import type { CommodityId } from "../marketGame/types"
 import { getPrestigeManager } from "../prestige/PrestigeManager"
@@ -63,27 +64,29 @@ function renderLobbyView(container: HTMLElement): void {
     const atkBonus = career.getBonus("autobattlerATK")
     const hpBonus = career.getBonus("autobattlerHP")
 
+    const lm = getLocaleManager()
+    const t = lm.t.bind(lm)
     let html = `
         <div class="ab-lobby">
-            <h2>⚔️ FRONTIER</h2>
-            <p class="ab-subtitle">Weird West Auto-Chess</p>
+            <h2>📜 ${t("symposium.ui.title")}</h2>
+            <p class="ab-subtitle">${t("symposium.ui.subtitle")}</p>
 
             <div class="ab-stats">
-                <div class="ab-stat"><span>Runs:</span><span>${collection.getCompletedRuns()}</span></div>
-                <div class="ab-stat"><span>Wins:</span><span>${collection.getWonRuns()}</span></div>
-                <div class="ab-stat"><span>Best Streak:</span><span>${collection.getBestStreak()}</span></div>
-                <div class="ab-stat"><span>Collection:</span><span>${collection.getCollectionSize()}</span></div>
+                <div class="ab-stat"><span>${t("symposium.ui.runs")}</span><span>${collection.getCompletedRuns()}</span></div>
+                <div class="ab-stat"><span>${t("symposium.ui.wins")}</span><span>${collection.getWonRuns()}</span></div>
+                <div class="ab-stat"><span>${t("symposium.ui.bestStreak")}</span><span>${collection.getBestStreak()}</span></div>
+                <div class="ab-stat"><span>${t("symposium.ui.collectionLabel")}</span><span>${collection.getCollectionSize()}</span></div>
             </div>
     `
 
     if (atkBonus > 0 || hpBonus > 0) {
-        html += `<div class="ab-bonuses">Career bonuses: `
+        html += `<div class="ab-bonuses">${t("symposium.ui.careerBonuses")} `
         if (atkBonus > 0) html += `+${Math.round(atkBonus * 100)}% ATK `
         if (hpBonus > 0) html += `+${Math.round(hpBonus * 100)}% HP`
         html += `</div>`
     }
 
-    html += `<button class="ab-start-btn">Start Run</button>`
+    html += `<button class="ab-start-btn">${t("symposium.ui.startRun")}</button>`
 
     const factions: FactionId[] = [
         "quickdraw",
@@ -94,7 +97,7 @@ function renderLobbyView(container: HTMLElement): void {
     ]
     const unlockedIds = collection.getUnlockedUnitIds()
 
-    html += `<div class="ab-collection-header"><h3>Collection</h3></div>`
+    html += `<div class="ab-collection-header"><h3>${t("symposium.ui.collection")}</h3></div>`
 
     for (const faction of factions) {
         const factionUnits = getUnitsForFaction(faction)
@@ -125,7 +128,7 @@ function renderLobbyView(container: HTMLElement): void {
     }
 
     if (unlockedIds.size === 0) {
-        html += `<div class="ab-empty">Start a run to begin collecting units!</div>`
+        html += `<div class="ab-empty">${t("symposium.ui.startCollecting")}</div>`
     }
 
     html += `</div>`
@@ -143,9 +146,11 @@ function renderPrepareRun(container: HTMLElement): void {
     const selectedBuffs = new Set<string>()
 
     function render(): void {
+        const lm = getLocaleManager()
+        const t = lm.t.bind(lm)
         let html = `<div class="ab-prepare">
-            <h3>Prepare Run</h3>
-            <p class="ab-prepare-hint">Spend commodities for one-time run buffs (optional)</p>
+            <h3>${t("symposium.ui.prepareRun")}</h3>
+            <p class="ab-prepare-hint">${t("symposium.ui.prepareHint")}</p>
             <div class="ab-buff-grid">`
 
         for (const buff of RUN_BUFFS) {
@@ -153,21 +158,27 @@ function renderPrepareRun(container: HTMLElement): void {
             const owned = holding?.quantity ?? 0
             const canAfford = owned >= buff.commodityCost
             const isSelected = selectedBuffs.has(buff.id)
+            const buffName = t(`symposium.buffs.${buff.id}.name`, {
+                defaultValue: buff.name,
+            })
+            const buffDesc = t(`symposium.buffs.${buff.id}.description`, {
+                defaultValue: buff.description,
+            })
 
             html += `
                 <button class="ab-buff-card ${isSelected ? "selected" : ""} ${!canAfford && !isSelected ? "disabled" : ""}"
                     data-buff="${buff.id}" ${!canAfford && !isSelected ? "disabled" : ""}>
                     <div class="ab-buff-icon">${buff.icon}</div>
-                    <div class="ab-buff-name">${buff.name}</div>
-                    <div class="ab-buff-desc">${buff.description}</div>
+                    <div class="ab-buff-name">${buffName}</div>
+                    <div class="ab-buff-desc">${buffDesc}</div>
                     <div class="ab-buff-cost">${buff.commodityCost} ${buff.commodityId} (have: ${owned})</div>
                 </button>`
         }
 
         html += `</div>
             <div class="ab-prepare-actions">
-                <button class="ab-launch-btn">Start Run${selectedBuffs.size > 0 ? ` (${selectedBuffs.size} buff${selectedBuffs.size > 1 ? "s" : ""})` : ""}</button>
-                <button class="ab-back-btn">Back</button>
+                <button class="ab-launch-btn">${t("symposium.ui.startRun")}${selectedBuffs.size > 0 ? ` (${selectedBuffs.size} buff${selectedBuffs.size > 1 ? "s" : ""})` : ""}</button>
+                <button class="ab-back-btn">${t("symposium.ui.back")}</button>
             </div>
         </div>`
 
@@ -223,17 +234,31 @@ function startNewRun(buffs: RunBuff[] = []): void {
         hpBonus: career.getBonus("autobattlerHP"),
     }
 
-    // Foresight: Scrap Reserves bonus
+    // Foresight: Thought Reserves bonus
     const scrapBonus = getPrestigeManager().getScrapReservesBonus()
     if (scrapBonus > 0) activeRun.addBonusScrap(scrapBonus)
 
     activeRun.on("runCompleted", () => {
+        const state = activeRun!.getState()
         const majority = getMajorityFaction(activeRun!)
-        getCollectionManager().recordRunComplete(true, majority)
+        const factions = [...new Set(state.lineup.map((u) => u.faction))]
+        getCollectionManager().recordRunComplete(
+            true,
+            majority,
+            state.losses,
+            factions
+        )
         saveManager.requestSave()
     })
     activeRun.on("runLost", () => {
-        getCollectionManager().recordRunComplete(false)
+        const state = activeRun!.getState()
+        const factions = [...new Set(state.lineup.map((u) => u.faction))]
+        getCollectionManager().recordRunComplete(
+            false,
+            undefined,
+            state.losses,
+            factions
+        )
         saveManager.requestSave()
     })
 }
@@ -293,14 +318,16 @@ function renderShopPhase(container: HTMLElement): void {
     const state = activeRun.getState()
     const offers = activeRun.getShopOffers()
 
+    const lm = getLocaleManager()
+    const t = lm.t.bind(lm)
     let html = `
         <div class="ab-run-header">
-            <span>Round ${state.round}/${state.totalRounds}</span>
-            <span>⛏ ${state.scrap} Scrap</span>
-            <span>W${state.wins} / L${state.losses}</span>
+            <span>${t("symposium.ui.roundOf", { current: state.round, total: state.totalRounds })}</span>
+            <span>${t("symposium.ui.thoughts", { amount: state.scrap })}</span>
+            <span>${t("symposium.ui.wl", { wins: state.wins, losses: state.losses })}</span>
         </div>
 
-        <div class="ab-shop-label">Shop</div>
+        <div class="ab-shop-label">${t("symposium.ui.shop")}</div>
         <div class="ab-shop-offers">
     `
 
@@ -319,14 +346,14 @@ function renderShopPhase(container: HTMLElement): void {
     html += `
         </div>
         <div class="ab-shop-actions">
-            <button class="ab-reroll-btn" ${state.scrap < 1 ? "disabled" : ""}>🔄 Reroll (1 ⛏)</button>
+            <button class="ab-reroll-btn" ${state.scrap < 1 ? "disabled" : ""}>🔄 ${t("symposium.ui.reroll")}</button>
         </div>
     `
 
     html += `
         <div class="ab-lineup-label">
-            Lineup (${state.lineup.length}/${getMaxLineSlots()})
-            <span class="ab-lineup-hint">← front | back → drag to reorder</span>
+            ${t("symposium.ui.lineup")} (${state.lineup.length}/${getMaxLineSlots()})
+            <span class="ab-lineup-hint">${t("symposium.ui.lineupHint")}</span>
         </div>
         <div class="ab-lineup-grid" id="ab-lineup-drop" data-zone="lineup">
     `
@@ -348,7 +375,7 @@ function renderShopPhase(container: HTMLElement): void {
 
     html += `</div>`
 
-    html += `<div class="ab-bench-label">Bench</div>`
+    html += `<div class="ab-bench-label">${t("symposium.ui.bench")}</div>`
     html += `<div class="ab-bench-grid" id="ab-bench-drop" data-zone="bench">`
 
     state.bench.forEach((unit, i) => {
@@ -361,14 +388,14 @@ function renderShopPhase(container: HTMLElement): void {
     })
 
     if (state.bench.length === 0) {
-        html += `<div style="font-size: 9px; color: #999; padding: 4px;">Empty</div>`
+        html += `<div style="font-size: 9px; color: #999; padding: 4px;">${t("symposium.ui.empty")}</div>`
     }
 
     html += `</div>`
 
     html += `
         <div class="ab-actions">
-            <button class="ab-fight-btn" ${state.lineup.length === 0 ? "disabled" : ""}>⚔ Fight!</button>
+            <button class="ab-fight-btn" ${state.lineup.length === 0 ? "disabled" : ""}>⚔ ${t("symposium.ui.fight")}</button>
         </div>
     `
 
@@ -602,18 +629,24 @@ function renderCombatPhase(container: HTMLElement): void {
             getProgressionManager().addXP(reward.value)
         }
         if (reward.type === "commodity" && typeof reward.value === "string") {
-            getMarketGame().grantCommodity(reward.value as CommodityId, 1)
+            const frontierBonus = getPrestigeManager().hasFrontierDispatch()
+                ? 0.25
+                : 0
+            const qty = Math.ceil(1 * (1 + frontierBonus))
+            getMarketGame().grantCommodity(reward.value as CommodityId, qty)
         }
         if (reward.type === "unit" && typeof reward.value === "string") {
             getCollectionManager().addUnit(reward.value)
         }
     }
 
+    const lm = getLocaleManager()
+    const t = lm.t.bind(lm)
     const headerHtml = `
         <div class="ab-run-header">
-            <span>Round ${state.round}/${state.totalRounds}</span>
+            <span>${t("symposium.ui.roundOf", { current: state.round, total: state.totalRounds })}</span>
             <span>vs ${opponent.name}</span>
-            <span>W${updatedState.wins} / L${updatedState.losses}</span>
+            <span>${t("symposium.ui.wl", { wins: updatedState.wins, losses: updatedState.losses })}</span>
         </div>
     `
     container.innerHTML = headerHtml + `<div id="ab-combat-container"></div>`
@@ -642,6 +675,8 @@ function renderResultPhase(container: HTMLElement): void {
     const result = activeRun.getLastCombatResult()
     if (!result) return
 
+    const lm = getLocaleManager()
+    const t = lm.t.bind(lm)
     const isFinished = state.phase === "finished"
     const resultClass =
         result.winner === "player"
@@ -651,24 +686,24 @@ function renderResultPhase(container: HTMLElement): void {
               : "defeat"
     const resultText =
         result.winner === "player"
-            ? "Victory!"
+            ? t("symposium.ui.victory")
             : result.winner === "draw"
-              ? "Draw"
-              : "Defeat"
+              ? t("symposium.ui.draw")
+              : t("symposium.ui.defeat")
 
     let html = `
         <div class="ab-run-header">
-            <span>Round ${state.round}/${state.totalRounds}</span>
-            <span>W${state.wins} / L${state.losses}</span>
+            <span>${t("symposium.ui.roundOf", { current: state.round, total: state.totalRounds })}</span>
+            <span>${t("symposium.ui.wl", { wins: state.wins, losses: state.losses })}</span>
         </div>
         <div class="ab-combat-result ${resultClass}">
             <h2>${resultText}</h2>
-            <div class="ab-combat-subtitle">Combat lasted ${result.rounds} rounds</div>
+            <div class="ab-combat-subtitle">${t("symposium.ui.combatLasted", { rounds: result.rounds })}</div>
     `
 
     if (result.playerSurvivors.length > 0) {
         html += `<div style="margin: 8px 0;">
-            <div style="font-size: 10px; font-weight: 700; margin-bottom: 4px;">Survivors</div>
+            <div style="font-size: 10px; font-weight: 700; margin-bottom: 4px;">${t("symposium.ui.survivors")}</div>
             <div style="display: flex; gap: 4px; justify-content: center;">`
         for (const u of result.playerSurvivors) {
             html += renderUnitCard(u, { variant: "combat", side: "player" })
@@ -678,7 +713,7 @@ function renderResultPhase(container: HTMLElement): void {
 
     html += `
         <details style="margin: 8px 0; text-align: left;">
-            <summary style="cursor: pointer; font-size: 10px;">Combat Log (${result.log.length} actions)</summary>
+            <summary style="cursor: pointer; font-size: 10px;">${t("symposium.ui.combatLog", { count: result.log.length })}</summary>
             <div class="ab-combat-log">
     `
     for (const entry of result.log) {
@@ -693,13 +728,13 @@ function renderResultPhase(container: HTMLElement): void {
 
     const recentRewards = state.runRewards.slice(-3)
     if (recentRewards.length > 0) {
-        html += `<div class="ab-rewards"><h3>Rewards</h3>`
+        html += `<div class="ab-rewards"><h3>${t("symposium.ui.rewards")}</h3>`
         for (const reward of recentRewards) {
             const icon =
                 reward.type === "xp"
                     ? "✨"
                     : reward.type === "scrap"
-                      ? "⛏"
+                      ? "💭"
                       : reward.type === "commodity"
                         ? "📦"
                         : "🎁"
@@ -711,12 +746,18 @@ function renderResultPhase(container: HTMLElement): void {
     if (isFinished) {
         const summary =
             state.wins >= state.totalRounds
-                ? `Run complete! ${state.wins}W / ${state.losses}L`
-                : `Run over — ${state.wins}W / ${state.losses}L`
+                ? t("symposium.ui.runComplete", {
+                      wins: state.wins,
+                      losses: state.losses,
+                  })
+                : t("symposium.ui.runOver", {
+                      wins: state.wins,
+                      losses: state.losses,
+                  })
         html += `<p style="font-size: 11px; margin: 8px 0;">${summary}</p>`
-        html += `<button class="ab-return-btn">Return to Lobby</button>`
+        html += `<button class="ab-return-btn">${t("symposium.ui.returnToLobby")}</button>`
     } else {
-        html += `<button class="ab-next-btn">Next Round →</button>`
+        html += `<button class="ab-next-btn">${t("symposium.ui.nextRound")}</button>`
     }
 
     html += `</div>`

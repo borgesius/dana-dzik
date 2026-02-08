@@ -94,12 +94,12 @@ Idle commodity trading simulator. Tick-based price simulation (trend/volatility/
 
 ### Autobattler
 
-Turn-based auto-combat with shop/run loop. 5 factions with scaling abilities. Units have triggers (combatStart, onDeath, roundStart, etc.). Buy/sell/reroll in shop phase, 30-round combat cap. Unit collection unlocked by winning against factions.
+Turn-based auto-combat with shop/run loop and post-Enlightenment continental philosophy theme. 5 factions with scaling abilities. Units have triggers (combatStart, onDeath, roundStart, etc.). Buy/sell/reroll in shop phase, 30-round combat cap. Unit collection unlocked by winning against factions.
 
 - [`src/lib/autobattler/combat.ts`](src/lib/autobattler/combat.ts) — combat resolution
 - [`src/lib/autobattler/RunManager.ts`](src/lib/autobattler/RunManager.ts) — run loop
 - [`src/lib/autobattler/units.ts`](src/lib/autobattler/units.ts) — unit definitions
-- [`src/lib/autobattler/CollectionManager.ts`](src/lib/autobattler/CollectionManager.ts) — unlock tracking
+- [`src/lib/autobattler/CollectionManager.ts`](src/lib/autobattler/CollectionManager.ts) — unlocked units tracking
 
 ### Progression & Prestige
 

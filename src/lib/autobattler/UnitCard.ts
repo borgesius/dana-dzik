@@ -1,3 +1,4 @@
+import { getLocaleManager } from "../localeManager"
 import { getSellRefund } from "./shop"
 import type { CombatUnit, FactionId, UnitDef } from "./types"
 import { UNIT_MAP } from "./units"
@@ -5,11 +6,11 @@ import { UNIT_MAP } from "./units"
 // ── Faction display ─────────────────────────────────────────────────────────
 
 const FACTION_ICONS: Record<FactionId, string> = {
-    quickdraw: "🔫",
-    deputies: "⭐",
-    clockwork: "⚙️",
-    prospectors: "💀",
-    drifters: "🤠",
+    quickdraw: "⚡",
+    deputies: "🏛️",
+    clockwork: "♾️",
+    prospectors: "🌀",
+    drifters: "🎓",
 }
 
 const FACTION_COLORS: Record<FactionId, string> = {
@@ -29,14 +30,19 @@ export function factionColor(faction: FactionId): string {
 }
 
 export function factionLabel(faction: FactionId): string {
-    const names: Record<FactionId, string> = {
-        quickdraw: "Quickdraw",
-        deputies: "Deputies",
-        clockwork: "Clockwork",
-        prospectors: "Prospectors",
-        drifters: "Drifters",
-    }
-    return `${FACTION_ICONS[faction] ?? ""} ${names[faction] ?? faction}`
+    const lm = getLocaleManager()
+    const t = lm.t.bind(lm)
+    const name = t(`symposium.factions.${faction}`, {
+        defaultValue: faction,
+    })
+    return `${FACTION_ICONS[faction] ?? ""} ${name}`
+}
+
+/** Get the localized display name for a unit definition */
+export function unitDisplayName(def: UnitDef): string {
+    return getLocaleManager().t(`symposium.units.${def.id}`, {
+        defaultValue: def.name,
+    })
 }
 
 // ── Level display ───────────────────────────────────────────────────────────
@@ -107,14 +113,14 @@ export function renderDefCard(def: UnitDef, options: CardOptions): string {
                     style="--uc-faction-color: ${fc}"
                     ${options.sold ? "disabled" : ""}>
                     <div class="uc-header">
-                        <span class="uc-name">${def.name}</span>
+                        <span class="uc-name">${unitDisplayName(def)}</span>
                     </div>
                     <div class="uc-body">
                         <span class="uc-stats">⚔${def.baseATK} ♥${def.baseHP}</span>
                         <span class="uc-faction">${factionIcon(def.faction)}</span>
                     </div>
                     <div class="uc-ability">${def.ability.description}</div>
-                    <div class="uc-cost">${options.sold ? "SOLD" : `${options.cost} ⛏`}</div>
+                    <div class="uc-cost">${options.sold ? getLocaleManager().t("symposium.ui.sold") : `${options.cost} 💭`}</div>
                 </button>
             `
         }
@@ -124,7 +130,7 @@ export function renderDefCard(def: UnitDef, options: CardOptions): string {
                     style="--uc-faction-color: ${fc}"
                     title="${def.ability.description}">
                     <div class="uc-header">
-                        <span class="uc-name">${def.name}</span>
+                        <span class="uc-name">${unitDisplayName(def)}</span>
                     </div>
                     <div class="uc-body">
                         <span class="uc-stats">⚔${def.baseATK} ♥${def.baseHP}</span>
@@ -162,14 +168,14 @@ export function renderUnitCard(unit: CombatUnit, options: CardOptions): string {
                     data-source="${options.source}" data-idx="${options.index}">
                     ${options.slotLabel ? `<div class="uc-slot-label">${options.slotLabel}</div>` : ""}
                     <div class="uc-header">
-                        <span class="uc-name">${def?.name ?? unit.unitDefId}</span>
+                        <span class="uc-name">${def ? unitDisplayName(def) : unit.unitDefId}</span>
                         <span class="uc-level">${stars}</span>
                     </div>
                     <div class="uc-body">
                         <span class="uc-stats">⚔${unit.currentATK} ♥${unit.currentHP}</span>
                         <span class="uc-faction">${factionIcon(unit.faction)}</span>
                     </div>
-                    <button class="uc-sell-btn" data-source="${options.source}" data-idx="${options.index}">Sell ${refund}⛏</button>
+                    <button class="uc-sell-btn" data-source="${options.source}" data-idx="${options.index}">${getLocaleManager().t("symposium.ui.sell", { amount: refund })}</button>
                 </div>
             `
         }
@@ -186,7 +192,7 @@ export function renderUnitCard(unit: CombatUnit, options: CardOptions): string {
                     data-instance="${unit.instanceId}"
                     data-unit-def="${unit.unitDefId}">
                     <div class="uc-header">
-                        <span class="uc-name">${def?.name ?? unit.unitDefId}</span>
+                        <span class="uc-name">${def ? unitDisplayName(def) : unit.unitDefId}</span>
                         <span class="uc-level">${stars}</span>
                     </div>
                     <div class="uc-body">

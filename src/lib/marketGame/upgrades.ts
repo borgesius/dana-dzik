@@ -16,7 +16,11 @@ export type UpgradeId =
     | "harvest-vc"
     | "autoscript"
 
-export type UpgradeCategory = "trading" | "production" | "intelligence" | "automation"
+export type UpgradeCategory =
+    | "trading"
+    | "production"
+    | "intelligence"
+    | "automation"
 
 export interface UpgradeDef {
     id: UpgradeId
@@ -138,7 +142,8 @@ export const UPGRADES: UpgradeDef[] = [
     {
         id: "autoscript",
         name: "Autoscript",
-        description: "Global automation. +1 unit per harvest click for ALL commodities.",
+        description:
+            "Global automation. +1 unit per harvest click for ALL commodities.",
         category: "automation",
         cost: 80,
     },

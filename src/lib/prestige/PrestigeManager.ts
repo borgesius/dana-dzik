@@ -72,7 +72,9 @@ export class PrestigeManager {
 
     public getHindsightPreview(lifetimeEarnings: number): number {
         const exp = this.getHindsightExponent()
-        return Math.floor(Math.pow(lifetimeEarnings / 100, exp))
+        const base = Math.floor(Math.pow(lifetimeEarnings / 100, exp))
+        const bonus = this.hindsightBonusProvider?.() ?? 0
+        return bonus > 0 ? Math.ceil(base * (1 + bonus)) : base
     }
 
     /**
@@ -218,6 +220,78 @@ export class PrestigeManager {
      */
     public hasScrapDividend(): boolean {
         return this.hasUpgrade("scrap-dividend")
+    }
+
+    /**
+     * Factory cost discount from Cheaper Factories (0 or 0.15).
+     */
+    public getCheaperFactoriesDiscount(): number {
+        return this.hasUpgrade("cheaper-factories") ? 0.15 : 0
+    }
+
+    /**
+     * Whether Insider Edge is active (events less random).
+     */
+    public hasInsiderEdge(): boolean {
+        return this.hasUpgrade("insider-edge")
+    }
+
+    /**
+     * Whether Frontier Dispatch is active (+25% autobattler commodity rewards).
+     */
+    public hasFrontierDispatch(): boolean {
+        return this.hasUpgrade("frontier-dispatch")
+    }
+
+    /**
+     * Career bonus multiplier from Veteran's Network (1.0 or 1.5).
+     */
+    public getVeteransNetworkMultiplier(): number {
+        return this.hasUpgrade("veterans-network") ? 1.5 : 1
+    }
+
+    // ── Foresight upgrade accessors ───────────────────────────────────────
+
+    /**
+     * Whether Perpetual Factories is active (1 of each factory survives prestige).
+     */
+    public hasPerpetualFactories(): boolean {
+        return this.hasForesightUpgrade("perpetual-factories")
+    }
+
+    /**
+     * Whether Veteran Recruits is active (seed 1 employee after prestige).
+     */
+    public hasVeteranRecruits(): boolean {
+        return this.hasForesightUpgrade("veteran-recruits")
+    }
+
+    /**
+     * Whether Career Tenure is active (reduced dormant penalty).
+     */
+    public hasCareerTenure(): boolean {
+        return this.hasForesightUpgrade("career-tenure")
+    }
+
+    /**
+     * Offline catchup efficiency (0.8 base, 0.95 with Compound Interest).
+     */
+    public getOfflineEfficiency(): number {
+        return this.hasForesightUpgrade("compound-interest") ? 0.95 : 0.8
+    }
+
+    /**
+     * Whether Market Memory is active (1 random upgrade after prestige).
+     */
+    public hasMarketMemory(): boolean {
+        return this.hasForesightUpgrade("market-memory")
+    }
+
+    /**
+     * Whether Spiral Momentum is active (unit unlocks persist through ascension).
+     */
+    public hasSpiralMomentum(): boolean {
+        return this.hasForesightUpgrade("spiral-momentum")
     }
 
     // ── Ascension ─────────────────────────────────────────────────────────

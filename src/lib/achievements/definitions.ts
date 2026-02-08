@@ -469,7 +469,7 @@ export const ACHIEVEMENTS: AchievementDef[] = [
     {
         id: "posse-up",
         category: "autobattler",
-        icon: "🤠",
+        icon: "📜",
         hidden: false,
     },
     {
@@ -619,7 +619,7 @@ export const ACHIEVEMENTS: AchievementDef[] = [
     {
         id: "greenhorn",
         category: "autobattler",
-        icon: "🤠",
+        icon: "🎓",
         hidden: false,
         tieredGroup: "wrangler",
         tier: 1,
@@ -627,7 +627,7 @@ export const ACHIEVEMENTS: AchievementDef[] = [
     {
         id: "deputy",
         category: "autobattler",
-        icon: "⭐",
+        icon: "🎓",
         hidden: false,
         tieredGroup: "wrangler",
         tier: 2,
@@ -635,7 +635,7 @@ export const ACHIEVEMENTS: AchievementDef[] = [
     {
         id: "sheriff",
         category: "autobattler",
-        icon: "🏅",
+        icon: "🎓",
         hidden: false,
         tieredGroup: "wrangler",
         tier: 3,
@@ -643,7 +643,7 @@ export const ACHIEVEMENTS: AchievementDef[] = [
     {
         id: "marshal",
         category: "autobattler",
-        icon: "🎖️",
+        icon: "🎓",
         hidden: false,
         tieredGroup: "wrangler",
         tier: 4,
@@ -790,6 +790,56 @@ export const ACHIEVEMENTS: AchievementDef[] = [
         id: "full-stack",
         category: "cross-system",
         icon: "🏗️",
+        hidden: true,
+    },
+
+    // ── Autobattler (concept / hidden) ──────────────────────────────────
+    {
+        id: "la-pensee-francaise",
+        category: "autobattler",
+        icon: "🇫🇷",
+        hidden: true,
+    },
+    {
+        id: "der-deutsche-idealismus",
+        category: "autobattler",
+        icon: "🇩🇪",
+        hidden: true,
+    },
+    {
+        id: "amor-fati",
+        category: "autobattler",
+        icon: "♾️",
+        hidden: true,
+    },
+    {
+        id: "continental-breakfast",
+        category: "autobattler",
+        icon: "🥐",
+        hidden: true,
+    },
+    {
+        id: "independent-study",
+        category: "autobattler",
+        icon: "🎓",
+        hidden: true,
+    },
+    {
+        id: "survey-course",
+        category: "autobattler",
+        icon: "📚",
+        hidden: false,
+    },
+    {
+        id: "revaluation-of-all-values",
+        category: "autobattler",
+        icon: "📖",
+        hidden: true,
+    },
+    {
+        id: "expressionism-in-philosophy",
+        category: "autobattler",
+        icon: "📖",
         hidden: true,
     },
 

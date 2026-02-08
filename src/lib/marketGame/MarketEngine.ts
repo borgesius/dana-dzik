@@ -330,6 +330,13 @@ export class MarketEngine {
                         totalProduced * (1 + factoryBonus)
                     )
                 }
+                const prestigeFactoryMult =
+                    this.prestigeProvider?.("factoryMultiplier") ?? 1
+                if (prestigeFactoryMult > 1) {
+                    totalProduced = Math.ceil(
+                        totalProduced * prestigeFactoryMult
+                    )
+                }
                 this.addToHoldings(fDef.produces, totalProduced, 0)
                 this.emit("portfolioChanged")
             }
@@ -410,10 +417,12 @@ export class MarketEngine {
                 }
             }
             this.ticksSinceEvent = 0
-            this.nextEventTicks = this.rng.nextInt(
-                EVENT_MIN_TICKS,
-                EVENT_MAX_TICKS
-            )
+            const hasInsiderEdge =
+                (this.prestigeProvider?.("insiderEdge") ?? 0) > 0
+            const maxTicks = hasInsiderEdge
+                ? Math.floor(EVENT_MAX_TICKS * 0.7)
+                : EVENT_MAX_TICKS
+            this.nextEventTicks = this.rng.nextInt(EVENT_MIN_TICKS, maxTicks)
         }
     }
 
@@ -727,7 +736,8 @@ export class MarketEngine {
         const scaling =
             this.prestigeProvider?.("factoryCostScaling") ??
             FACTORY_COST_SCALING
-        return def.cost * Math.pow(scaling, owned)
+        const discount = this.prestigeProvider?.("cheaperFactories") ?? 0
+        return def.cost * Math.pow(scaling, owned) * (1 - discount)
     }
 
     public deployFactory(factoryId: FactoryId): boolean {
@@ -1544,12 +1554,41 @@ export class MarketEngine {
     ): void {
         this.stop()
 
+        // Check Foresight upgrade flags before clearing state
+        const keepOneFactory =
+            (this.prestigeProvider?.("perpetualFactories") ?? 0) > 0
+        const seedEmployee =
+            (this.prestigeProvider?.("veteranRecruits") ?? 0) > 0
+        const grantRandomUpgrade =
+            (this.prestigeProvider?.("marketMemory") ?? 0) > 0
+
         this.cash = startingCash
         this.lifetimeEarnings = 0
         this.holdings.clear()
-        this.factories.clear()
+
+        // Perpetual Factories: keep 1 of each factory type you owned
+        if (keepOneFactory) {
+            const preserved = new Map<FactoryId, number>()
+            for (const fDef of FACTORIES) {
+                if ((this.factories.get(fDef.id) ?? 0) > 0) {
+                    preserved.set(fDef.id, 1)
+                }
+            }
+            this.factories = preserved
+        } else {
+            this.factories.clear()
+        }
+
         this.factoryTickCounters.clear()
         this.ownedUpgrades.clear()
+
+        // Market Memory: grant 1 random upgrade after clearing
+        if (grantRandomUpgrade && UPGRADES.length > 0) {
+            const randomUpgrade =
+                UPGRADES[Math.floor(Math.random() * UPGRADES.length)]
+            this.ownedUpgrades.add(randomUpgrade.id)
+        }
+
         this.limitOrders = []
         this.popupLevel = 0
         this.currentNews = ""
@@ -1564,6 +1603,11 @@ export class MarketEngine {
         this.initMarkets()
         this.influenceCooldowns.clear()
         this.orgChart.reset()
+
+        // Veteran Recruits: seed 1 random employee after reset
+        if (seedEmployee && this.orgChart.getCandidatePool().length > 0) {
+            this.orgChart.hireToFirstAvailable(0)
+        }
 
         // Reset Phase 6: Structured Products Desk
         this.securities = []
@@ -1615,7 +1659,9 @@ export class MarketEngine {
         let salariesPaid = 0
         let employeesFired = 0
 
-        // ── Simplified factory production (no bonusProvider, 80% output) ──
+        // ── Simplified factory production (efficiency from prestige) ──
+        const offlineEfficiency =
+            this.prestigeProvider?.("offlineEfficiency") ?? 0.8
         if (this.unlockedPhases.has(2)) {
             for (const fDef of FACTORIES) {
                 const count = this.factories.get(fDef.id) ?? 0
@@ -1625,10 +1671,9 @@ export class MarketEngine {
                 const cycleCount = Math.floor(ticks / effectiveCycle)
                 if (cycleCount === 0) continue
 
-                // Use average output, apply 80% efficiency, no bonuses
                 const avgOutput = (fDef.minOutput + fDef.maxOutput) / 2
                 const totalProduced = Math.floor(
-                    cycleCount * avgOutput * 0.8 * count
+                    cycleCount * avgOutput * offlineEfficiency * count
                 )
 
                 if (totalProduced > 0) {

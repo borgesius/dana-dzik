@@ -82,7 +82,8 @@ export function initCore(): void {
     marketGame.bonusProvider = (type: string): number => {
         const careerBonus = career.getBonus(type as never)
         const employeeBonus = marketGame.getEmployeeBonus(type)
-        return careerBonus + employeeBonus
+        const veteransMult = prestige.getVeteransNetworkMultiplier()
+        return careerBonus * veteransMult + employeeBonus
     }
 
     marketGame.prestigeProvider = (key: string): number => {
@@ -97,6 +98,20 @@ export function initCore(): void {
                 return prestige.getHiringDiscount()
             case "marketIntuition":
                 return prestige.hasUpgrade("market-intuition") ? 1 : 0
+            case "factoryMultiplier":
+                return prestige.getFactoryMultiplier()
+            case "cheaperFactories":
+                return prestige.getCheaperFactoriesDiscount()
+            case "insiderEdge":
+                return prestige.hasInsiderEdge() ? 1 : 0
+            case "offlineEfficiency":
+                return prestige.getOfflineEfficiency()
+            case "perpetualFactories":
+                return prestige.hasPerpetualFactories() ? 1 : 0
+            case "veteranRecruits":
+                return prestige.hasVeteranRecruits() ? 1 : 0
+            case "marketMemory":
+                return prestige.hasMarketMemory() ? 1 : 0
             default:
                 return 0
         }

@@ -21,10 +21,10 @@ export const RUN_BUFFS: RunBuff[] = [
     {
         id: "ad-revenue",
         name: "Ad Revenue",
-        description: "+2 bonus Scrap per round",
+        description: "+2 bonus Thoughts per round",
         commodityId: "ADS",
         commodityCost: 5,
-        icon: "⛏️",
+        icon: "💭",
     },
     {
         id: "soft-reroll",
@@ -53,7 +53,7 @@ export const RUN_BUFFS: RunBuff[] = [
     {
         id: "vc-funding",
         name: "VC Funding",
-        description: "Start with +3 bonus Scrap",
+        description: "Start with +3 bonus Thoughts",
         commodityId: "VC",
         commodityCost: 5,
         icon: "💰",

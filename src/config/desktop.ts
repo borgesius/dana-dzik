@@ -90,8 +90,8 @@ export const DESKTOP_ITEMS: DesktopItemConfig[] = [
     },
     {
         id: "autobattler",
-        filename: "FRONTIER.exe",
-        icon: "⚔️",
+        filename: "SYMPOSIUM.exe",
+        icon: "📜",
         windowId: "autobattler",
         fileType: "executable",
     },

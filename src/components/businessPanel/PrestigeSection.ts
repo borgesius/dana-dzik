@@ -242,8 +242,10 @@ export class PrestigeSection {
 
         const foresight = this.prestige.triggerAscension()
 
+        const careerCashBonus = getCareerManager().getBonus("startingCash")
+        const baseCash = this.prestige.getStartingCash()
         this.game.resetForPrestige(
-            this.prestige.getStartingCash(),
+            baseCash + careerCashBonus,
             this.prestige.getStartingPhases()
         )
 

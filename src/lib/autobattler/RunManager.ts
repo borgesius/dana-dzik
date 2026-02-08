@@ -295,7 +295,7 @@ export class RunManager {
         this.state.round++
         addRoundScrap(this.shopState)
 
-        // Ad Revenue buff: bonus scrap per round
+        // Ad Revenue buff: bonus thoughts per round
         if (this.hasBuff("ad-revenue")) {
             this.shopState.scrap += 2
         }
@@ -336,10 +336,10 @@ export class RunManager {
                 value: 15 + this.state.round * 5,
             })
 
-            // Scrap bonus
+            // Thought bonus
             rewards.push({
                 type: "scrap",
-                description: "Victory scrap",
+                description: "Victory thoughts",
                 value: 2,
             })
             this.shopState.scrap += 2

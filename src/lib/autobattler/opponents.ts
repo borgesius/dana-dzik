@@ -1,3 +1,4 @@
+import { getLocaleManager } from "../localeManager"
 import type { FactionId, OpponentDef, UnitTier } from "./types"
 import { getUnitsForFaction } from "./units"
 
@@ -35,44 +36,61 @@ const THEMED_FACTIONS: FactionId[] = [
     "prospectors",
 ]
 
-// ── Name generation ─────────────────────────────────────────────────────────
+// ── Fallback name data ──────────────────────────────────────────────────────
 
-const ADJECTIVES = [
-    "Dusty",
-    "Grizzled",
-    "Veteran",
-    "Ruthless",
-    "Ironclad",
-    "Spectral",
-    "Reckless",
-    "Weathered",
-    "Cunning",
+const FALLBACK_ADJECTIVES = [
+    "Tenured",
+    "Emeritus",
+    "Radical",
+    "Dogmatic",
+    "Heretical",
+    "Dialectical",
+    "Apodictic",
+    "Restless",
     "Notorious",
+    "Incorrigible",
 ]
 
-const FACTION_NOUNS: Record<FactionId, string[]> = {
-    quickdraw: [
-        "Gunslingers",
-        "Syndicate",
-        "Outlaws",
-        "Desperados",
-        "Shootists",
+const FALLBACK_NOUNS: Record<FactionId, string[]> = {
+    quickdraw: ["Nihilists", "Absurdists", "Overmen", "Abyss-Gazers", "Madmen"],
+    deputies: [
+        "Systematizers",
+        "Categorists",
+        "Faculty",
+        "Dialecticians",
+        "Academics",
     ],
-    deputies: ["Lawmen", "Garrison", "Posse", "Marshals", "Sentinels"],
-    clockwork: ["Workshop", "Collective", "Assembly", "Automata", "Foundry"],
+    clockwork: [
+        "Geometers",
+        "Determinists",
+        "Logicians",
+        "Axiomatics",
+        "Monads",
+    ],
     prospectors: [
-        "Excavation",
-        "Bone Diggers",
-        "Miners",
-        "Specter Crew",
-        "Unearthed",
+        "Deconstructors",
+        "Nomads",
+        "Assemblages",
+        "Rhizomes",
+        "Semionauts",
     ],
-    drifters: ["Wanderers", "Drifters", "Stragglers", "Vagrants", "Roamers"],
+    drifters: ["Adjuncts", "Auditors", "Sessionals", "Lecturers", "TAs"],
 }
 
+// ── Name generation ─────────────────────────────────────────────────────────
+
 function generateOpponentName(faction: FactionId): string {
-    const adj = ADJECTIVES[Math.floor(Math.random() * ADJECTIVES.length)]
-    const nouns = FACTION_NOUNS[faction]
+    const lm = getLocaleManager()
+    const t = lm.t.bind(lm)
+    const adjectives = t("symposium.opponents.adjectives", {
+        returnObjects: true,
+        defaultValue: FALLBACK_ADJECTIVES,
+    }) as unknown as string[]
+    const nouns = t(`symposium.opponents.nouns.${faction}`, {
+        returnObjects: true,
+        defaultValue: FALLBACK_NOUNS[faction],
+    }) as unknown as string[]
+    const adj = adjectives[Math.floor(Math.random() * adjectives.length)]
     const noun = nouns[Math.floor(Math.random() * nouns.length)]
     return `${adj} ${noun}`
 }
