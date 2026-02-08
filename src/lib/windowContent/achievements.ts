@@ -73,7 +73,7 @@ export function renderAchievementsWindow(): void {
         { key: "exercises", label: "Exercises" },
         { key: "social", label: "Social" },
         { key: "pinball", label: "Pinball" },
-        { key: "autobattler", label: "Hacking" },
+        { key: "autobattler", label: "Symposia" },
         { key: "prestige", label: "Prestige" },
         { key: "career", label: "Career" },
         { key: "cross-system", label: "Cross-System" },
