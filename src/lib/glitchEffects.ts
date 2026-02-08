@@ -21,24 +21,24 @@ interface GlitchEvent {
 }
 
 const GLITCH_CONFIG = {
-    minInterval: 3000,
-    maxInterval: 15000,
+    minInterval: 15000,
+    maxInterval: 45000,
     minDuration: 50,
     maxDuration: 300,
-    multiGlitchChance: 0.3,
+    multiGlitchChance: 0.1,
 }
 
 const THEME_GLITCH_CONFIG = {
-    flashMinInterval: 30000,
-    flashMaxInterval: 90000,
+    flashMinInterval: 90000,
+    flashMaxInterval: 300000,
     fullSwitchChance: 0.2,
     flashDuration: { min: 200, max: 500 },
     transitionEffectDuration: 100,
 }
 
 const LOCALE_GLITCH_CONFIG = {
-    flashMinInterval: 40000,
-    flashMaxInterval: 120000,
+    flashMinInterval: 120000,
+    flashMaxInterval: 360000,
     flashDuration: { min: 300, max: 700 },
     transitionEffectDuration: 150,
 }

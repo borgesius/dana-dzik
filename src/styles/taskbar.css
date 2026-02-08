@@ -125,6 +125,22 @@
     text-shadow: 1px 1px 0 rgb(0 0 0 / 30%);
 }
 
+.tray-theme-toggle {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    padding: 2px 4px;
+    line-height: 1;
+    border-radius: 2px;
+    opacity: 0.9;
+}
+
+.tray-theme-toggle:hover {
+    opacity: 1;
+    background: rgb(255 255 255 / 15%);
+}
+
 /* Level widget in system tray */
 .level-widget {
     display: flex;
