@@ -10,6 +10,7 @@ export {
     HARVEST_AUTOSCRIPT_BONUS,
     HARVEST_BASE_FRACTION,
     HARVEST_UPGRADE_BONUS,
+    MARKET_YEAR_TICKS,
     MEAN_REVERSION_STRENGTH,
     PHASE_THRESHOLDS,
     POPUP_THRESHOLDS,
@@ -40,6 +41,12 @@ import type { UpgradeId } from "./upgrades"
 
 export type TrendDirection = "bull" | "bear" | "flat"
 
+export interface TrendSegment {
+    trend: TrendDirection
+    strength: number
+    duration: number
+}
+
 export interface MarketState {
     commodityId: CommodityId
     price: number
@@ -49,6 +56,8 @@ export interface MarketState {
     priceHistory: number[]
     influenceMultiplier: number
     influenceTicksRemaining: number
+    trendQueue: TrendSegment[]
+    trendHistory: TrendSegment[]
 }
 
 export interface Holding {
@@ -220,6 +229,15 @@ export interface DeskSaveData {
     ratingAtMarginEvent: CreditRating
 }
 
+export interface TrendScheduleSaveData {
+    queue: TrendSegment[]
+    history: TrendSegment[]
+    /** The currently active segment (partially consumed). */
+    currentSegment: TrendSegment
+    /** How many ticks have elapsed in the current segment. */
+    currentTicksElapsed: number
+}
+
 export interface MarketSaveData {
     cash: number
     lifetimeEarnings: number
@@ -236,6 +254,8 @@ export interface MarketSaveData {
     orgChart?: OrgChartSaveData
     /** Phase 6: Structured Products Desk */
     desk?: DeskSaveData
+    /** Pre-generated trend schedules per commodity (deterministic across save/load). */
+    trendSchedules?: Record<string, TrendScheduleSaveData>
     // Legacy Phase 6 fields (ignored on load, kept for migration safety)
     ipoHistory?: unknown[]
     indexFunds?: unknown[]

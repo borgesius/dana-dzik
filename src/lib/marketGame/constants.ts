@@ -23,6 +23,8 @@ export const PRICE_HISTORY_LENGTH = 500
 export const PRICE_FLOOR_FACTOR = 0.1
 export const PRICE_CEILING_FACTOR = 20
 export const MEAN_REVERSION_STRENGTH = 0.005
+/** 1 tick = 1 market day; 252 trading days = 1 market year. */
+export const MARKET_YEAR_TICKS = 252
 
 export const STARTING_CASH = 0.1
 export const BULK_ORDER_QUANTITY = 10

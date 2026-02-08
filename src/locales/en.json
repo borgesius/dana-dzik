@@ -463,6 +463,14 @@
                 "name": "Material Advantage",
                 "description": "Material non-public information. Estimated price target on charts."
             },
+            "seasonal-forecast": {
+                "name": "Seasonal Forecast",
+                "description": "Quarterly outlook report. Shows the next trend direction after the current one ends."
+            },
+            "insider-calendar": {
+                "name": "Insider Calendar",
+                "description": "The full schedule. Upcoming trend sequence visible as a forecast bar on charts."
+            },
             "harvest-email": {
                 "name": "EMAIL Harvester",
                 "description": "Automated scraper. +1 EMAIL per harvest click."

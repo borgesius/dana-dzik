@@ -400,6 +400,8 @@
       "moving-average": { "name": "Media Mobile", "description": "Strumenti di analisi tecnica per grafici dei prezzi." },
       "confidential-tip": { "name": "Soffiata Riservata", "description": "Un amico al fondo. Conto alla rovescia del trend visibile sui grafici." },
       "material-advantage": { "name": "Vantaggio Materiale", "description": "Informazioni materiali non pubbliche. Prezzo obiettivo stimato sui grafici." },
+      "seasonal-forecast": { "name": "Previsione Stagionale", "description": "Rapporto trimestrale. Mostra la prossima direzione del trend dopo la fine di quello attuale." },
+      "insider-calendar": { "name": "Calendario Insider", "description": "Il programma completo. Sequenza di trend futuri visibile come barra di previsione sui grafici." },
       "harvest-email": { "name": "EMAIL Harvester", "description": "Automated scraper. +1 EMAIL per harvest click." },
       "harvest-ads": { "name": "ADS Generator", "description": "Impression bot. +1 ADS per harvest click." },
       "harvest-dom": { "name": "DOM Registrar", "description": "Bulk registration script. +1 DOM per harvest click." },

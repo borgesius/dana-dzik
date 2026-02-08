@@ -400,6 +400,8 @@
       "moving-average": { "name": "移动平均线叠加", "description": "价格图表技术分析工具。" },
       "confidential-tip": { "name": "机密消息", "description": "基金内部的朋友。图表上显示趋势倒计时。" },
       "material-advantage": { "name": "重大优势", "description": "重大非公开信息。图表上显示估计目标价格。" },
+      "seasonal-forecast": { "name": "季节性预测", "description": "季度展望报告。显示当前趋势结束后的下一个方向。" },
+      "insider-calendar": { "name": "内部日程", "description": "完整时间表。未来趋势序列作为预测条显示在图表上。" },
       "harvest-email": { "name": "EMAIL Harvester", "description": "Automated scraper. +1 EMAIL per harvest click." },
       "harvest-ads": { "name": "ADS Generator", "description": "Impression bot. +1 ADS per harvest click." },
       "harvest-dom": { "name": "DOM Registrar", "description": "Bulk registration script. +1 DOM per harvest click." },
