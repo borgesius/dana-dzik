@@ -792,6 +792,32 @@ export const ACHIEVEMENTS: AchievementDef[] = [
         icon: "🏗️",
         hidden: true,
     },
+
+    // ── Harvest (clicker) ────────────────────────────────────────────────
+    {
+        id: "harvest-100",
+        category: "trading",
+        icon: "🖱️",
+        hidden: false,
+        tieredGroup: "harvester",
+        tier: 1,
+    },
+    {
+        id: "harvest-1000",
+        category: "trading",
+        icon: "🖱️",
+        hidden: false,
+        tieredGroup: "harvester",
+        tier: 2,
+    },
+    {
+        id: "harvest-10000",
+        category: "trading",
+        icon: "🖱️",
+        hidden: true,
+        tieredGroup: "harvester",
+        tier: 3,
+    },
 ]
 
 export const ACHIEVEMENT_MAP: ReadonlyMap<string, AchievementDef> = new Map(

@@ -33,6 +33,7 @@ export class TradeControls {
         const holding = this.game.getHolding(commodity)
         const qty = holding?.quantity ?? 0
         const lm = getLocaleManager()
+        const harvestOutput = this.game.getHarvestOutput(commodity)
 
         const canBuy = cash >= price
         const canSell = qty > 0
@@ -44,16 +45,24 @@ export class TradeControls {
                 <span class="trade-holding">${lm.t("commodityExchange.ui.qty")}: ${qty}</span>
             </div>
             <div class="trade-buttons">
+                <button class="toolbar-button trade-btn harvest-btn">${lm.t("commodityExchange.ui.harvest")} (${harvestOutput})</button>
                 <button class="toolbar-button trade-btn buy-btn" ${canBuy ? "" : "disabled"}>${lm.t("commodityExchange.ui.buy")}</button>
                 <button class="toolbar-button trade-btn sell-btn" ${canSell ? "" : "disabled"}>${lm.t("commodityExchange.ui.sell")}</button>
                 <button class="toolbar-button trade-btn sell-all-btn" ${canSell ? "" : "disabled"}>${lm.t("commodityExchange.ui.sellAll")}</button>
             </div>
         `
 
+        const harvestBtn = this.element.querySelector(".harvest-btn")
         const buyBtn = this.element.querySelector(".buy-btn")
         const sellBtn = this.element.querySelector(".sell-btn")
         const sellAllBtn = this.element.querySelector(".sell-all-btn")
 
+        harvestBtn?.addEventListener("click", () => {
+            const result = this.game.harvest(this.getSelectedCommodity())
+            if (result > 0) {
+                this.playSound("click")
+            }
+        })
         buyBtn?.addEventListener("click", () => {
             const result = this.game.buy(this.getSelectedCommodity())
             if (result) {

@@ -147,6 +147,10 @@ export type AchievementId =
     // Cross-system
     | "renaissance"
     | "full-stack"
+    // Harvest (clicker)
+    | "harvest-100"
+    | "harvest-1000"
+    | "harvest-10000"
 
 export type TieredGroup =
     | "mogul"
@@ -156,6 +160,7 @@ export type TieredGroup =
     | "phases"
     | "wrangler"
     | "rank"
+    | "harvester"
 
 export interface AchievementDef {
     id: AchievementId

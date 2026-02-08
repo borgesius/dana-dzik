@@ -8,8 +8,15 @@ export type UpgradeId =
     | "insider-newsletter"
     | "analyst-reports"
     | "moving-average"
+    | "harvest-email"
+    | "harvest-ads"
+    | "harvest-dom"
+    | "harvest-bw"
+    | "harvest-soft"
+    | "harvest-vc"
+    | "autoscript"
 
-export type UpgradeCategory = "trading" | "production" | "intelligence"
+export type UpgradeCategory = "trading" | "production" | "intelligence" | "automation"
 
 export interface UpgradeDef {
     id: UpgradeId
@@ -83,5 +90,56 @@ export const UPGRADES: UpgradeDef[] = [
         description: "Technical analysis tools for price chart.",
         category: "intelligence",
         cost: 25,
+    },
+
+    // ── Automation (per-commodity harvest upgrades) ──────────────────────────
+    {
+        id: "harvest-email",
+        name: "EMAIL Harvester",
+        description: "Automated scraper. +1 EMAIL per harvest click.",
+        category: "automation",
+        cost: 15,
+    },
+    {
+        id: "harvest-ads",
+        name: "ADS Generator",
+        description: "Impression bot. +1 ADS per harvest click.",
+        category: "automation",
+        cost: 40,
+    },
+    {
+        id: "harvest-dom",
+        name: "DOM Registrar",
+        description: "Bulk registration script. +1 DOM per harvest click.",
+        category: "automation",
+        cost: 100,
+    },
+    {
+        id: "harvest-bw",
+        name: "BW Allocator",
+        description: "Bandwidth provisioner. +1 BW per harvest click.",
+        category: "automation",
+        cost: 250,
+    },
+    {
+        id: "harvest-soft",
+        name: "SOFT Compiler",
+        description: "License keygen. +1 SOFT per harvest click.",
+        category: "automation",
+        cost: 600,
+    },
+    {
+        id: "harvest-vc",
+        name: "VC Pipeline",
+        description: "Pitch deck generator. +1 VC per harvest click.",
+        category: "automation",
+        cost: 1500,
+    },
+    {
+        id: "autoscript",
+        name: "Autoscript",
+        description: "Global automation. +1 unit per harvest click for ALL commodities.",
+        category: "automation",
+        cost: 80,
     },
 ]

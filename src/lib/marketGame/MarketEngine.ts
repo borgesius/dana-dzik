@@ -26,6 +26,7 @@ import {
     type GameEventCallback,
     type GameEventType,
     type GameSnapshot,
+    HARVEST_BASE_OUTPUT,
     type Holding,
     type InfluenceDef,
     type InfluenceId,
@@ -79,6 +80,7 @@ export class MarketEngine {
     private upcomingEventCountdown: number = 0
     private popupLevel: number = 0
     private factoryTickCounters: Map<FactoryId, number> = new Map()
+    private totalHarvests: number = 0
 
     private eventListeners: Map<GameEventType, GameEventCallback[]> = new Map()
     private tickInterval: ReturnType<typeof setInterval> | null = null
@@ -612,6 +614,64 @@ export class MarketEngine {
         const holding = this.holdings.get(commodityId)
         if (!holding || holding.quantity === 0) return null
         return this.sell(commodityId, holding.quantity)
+    }
+
+    // -----------------------------------------------------------------------
+    // Harvest (clicker)
+    // -----------------------------------------------------------------------
+
+    /** Per-commodity harvest upgrade IDs. */
+    private static readonly HARVEST_UPGRADE_MAP: Record<
+        CommodityId,
+        UpgradeId
+    > = {
+        EMAIL: "harvest-email",
+        ADS: "harvest-ads",
+        DOM: "harvest-dom",
+        BW: "harvest-bw",
+        SOFT: "harvest-soft",
+        VC: "harvest-vc",
+    }
+
+    /**
+     * Compute how many units a single harvest click produces for a commodity.
+     * Base (1) + per-commodity upgrade (+1) + global autoscript (+1).
+     */
+    public getHarvestOutput(commodityId: CommodityId): number {
+        let output = HARVEST_BASE_OUTPUT
+
+        // Per-commodity harvest upgrade
+        const perAssetId = MarketEngine.HARVEST_UPGRADE_MAP[commodityId]
+        if (perAssetId && this.ownedUpgrades.has(perAssetId)) {
+            output += 1
+        }
+
+        // Global autoscript upgrade
+        if (this.ownedUpgrades.has("autoscript")) {
+            output += 1
+        }
+
+        return output
+    }
+
+    /**
+     * Harvest: generate free commodity units via click.
+     * Returns the quantity produced, or 0 if the commodity is locked.
+     */
+    public harvest(commodityId: CommodityId): number {
+        if (!this.unlockedCommodities.has(commodityId)) return 0
+
+        const qty = this.getHarvestOutput(commodityId)
+        this.addToHoldings(commodityId, qty, 0)
+        this.totalHarvests++
+
+        this.emit("harvestExecuted", { commodityId, quantity: qty })
+        this.emit("portfolioChanged")
+        return qty
+    }
+
+    public getTotalHarvests(): number {
+        return this.totalHarvests
     }
 
     private addToHoldings(
@@ -1408,6 +1468,7 @@ export class MarketEngine {
             unlockedPhases: [...this.unlockedPhases],
             limitOrders: this.limitOrders.map((o) => ({ ...o })),
             popupLevel: this.popupLevel,
+            totalHarvests: this.totalHarvests,
             orgChart: this.orgChart.serialize(),
             desk: {
                 securities: this.securities.map((s) => ({ ...s })),
@@ -1440,6 +1501,7 @@ export class MarketEngine {
         this.unlockedPhases = new Set(data.unlockedPhases)
         this.limitOrders = data.limitOrders.map((o) => ({ ...o }))
         this.popupLevel = data.popupLevel
+        this.totalHarvests = data.totalHarvests ?? 0
 
         // Restore org chart if present
         if (data.orgChart) {
