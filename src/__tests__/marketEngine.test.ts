@@ -430,8 +430,8 @@ describe("MarketEngine", () => {
             expect(FACTORIES.length).toBe(4)
         })
 
-        it("has 16 upgrades", () => {
-            expect(UPGRADES.length).toBe(16)
+        it("has 18 upgrades", () => {
+            expect(UPGRADES.length).toBe(18)
         })
 
         it("has 3 influences", () => {

@@ -12,6 +12,7 @@ export type AchievementCategory =
     | "prestige"
     | "career"
     | "cross-system"
+    | "arcana"
 
 export type AchievementId =
     // Trading
@@ -210,8 +211,34 @@ export type AchievementId =
     | "640k-enough"
     | "lingua-franca"
     | "dial-up-connection"
+    // Meta: spoofable environment (cont.)
+    | "year-to-remember"
+    | "negative-timestamp"
     // Meta: recursive (hidden)
     | "achievement-achievement"
+    // Major Arcana (hidden)
+    | "arcana-fool"
+    | "arcana-magician"
+    | "arcana-priestess"
+    | "arcana-empress"
+    | "arcana-emperor"
+    | "arcana-hierophant"
+    | "arcana-lovers"
+    | "arcana-chariot"
+    | "arcana-strength"
+    | "arcana-hermit"
+    | "arcana-fortune"
+    | "arcana-justice"
+    | "arcana-hanged"
+    | "arcana-death"
+    | "arcana-temperance"
+    | "arcana-devil"
+    | "arcana-tower"
+    | "arcana-star"
+    | "arcana-moon"
+    | "arcana-sun"
+    | "arcana-judgement"
+    | "arcana-world"
 
 export type TieredGroup =
     | "mogul"
@@ -253,6 +280,7 @@ export type CounterKey =
     | "harvest-SOFT"
     | "harvest-VC"
     | "achievements-opened"
+    | "grund-compiles"
 
 export interface AchievementSaveData {
     earned: Record<string, number>

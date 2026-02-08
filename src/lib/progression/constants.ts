@@ -64,8 +64,8 @@ export const XP_REWARDS = {
     guestbookSign: 5,
     felixMessage: 1,
 
-    // Achievement (base; tiered achievements multiply this)
-    achievementEarned: 10,
+    // Achievement (base; tiered achievements scale from this)
+    achievementEarned: 7,
 
     // Autobattler
     autobattlerRun: 15,
@@ -86,5 +86,5 @@ export const XP_REWARDS = {
  */
 export function getAchievementXP(tier?: number): number {
     if (!tier) return XP_REWARDS.achievementEarned
-    return [0, 10, 25, 50, 100, 250][tier] ?? XP_REWARDS.achievementEarned
+    return [0, 7, 18, 35, 70, 175][tier] ?? XP_REWARDS.achievementEarned
 }

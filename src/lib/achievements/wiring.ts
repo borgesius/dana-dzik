@@ -80,7 +80,8 @@ const LUNAR_PHASES: LunarPhase[] = [
 function getLunarPhase(date: Date = new Date()): LunarPhase {
     const msPerDay = 86400000
     const daysSinceRef = (date.getTime() - NEW_MOON_REF) / msPerDay
-    const cyclePosition = ((daysSinceRef % SYNODIC_PERIOD) + SYNODIC_PERIOD) % SYNODIC_PERIOD
+    const cyclePosition =
+        ((daysSinceRef % SYNODIC_PERIOD) + SYNODIC_PERIOD) % SYNODIC_PERIOD
     const phaseIndex = Math.floor((cyclePosition / SYNODIC_PERIOD) * 8) % 8
     return LUNAR_PHASES[phaseIndex]
 }
@@ -131,6 +132,9 @@ function wireWindowManager(
 
             // Spoofable environment
             if (now.getFullYear() < 2000) mgr.earn("time-traveler")
+            if (now.getFullYear() === 1968) mgr.earn("year-to-remember")
+            const year = now.getFullYear()
+            if (year >= 1990 && year <= 1999) mgr.earn("negative-timestamp")
 
             const ua = navigator.userAgent.toLowerCase()
             if (ua.includes("netscape") || ua.includes("navigator")) {
@@ -148,6 +152,41 @@ function wireWindowManager(
                 | { effectiveType?: string }
                 | undefined
             if (conn?.effectiveType === "2g") mgr.earn("dial-up-connection")
+
+            // ── Major Arcana (window-open triggers) ──────────────────────
+            // II - The High Priestess: new moon + midnight-5am
+            if (phase === "new-moon" && hour >= 0 && hour < 5) {
+                mgr.earn("arcana-priestess")
+            }
+
+            // XII - The Hanged Man: 3+ commodities in bear market
+            const game = getMarketGame()
+            let bearCount = 0
+            for (const c of COMMODITIES) {
+                const ms = game.getMarketState(c.id)
+                if (ms && ms.trend === "bear") bearCount++
+            }
+            if (bearCount >= 3) mgr.earn("arcana-hanged")
+
+            // XVII - The Star: all unlocked commodities trending bull
+            const unlocked = game.getUnlockedCommodities()
+            if (unlocked.length > 0) {
+                const allBull = unlocked.every((cid) => {
+                    const ms = game.getMarketState(cid)
+                    return ms && ms.trend === "bull"
+                })
+                if (allBull) mgr.earn("arcana-star")
+            }
+
+            // XIX - The Sun: weekend between 10am-2pm
+            const dayOfWeek = now.getDay()
+            if (
+                (dayOfWeek === 0 || dayOfWeek === 6) &&
+                hour >= 10 &&
+                hour < 14
+            ) {
+                mgr.earn("arcana-sun")
+            }
         } else {
             achievementsWindowOpen = false
         }
@@ -167,6 +206,44 @@ function wireMetaAchievements(mgr: AchievementManager): void {
 
         // Recursive: earn an achievement while viewing the achievements window
         if (achievementsWindowOpen) mgr.earn("achievement-achievement")
+
+        // ── Major Arcana (meta triggers) ─────────────────────────────
+        // XVIII - The Moon: earn all 8 lunar cycle achievements
+        const lunarIds = LUNAR_PHASES as readonly string[]
+        if (lunarIds.every((id) => mgr.hasEarned(id as never))) {
+            mgr.earn("arcana-moon")
+        }
+
+        // XX - Judgement: earn 75 total achievements
+        if (total >= 75) mgr.earn("arcana-judgement")
+
+        // XXI - The World: earn all other 21 Major Arcana
+        const arcanaIds = [
+            "arcana-fool",
+            "arcana-magician",
+            "arcana-priestess",
+            "arcana-empress",
+            "arcana-emperor",
+            "arcana-hierophant",
+            "arcana-lovers",
+            "arcana-chariot",
+            "arcana-strength",
+            "arcana-hermit",
+            "arcana-fortune",
+            "arcana-justice",
+            "arcana-hanged",
+            "arcana-death",
+            "arcana-temperance",
+            "arcana-devil",
+            "arcana-tower",
+            "arcana-star",
+            "arcana-moon",
+            "arcana-sun",
+            "arcana-judgement",
+        ] as const
+        if (arcanaIds.every((id) => mgr.hasEarned(id))) {
+            mgr.earn("arcana-world")
+        }
     })
 }
 
@@ -244,6 +321,20 @@ function wireMarketGame(mgr: AchievementManager): void {
         if (earnings >= 100) mgr.earn("going-concern")
         if (earnings >= 1000) mgr.earn("dot-com-darling")
         if (earnings >= 10000) mgr.earn("irrational-exuberance")
+
+        // X - Wheel of Fortune: 500+ lifetime trades
+        if (mgr.getCounter("trades") >= 500) mgr.earn("arcana-fortune")
+
+        // XI - Justice: all 6 commodities held within 20% of each other
+        const holdings = COMMODITIES.map((c) => game.getHolding(c.id))
+        const allHaveQty = holdings.every((h) => h !== null && h.quantity > 0)
+        if (allHaveQty) {
+            const qtys = holdings.map((h) => h!.quantity)
+            const avg = qtys.reduce((a, b) => a + b, 0) / qtys.length
+            if (avg > 0 && qtys.every((q) => Math.abs(q - avg) <= avg * 0.2)) {
+                mgr.earn("arcana-justice")
+            }
+        }
     })
 
     game.on("phaseUnlocked", (data) => {
@@ -260,9 +351,9 @@ function wireMarketGame(mgr: AchievementManager): void {
     })
 
     game.on("upgradeAcquired", () => {
-        if (game.getOwnedUpgrades().length >= UPGRADES.length) {
-            mgr.earn("wasnt-brains")
-        }
+        const owned = game.getOwnedUpgrades().length
+        if (owned === 1) mgr.earn("arcana-magician")
+        if (owned >= UPGRADES.length) mgr.earn("wasnt-brains")
     })
 
     game.on("factoryDeployed", () => {
@@ -279,9 +370,8 @@ function wireMarketGame(mgr: AchievementManager): void {
         for (const f of FACTORIES) {
             total += game.getFactoryCount(f.id)
         }
-        if (total >= 5) {
-            mgr.earn("assembly-line")
-        }
+        if (total >= 5) mgr.earn("assembly-line")
+        if (total >= 10) mgr.earn("arcana-empress")
     })
 
     game.on("influenceExecuted", (data) => {
@@ -471,6 +561,8 @@ function wireWeltEvents(mgr: AchievementManager): void {
 
     onAppEvent("grund:compiled", () => {
         mgr.earn("grund-compiled")
+        const compiles = mgr.incrementCounter("grund-compiles")
+        if (compiles >= 10) mgr.earn("arcana-hierophant")
     })
 
     onAppEvent("grund:executed", () => {
@@ -511,6 +603,14 @@ function wireSessionTimer(mgr: AchievementManager): void {
         },
         30 * 60 * 1000
     )
+
+    // IX - The Hermit: 45-minute session
+    setTimeout(
+        () => {
+            mgr.earn("arcana-hermit")
+        },
+        45 * 60 * 1000
+    )
 }
 
 function wireSessionCost(mgr: AchievementManager): void {
@@ -541,6 +641,16 @@ function wireProgressionEvents(mgr: AchievementManager): void {
         if (detail.hindsight >= 50) {
             mgr.earn("tell-them-theyll-be-ok")
         }
+
+        // 0 - The Fool: prestige with 0 hindsight upgrades purchased
+        const prestige = getPrestigeManager()
+        const noUpgrades = HINDSIGHT_UPGRADES.every(
+            (u) => prestige.getUpgradePurchaseCount(u.id) === 0
+        )
+        if (noUpgrades) mgr.earn("arcana-fool")
+
+        // XIII - Death: prestige for the 3rd time
+        if (detail.count >= 3) mgr.earn("arcana-death")
     })
 
     onAppEvent("prestige:purchase", () => {
@@ -571,6 +681,15 @@ function wireProgressionEvents(mgr: AchievementManager): void {
 
             // Win streak (3 in a row)
             if (consecutiveWins >= 3) mgr.earn("win-streak")
+
+            // VII - The Chariot: 5 consecutive wins
+            if (consecutiveWins >= 5) mgr.earn("arcana-chariot")
+
+            // VI - The Lovers: win with exactly 2 distinct factions
+            const distinctFactions = new Set(
+                detail.lineupFactions.filter((f) => f !== "drifters")
+            )
+            if (distinctFactions.size === 2) mgr.earn("arcana-lovers")
 
             // ── Concept achievements ──────────────────────────────────────
             const locale = getLocaleManager().getCurrentLocale()
@@ -641,6 +760,9 @@ function wireProgressionEvents(mgr: AchievementManager): void {
         if (detail.level >= 20) mgr.earn("level-20")
         if (detail.level >= 35) mgr.earn("level-35")
         if (detail.level >= 50) mgr.earn("level-50")
+
+        // IV - The Emperor: reach level 20
+        if (detail.level >= 20) mgr.earn("arcana-emperor")
     })
 
     // ── Phase 5 / 6 achievement ─────────────────────────────────────────
@@ -794,17 +916,27 @@ function wirePhase6Achievements(mgr: AchievementManager): void {
 
         // "music-stops" -- 6+ active DAS simultaneously
         // "The music is about to stop..."
-        if (game.getSecurities().length >= 6) {
-            mgr.earn("music-stops")
-        }
+        if (game.getSecurities().length >= 6) mgr.earn("music-stops")
+
+        // XIV - Temperance: create DAS while carrying 0 debt
+        if (game.getDebt() <= 0) mgr.earn("arcana-temperance")
     })
 
     // "be-first" -- Reach AAA credit rating
     // "Be first. Be smarter. Or cheat."
     game.on("ratingChanged", (data) => {
-        const { rating } = data as { rating: string; direction: string }
-        if (rating === "AAA") {
-            mgr.earn("be-first")
+        const { rating, direction } = data as {
+            rating: string
+            direction: string
+        }
+        if (rating === "AAA") mgr.earn("be-first")
+
+        // XVI - The Tower: experience a credit rating downgrade
+        if (direction === "downgrade") mgr.earn("arcana-tower")
+
+        // VIII - Strength: survive 100+ ticks after a margin event (on upgrade)
+        if (direction === "upgrade" && game.getTicksSinceMarginEvent() >= 100) {
+            mgr.earn("arcana-strength")
         }
     })
 
@@ -831,9 +963,10 @@ function wirePhase6Achievements(mgr: AchievementManager): void {
         const capacity = game.getBorrowCapacity()
         const debt = game.getDebt()
         const total = capacity + debt
-        if (total > 0 && debt / total >= 0.9) {
-            mgr.earn("it-goes-quickly")
-        }
+        if (total > 0 && debt / total >= 0.9) mgr.earn("it-goes-quickly")
+
+        // XV - The Devil: borrow at 95%+ capacity
+        if (total > 0 && debt / total >= 0.95) mgr.earn("arcana-devil")
     })
 
     // "rainy-day" -- Fully repay all debt with 3+ DAS performing
