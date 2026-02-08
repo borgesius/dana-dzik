@@ -29,11 +29,18 @@ export class Router {
 
     /**
      * Updates the URL to reflect the current window.
+     * Uses ROUTE_MAP to find the canonical URL for a given window ID,
+     * so window IDs don't need to match their URL path.
      * @param windowId - The window ID to reflect in the URL
      */
     public updateUrl(windowId: RoutableWindow): void {
         if (ROUTABLE_WINDOWS.includes(windowId)) {
-            const path = windowId === "welcome" ? "/" : `/${windowId}`
+            // Look up canonical path from ROUTE_MAP (reverse lookup)
+            const entry = Object.entries(ROUTE_MAP).find(
+                ([, wid]) => wid === windowId
+            )
+            const path =
+                entry?.[0] ?? (windowId === "welcome" ? "/" : `/${windowId}`)
             window.history.pushState({ windowId }, "", path)
         }
     }

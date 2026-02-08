@@ -40,6 +40,7 @@ export const GENERAL_MEMORY_MESSAGES = [
     "Exception 0x80000002: ARRAY_BOUNDS_EXCEEDED",
     "IRQL_NOT_LESS_OR_EQUAL",
     "MEMORY_MANAGEMENT (0x0000001A)",
+    "Process terminated: resource exhaustion (vital essence depleted)",
 ]
 
 export const BSOD_TEXT = `

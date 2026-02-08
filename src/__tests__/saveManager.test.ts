@@ -3,7 +3,38 @@
  */
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 
+import {
+    createEmptyAutobattlerData,
+    createEmptyPrestigeData,
+    createEmptyProgressionData,
+} from "../lib/progression/types"
 import type { SaveData } from "../lib/saveManager"
+
+function emptySaveData(overrides: Partial<SaveData> = {}): SaveData {
+    return {
+        version: 3,
+        savedAt: Date.now(),
+        game: null,
+        pinball: { highScore: 0 },
+        preferences: {
+            theme: "win95",
+            colorScheme: "system",
+            locale: "en",
+            calmMode: false,
+        },
+        filesystem: { modified: {}, created: {}, deleted: [] },
+        achievements: {
+            earned: {},
+            counters: {},
+            sets: {},
+            reported: [],
+        },
+        prestige: createEmptyPrestigeData(),
+        progression: createEmptyProgressionData(),
+        autobattler: createEmptyAutobattlerData(),
+        ...overrides,
+    }
+}
 
 interface SaveManagerInstance {
     load(): SaveData
@@ -36,12 +67,15 @@ describe("SaveManager", () => {
         it("creates empty save data when nothing stored", async () => {
             const { saveManager } = await loadSaveManagerModule()
             const data = saveManager.load()
-            expect(data.version).toBe(2)
+            expect(data.version).toBe(4)
             expect(data.pinball.highScore).toBe(0)
             expect(data.preferences.theme).toBe("win95")
             expect(data.preferences.colorScheme).toBe("system")
             expect(data.preferences.locale).toBe("en")
             expect(data.achievements.earned).toEqual({})
+            expect(data.prestige.count).toBe(0)
+            expect(data.progression.totalXP).toBe(0)
+            expect(data.autobattler.collection).toEqual([])
         })
 
         it("migrates legacy pinball high score", async () => {
@@ -86,10 +120,7 @@ describe("SaveManager", () => {
         })
 
         it("loads existing save data", async () => {
-            const saveData: SaveData = {
-                version: 1,
-                savedAt: Date.now(),
-                game: null,
+            const saveData = emptySaveData({
                 pinball: { highScore: 9999 },
                 preferences: {
                     theme: "apple2",
@@ -97,14 +128,13 @@ describe("SaveManager", () => {
                     locale: "ja",
                     calmMode: false,
                 },
-                filesystem: { modified: {}, created: {}, deleted: [] },
                 achievements: {
                     earned: { "first-trade": 12345 },
                     counters: { trades: 10 },
                     sets: {},
                     reported: [],
                 },
-            }
+            })
             localStorage.setItem("save", JSON.stringify(saveData))
             const { saveManager } = await loadSaveManagerModule()
             const loaded = saveManager.load()
@@ -117,15 +147,12 @@ describe("SaveManager", () => {
             localStorage.setItem("save", "not-valid-json{{")
             const { saveManager } = await loadSaveManagerModule()
             const data = saveManager.load()
-            expect(data.version).toBe(2)
+            expect(data.version).toBe(4)
             expect(data.pinball.highScore).toBe(0)
         })
 
         it("writes back individual localStorage keys on load from save blob", async () => {
-            const saveData: SaveData = {
-                version: 1,
-                savedAt: Date.now(),
-                game: null,
+            const saveData = emptySaveData({
                 pinball: { highScore: 500 },
                 preferences: {
                     theme: "c64",
@@ -133,14 +160,7 @@ describe("SaveManager", () => {
                     locale: "fr",
                     calmMode: false,
                 },
-                filesystem: { modified: {}, created: {}, deleted: [] },
-                achievements: {
-                    earned: {},
-                    counters: {},
-                    sets: {},
-                    reported: [],
-                },
-            }
+            })
             localStorage.setItem("save", JSON.stringify(saveData))
             const { saveManager } = await loadSaveManagerModule()
             saveManager.load()
@@ -150,18 +170,9 @@ describe("SaveManager", () => {
             expect(localStorage.getItem("pinball-high-score")).toBe("500")
         })
 
-        it("migrates v1 filesystem paths to v2", async () => {
-            const saveData: SaveData = {
+        it("migrates v1 filesystem paths to v2 and adds v3 fields", async () => {
+            const saveData = emptySaveData({
                 version: 1,
-                savedAt: Date.now(),
-                game: null,
-                pinball: { highScore: 0 },
-                preferences: {
-                    theme: "win95",
-                    colorScheme: "system",
-                    locale: "en",
-                    calmMode: false,
-                },
                 filesystem: {
                     modified: {
                         "C:\\WINDOWS\\system32\\memory.welt":
@@ -179,18 +190,12 @@ describe("SaveManager", () => {
                         "C:\\Program Files\\HACKTERM\\readme.txt",
                     ],
                 },
-                achievements: {
-                    earned: {},
-                    counters: {},
-                    sets: {},
-                    reported: [],
-                },
-            }
+            })
             localStorage.setItem("save", JSON.stringify(saveData))
             const { saveManager } = await loadSaveManagerModule()
             const loaded = saveManager.load()
 
-            expect(loaded.version).toBe(2)
+            expect(loaded.version).toBe(4)
             expect(loaded.filesystem.modified["3:\\DAS\\memory.welt"]).toBe(
                 "modified content"
             )
@@ -211,6 +216,9 @@ describe("SaveManager", () => {
             expect(loaded.filesystem.deleted).toContain(
                 "3:\\Programme\\HACKTERM\\readme.txt"
             )
+            expect(loaded.prestige.count).toBe(0)
+            expect(loaded.progression.totalXP).toBe(0)
+            expect(loaded.autobattler.collection).toEqual([])
         })
 
         it("fills in missing fields with defaults", async () => {
@@ -223,6 +231,44 @@ describe("SaveManager", () => {
             expect(data.pinball.highScore).toBe(0)
             expect(data.preferences.theme).toBe("win95")
             expect(data.achievements.earned).toEqual({})
+            expect(data.prestige.count).toBe(0)
+            expect(data.progression.totalXP).toBe(0)
+            expect(data.progression.activeCareer).toBeNull()
+            expect(data.autobattler.collection).toEqual([])
+            expect(data.autobattler.wonRuns).toBe(0)
+        })
+
+        it("migrates v2 save to v3 by adding progression fields", async () => {
+            const v2Data = {
+                version: 2,
+                savedAt: Date.now(),
+                game: null,
+                pinball: { highScore: 42 },
+                preferences: {
+                    theme: "win95",
+                    colorScheme: "system",
+                    locale: "en",
+                    calmMode: false,
+                },
+                filesystem: { modified: {}, created: {}, deleted: [] },
+                achievements: {
+                    earned: { "first-trade": 99999 },
+                    counters: {},
+                    sets: {},
+                    reported: [],
+                },
+            }
+            localStorage.setItem("save", JSON.stringify(v2Data))
+            const { saveManager } = await loadSaveManagerModule()
+            const data = saveManager.load()
+            expect(data.version).toBe(4)
+            expect(data.pinball.highScore).toBe(42)
+            expect(data.achievements.earned["first-trade"]).toBe(99999)
+            expect(data.prestige.count).toBe(0)
+            expect(data.prestige.currency).toBe(0)
+            expect(data.progression.totalXP).toBe(0)
+            expect(data.progression.level).toBe(0)
+            expect(data.autobattler.completedRuns).toBe(0)
         })
     })
 
@@ -231,25 +277,7 @@ describe("SaveManager", () => {
             const { saveManager } = await loadSaveManagerModule()
             saveManager.load()
             saveManager.registerGatherFn(
-                (): SaveData => ({
-                    version: 1,
-                    savedAt: Date.now(),
-                    game: null,
-                    pinball: { highScore: 1234 },
-                    preferences: {
-                        theme: "win95",
-                        colorScheme: "system",
-                        locale: "en",
-                        calmMode: false,
-                    },
-                    filesystem: { modified: {}, created: {}, deleted: [] },
-                    achievements: {
-                        earned: {},
-                        counters: {},
-                        sets: {},
-                        reported: [],
-                    },
-                })
+                (): SaveData => emptySaveData({ pinball: { highScore: 1234 } })
             )
             saveManager.saveImmediate()
             const raw = localStorage.getItem("save")
@@ -262,25 +290,16 @@ describe("SaveManager", () => {
             const { saveManager } = await loadSaveManagerModule()
             saveManager.load()
             saveManager.registerGatherFn(
-                (): SaveData => ({
-                    version: 1,
-                    savedAt: Date.now(),
-                    game: null,
-                    pinball: { highScore: 777 },
-                    preferences: {
-                        theme: "mac-classic",
-                        colorScheme: "light",
-                        locale: "es",
-                        calmMode: false,
-                    },
-                    filesystem: { modified: {}, created: {}, deleted: [] },
-                    achievements: {
-                        earned: {},
-                        counters: {},
-                        sets: {},
-                        reported: [],
-                    },
-                })
+                (): SaveData =>
+                    emptySaveData({
+                        pinball: { highScore: 777 },
+                        preferences: {
+                            theme: "mac-classic",
+                            colorScheme: "light",
+                            locale: "es",
+                            calmMode: false,
+                        },
+                    })
             )
             saveManager.saveImmediate()
             expect(localStorage.getItem("theme")).toBe("mac-classic")

@@ -1,7 +1,9 @@
 import type { RoutableWindow } from "../config/routing"
-import { getBuildInfo } from "../lib/buildInfo"
+import { getLocaleManager } from "../lib/localeManager"
 import { saveManager } from "../lib/saveManager"
 import { getThemeManager } from "../lib/themeManager"
+import { requestResumeCareerTab } from "../lib/windowContent"
+import { LevelWidget } from "./widgets/LevelWidget"
 import type { WindowManager } from "./WindowManager"
 
 function pick<T>(arr: T[]): T {
@@ -49,9 +51,6 @@ const TRAY_TOOLTIPS = [
     "Helper.dll (helping)",
 ]
 
-const CHANGELOG_URL =
-    "https://github.com/borgesius/dana-dzik/blob/main/CHANGELOG.md"
-
 const GLITCH_TIMES = [
     "??:?? AM",
     "25:61 PM",
@@ -92,6 +91,12 @@ export class Taskbar {
 
         const systemTray = this.createSystemTray()
         this.element.appendChild(systemTray)
+
+        const themeToggle = this.createThemeToggle()
+        systemTray.appendChild(themeToggle)
+
+        const levelWidget = new LevelWidget()
+        systemTray.appendChild(levelWidget.getElement())
 
         this.clockElement = document.createElement("div")
         this.clockElement.className = "tray-clock"
@@ -154,11 +159,12 @@ export class Taskbar {
         headerSource.type = "image/webp"
         const headerImg = document.createElement("img")
         headerImg.src = "/assets/dana/IMG_5531.jpg"
-        headerImg.alt = "User"
+        const lm = getLocaleManager()
+        headerImg.alt = lm.t("taskbar.userAlt")
         headerPicture.appendChild(headerSource)
         headerPicture.appendChild(headerImg)
         const headerText = document.createElement("span")
-        headerText.textContent = "Dana"
+        headerText.textContent = lm.t("taskbar.userName")
         header.appendChild(headerPicture)
         header.appendChild(headerText)
         menu.appendChild(header)
@@ -170,41 +176,45 @@ export class Taskbar {
         left.className = "start-menu-left"
         const leftItems: Array<{
             icon: string
-            text: string
+            textKey: string
             windowId: RoutableWindow
+            onOpen?: () => void
         }> = [
             {
                 icon: "📁",
-                text: "File Explorer",
+                textKey: "taskbar.fileExplorer",
                 windowId: "explorer",
             },
-            {
-                icon: "💻",
-                text: "Terminal",
-                windowId: "terminal",
-            },
+            { icon: "💻", textKey: "taskbar.terminal", windowId: "terminal" },
             {
                 icon: "🏆",
-                text: "Achievements",
+                textKey: "taskbar.achievements",
                 windowId: "achievements",
             },
+            { icon: "🎮", textKey: "taskbar.pinball", windowId: "pinball" },
+            { icon: "😺", textKey: "taskbar.felixgpt", windowId: "felixgpt" },
             {
-                icon: "🎮",
-                text: "Pinball",
-                windowId: "pinball",
+                icon: "⚔️",
+                textKey: "taskbar.frontier",
+                windowId: "autobattler",
             },
+            { icon: "🎨", textKey: "taskbar.customize", windowId: "customize" },
             {
-                icon: "😺",
-                text: "FelixGPT",
-                windowId: "felixgpt",
+                icon: "📋",
+                textKey: "taskbar.careerDev",
+                windowId: "resume",
+                onOpen: () => requestResumeCareerTab(),
             },
         ]
-        leftItems.forEach(({ icon, text, windowId }) => {
+        leftItems.forEach(({ icon, textKey, windowId, onOpen }) => {
             const item = document.createElement("div")
             item.className = "start-menu-item"
+            const text = lm.t(textKey)
+
             item.innerHTML = `<span style="font-size: 20px">${icon}</span><span>${text}</span>`
             item.addEventListener("click", () => {
                 this.windowManager.openWindow(windowId)
+                onOpen?.()
                 this.closeStartMenu()
             })
             left.appendChild(item)
@@ -213,17 +223,18 @@ export class Taskbar {
 
         const right = document.createElement("div")
         right.className = "start-menu-right"
-        const rightItems: Array<{ text: string; windowId: RoutableWindow }> = [
-            { text: "About", windowId: "about" },
-            { text: "Projects", windowId: "projects" },
-            { text: "Resume", windowId: "resume" },
-            { text: "Links", windowId: "links" },
-            { text: "Guestbook", windowId: "guestbook" },
-        ]
-        rightItems.forEach(({ text, windowId }) => {
+        const rightItems: Array<{ textKey: string; windowId: RoutableWindow }> =
+            [
+                { textKey: "taskbar.about", windowId: "about" },
+                { textKey: "taskbar.projects", windowId: "projects" },
+                { textKey: "taskbar.resume", windowId: "resume" },
+                { textKey: "taskbar.links", windowId: "links" },
+                { textKey: "taskbar.guestbook", windowId: "guestbook" },
+            ]
+        rightItems.forEach(({ textKey, windowId }) => {
             const item = document.createElement("div")
             item.className = "start-menu-item"
-            item.innerHTML = `<span>${text}</span>`
+            item.innerHTML = `<span>${lm.t(textKey)}</span>`
             item.addEventListener("click", () => {
                 this.windowManager.openWindow(windowId)
                 this.closeStartMenu()
@@ -237,23 +248,11 @@ export class Taskbar {
         const footer = document.createElement("div")
         footer.className = "start-menu-footer"
 
-        const buildInfo = getBuildInfo()
-        const versionInfo = document.createElement("div")
-        versionInfo.className = "start-menu-version"
-        const commitShort = buildInfo.gitCommit.substring(0, 7)
-        const commitLink =
-            buildInfo.gitCommit !== "local"
-                ? `<a href="https://github.com/borgesius/dana-dzik/commit/${buildInfo.gitCommit}" target="_blank">${commitShort}</a>`
-                : commitShort
-        const versionLink = `<a href="${CHANGELOG_URL}" target="_blank">v${buildInfo.version}</a>`
-        versionInfo.innerHTML = `${versionLink} · ${commitLink}`
-        footer.appendChild(versionInfo)
-
         const buttons = document.createElement("div")
         buttons.className = "start-menu-footer-buttons"
         const resetBtn = document.createElement("button")
-        resetBtn.innerHTML = "🔄 Reset"
-        resetBtn.title = "Erase all saved progress"
+        resetBtn.innerHTML = lm.t("taskbar.reset")
+        resetBtn.title = lm.t("taskbar.resetTooltip")
         resetBtn.addEventListener("click", () => {
             this.closeStartMenu()
             this.confirmReset()
@@ -267,6 +266,7 @@ export class Taskbar {
     }
 
     private confirmReset(): void {
+        const lm = getLocaleManager()
         const overlay = document.createElement("div")
         overlay.className = "reset-dialog-overlay"
 
@@ -275,13 +275,12 @@ export class Taskbar {
 
         const title = document.createElement("div")
         title.className = "reset-dialog-title"
-        title.textContent = "⚠️ Reset All Data"
+        title.textContent = lm.t("taskbar.resetTitle")
         dialog.appendChild(title)
 
         const message = document.createElement("div")
         message.className = "reset-dialog-message"
-        message.textContent =
-            "This will permanently erase all progress, achievements, market game state, filesystem edits, and preferences. This cannot be undone."
+        message.textContent = lm.t("taskbar.resetMessage")
         dialog.appendChild(message)
 
         const buttonRow = document.createElement("div")
@@ -289,12 +288,12 @@ export class Taskbar {
 
         const cancelBtn = document.createElement("button")
         cancelBtn.className = "reset-dialog-cancel"
-        cancelBtn.textContent = "Cancel"
+        cancelBtn.textContent = lm.t("taskbar.resetCancel")
         cancelBtn.addEventListener("click", () => overlay.remove())
 
         const confirmBtn = document.createElement("button")
         confirmBtn.className = "reset-dialog-confirm"
-        confirmBtn.textContent = "Erase Everything"
+        confirmBtn.textContent = lm.t("taskbar.resetConfirm")
         confirmBtn.addEventListener("click", () => {
             overlay.remove()
             saveManager.reset()
@@ -332,6 +331,35 @@ export class Taskbar {
     private closeStartMenu(): void {
         this.startMenuOpen = false
         this.startMenu.classList.remove("open")
+    }
+
+    private createThemeToggle(): HTMLElement {
+        const THEME_ICONS: Record<string, string> = {
+            win95: "🪟",
+            "mac-classic": "🍎",
+            apple2: "🖥️",
+            c64: "📺",
+        }
+
+        const tm = getThemeManager()
+        const btn = document.createElement("button")
+        btn.className = "tray-theme-toggle"
+        btn.textContent = THEME_ICONS[tm.getCurrentTheme()] ?? "🎨"
+        btn.title = tm.getCurrentTheme()
+
+        btn.addEventListener("click", () => {
+            const themes = tm.getThemeIds()
+            const current = themes.indexOf(tm.getCurrentTheme())
+            const next = themes[(current + 1) % themes.length]
+            tm.setTheme(next)
+        })
+
+        tm.on("themeChanged", () => {
+            btn.textContent = THEME_ICONS[tm.getCurrentTheme()] ?? "🎨"
+            btn.title = tm.getCurrentTheme()
+        })
+
+        return btn
     }
 
     private createQuickLaunch(): HTMLElement {

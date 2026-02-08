@@ -32,23 +32,8 @@ export class WeatherWidget {
 
         this.el.innerHTML = `☀️ ${month} ${day}, ${this.yearStr}`
 
-        if (!navigator.geolocation) {
-            this.setFallbackWeather()
-            return
-        }
-
-        navigator.geolocation.getCurrentPosition(
-            (position) => {
-                void this.fetchHistoricalWeather(
-                    position.coords.latitude,
-                    position.coords.longitude
-                )
-            },
-            () => {
-                this.setFallbackWeather()
-            },
-            { timeout: 5000 }
-        )
+        // Always use San Francisco coordinates
+        void this.fetchHistoricalWeather(37.7749, -122.4194)
     }
 
     private async fetchHistoricalWeather(
@@ -81,7 +66,7 @@ export class WeatherWidget {
             else if (maxTemp < 40) emoji = "❄️"
 
             const tempDisplay = this.formatTemperature(maxTemp)
-            this.el.innerHTML = `${tempDisplay} ${emoji} - ${month} ${day}, ${this.yearStr}`
+            this.el.innerHTML = `${tempDisplay} ${emoji} SF - ${month} ${day}, ${this.yearStr}`
         } catch {
             this.setFallbackWeather()
         }

@@ -198,6 +198,57 @@
 }
 
 /* === Resume Window === */
+
+/* Tab wrapper fills window content and stacks vertically */
+.resume-tabs-wrapper {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.resume-tab-bar {
+    display: flex;
+    gap: 2px;
+    padding: 4px 6px 0;
+    background: var(--theme-surface-secondary);
+    border-bottom: 1px solid var(--theme-border-dark);
+    flex-shrink: 0;
+}
+
+.resume-tab {
+    padding: 5px 14px;
+    font-size: 11px;
+    font-family: var(--theme-font-content);
+    border: 1px solid var(--theme-border-dark);
+    border-bottom: none;
+    background: var(--theme-surface-primary);
+    color: var(--theme-text-on-surface);
+    cursor: pointer;
+    position: relative;
+    top: 1px;
+    border-radius: 3px 3px 0 0;
+}
+
+.resume-tab:hover {
+    background: var(--theme-surface-elevated);
+}
+
+.resume-tab.active {
+    background: var(--theme-window-content-bg);
+    border-bottom: 1px solid var(--theme-window-content-bg);
+    font-weight: 700;
+}
+
+.resume-tab-pane {
+    display: none;
+    overflow-y: auto;
+    flex: 1;
+}
+
+.resume-tab-pane.active {
+    display: block;
+}
+
 .resume-content {
     padding: 20px;
     font-family: var(--theme-font-content);
@@ -237,6 +288,426 @@
 .resume-content .entry .meta {
     color: var(--theme-text-secondary);
     font-size: 11px;
+}
+
+/* Career selection */
+.career-prompt {
+    font-size: 12px;
+    color: var(--theme-text-secondary);
+    margin-bottom: 12px;
+}
+
+.career-selection-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-bottom: 16px;
+}
+
+.career-select-btn {
+    padding: 12px;
+    text-align: left;
+    border: 2px outset var(--theme-border-light);
+    background: var(--theme-surface-primary);
+    color: var(--theme-text-on-surface);
+    cursor: pointer;
+}
+
+.career-select-btn:hover {
+    background: var(--theme-surface-secondary);
+}
+
+.career-select-name {
+    font-weight: 700;
+    font-size: 13px;
+}
+
+.career-select-desc {
+    font-size: 10px;
+    color: var(--theme-text-secondary);
+    margin-top: 4px;
+}
+
+/* Skill points */
+.skill-points-display {
+    font-size: 12px;
+    padding: 6px 8px;
+    background: var(--theme-surface-primary);
+    border: 2px inset var(--theme-border-light);
+    margin-bottom: 12px;
+}
+
+/* Resume experience entries */
+.resume-entry {
+    margin: 12px 0;
+    padding: 8px 10px;
+    border-left: 3px solid var(--theme-border-light);
+    background: transparent;
+}
+
+.resume-entry.active-job {
+    border-left-color: var(--theme-color-success);
+    background: rgb(34 139 34 / 5%);
+}
+
+.resume-entry.dormant {
+    border-left-color: var(--theme-text-secondary);
+    background: rgb(128 128 128 / 5%);
+    opacity: 0.7;
+}
+
+.resume-entry.available {
+    border-left-color: var(--theme-color-warning);
+    border-left-style: dashed;
+    background: rgb(212 160 23 / 8%);
+}
+
+.resume-entry.locked {
+    border-left-color: var(--theme-text-secondary);
+    border-left-style: dotted;
+    background: transparent;
+    opacity: 0.5;
+}
+
+.resume-entry.locked.prereq-missing {
+    opacity: 0.3;
+}
+
+.resume-entry-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+}
+
+.resume-entry-title {
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.resume-entry-dates {
+    font-size: 10px;
+    color: var(--theme-text-secondary);
+    white-space: nowrap;
+    margin-left: 8px;
+}
+
+.resume-entry-company {
+    font-size: 11px;
+    color: var(--theme-text-secondary);
+    margin-top: 1px;
+}
+
+.resume-entry-bullets {
+    margin: 4px 0 4px 16px;
+    padding: 0;
+    font-size: 11px;
+    line-height: 1.5;
+}
+
+.resume-entry-bullets li {
+    margin-bottom: 2px;
+}
+
+.resume-entry-bonus {
+    font-size: 10px;
+    font-weight: 600;
+    margin-top: 4px;
+    color: var(--theme-color-success);
+}
+
+.resume-entry-bonus.dormant {
+    color: var(--theme-text-secondary);
+}
+
+.resume-entry-bonus.available {
+    color: var(--theme-color-warning);
+}
+
+.resume-entry-bonus.locked {
+    color: var(--theme-text-secondary);
+    font-weight: 400;
+    font-style: italic;
+}
+
+.resume-next-positions {
+    margin-top: 8px;
+}
+
+.node-unlock-btn {
+    margin-top: 6px;
+    padding: 4px 12px;
+    font-size: 11px;
+    border: 2px outset var(--theme-border-light);
+    background: var(--theme-color-warning);
+    color: #ffffff;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.node-unlock-btn:hover {
+    filter: brightness(1.1);
+}
+
+/* Skills summary */
+.resume-skills-list {
+    margin: 4px 0 12px 16px;
+    padding: 0;
+    font-size: 11px;
+    line-height: 1.6;
+}
+
+.resume-skills-list li {
+    margin-bottom: 2px;
+}
+
+.resume-skills-list li.dormant {
+    color: var(--theme-text-secondary);
+}
+
+/* Career switch */
+.career-switch-section {
+    margin-top: 16px;
+    border-top: 2px solid var(--theme-border-dark);
+    padding-top: 8px;
+}
+
+.career-switch-section h3 {
+    margin: 0 0 4px;
+    font-size: 12px;
+}
+
+.career-switch-warning {
+    font-size: 10px;
+    color: var(--theme-color-danger);
+    margin: 0 0 8px;
+}
+
+.career-switch-options {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
+.career-switch-btn {
+    padding: 6px 12px;
+    font-size: 10px;
+    border: 2px outset var(--theme-border-light);
+    background: var(--theme-surface-primary);
+    color: var(--theme-text-on-surface);
+    cursor: pointer;
+}
+
+.career-switch-btn:hover {
+    background: var(--theme-surface-secondary);
+}
+
+/* === Career Tree Window === */
+
+.career-tree-content {
+    font-size: 12px;
+}
+
+.ct-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 8px;
+    margin-bottom: 8px;
+    background: var(--theme-surface-secondary);
+    border: 1px solid var(--theme-border-dark);
+}
+
+.ct-sp-display {
+    font-size: 13px;
+}
+
+.ct-active-career {
+    font-size: 11px;
+    color: var(--theme-text-secondary);
+}
+
+.ct-branch {
+    margin-bottom: 10px;
+    border: 1px solid var(--theme-border-dark);
+}
+
+.ct-branch.active {
+    border-color: var(--theme-link);
+}
+
+.ct-branch.locked {
+    opacity: 0.5;
+}
+
+.ct-branch-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 4px 8px;
+    background: var(--theme-surface-secondary);
+    border-bottom: 1px solid var(--theme-border-dark);
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.ct-branch-progress {
+    font-size: 10px;
+    font-weight: 400;
+    color: var(--theme-text-secondary);
+}
+
+.ct-branch-active-badge {
+    font-size: 8px;
+    padding: 1px 5px;
+    background: var(--theme-link);
+    color: var(--theme-surface-primary);
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+.ct-branch-locked-msg {
+    padding: 6px 8px;
+    font-size: 10px;
+    color: var(--theme-text-secondary);
+    font-style: italic;
+}
+
+.ct-node-list {
+    padding: 4px;
+}
+
+.ct-node {
+    padding: 4px 8px;
+    margin-bottom: 3px;
+    border-left: 3px solid transparent;
+}
+
+.ct-node.ct-unlocked {
+    border-left-color: var(--theme-color-success);
+    background: rgb(0 180 0 / 5%);
+}
+
+.ct-node.ct-dormant {
+    border-left-color: var(--theme-color-warning);
+    opacity: 0.7;
+}
+
+.ct-node.ct-available {
+    border-left-color: var(--theme-color-warning);
+    border-left-style: dashed;
+    background: rgb(212 160 23 / 8%);
+}
+
+.ct-node.ct-locked {
+    border-left-color: var(--theme-text-secondary);
+    opacity: 0.5;
+}
+
+.ct-node.ct-prereq-missing {
+    border-left-color: var(--theme-text-secondary);
+    opacity: 0.3;
+}
+
+.ct-node-header {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.ct-node-status {
+    font-size: 10px;
+    flex-shrink: 0;
+}
+
+.ct-node-title {
+    font-weight: 700;
+    font-size: 11px;
+    flex: 1;
+}
+
+.ct-node-tier {
+    font-size: 9px;
+    color: var(--theme-text-secondary);
+}
+
+.ct-node-company {
+    font-size: 10px;
+    color: var(--theme-text-secondary);
+    margin-left: 16px;
+}
+
+.ct-node-bonus {
+    font-size: 10px;
+    color: var(--theme-color-success);
+    margin-left: 16px;
+    margin-top: 1px;
+}
+
+.ct-node.ct-dormant .ct-node-bonus {
+    color: var(--theme-color-warning);
+}
+
+.ct-node-prereq {
+    font-size: 9px;
+    color: var(--theme-text-secondary);
+    font-style: italic;
+    margin-left: 16px;
+    margin-top: 2px;
+}
+
+.ct-unlock-btn {
+    margin: 4px 0 2px 16px;
+    padding: 3px 10px;
+    font-size: 10px;
+    background: var(--theme-window-title-bg);
+    color: var(--theme-window-title-text);
+    border: 1px outset var(--theme-border-light);
+    cursor: pointer;
+}
+
+.ct-unlock-btn:hover {
+    filter: brightness(1.1);
+}
+
+.ct-switch-section {
+    margin-top: 12px;
+    border-top: 2px solid var(--theme-border-dark);
+    padding-top: 8px;
+}
+
+.ct-switch-section h3 {
+    margin: 0 0 4px;
+    font-size: 12px;
+}
+
+.ct-switch-warning {
+    font-size: 10px;
+    color: var(--theme-color-danger);
+    margin: 0 0 8px;
+}
+
+.ct-switch-options {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
+.ct-switch-btn {
+    padding: 5px 10px;
+    font-size: 10px;
+    border: 2px outset var(--theme-border-light);
+    background: var(--theme-surface-primary);
+    color: var(--theme-text-on-surface);
+    cursor: pointer;
+}
+
+.ct-switch-btn:hover {
+    background: var(--theme-surface-secondary);
+}
+
+.ct-switch-btn.locked {
+    cursor: not-allowed;
+    opacity: 0.5;
 }
 
 /* === Links Window === */
@@ -317,7 +788,7 @@
 }
 
 .guestbook-content .entries .error {
-    color: #cc0000;
+    color: var(--theme-color-danger);
 }
 
 .guestbook-entry {
@@ -326,6 +797,7 @@
     padding: 10px;
     margin-bottom: 10px;
     overflow: visible;
+    color: #000000;
 }
 
 .entry-header {
@@ -340,7 +812,7 @@
     align-items: center;
     gap: 8px;
     text-decoration: none;
-    color: var(--theme-link);
+    color: #0000cc;
     font-weight: bold;
 }
 
@@ -355,7 +827,7 @@
 }
 
 .entry-date {
-    color: var(--theme-text-secondary);
+    color: #666666;
     font-size: 10px;
 }
 

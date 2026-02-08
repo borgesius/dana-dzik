@@ -30,9 +30,11 @@ export interface AppEventMap {
     "analytics:intent": { type: string }
     "qa:report-clicked": undefined
     "popup:bonus-claimed": undefined
+    "popup:x-dismissed": { headline: string }
     "felix:message": undefined
     "session-cost:big-spender": undefined
     "session-cost:whale": undefined
+    "session-cost:leviathan": undefined
     "system-file-modified": {
         filename: string
         severity: string
@@ -40,6 +42,42 @@ export interface AppEventMap {
         values: Record<string, number>
     }
     "calm-mode:changed": { enabled: boolean }
+    // Progression system events
+    "prestige:triggered": { count: number; hindsight: number }
+    "prestige:purchase": { upgradeId: string }
+    "prestige:ascension": { count: number; foresight: number }
+    "prestige:foresight-purchase": { upgradeId: string }
+    "autobattler:run-complete": {
+        won: boolean
+        majorityFaction?: string
+        losses: number
+        lineupFactions: string[]
+        highestRound: number
+    }
+    "autobattler:boss-defeated": {
+        bossId: string
+        noUnitsLost: boolean
+    }
+    "autobattler:unit-unlocked": { unitId: string }
+    "autobattler:spiral-complete": undefined
+    "career:selected": { branch: string }
+    "career:switched": { from: string; to: string }
+    "career:node-unlocked": { nodeId: string }
+    "progression:level-up": { level: number }
+    "market:employee-hired": { type: string }
+    "market:employee-fired": { type: string }
+    "market:org-reorg": undefined
+    "market:scrap-dividend": Record<string, never>
+    "autobattler:faction-complete": { faction: string }
+    "cosmetic:unlocked": { type: string; id: string }
+    "glitch:triggered": { type: string }
+    "system-crash:triggered": { effectType: string }
+    // Veil system events
+    "veil:triggered": { veilId: number }
+    "veil:unlocked": { veilId: number }
+    "veil:completed": { veilId: number; attempts: number }
+    "veil:failed": { veilId: number }
+    "veil:boss-defeated": undefined
 }
 
 export function emitAppEvent<K extends keyof AppEventMap>(

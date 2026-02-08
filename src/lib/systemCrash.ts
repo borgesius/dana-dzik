@@ -1,5 +1,5 @@
 import { isCalmMode } from "./calmMode"
-import { onAppEvent } from "./events"
+import { emitAppEvent, onAppEvent } from "./events"
 import { FILE_EFFECTS, type SystemEffect } from "./systemCrash/constants"
 import { triggerBSOD } from "./systemCrash/effects/bsod"
 import { triggerClockHaywire } from "./systemCrash/effects/clockHaywire"
@@ -19,6 +19,7 @@ export class SystemCrashHandler {
             if (severity === "none" || severity === "minor") return
 
             this.effectActive = true
+            emitAppEvent("system-crash:triggered", { effectType: effect })
             this.triggerEffect(effect, severity as Severity, broken, values)
         })
     }

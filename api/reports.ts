@@ -1,39 +1,14 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node"
 
-const GITHUB_OWNER = "borgesius"
-const GITHUB_REPO = "dana-dzik"
-
-interface WorkflowRun {
-    id: number
-    head_sha: string
-    status: string
-    conclusion: string | null
-    html_url: string
-    created_at: string
-}
-
-interface WorkflowRunsResponse {
-    workflow_runs: WorkflowRun[]
-}
-
-interface Artifact {
-    id: number
-    name: string
-    archive_download_url: string
-    created_at: string
-}
-
-interface ArtifactsResponse {
-    artifacts: Artifact[]
-}
-
-interface CommitStatus {
-    context: string
-    description: string | null
-    state: string
-    target_url: string | null
-    updated_at: string
-}
+import {
+    GITHUB_OWNER,
+    GITHUB_REPO,
+    fetchGitHub,
+    type WorkflowRun,
+    type WorkflowRunsResponse,
+    type ArtifactsResponse,
+    type CommitStatus,
+} from "./lib/github"
 
 interface LighthouseScores {
     performance: number | null
@@ -72,29 +47,12 @@ interface ReportsData {
     }
 }
 
-async function fetchGitHub<T>(endpoint: string): Promise<T | null> {
-    try {
-        const response = await fetch(
-            `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}${endpoint}`,
-            {
-                headers: {
-                    Accept: "application/vnd.github.v3+json",
-                    "User-Agent": "dana-dzik-reports",
-                },
-            }
-        )
-        if (!response.ok) return null
-        return (await response.json()) as T
-    } catch {
-        return null
-    }
-}
-
 async function getStatusesForWorkflow(
-    workflowFile: string
+    workflowFile: string,
+    branch: string = "main"
 ): Promise<{ run: WorkflowRun; statuses: CommitStatus[] } | null> {
     const runs = await fetchGitHub<WorkflowRunsResponse>(
-        `/actions/workflows/${workflowFile}/runs?per_page=1&branch=main&status=completed`
+        `/actions/workflows/${workflowFile}/runs?per_page=1&branch=${branch}&status=completed`
     )
 
     if (!runs?.workflow_runs?.[0]) return null
@@ -149,7 +107,9 @@ function parseCoverageDescription(description: string): CoverageMetrics {
     return metrics
 }
 
-async function getLatestLighthouseReport(): Promise<ReportsData["lighthouse"]> {
+async function getLatestLighthouseReport(
+    branch: string = "main"
+): Promise<ReportsData["lighthouse"]> {
     const defaultResult: ReportsData["lighthouse"] = {
         url: null,
         workflowUrl: `https://github.com/${GITHUB_OWNER}/${GITHUB_REPO}/actions/workflows/lighthouse.yml`,
@@ -164,7 +124,7 @@ async function getLatestLighthouseReport(): Promise<ReportsData["lighthouse"]> {
         updatedAt: null,
     }
 
-    const result = await getStatusesForWorkflow("lighthouse.yml")
+    const result = await getStatusesForWorkflow("lighthouse.yml", branch)
     if (!result) return defaultResult
 
     const { run, statuses } = result
@@ -189,7 +149,9 @@ async function getLatestLighthouseReport(): Promise<ReportsData["lighthouse"]> {
     return defaultResult
 }
 
-async function getLatestPlaywrightReport(): Promise<ReportsData["playwright"]> {
+async function getLatestPlaywrightReport(
+    branch: string = "main"
+): Promise<ReportsData["playwright"]> {
     const defaultResult: ReportsData["playwright"] = {
         artifactUrl: null,
         workflowUrl: `https://github.com/${GITHUB_OWNER}/${GITHUB_REPO}/actions/workflows/ci.yml`,
@@ -198,7 +160,7 @@ async function getLatestPlaywrightReport(): Promise<ReportsData["playwright"]> {
     }
 
     const runs = await fetchGitHub<WorkflowRunsResponse>(
-        "/actions/workflows/ci.yml/runs?per_page=1&branch=main&status=completed"
+        `/actions/workflows/ci.yml/runs?per_page=1&branch=${branch}&status=completed`
     )
 
     if (!runs?.workflow_runs?.[0]) return defaultResult
@@ -224,7 +186,9 @@ async function getLatestPlaywrightReport(): Promise<ReportsData["playwright"]> {
     return defaultResult
 }
 
-async function getCoverageInfo(): Promise<ReportsData["coverage"]> {
+async function getCoverageInfo(
+    branch: string = "main"
+): Promise<ReportsData["coverage"]> {
     const defaultResult: ReportsData["coverage"] = {
         available: false,
         metrics: {
@@ -237,7 +201,7 @@ async function getCoverageInfo(): Promise<ReportsData["coverage"]> {
         updatedAt: null,
     }
 
-    const result = await getStatusesForWorkflow("ci.yml")
+    const result = await getStatusesForWorkflow("ci.yml", branch)
     if (!result) return defaultResult
 
     const { statuses } = result
@@ -277,10 +241,13 @@ export default async function handler(
     }
 
     try {
+        const host = (req.headers.host || "").toString()
+        const branch = host.startsWith("staging.") ? "staging" : "main"
+
         const [lighthouse, playwright, coverage] = await Promise.all([
-            getLatestLighthouseReport(),
-            getLatestPlaywrightReport(),
-            getCoverageInfo(),
+            getLatestLighthouseReport(branch),
+            getLatestPlaywrightReport(branch),
+            getCoverageInfo(branch),
         ])
 
         res.status(200).json({

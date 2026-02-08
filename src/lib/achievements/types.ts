@@ -8,6 +8,12 @@ export type AchievementCategory =
     | "exercises"
     | "social"
     | "pinball"
+    | "autobattler"
+    | "prestige"
+    | "career"
+    | "cross-system"
+    | "veil"
+    | "arcana"
 
 export type AchievementId =
     // Trading
@@ -17,16 +23,16 @@ export type AchievementId =
     | "going-concern"
     | "dot-com-darling"
     | "irrational-exuberance"
-    | "buy-the-dip"
-    | "sell-the-top"
-    | "diversified"
+    | "fire-sale"
+    | "first-out-the-door"
+    | "who-are-we-selling-to"
     // Production
     | "factory-floor"
     | "industrialist"
     | "assembly-line"
-    | "fully-automated"
-    | "market-maker"
-    | "cornered"
+    | "wasnt-brains"
+    | "speak-to-a-retriever"
+    | "could-be-wrong"
     // Milestones
     | "phase-2"
     | "phase-3"
@@ -48,6 +54,18 @@ export type AchievementId =
     | "author"
     | "navigator"
     | "choo-choo"
+    | "ls-user"
+    | "tree-hugger"
+    | "you-are-here"
+    | "open-sesame"
+    | "red-pen"
+    | "clean-desk"
+    | "self-aware"
+    | "rtfm"
+    | "from-nothing"
+    | "empty-room"
+    | "shredder"
+    | "witness-protection"
     // Coding
     | "programmer"
     | "grund-compiled"
@@ -72,6 +90,11 @@ export type AchievementId =
     | "cat-person"
     | "meow"
     | "popup-enjoyer"
+    | "beyond-the-binary"
+    | "open-source"
+    | "link-and-build"
+    | "sliding-into-dms"
+    | "connections"
     // Pinball
     | "pinball-wizard"
     | "high-roller"
@@ -81,13 +104,209 @@ export type AchievementId =
     | "y2k-survivor"
     | "big-spender"
     | "whale"
+    | "leviathan"
     | "qa-inspector"
+    // Autobattler
+    | "first-draft"
+    | "posse-up"
+    | "faction-recruit"
+    | "full-spiral"
+    | "no-drifters"
+    | "triple-threat"
+    // Prestige
+    | "ive-been-wrong"
+    | "doesnt-matter-what-floor"
+    | "hindsight-shopper"
+    | "tell-them-theyll-be-ok"
+    // Career
+    | "career-starter"
+    | "career-switcher"
+    | "skill-tree-novice"
+    | "skill-tree-master"
+    // HR / Phase 5
+    | "that-ones-a-person"
+    | "we-make-nothing"
+    | "you-dont-get-to-choose"
+    | "reorg"
+    // Autobattler (faction complete)
+    | "syndicate-complete"
+    | "deputies-complete"
+    | "collective-complete"
+    | "prospectors-complete"
+    // Cross-system (hidden)
+    | "vertical-integration"
+    | "exit-interview"
+    // Autobattler (tiered - Wrangler)
+    | "greenhorn"
+    | "deputy"
+    | "sheriff"
+    | "marshal"
+    // Autobattler (tiered - Depth)
+    | "tenure-track"
+    | "associate-prof"
+    | "full-prof"
+    | "endowed-chair"
+    // Autobattler (Boss)
+    | "dissertation-defense"
+    | "summa-cum-laude"
+    | "comprehensive-exams"
+    // Milestones (tiered - Rank)
+    | "level-5"
+    | "level-10"
+    | "level-20"
+    | "level-35"
+    | "level-50"
+    // Milestones (tiered - Phases extension)
+    | "phase-5"
+    | "phase-6"
+    // Phase 6: Structured Products Desk
+    | "its-just-money"
+    | "be-first"
+    | "just-silence"
+    | "music-stops"
+    | "it-goes-quickly"
+    | "rainy-day"
+    // Standalone new
+    | "win-streak"
+    | "serial-pivoter"
+    | "overqualified"
+    | "executive-material"
+    | "pieces-of-paper"
+    // Cross-system
+    | "renaissance"
+    | "full-stack"
+    // Harvest (clicker)
+    | "harvest-100"
+    | "harvest-1000"
+    | "harvest-10000"
+    | "harvest-50000"
+    | "harvest-100000"
+    // Per-commodity harvest
+    | "harvest-email-500"
+    | "harvest-ads-500"
+    | "harvest-dom-500"
+    | "harvest-bw-500"
+    | "harvest-soft-500"
+    | "harvest-vc-500"
+    // Autoclicker
+    | "definitely-not-a-bot"
+    // Autobattler (concept / hidden)
+    | "la-pensee-francaise"
+    | "der-deutsche-idealismus"
+    | "amor-fati"
+    | "continental-breakfast"
+    | "independent-study"
+    | "survey-course"
+    | "revaluation-of-all-values"
+    | "expressionism-in-philosophy"
+    // Meta: achievements window opens (tiered)
+    | "self-assessment"
+    | "performance-review"
+    | "observer-effect"
+    | "the-unexamined-life"
+    // Meta: total achievements earned (tiered)
+    | "participation-trophy"
+    | "overachiever"
+    | "completionist"
+    | "sisyphean"
+    | "herculean"
+    | "promethean"
+    // Meta: time/date novelties (hidden)
+    | "graveyard-shift"
+    // Meta: lunar cycle (tiered, hidden)
+    | "new-moon"
+    | "waxing-crescent"
+    | "first-quarter"
+    | "waxing-gibbous"
+    | "full-moon"
+    | "waning-gibbous"
+    | "last-quarter"
+    | "waning-crescent"
+    // Meta: spoofable environment (hidden)
+    | "time-traveler"
+    | "netscape-navigator"
+    | "640k-enough"
+    | "lingua-franca"
+    | "dial-up-connection"
+    // Meta: spoofable environment (cont.)
+    | "year-to-remember"
+    | "negative-timestamp"
+    // Meta: recursive (hidden)
+    | "achievement-achievement"
+    // Glitch effects
+    | "seein-double"
+    // System file glitches
+    | "bsod-trigger"
+    | "display-glitch"
+    | "clock-glitch"
+    | "memory-glitch"
+    | "restart-glitch"
+    // Phase 6: Novelty (Margin Call quotes)
+    | "three-ways"
+    | "killed-this-firm"
+    | "someone-pays"
+    // Ascension
+    | "through-the-looking-glass"
+    | "eternal-return"
+    | "samsara"
+    | "foresight-shopper"
+    | "oracle-of-delphi"
+    | "windfall"
+    // Veil (hidden, dead Germans themed)
+    | "die-welt-als-wille"
+    | "denkwurdigkeiten"
+    | "gotzen-dammerung"
+    | "der-antichrist"
+    | "ecce-homo"
+    | "horse-whisperer"
+    // Major Arcana (hidden)
+    | "arcana-fool"
+    | "arcana-magician"
+    | "arcana-priestess"
+    | "arcana-empress"
+    | "arcana-emperor"
+    | "arcana-hierophant"
+    | "arcana-lovers"
+    | "arcana-chariot"
+    | "arcana-strength"
+    | "arcana-hermit"
+    | "arcana-fortune"
+    | "arcana-justice"
+    | "arcana-hanged"
+    | "arcana-death"
+    | "arcana-temperance"
+    | "arcana-devil"
+    | "arcana-tower"
+    | "arcana-star"
+    | "arcana-moon"
+    | "arcana-sun"
+    | "arcana-judgement"
+    | "arcana-world"
+
+export type TieredGroup =
+    | "mogul"
+    | "scholar"
+    | "arcade"
+    | "industrialist"
+    | "phases"
+    | "wrangler"
+    | "depth"
+    | "rank"
+    | "harvester"
+    | "commodity-harvester"
+    | "introspection"
+    | "collector"
+    | "lunar"
+    | "ascension"
 
 export interface AchievementDef {
     id: AchievementId
     category: AchievementCategory
     icon: string
     hidden: boolean
+    desktopOnly?: boolean
+    tieredGroup?: TieredGroup
+    tier?: number // 1-based tier within the group
 }
 
 export type CounterKey =
@@ -98,6 +317,17 @@ export type CounterKey =
     | "languages-tried"
     | "themes-tried"
     | "windows-opened"
+    | "factions-won-with"
+    | "harvest-EMAIL"
+    | "harvest-ADS"
+    | "harvest-DOM"
+    | "harvest-BW"
+    | "harvest-SOFT"
+    | "harvest-VC"
+    | "achievements-opened"
+    | "grund-compiles"
+    | "bosses-defeated"
+    | "veil-attempts"
 
 export interface AchievementSaveData {
     earned: Record<string, number>

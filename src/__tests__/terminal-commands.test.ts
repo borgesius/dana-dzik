@@ -31,7 +31,9 @@ describe("Terminal Commands", () => {
     describe("help command", () => {
         it("returns help text", async () => {
             const result = await executeCommand("help", ctx)
-            expect(result.output).toContain("Available commands")
+            expect(result.output).toContain(
+                "terminalCommands.availableCommands"
+            )
             expect(result.output).toContain("cd")
             expect(result.output).toContain("ls")
             expect(result.output).toContain("cat")
@@ -51,7 +53,7 @@ describe("Terminal Commands", () => {
 
         it("returns error for invalid path", async () => {
             const result = await executeCommand("cd 3:\\NonExistent", ctx)
-            expect(result.output).toContain("cannot find the path")
+            expect(result.output).toContain("filesystem.pathNotFound")
             expect(result.className).toBe("error")
         })
 
@@ -71,20 +73,21 @@ describe("Terminal Commands", () => {
 
         it("shows directory header", async () => {
             const result = await executeCommand("ls", ctx)
-            expect(result.output).toContain("Directory of")
-            expect(result.output).toContain("3:\\Users\\Dana\\Desktop")
+            expect(result.output).toContain("terminalCommands.directoryOf")
         })
 
         it("shows file type labels", async () => {
             const result = await executeCommand("ls", ctx)
-            expect(result.output).toMatch(/<DIR>|<EXE>|<LNK>/)
+            expect(result.output).toMatch(
+                /terminalCommands\.dir|terminalCommands\.exe|terminalCommands\.lnk/
+            )
         })
     })
 
     describe("dir command", () => {
         it("is alias for ls", async () => {
             const dirResult = await executeCommand("dir", ctx)
-            expect(dirResult.output).toContain("Directory of")
+            expect(dirResult.output).toContain("terminalCommands.directoryOf")
         })
     })
 
@@ -123,25 +126,25 @@ describe("Terminal Commands", () => {
 
         it("returns error for no filename", async () => {
             const result = await executeCommand("cat", ctx)
-            expect(result.output).toContain("Usage:")
+            expect(result.output).toContain("terminalCommands.usageCat")
             expect(result.className).toBe("error")
         })
 
         it("returns error for non-existent file", async () => {
             const result = await executeCommand("cat nonexistent.txt", ctx)
-            expect(result.output).toContain("File not found")
+            expect(result.output).toContain("filesystem.fileNotFound")
             expect(result.className).toBe("error")
         })
 
         it("returns error for directory", async () => {
             const result = await executeCommand("cat 3:\\Users", ctx)
-            expect(result.output).toContain("is a directory")
+            expect(result.output).toContain("filesystem.isADirectory")
             expect(result.className).toBe("error")
         })
 
         it("shows message for executable without content", async () => {
             const result = await executeCommand("cat guestbook.exe", ctx)
-            expect(result.output).toContain("Binary file")
+            expect(result.output).toContain("terminalCommands.binaryFile")
             expect(result.className).toBe("info")
         })
     })
@@ -155,7 +158,7 @@ describe("Terminal Commands", () => {
 
         it("returns error when -n used without filename", async () => {
             const result = await executeCommand("cat -n", ctx)
-            expect(result.output).toContain("Usage:")
+            expect(result.output).toContain("terminalCommands.usageCat")
             expect(result.className).toBe("error")
         })
 
@@ -177,7 +180,7 @@ describe("Terminal Commands", () => {
         it("opens window for file with windowId", async () => {
             const result = await executeCommand("open about_me.doc", ctx)
             expect(ctx.openWindow).toHaveBeenCalledWith("about")
-            expect(result.output).toContain("Opening")
+            expect(result.output).toContain("terminalCommands.opening")
             expect(result.className).toBe("success")
         })
 
@@ -188,7 +191,7 @@ describe("Terminal Commands", () => {
 
         it("returns error for no filename", async () => {
             const result = await executeCommand("open", ctx)
-            expect(result.output).toContain("Usage:")
+            expect(result.output).toContain("terminalCommands.usageOpen")
             expect(result.className).toBe("error")
         })
 
@@ -197,7 +200,7 @@ describe("Terminal Commands", () => {
                 "open 3:\\DAS\\config.welt",
                 ctx
             )
-            expect(result.output).toContain("Cannot open")
+            expect(result.output).toContain("terminalCommands.cannotOpen")
             expect(result.className).toBe("error")
         })
     })
@@ -217,9 +220,7 @@ describe("Terminal Commands", () => {
     describe("whoami command", () => {
         it("shows user info", async () => {
             const result = await executeCommand("whoami", ctx)
-            expect(result.output).toContain("DANA")
-            expect(result.output).toContain("Guest")
-            expect(result.output).toContain("HACKTERM")
+            expect(result.output).toContain("terminalCommands.whoamiOutput")
         })
     })
 
@@ -241,7 +242,7 @@ describe("Terminal Commands", () => {
         it("runs executable by name", async () => {
             const result = await executeCommand("guestbook.exe", ctx)
             expect(ctx.openWindow).toHaveBeenCalledWith("guestbook")
-            expect(result.output).toContain("Launching")
+            expect(result.output).toContain("terminalCommands.launching")
         })
 
         it("runs executable with ./ prefix", async () => {
@@ -251,7 +252,7 @@ describe("Terminal Commands", () => {
 
         it("returns error for unknown command", async () => {
             const result = await executeCommand("unknowncommand", ctx)
-            expect(result.output).toContain("is not recognized")
+            expect(result.output).toContain("terminalCommands.notRecognized")
             expect(result.className).toBe("error")
         })
     })
@@ -272,8 +273,12 @@ describe("Terminal Commands", () => {
         it("commands are case insensitive", async () => {
             const result1 = await executeCommand("HELP", ctx)
             const result2 = await executeCommand("Help", ctx)
-            expect(result1.output).toContain("Available commands")
-            expect(result2.output).toContain("Available commands")
+            expect(result1.output).toContain(
+                "terminalCommands.availableCommands"
+            )
+            expect(result2.output).toContain(
+                "terminalCommands.availableCommands"
+            )
         })
 
         it("CD works uppercase", async () => {
@@ -297,7 +302,7 @@ describe("Terminal Commands", () => {
     describe("edit command", () => {
         it("returns error for no filename", async () => {
             const result = await executeCommand("edit", ctx)
-            expect(result.output).toContain("Usage:")
+            expect(result.output).toContain("terminalCommands.usageEdit")
             expect(result.className).toBe("error")
         })
 
@@ -310,13 +315,13 @@ describe("Terminal Commands", () => {
     describe("welt command", () => {
         it("returns error for no filename", async () => {
             const result = await executeCommand("welt", ctx)
-            expect(result.output).toContain("Usage:")
+            expect(result.output).toContain("terminalCommands.usageWelt")
             expect(result.className).toBe("error")
         })
 
         it("returns error for non-existent file", async () => {
             const result = await executeCommand("welt nonexistent.welt", ctx)
-            expect(result.output).toContain("File not found")
+            expect(result.output).toContain("filesystem.fileNotFound")
             expect(result.className).toBe("error")
         })
 
@@ -330,7 +335,7 @@ describe("Terminal Commands", () => {
         it("reports welt errors", async () => {
             fs.cwd = ["3:", "DAS"]
             const result = await executeCommand("welt syslog.txt", ctx)
-            expect(result.output).toContain("WELT ERROR")
+            expect(result.output).toContain("terminalCommands.weltError")
             expect(result.className).toBe("error")
         })
     })
