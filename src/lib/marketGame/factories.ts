@@ -18,7 +18,7 @@ export interface FactoryDef {
     conversionInput?: { commodity: CommodityId; quantity: number }
 }
 
-export const FACTORY_COST_SCALING = 1.15
+export const FACTORY_COST_SCALING = 1.18
 
 export const FACTORIES: FactoryDef[] = [
     {
@@ -42,7 +42,7 @@ export const FACTORIES: FactoryDef[] = [
         minOutput: 0,
         maxOutput: 2,
         ticksPerCycle: 2,
-        conversionInput: { commodity: "EMAIL", quantity: 5 },
+        conversionInput: { commodity: "EMAIL", quantity: 6 },
     },
     {
         id: "colocation-rack",
@@ -53,7 +53,7 @@ export const FACTORIES: FactoryDef[] = [
         minOutput: 0,
         maxOutput: 1,
         ticksPerCycle: 3,
-        conversionInput: { commodity: "ADS", quantity: 10 },
+        conversionInput: { commodity: "ADS", quantity: 11 },
     },
     {
         id: "offshore-dev",

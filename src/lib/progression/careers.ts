@@ -507,9 +507,7 @@ export const SKILLS_STARTER_NODE: CareerNodeDef = {
     tier: 0,
     prerequisites: [],
     bonusType: "factoryOutput",
-    // I was going to make this 0.05, but then I realized the base value is
-    // a magic number not exposed to the user... :think:
-    bonusValue: 0.0,
+    bonusValue: 0.05,
 }
 
 const SKILLS_NODES: CareerNodeDef[] = [
