@@ -1,3 +1,5 @@
+import { githubCommitUrl } from "./github"
+
 declare const __BUILD_TIME__: string
 declare const __GIT_COMMIT__: string
 declare const __VERSION__: string
@@ -14,7 +16,7 @@ export function initBuildInfo(): void {
 
     const commitLink =
         gitCommit !== "local"
-            ? `<a href="https://github.com/dana-dzik/dana-dzik/commit/${gitCommit}" target="_blank">${gitCommit.substring(0, 7)}</a>`
+            ? `<a href="${githubCommitUrl(gitCommit)}" target="_blank">${gitCommit.substring(0, 7)}</a>`
             : gitCommit
 
     buildInfoEl.innerHTML = `v${version} | Built: ${buildTime} | Commit: ${commitLink}`

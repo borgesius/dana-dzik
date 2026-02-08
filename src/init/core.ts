@@ -3,6 +3,7 @@ import { setupErrorHandlers } from "../core/ErrorHandler"
 import { getAchievementManager } from "../lib/achievements/AchievementManager"
 import {
     getAbVariant,
+    initCrashTracking,
     initPerfTracking,
     trackFunnelStep,
     trackPageview,
@@ -226,4 +227,5 @@ export async function initServices(): Promise<void> {
     trackFunnelStep("boot_complete")
     getAbVariant()
     initPerfTracking()
+    initCrashTracking()
 }

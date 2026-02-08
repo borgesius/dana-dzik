@@ -39,10 +39,18 @@ function isBot(userAgent: string | undefined): boolean {
 }
 
 interface AnalyticsEvent {
-    type: "pageview" | "window" | "funnel" | "ab_assign" | "ab_convert" | "perf"
+    type:
+        | "pageview"
+        | "window"
+        | "funnel"
+        | "ab_assign"
+        | "ab_convert"
+        | "perf"
+        | "crash"
     windowId?: string
     funnelStep?: string
     variant?: string
+    effectType?: string
     perf?: {
         resource: string
         duration: number
@@ -62,6 +70,10 @@ interface Stats {
     perf: {
         avgLoadTime: number
         byType: Record<string, { avg: number; count: number }>
+    }
+    crashes: {
+        total: number
+        byType: Record<string, number>
     }
 }
 
@@ -200,6 +212,17 @@ async function recordEvent(
                 )
             }
             break
+
+        case "crash":
+            await client.incr("stats:crashes:total")
+            if (event.effectType) {
+                await client.hincrby(
+                    "stats:crashes:types",
+                    event.effectType,
+                    1
+                )
+            }
+            break
     }
 }
 
@@ -212,6 +235,8 @@ async function getStats(client: Redis): Promise<Stats> {
         abConverted,
         perfCounts,
         perfTotals,
+        crashTotal,
+        crashTypes,
     ] = await Promise.all([
         client.get<number>("stats:views:total"),
         client.hgetall<Record<string, number>>("stats:windows"),
@@ -220,6 +245,8 @@ async function getStats(client: Redis): Promise<Stats> {
         client.hgetall<Record<string, number>>("stats:ab:converted"),
         client.hgetall<Record<string, number>>("stats:perf:counts"),
         client.hgetall<Record<string, number>>("stats:perf:totals"),
+        client.get<number>("stats:crashes:total"),
+        client.hgetall<Record<string, number>>("stats:crashes:types"),
     ])
 
     const variants: Record<string, { assigned: number; converted: number }> = {}
@@ -247,6 +274,10 @@ async function getStats(client: Redis): Promise<Stats> {
             variants,
         },
         perf,
+        crashes: {
+            total: crashTotal || 0,
+            byType: crashTypes || {},
+        },
     }
 }
 

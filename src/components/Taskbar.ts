@@ -1,10 +1,4 @@
-import {
-    getDeployEnv,
-    getProductionUrl,
-    getStagingUrl,
-} from "../config/environment"
 import type { RoutableWindow } from "../config/routing"
-import { getBuildInfo } from "../lib/buildInfo"
 import { getLocaleManager } from "../lib/localeManager"
 import { saveManager } from "../lib/saveManager"
 import { getThemeManager } from "../lib/themeManager"
@@ -56,9 +50,6 @@ const TRAY_TOOLTIPS = [
     "System32.exe",
     "Helper.dll (helping)",
 ]
-
-const CHANGELOG_URL =
-    "https://github.com/borgesius/dana-dzik/blob/main/CHANGELOG.md"
 
 const GLITCH_TIMES = [
     "??:?? AM",
@@ -256,49 +247,6 @@ export class Taskbar {
 
         const footer = document.createElement("div")
         footer.className = "start-menu-footer"
-
-        const buildInfo = getBuildInfo()
-        const versionInfo = document.createElement("div")
-        versionInfo.className = "start-menu-version"
-        const commitShort = buildInfo.gitCommit.substring(0, 7)
-        const commitLink =
-            buildInfo.gitCommit !== "local"
-                ? `<a href="https://github.com/borgesius/dana-dzik/commit/${buildInfo.gitCommit}" target="_blank">${commitShort}</a>`
-                : commitShort
-
-        const env = getDeployEnv()
-        if (env === "staging") {
-            versionInfo.innerHTML = commitLink
-        } else {
-            const versionLink = `<a href="${CHANGELOG_URL}" target="_blank">v${buildInfo.version}</a>`
-            versionInfo.innerHTML = `${versionLink} · ${commitLink}`
-        }
-        footer.appendChild(versionInfo)
-
-        const envSwitcher = document.createElement("div")
-        envSwitcher.className = "start-menu-env"
-        if (env === "staging") {
-            envSwitcher.innerHTML =
-                `<span class="env-badge env-staging">STAGING</span> · ` +
-                `<a href="${getProductionUrl()}" class="env-link">Production ↗</a>`
-        } else if (env === "production") {
-            envSwitcher.innerHTML = `<a href="${getStagingUrl()}" class="env-link">Staging ↗</a>`
-        } else {
-            envSwitcher.innerHTML =
-                `<span class="env-badge env-dev" style="cursor:pointer" title="Toggle Dev Panel (Ctrl+Shift+D)">DEV</span> · ` +
-                `<a href="${getProductionUrl()}" class="env-link">Production ↗</a> · ` +
-                `<a href="${getStagingUrl()}" class="env-link">Staging ↗</a>`
-            const devBadge = envSwitcher.querySelector(".env-dev")
-            devBadge?.addEventListener("click", (e) => {
-                e.stopPropagation()
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access
-                const panel = (window as any).__devPanel as
-                    | { toggle?: () => void }
-                    | undefined
-                panel?.toggle?.()
-            })
-        }
-        footer.appendChild(envSwitcher)
 
         const buttons = document.createElement("div")
         buttons.className = "start-menu-footer-buttons"

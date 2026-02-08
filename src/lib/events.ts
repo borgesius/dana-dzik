@@ -71,6 +71,7 @@ export interface AppEventMap {
     "autobattler:faction-complete": { faction: string }
     "cosmetic:unlocked": { type: string; id: string }
     "glitch:triggered": { type: string }
+    "system-crash:triggered": { effectType: string }
     // Veil system events
     "veil:triggered": { veilId: number }
     "veil:unlocked": { veilId: number }

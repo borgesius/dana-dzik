@@ -257,21 +257,6 @@
     border-top: 1px solid var(--theme-border-dark);
 }
 
-.start-menu-version {
-    font-size: 9px;
-    color: var(--theme-text-secondary);
-    text-align: center;
-}
-
-.start-menu-version a {
-    color: var(--theme-link);
-    text-decoration: none;
-}
-
-.start-menu-version a:hover {
-    text-decoration: underline;
-}
-
 .start-menu-footer-buttons {
     display: flex;
     justify-content: flex-end;
