@@ -218,6 +218,12 @@ export type AchievementId =
     | "achievement-achievement"
     // Glitch effects
     | "seein-double"
+    // System file glitches
+    | "bsod-trigger"
+    | "display-glitch"
+    | "clock-glitch"
+    | "memory-glitch"
+    | "restart-glitch"
     // Phase 6: Novelty (Margin Call quotes)
     | "three-ways"
     | "killed-this-firm"

@@ -1283,7 +1283,12 @@
         "arcana-moon": { "name": "The Moon", "description": "Obtén los ocho logros del ciclo lunar." },
         "arcana-sun": { "name": "The Sun", "description": "Abre logros en una tarde de fin de semana." },
         "arcana-judgement": { "name": "Judgement", "description": "Obtén 75 logros en total." },
-        "arcana-world": { "name": "The World", "description": "Obtén todos los demás Arcanos Mayores." }
+        "arcana-world": { "name": "The World", "description": "Obtén todos los demás Arcanos Mayores." },
+        "bsod-trigger": { "name": "Fatal Exception 420", "description": "Corrompe kernel.welt y provoca una Pantalla Azul de la Muerte." },
+        "display-glitch": { "name": "Waiting for the Gift of Sound and Vision", "description": "Corrompe display.welt y provoca corrupción de pantalla." },
+        "clock-glitch": { "name": "Does Anybody Really Know What Time It Is?", "description": "Corrompe clock.welt y descontrola el reloj del sistema." },
+        "memory-glitch": { "name": "PC LOAD LETTER", "description": "Corrompe memory.welt y provoca errores de fallo de memoria." },
+        "restart-glitch": { "name": "Have You Tried Turning It Off and On Again?", "description": "Corrompe boot.welt y fuerza un reinicio del sistema." }
     },
     "symposium": {
         "factions": {
@@ -1332,10 +1337,10 @@
             "wl": "V{{wins}} / D{{losses}}"
         },
         "units": {
-            "drifter-brawler": "Asistente de Cátedra",
-            "drifter-scout": "El Interino",
-            "drifter-medic": "Horario de Consulta",
-            "drifter-heavy": "Burocracia",
+            "drifter-brawler": "El Corrector",
+            "drifter-scout": "El Candidato",
+            "drifter-medic": "El Asesor",
+            "drifter-heavy": "El Burócrata",
             "qd-sharpshooter": "Iconoclasta",
             "qd-deadeye": "The Übermensch",
             "qd-dynamiter": "El Dinamitero",

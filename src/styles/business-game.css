@@ -163,8 +163,8 @@
     border: 2px inset var(--theme-border-dark);
     border-top: none;
     padding: 0;
-    font-size: 11px;
-    max-height: 460px;
+    font-size: 13px;
+    max-height: 520px;
     overflow-y: auto;
 }
 
@@ -179,7 +179,7 @@
 }
 
 .business-panel-title {
-    font-size: 12px;
+    font-size: 14px;
     font-family: "Courier New", monospace;
 }
 
@@ -203,7 +203,7 @@
     background: #000000;
     color: #ffff00;
     font-family: "Courier New", monospace;
-    font-size: 10px;
+    font-size: 12px;
     padding: 3px 8px;
     overflow: hidden;
     white-space: nowrap;
@@ -233,7 +233,7 @@
 }
 
 .panel-col-left {
-    flex: 1.2;
+    flex: 1.5;
     display: flex;
     flex-direction: column;
     gap: 8px;
@@ -244,7 +244,7 @@
     display: flex;
     flex-direction: column;
     gap: 8px;
-    max-height: 380px;
+    max-height: 440px;
     overflow-y: auto;
 }
 
@@ -255,20 +255,26 @@
     padding: 0;
 }
 
+.chart-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: stretch;
+    background: var(--theme-surface-primary);
+    border-bottom: 2px inset var(--theme-border-dark);
+}
+
 .commodity-tabs {
     display: flex;
     gap: 0;
-    background: var(--theme-surface-primary);
-    border-bottom: 2px inset var(--theme-border-dark);
 }
 
 .commodity-tab {
     background: var(--theme-surface-primary);
     border: 1px solid var(--theme-border-dark);
     border-bottom: none;
-    padding: 2px 6px;
+    padding: 3px 8px;
     font-family: "Courier New", monospace;
-    font-size: 9px;
+    font-size: 11px;
     font-weight: bold;
     cursor: pointer;
     color: var(--theme-text-on-surface);
@@ -285,8 +291,38 @@
     cursor: not-allowed;
 }
 
+.timescale-tabs {
+    display: flex;
+    gap: 0;
+    align-items: center;
+    padding-right: 2px;
+}
+
+.timescale-tab {
+    background: var(--theme-surface-primary);
+    border: 1px solid var(--theme-border-dark);
+    border-bottom: none;
+    padding: 2px 5px;
+    font-family: "Courier New", monospace;
+    font-size: 9px;
+    font-weight: bold;
+    cursor: pointer;
+    color: var(--theme-text-secondary);
+}
+
+.timescale-tab.active {
+    background: #000000;
+    color: #00cccc;
+    border-bottom: 1px solid #000000;
+}
+
+.timescale-tab:hover:not(.active) {
+    color: var(--theme-text-on-surface);
+}
+
 .chart-wrapper {
     padding: 4px;
+    min-height: 180px;
 }
 
 .market-chart {
@@ -315,19 +351,19 @@
     font-weight: bold;
     color: #ffcc00;
     background: #000000;
-    padding: 1px 4px;
-    font-size: 11px;
+    padding: 2px 5px;
+    font-size: 13px;
 }
 
 .trade-price {
     font-weight: bold;
     color: var(--theme-color-success);
-    font-size: 12px;
+    font-size: 14px;
 }
 
 .trade-holding {
     color: var(--theme-text-secondary);
-    font-size: 10px;
+    font-size: 12px;
 }
 
 .trade-buttons {
@@ -337,9 +373,9 @@
 
 .trade-btn {
     flex: 1;
-    font-size: 10px;
+    font-size: 12px;
     font-weight: bold;
-    padding: 3px 4px;
+    padding: 4px 6px;
 }
 
 .buy-btn:not(:disabled) {
@@ -356,7 +392,7 @@
 .factories-section h3,
 .upgrades-section h3,
 .influence-section h3 {
-    font-size: 11px;
+    font-size: 13px;
     margin: 0 0 4px;
     padding-bottom: 3px;
     border-bottom: 1px solid var(--theme-border-dark);
@@ -366,7 +402,7 @@
     background: var(--theme-window-content-bg);
     border: 2px inset var(--theme-border-dark);
     padding: 4px;
-    max-height: 80px;
+    max-height: 100px;
     overflow-y: auto;
 }
 
@@ -375,16 +411,16 @@
     font-style: italic;
     padding: 6px;
     text-align: center;
-    font-size: 10px;
+    font-size: 12px;
 }
 
 .portfolio-row {
     display: flex;
     align-items: center;
     gap: 6px;
-    padding: 1px 2px;
+    padding: 2px 3px;
     border-bottom: 1px solid var(--theme-border-light);
-    font-size: 10px;
+    font-size: 12px;
     font-family: "Courier New", monospace;
 }
 
@@ -426,7 +462,7 @@
 /* ── Phase Locked Teaser ──────────────────────────────────────────────────── */
 
 .phase-locked-teaser {
-    font-size: 9px;
+    font-size: 11px;
     color: var(--theme-text-secondary);
     padding: 6px 8px;
     background: repeating-linear-gradient(
@@ -467,30 +503,30 @@
 
 .factory-name {
     font-weight: bold;
-    font-size: 10px;
+    font-size: 12px;
 }
 
 .factory-desc {
     color: var(--theme-text-secondary);
-    font-size: 9px;
+    font-size: 11px;
 }
 
 .factory-output {
     font-family: "Courier New", monospace;
-    font-size: 9px;
+    font-size: 11px;
     color: var(--theme-color-success);
 }
 
 .factory-count {
     font-weight: bold;
-    font-size: 9px;
+    font-size: 11px;
     color: var(--theme-accent);
 }
 
 .factory-deploy-btn {
-    font-size: 9px;
+    font-size: 11px;
     white-space: nowrap;
-    padding: 2px 6px;
+    padding: 3px 8px;
 }
 
 /* Upgrade Section */
@@ -498,7 +534,7 @@
     display: flex;
     flex-direction: column;
     gap: 3px;
-    max-height: 100px;
+    max-height: 120px;
     overflow-y: auto;
 }
 
@@ -509,9 +545,9 @@
     gap: 4px;
     background: var(--theme-surface-primary);
     border: 2px outset var(--theme-border-light);
-    padding: 3px 6px;
+    padding: 4px 8px;
     cursor: pointer;
-    font-size: 10px;
+    font-size: 12px;
     text-align: left;
 }
 
@@ -545,18 +581,25 @@
 .upgrade-desc {
     flex-basis: 100%;
     color: var(--theme-text-secondary);
-    font-size: 9px;
+    font-size: 11px;
 }
 
 .upgrade-badge {
     background: var(--theme-color-success);
     color: white;
     padding: 1px 4px;
-    font-size: 9px;
+    font-size: 11px;
     font-weight: bold;
 }
 
 /* Influence Section */
+.influence-target {
+    font-family: "Courier New", monospace;
+    color: #ffcc00;
+    font-weight: bold;
+    margin-left: 4px;
+}
+
 .influence-list {
     display: flex;
     flex-direction: column;
@@ -581,24 +624,24 @@
 
 .influence-name {
     font-weight: bold;
-    font-size: 10px;
+    font-size: 12px;
 }
 
 .influence-desc {
     color: var(--theme-text-secondary);
-    font-size: 9px;
+    font-size: 11px;
 }
 
 .influence-cost {
     font-family: "Courier New", monospace;
-    font-size: 9px;
+    font-size: 11px;
     color: var(--theme-color-danger);
 }
 
 .influence-exec-btn {
-    font-size: 9px;
+    font-size: 11px;
     white-space: nowrap;
-    padding: 2px 6px;
+    padding: 3px 8px;
 }
 
 /* Bonus Popup Styling */
@@ -624,7 +667,7 @@
 
 .prestige-section h3 {
     margin: 0 0 8px;
-    font-size: 12px;
+    font-size: 14px;
     color: var(--theme-text-on-surface);
 }
 
@@ -633,7 +676,7 @@
     flex-direction: column;
     gap: 4px;
     margin-bottom: 8px;
-    font-size: 11px;
+    font-size: 13px;
 }
 
 .prestige-stat {
@@ -649,7 +692,7 @@
 .prestige-trigger-btn {
     width: 100%;
     padding: 8px;
-    font-size: 12px;
+    font-size: 14px;
     font-weight: 700;
     background: linear-gradient(135deg, #6a0dad, #9b30ff);
     color: #ffffff;
@@ -670,7 +713,7 @@
 
 .prestige-locked {
     text-align: center;
-    font-size: 11px;
+    font-size: 13px;
     color: var(--theme-text-secondary);
     padding: 6px;
     margin-bottom: 8px;
@@ -678,7 +721,7 @@
 
 .hindsight-shop h4 {
     margin: 0 0 6px;
-    font-size: 11px;
+    font-size: 13px;
     color: var(--theme-accent);
 }
 
@@ -688,7 +731,7 @@
     text-align: left;
     padding: 6px 8px;
     margin-bottom: 4px;
-    font-size: 10px;
+    font-size: 12px;
     border: 1px solid var(--theme-border-dark);
     background: var(--theme-surface-primary);
     color: var(--theme-text-on-surface);
@@ -725,7 +768,7 @@
 
 .hindsight-badge {
     color: var(--theme-color-success);
-    font-size: 9px;
+    font-size: 11px;
 }
 
 .hindsight-item-desc {
@@ -735,7 +778,7 @@
 
 .hindsight-item-stacks {
     color: var(--theme-text-secondary);
-    font-size: 9px;
+    font-size: 11px;
     margin-top: 2px;
 }
 
@@ -781,7 +824,7 @@
 }
 
 .employees-section h3 {
-    font-size: 12px;
+    font-size: 14px;
     margin: 0 0 6px;
 }
 
@@ -791,7 +834,7 @@
 }
 
 .hr-pool-label {
-    font-size: 10px;
+    font-size: 12px;
     font-weight: 700;
     margin-bottom: 4px;
 }
@@ -808,8 +851,8 @@
 }
 
 .hr-refresh-btn {
-    padding: 2px 8px;
-    font-size: 9px;
+    padding: 3px 8px;
+    font-size: 11px;
     border: 1px outset var(--theme-border-light);
     background: var(--theme-surface-primary);
     color: var(--theme-text-on-surface);
@@ -827,7 +870,7 @@
     border: 1px outset var(--theme-border-light);
     background: var(--theme-surface-primary);
     color: var(--theme-text-on-surface);
-    font-size: 9px;
+    font-size: 11px;
     min-width: 80px;
     position: relative;
     cursor: pointer;
@@ -854,44 +897,44 @@
 
 .hr-emp-name {
     font-weight: 700;
-    font-size: 9px;
+    font-size: 11px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    max-width: 90px;
+    max-width: 100px;
 }
 
 .hr-emp-type {
     display: flex;
     align-items: center;
     gap: 2px;
-    font-size: 8px;
+    font-size: 10px;
     color: var(--theme-text-secondary);
 }
 
 .hr-emp-type .type-icon {
-    font-size: 10px;
+    font-size: 12px;
 }
 
 .hr-emp-bonus {
-    font-size: 8px;
+    font-size: 10px;
     color: var(--theme-color-success);
     margin-top: 1px;
 }
 
 .hr-emp-salary {
-    font-size: 8px;
+    font-size: 10px;
     color: var(--theme-color-danger);
     margin-top: 1px;
 }
 
 .hr-emp-level {
-    font-size: 8px;
+    font-size: 10px;
     color: var(--theme-color-warning);
 }
 
 .hr-hire-cost {
-    font-size: 8px;
+    font-size: 10px;
     font-weight: 700;
     margin-top: 2px;
     color: var(--theme-text-on-surface);
@@ -903,7 +946,7 @@
 }
 
 .hr-org-label {
-    font-size: 10px;
+    font-size: 12px;
     font-weight: 700;
     margin-bottom: 4px;
 }
@@ -919,7 +962,7 @@
     border: 2px outset var(--theme-border-light);
     background: var(--theme-window-title-bg);
     color: var(--theme-window-title-text);
-    font-size: 9px;
+    font-size: 11px;
     font-weight: 700;
     text-align: center;
 }
@@ -957,7 +1000,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 8px;
+    font-size: 10px;
     color: var(--theme-text-secondary);
     cursor: pointer;
 }
@@ -989,7 +1032,7 @@
     position: absolute;
     top: 1px;
     right: 1px;
-    font-size: 7px;
+    font-size: 9px;
     padding: 0 3px;
     cursor: pointer;
     border: 1px solid var(--theme-border-dark);
@@ -1006,7 +1049,7 @@
 
 /* Payroll summary */
 .hr-payroll {
-    font-size: 9px;
+    font-size: 11px;
     padding: 4px 6px;
     background: var(--theme-surface-primary);
     border: 1px inset var(--theme-border-light);
@@ -1081,7 +1124,7 @@
 }
 
 .hr-raise-badge {
-    font-size: 9px;
+    font-size: 11px;
     font-weight: 900;
     color: var(--theme-color-warning);
     animation: hr-raise-pulse 1s ease-in-out infinite;
@@ -1094,8 +1137,8 @@
 
 .hr-raise-grant,
 .hr-raise-deny {
-    font-size: 8px;
-    padding: 0 3px;
+    font-size: 10px;
+    padding: 0 4px;
     cursor: pointer;
     border: 1px solid var(--theme-border-dark);
     background: var(--theme-surface-primary);
@@ -1149,7 +1192,7 @@
 }
 
 .hr-notification {
-    font-size: 8px;
+    font-size: 10px;
     padding: 2px 6px;
     background: var(--theme-surface-secondary);
     border-left: 2px solid var(--theme-color-warning);
@@ -1179,7 +1222,7 @@
 }
 
 .desk-section h3 {
-    font-size: 10px;
+    font-size: 12px;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.5px;
@@ -1195,7 +1238,7 @@
     background: var(--theme-surface-secondary);
     border: 1px solid var(--theme-border);
     margin-bottom: 6px;
-    font-size: 9px;
+    font-size: 11px;
 }
 
 .desk-rating-label {
@@ -1204,7 +1247,7 @@
 
 .desk-rating-value {
     font-weight: 700;
-    font-size: 11px;
+    font-size: 13px;
 }
 
 .desk-rating-f,
@@ -1236,7 +1279,7 @@
     display: flex;
     gap: 2px;
     margin-left: auto;
-    font-size: 7px;
+    font-size: 9px;
 }
 
 .desk-notch {
@@ -1257,7 +1300,7 @@
 .desk-summary {
     display: flex;
     gap: 8px;
-    font-size: 8px;
+    font-size: 10px;
     padding: 3px 6px;
     background: var(--theme-surface-primary);
     border: 1px solid var(--theme-border);
@@ -1282,7 +1325,7 @@
 }
 
 .desk-subsection h4 {
-    font-size: 9px;
+    font-size: 11px;
     font-weight: 600;
     margin: 0 0 4px;
     color: var(--theme-text-primary);
@@ -1302,7 +1345,7 @@
     padding: 3px 6px;
     background: var(--theme-surface-secondary);
     border: 1px solid var(--theme-border);
-    font-size: 8px;
+    font-size: 10px;
 }
 
 .desk-das-header {
@@ -1315,12 +1358,12 @@
 .desk-das-id {
     font-weight: 600;
     font-family: monospace;
-    font-size: 8px;
+    font-size: 10px;
 }
 
 .desk-das-status {
     font-weight: 700;
-    font-size: 7px;
+    font-size: 9px;
     padding: 1px 3px;
     border-radius: 2px;
 }
@@ -1350,15 +1393,15 @@
 }
 
 .desk-note {
-    font-size: 8px;
+    font-size: 10px;
     color: var(--theme-text-secondary);
     font-style: italic;
     padding: 4px 0;
 }
 
 .desk-btn {
-    font-size: 8px;
-    padding: 2px 6px;
+    font-size: 10px;
+    padding: 3px 8px;
     background: var(--theme-surface-primary);
     border: 1px solid var(--theme-border);
     color: var(--theme-text-primary);
@@ -1386,7 +1429,7 @@
 .desk-qty-input,
 .desk-borrow-input,
 .desk-repay-input {
-    font-size: 8px;
+    font-size: 10px;
     padding: 2px 4px;
     border: 1px solid var(--theme-border);
     background: var(--theme-surface-primary);
@@ -1403,7 +1446,7 @@
     display: flex;
     flex-wrap: wrap;
     gap: 6px;
-    font-size: 8px;
+    font-size: 10px;
     padding: 3px 6px;
     background: var(--theme-surface-primary);
     border: 1px solid var(--theme-border);
@@ -1416,7 +1459,7 @@
 }
 
 .desk-ratio {
-    font-size: 8px;
+    font-size: 10px;
     padding: 2px 6px;
     margin-bottom: 4px;
     font-weight: 600;
@@ -1444,7 +1487,7 @@
 
 .desk-rates-table table {
     width: 100%;
-    font-size: 7px;
+    font-size: 9px;
     border-collapse: collapse;
 }
 

@@ -7,6 +7,7 @@ import type {
     FactionId,
     UnitDef,
 } from "./types"
+import { unitDisplayName } from "./UnitCard"
 import { UNIT_MAP } from "./units"
 
 const MAX_COMBAT_ROUNDS = 30
@@ -16,6 +17,8 @@ let nextInstanceId = 1
 export interface CombatBonuses {
     atkBonus?: number // flat additive, e.g. 0.1 = +10%
     hpBonus?: number // flat additive, e.g. 0.1 = +10%
+    /** Per-faction ATK bonuses (stacks with global atkBonus) */
+    factionATK?: Partial<Record<FactionId, number>>
 }
 
 export function createCombatUnit(
@@ -27,7 +30,8 @@ export function createCombatUnit(
     if (!def) throw new Error(`Unknown unit: ${unitDefId}`)
 
     const levelMult = 1 + (level - 1) * 0.5 // 1x at L1, 1.5x at L2, 2x at L3
-    const atkMult = 1 + (bonuses?.atkBonus ?? 0)
+    const factionAtkBonus = bonuses?.factionATK?.[def.faction] ?? 0
+    const atkMult = 1 + (bonuses?.atkBonus ?? 0) + factionAtkBonus
     const hpMult = 1 + (bonuses?.hpBonus ?? 0)
     const atk = Math.floor(def.baseATK * levelMult * atkMult)
     const hp = Math.floor(def.baseHP * levelMult * hpMult)
@@ -47,6 +51,13 @@ export function createCombatUnit(
 
 function getUnitDef(unit: CombatUnit): UnitDef | undefined {
     return UNIT_MAP.get(unit.unitDefId)
+}
+
+/** Localized display name for a unit def ID (falls back to the slug) */
+function uName(id: string): string {
+    const def = UNIT_MAP.get(id)
+    if (!def) return id
+    return unitDisplayName(def)
 }
 
 function isAlive(unit: CombatUnit): boolean {
@@ -130,7 +141,7 @@ export function resolveCombat(
         const pDmgDealt = dealDamage(oFront, pDmg)
         log.push({
             round,
-            description: `${pFront.unitDefId} attacks ${oFront.unitDefId} for ${pDmgDealt}`,
+            description: `${uName(pFront.unitDefId)} attacks ${uName(oFront.unitDefId)} for ${pDmgDealt}`,
         })
 
         if (pDmgDealt > 0) {
@@ -193,7 +204,7 @@ export function resolveCombat(
             const oDmgDealt = dealDamage(pTarget, oDmg)
             log.push({
                 round,
-                description: `${oAttacker.unitDefId} attacks ${pTarget.unitDefId} for ${oDmgDealt}`,
+                description: `${uName(oAttacker.unitDefId)} attacks ${uName(pTarget.unitDefId)} for ${oDmgDealt}`,
             })
 
             if (oDmgDealt > 0) {
@@ -348,7 +359,7 @@ function applyEffect(
                 dealDamage(t, amount)
                 log.push({
                     round,
-                    description: `${owner.unitDefId} ability deals ${amount} to ${t.unitDefId}`,
+                    description: `${uName(owner.unitDefId)} ability deals ${amount} to ${uName(t.unitDefId)}`,
                 })
             }
             break
@@ -384,7 +395,7 @@ function applyEffect(
             const sideTag = side ? ` [${side}]` : ""
             log.push({
                 round,
-                description: `${owner.unitDefId} summons ${effect.unitId}${sideTag}`,
+                description: `${uName(owner.unitDefId)} summons ${uName(effect.unitId)}${sideTag}`,
             })
             break
         }
@@ -449,7 +460,7 @@ function handleDeath(
     round: number,
     side?: "player" | "opponent"
 ): void {
-    log.push({ round, description: `${deadUnit.unitDefId} dies` })
+    log.push({ round, description: `${uName(deadUnit.unitDefId)} dies` })
 
     // Trigger onDeath (with faction scaling + cross bonus)
     const def = getUnitDef(deadUnit)

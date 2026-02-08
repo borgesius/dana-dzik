@@ -41,9 +41,9 @@ export class InfluenceSection {
         section.className = "influence-section"
 
         const heading = document.createElement("h3")
-        heading.textContent = getLocaleManager().t(
-            "commodityExchange.ui.marketOperations"
-        )
+        heading.className = "influence-heading"
+        const lm = getLocaleManager()
+        heading.innerHTML = `${lm.t("commodityExchange.ui.marketOperations")} <span class="influence-target">[${this.getSelectedCommodity()}]</span>`
         section.appendChild(heading)
         section.appendChild(this.lockedEl)
         section.appendChild(this.listEl)
@@ -76,6 +76,13 @@ export class InfluenceSection {
         if (!this.game.isPhaseUnlocked(4)) return
 
         const lm = getLocaleManager()
+
+        // Update the target commodity label in the heading
+        const targetEl = this.element.querySelector(".influence-target")
+        if (targetEl) {
+            targetEl.textContent = `[${this.getSelectedCommodity()}]`
+        }
+
         this.listEl.innerHTML = ""
 
         for (const inf of INFLUENCES) {

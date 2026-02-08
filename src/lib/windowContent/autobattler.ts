@@ -2,7 +2,7 @@ import { getCollectionManager } from "../autobattler/CollectionManager"
 import { createCombatUnit } from "../autobattler/combat"
 import { CombatAnimator } from "../autobattler/CombatAnimator"
 import { pickOpponent } from "../autobattler/opponents"
-import { RUN_BUFFS, type RunBuff } from "../autobattler/runBuffs"
+import { getBuffCost, RUN_BUFFS, type RunBuff } from "../autobattler/runBuffs"
 import { RunManager } from "../autobattler/RunManager"
 import { getMaxLineSlots } from "../autobattler/shop"
 import type { FactionId } from "../autobattler/types"
@@ -63,6 +63,10 @@ function renderLobbyView(container: HTMLElement): void {
     const career = getCareerManager()
     const atkBonus = career.getBonus("autobattlerATK")
     const hpBonus = career.getBonus("autobattlerHP")
+    const clockworkATK = career.getBonus("autobattlerATK_clockwork")
+    const quickdrawATK = career.getBonus("autobattlerATK_quickdraw")
+    const deputiesATK = career.getBonus("autobattlerATK_deputies")
+    const prospectorsATK = career.getBonus("autobattlerATK_prospectors")
 
     const lm = getLocaleManager()
     const t = lm.t.bind(lm)
@@ -79,10 +83,25 @@ function renderLobbyView(container: HTMLElement): void {
             </div>
     `
 
-    if (atkBonus > 0 || hpBonus > 0) {
+    const hasBonuses =
+        atkBonus > 0 ||
+        hpBonus > 0 ||
+        clockworkATK > 0 ||
+        quickdrawATK > 0 ||
+        deputiesATK > 0 ||
+        prospectorsATK > 0
+    if (hasBonuses) {
         html += `<div class="ab-bonuses">${t("symposium.ui.careerBonuses")} `
         if (atkBonus > 0) html += `+${Math.round(atkBonus * 100)}% ATK `
-        if (hpBonus > 0) html += `+${Math.round(hpBonus * 100)}% HP`
+        if (hpBonus > 0) html += `+${Math.round(hpBonus * 100)}% HP `
+        if (clockworkATK > 0)
+            html += `+${Math.round(clockworkATK * 100)}% Rationalist ATK `
+        if (quickdrawATK > 0)
+            html += `+${Math.round(quickdrawATK * 100)}% Existentialist ATK `
+        if (deputiesATK > 0)
+            html += `+${Math.round(deputiesATK * 100)}% Idealist ATK `
+        if (prospectorsATK > 0)
+            html += `+${Math.round(prospectorsATK * 100)}% Post-Structuralist ATK `
         html += `</div>`
     }
 
@@ -148,6 +167,7 @@ function renderPrepareRun(container: HTMLElement): void {
     function render(): void {
         const lm = getLocaleManager()
         const t = lm.t.bind(lm)
+        const netWorth = game.getNetWorth()
         let html = `<div class="ab-prepare">
             <h3>${t("symposium.ui.prepareRun")}</h3>
             <p class="ab-prepare-hint">${t("symposium.ui.prepareHint")}</p>
@@ -156,7 +176,10 @@ function renderPrepareRun(container: HTMLElement): void {
         for (const buff of RUN_BUFFS) {
             const holding = game.getHolding(buff.commodityId)
             const owned = holding?.quantity ?? 0
-            const canAfford = owned >= buff.commodityCost
+            const mkt = game.getMarketState(buff.commodityId)
+            const price = mkt?.price ?? 1
+            const cost = getBuffCost(netWorth, price)
+            const canAfford = owned >= cost
             const isSelected = selectedBuffs.has(buff.id)
             const buffName = t(`symposium.buffs.${buff.id}.name`, {
                 defaultValue: buff.name,
@@ -164,6 +187,7 @@ function renderPrepareRun(container: HTMLElement): void {
             const buffDesc = t(`symposium.buffs.${buff.id}.description`, {
                 defaultValue: buff.description,
             })
+            const dollarCost = (cost * price).toFixed(2)
 
             html += `
                 <button class="ab-buff-card ${isSelected ? "selected" : ""} ${!canAfford && !isSelected ? "disabled" : ""}"
@@ -171,7 +195,7 @@ function renderPrepareRun(container: HTMLElement): void {
                     <div class="ab-buff-icon">${buff.icon}</div>
                     <div class="ab-buff-name">${buffName}</div>
                     <div class="ab-buff-desc">${buffDesc}</div>
-                    <div class="ab-buff-cost">${buff.commodityCost} ${buff.commodityId} (have: ${owned})</div>
+                    <div class="ab-buff-cost">${cost} ${buff.commodityId} ($${dollarCost}) · have: ${owned}</div>
                 </button>`
         }
 
@@ -200,14 +224,17 @@ function renderPrepareRun(container: HTMLElement): void {
         container
             .querySelector(".ab-launch-btn")
             ?.addEventListener("click", () => {
+                const nw = game.getNetWorth()
                 const buffs: RunBuff[] = []
                 for (const buffId of selectedBuffs) {
                     const buff = RUN_BUFFS.find((b) => b.id === buffId)
                     if (!buff) continue
                     const holding = game.getHolding(buff.commodityId)
-                    if (!holding || holding.quantity < buff.commodityCost)
-                        continue
-                    game.grantCommodity(buff.commodityId, -buff.commodityCost)
+                    const mkt = game.getMarketState(buff.commodityId)
+                    const price = mkt?.price ?? 1
+                    const cost = getBuffCost(nw, price)
+                    if (!holding || holding.quantity < cost) continue
+                    game.grantCommodity(buff.commodityId, -cost)
                     buffs.push(buff)
                 }
                 startNewRun(buffs)
@@ -229,9 +256,26 @@ function startNewRun(buffs: RunBuff[] = []): void {
     activeRun = new RunManager(unlockedIds, undefined, buffs)
 
     const career = getCareerManager()
+    const clockworkATK = career.getBonus("autobattlerATK_clockwork")
+    const quickdrawATK = career.getBonus("autobattlerATK_quickdraw")
+    const deputiesATK = career.getBonus("autobattlerATK_deputies")
+    const prospectorsATK = career.getBonus("autobattlerATK_prospectors")
+    const hasFactionBonuses =
+        clockworkATK > 0 ||
+        quickdrawATK > 0 ||
+        deputiesATK > 0 ||
+        prospectorsATK > 0
     activeRun.combatBonuses = {
         atkBonus: career.getBonus("autobattlerATK"),
         hpBonus: career.getBonus("autobattlerHP"),
+        factionATK: hasFactionBonuses
+            ? {
+                  clockwork: clockworkATK,
+                  quickdraw: quickdrawATK,
+                  deputies: deputiesATK,
+                  prospectors: prospectorsATK,
+              }
+            : undefined,
     }
 
     // Foresight: Thought Reserves bonus
@@ -629,10 +673,8 @@ function renderCombatPhase(container: HTMLElement): void {
             getProgressionManager().addXP(reward.value)
         }
         if (reward.type === "commodity" && typeof reward.value === "string") {
-            const frontierBonus = getPrestigeManager().hasFrontierDispatch()
-                ? 0.25
-                : 0
-            const qty = Math.ceil(1 * (1 + frontierBonus))
+            const hasFrontier = getPrestigeManager().hasFrontierDispatch()
+            const qty = 1 + (hasFrontier && Math.random() < 0.25 ? 1 : 0)
             getMarketGame().grantCommodity(reward.value as CommodityId, qty)
         }
         if (reward.type === "unit" && typeof reward.value === "string") {

@@ -19,7 +19,11 @@ export {
 
 export type { RoundParams } from "../lib/autobattler/opponents"
 export { ROUND_PARAMS } from "../lib/autobattler/opponents"
-export { RUN_BUFFS } from "../lib/autobattler/runBuffs"
+export {
+    BUFF_MIN_COST,
+    getBuffCost,
+    RUN_BUFFS,
+} from "../lib/autobattler/runBuffs"
 export { DEFAULT_TOTAL_ROUNDS } from "../lib/autobattler/RunManager"
 export {
     BASE_LINE_SLOTS,

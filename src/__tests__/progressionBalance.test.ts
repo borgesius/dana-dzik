@@ -10,6 +10,7 @@ import {
     ALL_UNITS,
     // Thresholds
     BALANCE_THRESHOLDS,
+    BUFF_MIN_COST,
     calculateHindsight,
     // Phase 6: Structured Products Desk
     CREDIT_RATING_SCALE,
@@ -19,6 +20,7 @@ import {
     DEFAULT_TOTAL_ROUNDS,
     DORMANT_MULTIPLIER,
     getAchievementXP,
+    getBuffCost,
     HINDSIGHT_UPGRADES,
     // Autobattler economy
     INITIAL_SCRAP,
@@ -167,14 +169,12 @@ describe("opponent difficulty scaling", () => {
 // ─────────────────────────────────────────────────────────────────────────────
 
 describe("cross-system reward proportionality", () => {
-    it("autobattler commodity rewards fund 1 buff within maxRunsPerBuff runs", () => {
-        // Each win can produce 1 commodity. Buff costs 5.
-        // With DEFAULT_TOTAL_ROUNDS rounds, max wins ~= totalRounds.
-        // Expect: totalRounds * maxRunsPerBuff >= buffCost
+    it("autobattler buff minimum cost is achievable early game", () => {
+        // Buff costs are wealth-scaled with a minimum of BUFF_MIN_COST units.
+        // Verify the min cost is reachable within a few runs of winning commodities.
         const avgWinsPerRun = Math.ceil(DEFAULT_TOTAL_ROUNDS * 0.6) // ~60% win rate
         const commoditiesPerRun = avgWinsPerRun // 1 commodity per win
-        const buffCost = RUN_BUFFS[0].commodityCost
-        const runsNeeded = Math.ceil(buffCost / commoditiesPerRun)
+        const runsNeeded = Math.ceil(BUFF_MIN_COST / commoditiesPerRun)
         expect(runsNeeded).toBeLessThanOrEqual(
             BALANCE_THRESHOLDS.maxRunsPerBuff
         )
@@ -345,18 +345,21 @@ describe("unit stat efficiency", () => {
 // 9. Pre-Run Buff Uniformity
 // ─────────────────────────────────────────────────────────────────────────────
 
-describe("pre-run buff uniformity", () => {
-    it("all buff commodity costs are equal", () => {
-        const costs = RUN_BUFFS.map((b) => b.commodityCost)
-        const first = costs[0]
-        for (const cost of costs) {
-            expect(cost).toBe(first)
-        }
+describe("pre-run buff wealth-scaled costs", () => {
+    it("buff cost scales with net worth", () => {
+        const lowCost = getBuffCost(10, 0.25) // early game
+        const highCost = getBuffCost(50000, 0.25) // late game
+        expect(highCost).toBeGreaterThan(lowCost)
     })
 
-    it("all buffs have a non-zero cost", () => {
+    it("buff cost has a minimum floor", () => {
+        const cost = getBuffCost(0, 0.25) // zero net worth
+        expect(cost).toBe(BUFF_MIN_COST)
+    })
+
+    it("all buffs have a commodity assigned", () => {
         for (const buff of RUN_BUFFS) {
-            expect(buff.commodityCost).toBeGreaterThan(0)
+            expect(buff.commodityId).toBeTruthy()
         }
     })
 })

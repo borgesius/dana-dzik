@@ -825,7 +825,12 @@
     "arcana-moon": { "name": "The Moon", "description": "8つの月相実績をすべて獲得する。" },
     "arcana-sun": { "name": "The Sun", "description": "週末の午後に実績を開く。" },
     "arcana-judgement": { "name": "Judgement", "description": "合計75個の実績を獲得する。" },
-    "arcana-world": { "name": "The World", "description": "他のすべての大アルカナを獲得する。" }
+    "arcana-world": { "name": "The World", "description": "他のすべての大アルカナを獲得する。" },
+    "bsod-trigger": { "name": "Fatal Exception 420", "description": "kernel.weltを破損させてブルースクリーンを引き起こす。" },
+    "display-glitch": { "name": "Waiting for the Gift of Sound and Vision", "description": "display.weltを破損させて画面表示を壊す。" },
+    "clock-glitch": { "name": "Does Anybody Really Know What Time It Is?", "description": "clock.weltを破損させてシステム時計を狂わせる。" },
+    "memory-glitch": { "name": "PC LOAD LETTER", "description": "memory.weltを破損させてメモリ障害エラーを引き起こす。" },
+    "restart-glitch": { "name": "Have You Tried Turning It Off and On Again?", "description": "boot.weltを破損させてシステムを強制再起動する。" }
   },
   "symposium": {
         "factions": {
@@ -874,10 +879,10 @@
             "wl": "{{wins}}勝 / {{losses}}敗"
         },
         "units": {
-            "drifter-brawler": "ティーチングアシスタント",
-            "drifter-scout": "非常勤",
-            "drifter-medic": "オフィスアワー",
-            "drifter-heavy": "お役所仕事",
+            "drifter-brawler": "採点者",
+            "drifter-scout": "候補者",
+            "drifter-medic": "指導教員",
+            "drifter-heavy": "官僚",
             "qd-sharpshooter": "偶像破壊者",
             "qd-deadeye": "The Übermensch",
             "qd-dynamiter": "爆破者",

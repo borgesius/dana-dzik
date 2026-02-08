@@ -62,7 +62,7 @@ export class RunManager {
         let bonusScrap = 0
         for (const buff of buffs) {
             this.activeBuffs.add(buff.id)
-            if (buff.id === "vc-funding") bonusScrap += 3
+            if (buff.id === "vc-funding") bonusScrap += 5
             if (buff.id === "soft-reroll") this.freeRerolls = 1
             if (buff.id === "dom-expansion") this.extraShopSize = 1
         }
@@ -249,9 +249,9 @@ export class RunManager {
                 unit.currentHP += 5
             }
         }
-        if (this.hasBuff("email-rush") && this.state.round === 1) {
+        if (this.hasBuff("email-rush")) {
             for (const unit of playerUnits) {
-                unit.currentATK += 2
+                unit.currentATK += 1
             }
         }
 
@@ -297,7 +297,7 @@ export class RunManager {
 
         // Ad Revenue buff: bonus thoughts per round
         if (this.hasBuff("ad-revenue")) {
-            this.shopState.scrap += 2
+            this.shopState.scrap += 1
         }
 
         if (this.hasBuff("soft-reroll")) {

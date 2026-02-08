@@ -4,6 +4,7 @@ import {
     CAREER_BRANCHES,
     CAREER_NODE_MAP,
     type CareerNodeDef,
+    EDUCATION_STARTER_NODE,
     ENGINEERING_STARTER_NODE,
     getNodesForBranch,
     SKILLS_STARTER_NODE,
@@ -12,8 +13,10 @@ import {
 // ── Base resume entries (always shown, even before unlock) ──────────────────
 
 const BASE_EXPERIENCE: CareerNodeDef = ENGINEERING_STARTER_NODE
-const BASE_EDUCATION: CareerNodeDef =
-    CAREER_NODE_MAP.get("edu-undergrad") ?? ({} as CareerNodeDef)
+const BASE_EDUCATION: CareerNodeDef[] = [
+    CAREER_NODE_MAP.get("edu-undergrad") ?? ({} as CareerNodeDef),
+    EDUCATION_STARTER_NODE,
+]
 
 export function getResumeContent(): string {
     return `<div id="resume-content" class="resume-content"></div>`
@@ -86,9 +89,11 @@ export function renderResumeWindow(): void {
         educationHtml += renderResumeEntry(node, false)
     }
 
-    // Always show the base UChicago entry if it hasn't appeared via unlock
-    if (!shownEduIds.has(BASE_EDUCATION.id) && BASE_EDUCATION.id) {
-        educationHtml = renderResumeEntry(BASE_EDUCATION, false) + educationHtml
+    // Always show base education entries if they haven't appeared via unlock
+    for (const base of BASE_EDUCATION) {
+        if (!shownEduIds.has(base.id) && base.id) {
+            educationHtml += renderResumeEntry(base, false)
+        }
     }
 
     html += educationHtml

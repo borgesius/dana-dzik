@@ -60,6 +60,12 @@ export class BusinessPanel {
         )
         this.element = this.createElement()
         this.setupEventListeners()
+
+        this.chart.setOnCommodityChange(() => {
+            if (!this.isExpanded) return
+            this.tradeControls.render()
+            this.influence.render()
+        })
     }
 
     private createElement(): HTMLElement {
@@ -99,6 +105,7 @@ export class BusinessPanel {
         leftCol.className = "panel-col-left"
         leftCol.appendChild(this.chart.getElement())
         leftCol.appendChild(this.tradeControls.getElement())
+        leftCol.appendChild(this.influence.getElement())
         content.appendChild(leftCol)
 
         const rightCol = document.createElement("div")
@@ -106,7 +113,6 @@ export class BusinessPanel {
         rightCol.appendChild(this.portfolio.getElement())
         rightCol.appendChild(this.factories.getElement())
         rightCol.appendChild(this.upgrades.getElement())
-        rightCol.appendChild(this.influence.getElement())
         rightCol.appendChild(this.employees.getElement())
         rightCol.appendChild(this.portfolioMgmt.getElement())
         rightCol.appendChild(this.prestige.getElement())

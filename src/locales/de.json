@@ -832,7 +832,12 @@
     "arcana-moon": { "name": "The Moon", "description": "Verdiene alle acht Mondzyklus-Erfolge." },
     "arcana-sun": { "name": "The Sun", "description": "Öffne Erfolge an einem Wochenendnachmittag." },
     "arcana-judgement": { "name": "Judgement", "description": "Verdiene insgesamt 75 Erfolge." },
-    "arcana-world": { "name": "The World", "description": "Verdiene alle anderen Großen Arkana." }
+    "arcana-world": { "name": "The World", "description": "Verdiene alle anderen Großen Arkana." },
+    "bsod-trigger": { "name": "Fatal Exception 420", "description": "Beschädige kernel.welt und löse einen Bluescreen aus." },
+    "display-glitch": { "name": "Waiting for the Gift of Sound and Vision", "description": "Beschädige display.welt und löse Anzeigestörungen aus." },
+    "clock-glitch": { "name": "Does Anybody Really Know What Time It Is?", "description": "Beschädige clock.welt und bringe die Systemuhr durcheinander." },
+    "memory-glitch": { "name": "PC LOAD LETTER", "description": "Beschädige memory.welt und löse Speicherfehler aus." },
+    "restart-glitch": { "name": "Have You Tried Turning It Off and On Again?", "description": "Beschädige boot.welt und erzwinge einen Systemneustart." }
   },
   "symposium": {
         "factions": {
@@ -881,10 +886,10 @@
             "wl": "S{{wins}} / N{{losses}}"
         },
         "units": {
-            "drifter-brawler": "Wissenschaftliche Hilfskraft",
-            "drifter-scout": "Lehrbeauftragter",
-            "drifter-medic": "Sprechstunde",
-            "drifter-heavy": "Bürokratie",
+            "drifter-brawler": "Der Korrektor",
+            "drifter-scout": "Der Kandidat",
+            "drifter-medic": "Der Berater",
+            "drifter-heavy": "Der Bürokrat",
             "qd-sharpshooter": "Ikonoklast",
             "qd-deadeye": "The Übermensch",
             "qd-dynamiter": "Der Dynamitard",

@@ -1491,6 +1491,26 @@
         "arcana-world": {
             "name": "The World",
             "description": "Earn all other Major Arcana."
+        },
+        "bsod-trigger": {
+            "name": "Fatal Exception 420",
+            "description": "Corrupt kernel.welt and trigger a Blue Screen of Death."
+        },
+        "display-glitch": {
+            "name": "Waiting for the Gift of Sound and Vision",
+            "description": "Corrupt display.welt and trigger display corruption."
+        },
+        "clock-glitch": {
+            "name": "Does Anybody Really Know What Time It Is?",
+            "description": "Corrupt clock.welt and send the system clock haywire."
+        },
+        "memory-glitch": {
+            "name": "PC LOAD LETTER",
+            "description": "Corrupt memory.welt and trigger memory fault errors."
+        },
+        "restart-glitch": {
+            "name": "Have You Tried Turning It Off and On Again?",
+            "description": "Corrupt boot.welt and force a system restart."
         }
     },
     "symposium": {
@@ -1540,10 +1560,10 @@
             "wl": "W{{wins}} / L{{losses}}"
         },
         "units": {
-            "drifter-brawler": "Teaching Assistant",
-            "drifter-scout": "The Sessional",
-            "drifter-medic": "Office Hours",
-            "drifter-heavy": "Red Tape",
+            "drifter-brawler": "The Grader",
+            "drifter-scout": "The Candidate",
+            "drifter-medic": "The Advisor",
+            "drifter-heavy": "The Bureaucrat",
             "qd-sharpshooter": "Iconoclast",
             "qd-deadeye": "The Übermensch",
             "qd-dynamiter": "The Dynamitard",

@@ -825,7 +825,12 @@
     "arcana-moon": { "name": "The Moon", "description": "Ottieni tutti e otto i traguardi del ciclo lunare." },
     "arcana-sun": { "name": "The Sun", "description": "Apri i traguardi in un pomeriggio del fine settimana." },
     "arcana-judgement": { "name": "Judgement", "description": "Ottieni 75 traguardi in totale." },
-    "arcana-world": { "name": "The World", "description": "Ottieni tutti gli altri Arcani Maggiori." }
+    "arcana-world": { "name": "The World", "description": "Ottieni tutti gli altri Arcani Maggiori." },
+    "bsod-trigger": { "name": "Fatal Exception 420", "description": "Corrompi kernel.welt e provoca una Schermata Blu della Morte." },
+    "display-glitch": { "name": "Waiting for the Gift of Sound and Vision", "description": "Corrompi display.welt e provoca corruzione del display." },
+    "clock-glitch": { "name": "Does Anybody Really Know What Time It Is?", "description": "Corrompi clock.welt e manda in tilt l'orologio di sistema." },
+    "memory-glitch": { "name": "PC LOAD LETTER", "description": "Corrompi memory.welt e provoca errori di memoria." },
+    "restart-glitch": { "name": "Have You Tried Turning It Off and On Again?", "description": "Corrompi boot.welt e forza un riavvio del sistema." }
   },
   "symposium": {
     "factions": {
@@ -874,10 +879,10 @@
       "wl": "V{{wins}} / S{{losses}}"
     },
     "units": {
-      "drifter-brawler": "Assistente",
-      "drifter-scout": "Il Supplente",
-      "drifter-medic": "Ricevimento",
-      "drifter-heavy": "Burocrazia",
+      "drifter-brawler": "Il Correttore",
+      "drifter-scout": "Il Candidato",
+      "drifter-medic": "Il Relatore",
+      "drifter-heavy": "Il Burocrate",
       "qd-sharpshooter": "Iconoclasta",
       "qd-deadeye": "The Übermensch",
       "qd-dynamiter": "Il Dinamitardo",

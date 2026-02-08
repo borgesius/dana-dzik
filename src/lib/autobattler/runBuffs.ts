@@ -5,25 +5,40 @@ export interface RunBuff {
     name: string
     description: string
     commodityId: CommodityId
-    commodityCost: number
     icon: string
+}
+
+/** Fraction of net worth each buff costs (8 % → buying all 6 = ~48 %). */
+export const BUFF_COST_FRACTION = 0.08
+/** Minimum commodity units a buff can cost (keeps it buyable early game). */
+export const BUFF_MIN_COST = 3
+
+/**
+ * Compute the dynamic commodity-unit cost for a buff.
+ * `netWorth` = MarketEngine.getNetWorth()
+ * `commodityPrice` = current market price of the buff's commodity
+ */
+export function getBuffCost(netWorth: number, commodityPrice: number): number {
+    if (commodityPrice <= 0) return BUFF_MIN_COST
+    return Math.max(
+        BUFF_MIN_COST,
+        Math.ceil((netWorth * BUFF_COST_FRACTION) / commodityPrice)
+    )
 }
 
 export const RUN_BUFFS: RunBuff[] = [
     {
         id: "email-rush",
         name: "Email Rush",
-        description: "+2 ATK to all units in round 1",
+        description: "+1 ATK to all units each round",
         commodityId: "EMAIL",
-        commodityCost: 5,
         icon: "⚔️",
     },
     {
         id: "ad-revenue",
         name: "Ad Revenue",
-        description: "+2 bonus Thoughts per round",
+        description: "+1 bonus Thought per round",
         commodityId: "ADS",
-        commodityCost: 5,
         icon: "💭",
     },
     {
@@ -31,7 +46,6 @@ export const RUN_BUFFS: RunBuff[] = [
         name: "Software Assist",
         description: "+1 free reroll per shop phase",
         commodityId: "SOFT",
-        commodityCost: 5,
         icon: "🔄",
     },
     {
@@ -39,7 +53,6 @@ export const RUN_BUFFS: RunBuff[] = [
         name: "Bandwidth Armor",
         description: "+5 HP to all units",
         commodityId: "BW",
-        commodityCost: 5,
         icon: "🛡️",
     },
     {
@@ -47,15 +60,13 @@ export const RUN_BUFFS: RunBuff[] = [
         name: "DOM Expansion",
         description: "Shop offers +1 extra unit",
         commodityId: "DOM",
-        commodityCost: 5,
         icon: "🏪",
     },
     {
         id: "vc-funding",
         name: "VC Funding",
-        description: "Start with +3 bonus Thoughts",
+        description: "Start with +5 bonus Thoughts",
         commodityId: "VC",
-        commodityCost: 5,
         icon: "💰",
     },
 ]
