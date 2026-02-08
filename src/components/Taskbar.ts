@@ -8,6 +8,7 @@ import { getBuildInfo } from "../lib/buildInfo"
 import { getLocaleManager } from "../lib/localeManager"
 import { saveManager } from "../lib/saveManager"
 import { getThemeManager } from "../lib/themeManager"
+import { requestResumeCareerTab } from "../lib/windowContent"
 import { LevelWidget } from "./widgets/LevelWidget"
 import type { WindowManager } from "./WindowManager"
 
@@ -186,6 +187,7 @@ export class Taskbar {
             icon: string
             textKey: string
             windowId: RoutableWindow
+            onOpen?: () => void
         }> = [
             {
                 icon: "📁",
@@ -209,10 +211,11 @@ export class Taskbar {
             {
                 icon: "📋",
                 textKey: "taskbar.careerDev",
-                windowId: "career-tree",
+                windowId: "resume",
+                onOpen: () => requestResumeCareerTab(),
             },
         ]
-        leftItems.forEach(({ icon, textKey, windowId }) => {
+        leftItems.forEach(({ icon, textKey, windowId, onOpen }) => {
             const item = document.createElement("div")
             item.className = "start-menu-item"
             const text = lm.t(textKey)
@@ -220,6 +223,7 @@ export class Taskbar {
             item.innerHTML = `<span style="font-size: 20px">${icon}</span><span>${text}</span>`
             item.addEventListener("click", () => {
                 this.windowManager.openWindow(windowId)
+                onOpen?.()
                 this.closeStartMenu()
             })
             left.appendChild(item)

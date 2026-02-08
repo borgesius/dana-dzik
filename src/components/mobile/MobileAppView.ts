@@ -11,7 +11,6 @@ import {
     getWindowContent,
     renderAchievementsWindow,
     renderAutobattlerWindow,
-    renderCareerTreeWindow,
     renderCustomizeWindow,
     renderResumeWindow,
 } from "../../lib/windowContent"
@@ -30,7 +29,6 @@ const APP_TITLES: Record<string, string> = {
     achievements: "Achievements",
     autobattler: "Frontier",
     customize: "Customize",
-    "career-tree": "Career Tree",
 }
 
 export class MobileAppView {
@@ -184,8 +182,6 @@ export class MobileAppView {
             renderAutobattlerWindow()
         } else if (contentType === "resume") {
             renderResumeWindow()
-        } else if (contentType === "career-tree") {
-            renderCareerTreeWindow()
         } else if (contentType === "customize") {
             renderCustomizeWindow()
         }

@@ -244,7 +244,8 @@ function renderCareerSwitch(
 
 function wireCareerTreeButtons(
     container: HTMLElement,
-    career: CareerManager
+    career: CareerManager,
+    containerId: string
 ): void {
     // Node unlock buttons
     container.querySelectorAll<HTMLElement>(".ct-unlock-btn").forEach((btn) => {
@@ -252,7 +253,7 @@ function wireCareerTreeButtons(
             const nodeId = btn.getAttribute("data-node")
             if (nodeId) {
                 career.unlockNode(nodeId)
-                renderCareerTreeWindow()
+                renderCareerTreeWindow(containerId)
             }
         })
     })
@@ -265,7 +266,7 @@ function wireCareerTreeButtons(
                 const masteryId = btn.getAttribute("data-mastery")
                 if (masteryId) {
                     career.purchaseMastery(masteryId)
-                    renderCareerTreeWindow()
+                    renderCareerTreeWindow(containerId)
                 }
             })
         })
@@ -276,7 +277,7 @@ function wireCareerTreeButtons(
             const branch = btn.getAttribute("data-branch") as CareerBranch
             if (branch) {
                 career.switchCareer(branch)
-                renderCareerTreeWindow()
+                renderCareerTreeWindow(containerId)
             }
         })
     })

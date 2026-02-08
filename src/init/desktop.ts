@@ -18,6 +18,7 @@ import { isCalmMode } from "../lib/calmMode"
 import { getCosmeticManager } from "../lib/cosmetics/CosmeticManager"
 import { wireCosmeticUnlocks } from "../lib/cosmetics/wiring"
 import { onAppEvent } from "../lib/events"
+import { requestResumeCareerTab } from "../lib/windowContent"
 import { GlitchManager } from "../lib/glitchEffects"
 import { getLocaleManager } from "../lib/localeManager"
 import { getMarketGame } from "../lib/marketGame/MarketEngine"
@@ -88,6 +89,12 @@ export function initDesktop(app: HTMLElement): void {
 
     const router = new Router((windowId) => {
         windowManager.openWindow(windowId)
+        // /career route now opens the resume window — switch to career tab
+        const route =
+            window.location.hash.replace("#", "") || window.location.pathname
+        if (route === "/career") {
+            requestResumeCareerTab()
+        }
     })
 
     windowManager.onWindowsChange(() => {

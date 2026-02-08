@@ -1,5 +1,5 @@
 import { DESKTOP_ITEMS } from "../../config/desktop"
-import { MOBILE_DOCK_IDS, MOBILE_EXCLUDED_IDS } from "../../config/mobile"
+import { MOBILE_ALLOWED_IDS, MOBILE_DOCK_IDS } from "../../config/mobile"
 import type { RoutableWindow } from "../../config/routing"
 
 export class MobileHomeScreen {
@@ -17,7 +17,7 @@ export class MobileHomeScreen {
 
         const gridItems = DESKTOP_ITEMS.filter(
             (item) =>
-                !MOBILE_EXCLUDED_IDS.includes(item.id) &&
+                MOBILE_ALLOWED_IDS.includes(item.id) &&
                 !MOBILE_DOCK_IDS.includes(item.id)
         )
         const dockItems = DESKTOP_ITEMS.filter((item) =>

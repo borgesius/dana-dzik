@@ -1,5 +1,6 @@
-import { onAppEvent } from "../lib/events"
+import { emitAppEvent, onAppEvent } from "../lib/events"
 import { getLocaleManager } from "../lib/localeManager"
+import { requestResumeCareerTab } from "../lib/windowContent"
 
 const POPUP_DURATION_MS = 4000
 const POPUP_ANIMATION_MS = 400
@@ -38,6 +39,8 @@ export class LevelUpPopup {
             popup.classList.remove("levelup-popup-visible")
             popup.classList.add("levelup-popup-exit")
             setTimeout(() => popup.remove(), POPUP_ANIMATION_MS)
+            emitAppEvent("terminal:open-window", { windowId: "resume" })
+            requestResumeCareerTab()
         })
 
         this.container.appendChild(popup)

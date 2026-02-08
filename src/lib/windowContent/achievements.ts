@@ -77,6 +77,7 @@ export function renderAchievementsWindow(): void {
         { key: "prestige", label: "Prestige" },
         { key: "career", label: "Career" },
         { key: "cross-system", label: "Cross-System" },
+        { key: "veil", label: "Piercing the Veil" },
         { key: "arcana", label: "Major Arcana" },
     ]
 

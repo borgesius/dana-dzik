@@ -198,6 +198,57 @@
 }
 
 /* === Resume Window === */
+
+/* Tab wrapper fills window content and stacks vertically */
+.resume-tabs-wrapper {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.resume-tab-bar {
+    display: flex;
+    gap: 2px;
+    padding: 4px 6px 0;
+    background: var(--theme-surface-secondary);
+    border-bottom: 1px solid var(--theme-border-dark);
+    flex-shrink: 0;
+}
+
+.resume-tab {
+    padding: 5px 14px;
+    font-size: 11px;
+    font-family: var(--theme-font-content);
+    border: 1px solid var(--theme-border-dark);
+    border-bottom: none;
+    background: var(--theme-surface-primary);
+    color: var(--theme-text-on-surface);
+    cursor: pointer;
+    position: relative;
+    top: 1px;
+    border-radius: 3px 3px 0 0;
+}
+
+.resume-tab:hover {
+    background: var(--theme-surface-elevated);
+}
+
+.resume-tab.active {
+    background: var(--theme-window-content-bg);
+    border-bottom: 1px solid var(--theme-window-content-bg);
+    font-weight: 700;
+}
+
+.resume-tab-pane {
+    display: none;
+    overflow-y: auto;
+    flex: 1;
+}
+
+.resume-tab-pane.active {
+    display: block;
+}
+
 .resume-content {
     padding: 20px;
     font-family: var(--theme-font-content);

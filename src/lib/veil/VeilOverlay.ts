@@ -7,6 +7,7 @@ import { getVeilManager } from "./VeilManager"
 const TRANSITION_IN_MS = 2000
 const TRANSITION_OUT_MS = 1500
 const WIN_PAUSE_MS = 800
+const REPLAY_FLASH_MS = 1200
 
 export class VeilOverlay {
     private overlay: HTMLElement | null = null
@@ -16,17 +17,32 @@ export class VeilOverlay {
     private canvas: HTMLCanvasElement | null = null
     private dialogueContainer: HTMLElement | null = null
     private retryContainer: HTMLElement | null = null
+    private replay: boolean = false
 
     /** Text resolver for localization */
     public textResolver: ((key: string) => string) | null = null
 
-    public launch(veilId: VeilId): void {
+    public launch(veilId: VeilId, replay?: boolean): void {
         this.veilId = veilId
+        this.replay = replay ?? false
+
+        const config = LEVEL_CONFIGS[veilId]
 
         // Create overlay
         this.overlay = document.createElement("div")
-        this.overlay.className = "veil-overlay"
+        this.overlay.className = `veil-overlay ${config.theme.cssClass}`
         document.body.appendChild(this.overlay)
+
+        // Set CSS custom properties for per-level theming
+        this.overlay.style.setProperty(
+            "--veil-intensity",
+            String(config.theme.vignetteIntensity)
+        )
+        this.overlay.style.setProperty(
+            "--veil-player-color",
+            config.theme.playerColor
+        )
+        this.overlay.style.setProperty("--veil-bg-color", config.theme.bgColor)
 
         // Static transition layer
         const staticLayer = document.createElement("div")
@@ -67,18 +83,18 @@ export class VeilOverlay {
         const config = LEVEL_CONFIGS[this.veilId]
         this.runner = new CubeRunner(this.canvas, config, this.veilId === 4)
 
-        this.runner.onWin = () => {
+        this.runner.onWin = (): void => {
             setTimeout(() => {
                 this.onRunnerWin()
             }, WIN_PAUSE_MS)
         }
 
-        this.runner.onDeath = () => {
+        this.runner.onDeath = (): void => {
             const mgr = getVeilManager()
             mgr.failVeil(this.veilId)
             setTimeout(() => {
                 this.showRetryPrompt()
-            }, 800)
+            }, 1200) // slightly longer to let death particles play
         }
 
         // Fade in canvas
@@ -98,6 +114,12 @@ export class VeilOverlay {
         this.canvas?.remove()
         this.canvas = null
 
+        // Replay mode: skip dialogue, show brief flash and dismiss
+        if (this.replay) {
+            this.showReplayFlash()
+            return
+        }
+
         // Start dialogue
         this.dialogueContainer = document.createElement("div")
         this.dialogueContainer.className = "veil-dialogue-container"
@@ -106,11 +128,11 @@ export class VeilOverlay {
         this.dialogueMgr = new DialogueManager(this.dialogueContainer)
         this.dialogueMgr.textResolver = this.textResolver
 
-        this.dialogueMgr.onComplete = () => {
+        this.dialogueMgr.onComplete = (): void => {
             this.onDialogueComplete()
         }
 
-        this.dialogueMgr.onTriggerBoss = () => {
+        this.dialogueMgr.onTriggerBoss = (): void => {
             this.onDialogueTriggerBoss()
         }
 
@@ -122,6 +144,25 @@ export class VeilOverlay {
         this.dialogueMgr.start(this.veilId)
     }
 
+    private showReplayFlash(): void {
+        if (!this.overlay) return
+
+        const flash = document.createElement("div")
+        flash.className = "veil-replay-flash"
+        flash.textContent = this.resolveText("veil.widget.pierced")
+        this.overlay.appendChild(flash)
+
+        requestAnimationFrame(() => {
+            flash.classList.add("veil-replay-flash-active")
+        })
+
+        setTimeout(() => {
+            const mgr = getVeilManager()
+            mgr.dismissVeil()
+            this.dismiss()
+        }, REPLAY_FLASH_MS)
+    }
+
     private onDialogueComplete(): void {
         const mgr = getVeilManager()
         mgr.completeVeil(this.veilId)
@@ -129,20 +170,16 @@ export class VeilOverlay {
     }
 
     private onDialogueTriggerBoss(): void {
-        // Complete veil 3, then trigger boss
         const mgr = getVeilManager()
         mgr.completeVeil(this.veilId)
 
-        // Clean up dialogue
         this.dialogueMgr?.destroy()
         this.dialogueMgr = null
         this.dialogueContainer?.remove()
         this.dialogueContainer = null
 
-        // Brief pause, then launch boss veil
         setTimeout(() => {
             this.dismiss()
-            // Trigger boss veil after overlay is removed
             setTimeout(() => {
                 mgr.triggerBossVeil()
             }, 500)

@@ -14,7 +14,6 @@ import {
     getWindowContent,
     renderAchievementsWindow,
     renderAutobattlerWindow,
-    renderCareerTreeWindow,
     renderCustomizeWindow,
     renderResumeWindow,
 } from "../lib/windowContent"
@@ -142,8 +141,6 @@ export class Window {
             renderResumeWindow()
         } else if (this.config.contentType === "customize") {
             renderCustomizeWindow()
-        } else if (this.config.contentType === "career-tree") {
-            renderCareerTreeWindow()
         }
     }
 

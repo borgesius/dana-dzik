@@ -31,6 +31,7 @@ import { patchFilesystem } from "../lib/terminal/filesystemDiff"
 import { getThemeManager } from "../lib/themeManager"
 import { getVeilManager } from "../lib/veil/VeilManager"
 import { getVeilOverlay } from "../lib/veil/VeilOverlay"
+import { VeilUnlockModal } from "../lib/veil/VeilUnlockModal"
 
 export function isRoutableWindow(id: string): id is RoutableWindow {
     return ROUTABLE_WINDOWS.includes(id as RoutableWindow)
@@ -87,8 +88,14 @@ export function initCore(): void {
 
     // Wire overlay launcher
     const overlay = getVeilOverlay()
-    overlay.textResolver = (key: string) => getLocaleManager().t(key)
-    veil.launchOverlay = (veilId) => overlay.launch(veilId)
+    overlay.textResolver = (key: string): string => getLocaleManager().t(key)
+    veil.launchOverlay = (veilId, replay): void =>
+        overlay.launch(veilId, replay)
+
+    // Wire unlock modal (listens for veil:unlocked events for veils 1-3)
+    const unlockModal = new VeilUnlockModal()
+    unlockModal.textResolver = (key: string): string =>
+        getLocaleManager().t(key)
 
     // ── Wire cross-system bonus providers ────────────────────────────────────
     const marketGame = getMarketGame()

@@ -167,14 +167,17 @@ function wireWindowManager(
                 mgr.earn("arcana-priestess")
             }
 
-            // XII - The Hanged Man: 3+ commodities in bear market
+            // XII - The Hanged Man: 4+ commodities in bear market + owns intel upgrade
             const game = getMarketGame()
             let bearCount = 0
             for (const c of COMMODITIES) {
                 const ms = game.getMarketState(c.id)
                 if (ms && ms.trend === "bear") bearCount++
             }
-            if (bearCount >= 3) mgr.earn("arcana-hanged")
+            const hasIntel = UPGRADES.some(
+                (u) => u.category === "intelligence" && game.hasUpgrade(u.id)
+            )
+            if (bearCount >= 4 && hasIntel) mgr.earn("arcana-hanged")
 
             // XVII - The Star: all unlocked commodities trending bull
             const unlocked = game.getUnlockedCommodities()

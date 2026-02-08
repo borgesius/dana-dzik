@@ -582,7 +582,9 @@
         "school": "Université de Chicago",
         "degree": "B.A. avec Mention en Mathématiques et Philosophie",
         "location": "Chicago, IL",
-        "skills": "Compétences"
+        "skills": "Compétences",
+        "tabResume": "CV",
+        "tabCareer": "Développement de Carrière"
     },
     "links": {
         "title": "🔗 Liens"
@@ -1569,7 +1571,7 @@
         },
         "arcana-hanged": {
             "name": "The Hanged Man",
-            "description": "Ouvrez les succès pendant que trois marchés ou plus sont en baisse."
+            "description": "Ouvrez les succès pendant que quatre marchés ou plus sont en baisse et que vous possédez du renseignement."
         },
         "arcana-death": {
             "name": "Death",
@@ -1926,6 +1928,15 @@
             "t7": "The Will-to-Bind is absolute.",
             "t8": "Transmutation is not optional.",
             "t9": "You are substrate. Accept it."
+        },
+        "widget": {
+            "pierced": "VEIL PIERCED"
+        },
+        "modal": {
+            "title": "The veil thins...",
+            "subtitle": "A signal pushes through the wire.",
+            "pierce_now": "Pierce Now",
+            "not_yet": "Not Yet"
         }
     }
 }

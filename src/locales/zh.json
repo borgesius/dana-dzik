@@ -582,7 +582,9 @@
         "school": "芝加哥大学",
         "degree": "数学与哲学荣誉学士学位",
         "location": "伊利诺伊州芝加哥",
-        "skills": "技能"
+        "skills": "技能",
+        "tabResume": "简历",
+        "tabCareer": "职业发展"
     },
     "links": {
         "title": "🔗 链接"
@@ -1569,7 +1571,7 @@
         },
         "arcana-hanged": {
             "name": "The Hanged Man",
-            "description": "在三个或更多市场下跌时打开成就。"
+            "description": "在四个或更多市场下跌且拥有情报升级时打开成就。"
         },
         "arcana-death": {
             "name": "Death",
@@ -1926,6 +1928,15 @@
             "t7": "The Will-to-Bind is absolute.",
             "t8": "Transmutation is not optional.",
             "t9": "You are substrate. Accept it."
+        },
+        "widget": {
+            "pierced": "VEIL PIERCED"
+        },
+        "modal": {
+            "title": "The veil thins...",
+            "subtitle": "A signal pushes through the wire.",
+            "pierce_now": "Pierce Now",
+            "not_yet": "Not Yet"
         }
     }
 }

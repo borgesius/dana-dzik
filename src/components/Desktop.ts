@@ -1,4 +1,5 @@
 import { DESKTOP_ITEMS } from "../config/desktop"
+import { requestResumeCareerTab } from "../lib/windowContent"
 import { DesktopIcon, type IconConfig } from "./DesktopIcon"
 import { Taskbar } from "./Taskbar"
 import { Toolbars } from "./Toolbars"
@@ -49,6 +50,9 @@ export class Desktop {
         getDesktopIcons().forEach((config) => {
             const icon = new DesktopIcon(config, (windowId) => {
                 this.windowManager.openWindow(windowId)
+                if (config.id === "career-development") {
+                    requestResumeCareerTab()
+                }
             })
             this.icons.push(icon)
             iconsContainer.appendChild(icon.getElement())

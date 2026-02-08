@@ -34,17 +34,18 @@ const VEIL_GATES: Record<number, VeilGate> = {
 
 /** RNG chance per eligible market tick */
 const VEIL_CHANCES: Record<number, number> = {
-    0: 0.003,
-    1: 0.002,
-    2: 0.0015,
-    3: 0.001,
+    0: 0.012,
+    1: 0.008,
+    2: 0.006,
+    3: 0.004,
 }
 
 /** Cooldown between veil trigger attempts (ms) — prevents rapid re-triggering */
-const TRIGGER_COOLDOWN_MS = 60_000
+const TRIGGER_COOLDOWN_MS = 15_000
 
 export class VeilManager {
     private completedVeils: Set<VeilId> = new Set()
+    private unlockedVeils: Set<VeilId> = new Set()
     private attempts: Record<number, number> = {}
     private currentVeil: VeilId | null = null
     private active: boolean = false
@@ -64,7 +65,8 @@ export class VeilManager {
     /** Called by VeilOverlay when the player completes a cube run + dialogue */
     public onVeilComplete: ((veilId: VeilId) => void) | null = null
     /** Called to launch the overlay — set during init */
-    public launchOverlay: ((veilId: VeilId) => void) | null = null
+    public launchOverlay: ((veilId: VeilId, replay?: boolean) => void) | null =
+        null
 
     // ── Events ─────────────────────────────────────────────────────────────
 
@@ -99,6 +101,10 @@ export class VeilManager {
         return this.completedVeils.has(id)
     }
 
+    public isVeilUnlocked(id: VeilId): boolean {
+        return this.unlockedVeils.has(id)
+    }
+
     public getCompletedCount(): number {
         return this.completedVeils.size
     }
@@ -109,6 +115,46 @@ export class VeilManager {
 
     public getAllCompleted(): VeilId[] {
         return [...this.completedVeils] as VeilId[]
+    }
+
+    public getUnlockedVeils(): VeilId[] {
+        return [...this.unlockedVeils] as VeilId[]
+    }
+
+    public getCompletedVeils(): VeilId[] {
+        return [...this.completedVeils] as VeilId[]
+    }
+
+    /**
+     * Whether the widget should be visible on the desktop.
+     * True if the player has ever had a veil triggered (completed or unlocked).
+     */
+    public isWidgetVisible(): boolean {
+        return this.completedVeils.size > 0 || this.unlockedVeils.size > 0
+    }
+
+    /**
+     * Returns the next locked veil (not yet unlocked or completed).
+     * Returns null if all veils are unlocked/completed.
+     */
+    public getNextLockedVeil(): VeilId | null {
+        for (let i = 0; i <= 3; i++) {
+            const id = i as VeilId
+            if (!this.completedVeils.has(id) && !this.unlockedVeils.has(id)) {
+                return id
+            }
+        }
+        // Boss veil: show only if all pre-boss done and boss not completed
+        if (
+            this.completedVeils.has(0 as VeilId) &&
+            this.completedVeils.has(1 as VeilId) &&
+            this.completedVeils.has(2 as VeilId) &&
+            this.completedVeils.has(3 as VeilId) &&
+            !this.completedVeils.has(BOSS_VEIL)
+        ) {
+            return BOSS_VEIL
+        }
+        return null
     }
 
     // ── Next veil to trigger ───────────────────────────────────────────────
@@ -169,11 +215,14 @@ export class VeilManager {
 
     /**
      * Checks if a veil should trigger. Called each market tick.
-     * Returns the veil ID to trigger, or null.
+     *
+     * For veil 0: returns the veil ID for immediate launch (ambush).
+     * For veils 1-3: unlocks the veil and emits "veil:unlocked" (returns null).
+     *   The unlock modal listens for that event and offers pierce-now / defer.
      */
     public checkTrigger(): VeilId | null {
-        // Don't trigger if already active, calm mode, or all done
-        if (this.active || isCalmMode()) return null
+        // Don't trigger if already active or all done
+        if (this.active) return null
 
         const now = Date.now()
         if (now - this.lastTriggerAttempt < TRIGGER_COOLDOWN_MS) return null
@@ -181,6 +230,9 @@ export class VeilManager {
 
         const nextId = this.getNextVeilId()
         if (nextId === null || nextId === BOSS_VEIL) return null
+
+        // Skip veils already unlocked (waiting in widget)
+        if (this.unlockedVeils.has(nextId)) return null
 
         // Previous veil must be completed (except veil 0)
         if (nextId > 0) {
@@ -194,7 +246,37 @@ export class VeilManager {
         const chance = VEIL_CHANCES[nextId] ?? 0
         if (Math.random() >= chance) return null
 
-        return nextId
+        // Calm mode: unlock into widget silently (no ambush, no modal)
+        if (isCalmMode()) {
+            this.unlockVeil(nextId)
+            return null
+        }
+
+        // Veil 0: immediate ambush launch
+        if (nextId === 0) {
+            // Also mark as unlocked so the widget appears after exit
+            this.unlockedVeils.add(nextId)
+            this.onDirty?.()
+            return nextId
+        }
+
+        // Veils 1-3: unlock and emit event (modal will handle launch choice)
+        this.unlockVeil(nextId)
+        return null
+    }
+
+    // ── Unlocking a veil ───────────────────────────────────────────────────
+
+    /**
+     * Marks a veil as unlocked (available to play from widget or modal).
+     * Emits "veil:unlocked" so the modal and widget can react.
+     */
+    public unlockVeil(id: VeilId): void {
+        if (this.unlockedVeils.has(id) || this.completedVeils.has(id)) return
+
+        this.unlockedVeils.add(id)
+        emitAppEvent("veil:unlocked", { veilId: id })
+        this.onDirty?.()
     }
 
     // ── Triggering a veil ──────────────────────────────────────────────────
@@ -208,6 +290,32 @@ export class VeilManager {
         emitAppEvent("veil:triggered", { veilId: id })
 
         this.launchOverlay?.(id)
+    }
+
+    /**
+     * Launch an unlocked veil from the widget or modal.
+     * Validates the veil is actually available.
+     */
+    public launchVeil(id: VeilId): void {
+        if (this.active) return
+        if (!this.unlockedVeils.has(id) && !this.completedVeils.has(id)) return
+
+        this.triggerVeil(id)
+    }
+
+    /**
+     * Launch a completed veil in replay mode (cube run only, no dialogue on win).
+     */
+    public launchReplay(id: VeilId): void {
+        if (this.active) return
+        if (!this.completedVeils.has(id)) return
+
+        this.active = true
+        this.currentVeil = id
+        this.emit("veilTriggered", { veilId: id })
+        emitAppEvent("veil:triggered", { veilId: id })
+
+        this.launchOverlay?.(id, true)
     }
 
     /**
@@ -230,6 +338,7 @@ export class VeilManager {
 
     public completeVeil(id: VeilId): void {
         this.completedVeils.add(id)
+        this.unlockedVeils.delete(id)
         this.active = false
         this.currentVeil = null
 
@@ -263,16 +372,24 @@ export class VeilManager {
         return {
             completed: [...this.completedVeils],
             attempts: { ...this.attempts },
+            unlocked: [...this.unlockedVeils],
         }
     }
 
     public deserialize(data: VeilSaveData): void {
         this.completedVeils.clear()
+        this.unlockedVeils.clear()
         this.attempts = {}
 
         if (data.completed) {
             for (const id of data.completed) {
                 this.completedVeils.add(id as VeilId)
+            }
+        }
+
+        if (data.unlocked) {
+            for (const id of data.unlocked) {
+                this.unlockedVeils.add(id as VeilId)
             }
         }
 

@@ -145,15 +145,6 @@ const WINDOW_CONFIGS: Record<RoutableWindow, WindowConfig> = {
         style: "winxp",
         contentType: "customize",
     },
-    "career-tree": {
-        id: "career-tree",
-        title: "Career Development",
-        icon: "📋",
-        width: 480,
-        height: 520,
-        style: "win95",
-        contentType: "career-tree",
-    },
 }
 
 /**

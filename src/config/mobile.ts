@@ -5,4 +5,11 @@ export const MOBILE_DOCK_IDS = [
     "links",
 ]
 
-export const MOBILE_EXCLUDED_IDS = ["terminal", "welt", "pinball"]
+export const MOBILE_ALLOWED_IDS = [
+    ...MOBILE_DOCK_IDS,
+    "resume",
+    "guestbook",
+    "felixgpt",
+    "stats",
+    "career-development",
+]

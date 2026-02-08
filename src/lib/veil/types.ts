@@ -12,13 +12,65 @@ export const BOSS_VEIL: VeilId = 4
 export interface VeilSaveData {
     completed: number[]
     attempts: Record<number, number>
+    /** Veils that have been triggered (available to play) but not yet completed */
+    unlocked?: number[]
 }
 
 export function createEmptyVeilData(): VeilSaveData {
     return {
         completed: [],
         attempts: {},
+        unlocked: [],
     }
+}
+
+// ── Visual theme ────────────────────────────────────────────────────────────
+
+export interface LevelTheme {
+    name: string
+    /** Background base color */
+    bgColor: string
+    /** Background pulse color (mixed during pulse) */
+    bgPulseColor: string
+    /** Road edge line color */
+    roadColor: string
+    /** Lane divider color */
+    laneColor: string
+    /** Depth marker color */
+    depthMarkerColor: string
+    /** Player wireframe + glow color */
+    playerColor: string
+    /** Player inner fill color (with alpha) */
+    playerFill: string
+    /** Obstacle neon palette */
+    obstacleColors: string[]
+    /** Horizon glow radial gradient color */
+    horizonGlow: string
+    /** Depth fog tint (objects fade into this) */
+    fogColor: string
+    /** Starfield / void particle color */
+    starColor: string
+    /** Vignette intensity (0-1) */
+    vignetteIntensity: number
+    /** CSS class suffix for overlay */
+    cssClass: string
+}
+
+// ── Obstacle patterns ───────────────────────────────────────────────────────
+
+export interface PatternWave {
+    /** Delay in seconds from pattern start */
+    delay: number
+    /** Lane index, or "random" for random placement, or "mirror" for mirrored from center */
+    lane: number | "random" | "mirror"
+    type: ObstacleType
+    width?: number
+    reverse?: boolean
+}
+
+export interface ObstaclePattern {
+    id: string
+    waves: PatternWave[]
 }
 
 // ── Cube Runner level config ────────────────────────────────────────────────
@@ -46,6 +98,27 @@ export interface LevelConfig {
     taunts: boolean
     /** Glue walls narrow the corridor */
     glueWalls: boolean
+
+    // ── Visual theme ────────────────────────────────────────────────────
+    theme: LevelTheme
+
+    // ── Pattern system ──────────────────────────────────────────────────
+    /** Available choreographed patterns for this level */
+    patterns: ObstaclePattern[]
+    /** Chance (0-1) of spawning a pattern instead of random obstacle */
+    patternChance: number
+
+    // ── Environment hazards ─────────────────────────────────────────────
+    /** Visual road edge warping (purely visual disorientation) */
+    roadWarp: boolean
+    /** Brief blackout moments (only player + nearest obstacles visible) */
+    blackout: boolean
+    /** Lane shift can reverse direction mid-cycle */
+    laneInversion: boolean
+    /** Speed pulses (sine modulation on top of linear ramp) */
+    pulseSpeed: boolean
+    /** Obstacles jitter in visual depth (distance estimation harder) */
+    depthDistortion: boolean
 }
 
 // ── Dialogue types ──────────────────────────────────────────────────────────

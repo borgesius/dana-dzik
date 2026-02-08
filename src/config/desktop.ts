@@ -100,7 +100,7 @@ export const DESKTOP_ITEMS: DesktopItemConfig[] = [
         filename: "Career Development.exe",
         label: "Career Development",
         icon: "📋",
-        windowId: "career-tree",
+        windowId: "resume",
         fileType: "executable",
     },
 ]

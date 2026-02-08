@@ -12,6 +12,7 @@ export type AchievementCategory =
     | "prestige"
     | "career"
     | "cross-system"
+    | "veil"
     | "arcana"
 
 export type AchievementId =
