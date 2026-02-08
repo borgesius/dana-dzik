@@ -1,4 +1,5 @@
 import { isCalmMode } from "./calmMode"
+import { emitAppEvent } from "./events"
 import { getLocaleManager, type LocaleId } from "./localeManager"
 import { getThemeManager } from "./themeManager"
 
@@ -271,6 +272,7 @@ export class GlitchManager {
     }
 
     private applyGlitch(glitch: GlitchEvent): void {
+        emitAppEvent("glitch:triggered", { type: glitch.type })
         const body = document.body
         const desktop = document.querySelector(".desktop-area") as HTMLElement
 

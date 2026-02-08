@@ -352,6 +352,12 @@
             "sell": "SELL",
             "sellAll": "SELL ALL",
             "harvest": "HARVEST",
+            "harvest_EMAIL": "SCRAPE",
+            "harvest_ADS": "CLICK",
+            "harvest_DOM": "SQUAT",
+            "harvest_BW": "LEECH",
+            "harvest_SOFT": "PIRATE",
+            "harvest_VC": "PITCH",
             "deploy": "DEPLOY",
             "acquire": "ACQUIRE",
             "execute": "EXECUTE",
@@ -796,6 +802,10 @@
         "calm-mode": {
             "name": "Business and Meetings are Important",
             "description": "Enable calm mode."
+        },
+        "seein-double": {
+            "name": "I'm Seein' Double! Four Krusties!",
+            "description": "Experience a chromatic aberration glitch."
         },
         "explorer": {
             "name": "Internet Explorer",

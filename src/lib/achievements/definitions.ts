@@ -156,6 +156,12 @@ export const ACHIEVEMENTS: AchievementDef[] = [
         hidden: false,
     },
     {
+        id: "seein-double",
+        category: "exploration",
+        icon: "👀",
+        hidden: true,
+    },
+    {
         id: "explorer",
         category: "exploration",
         icon: "🗺️",
