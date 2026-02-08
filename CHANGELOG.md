@@ -1,3 +1,9 @@
+## [2.1.0](https://github.com/borgesius/dana-dzik/compare/v2.0.0...v2.1.0) (2026-02-08)
+
+### Features
+
+* xp rebalance ([#41](https://github.com/borgesius/dana-dzik/issues/41)) ([388c2e6](https://github.com/borgesius/dana-dzik/commit/388c2e6cd6a7c0fc793c88b84cfa378c724a2870))
+
 ## [2.0.0](https://github.com/borgesius/dana-dzik/compare/v1.40.0...v2.0.0) (2026-02-08)
 
 ### ⚠ BREAKING CHANGES
