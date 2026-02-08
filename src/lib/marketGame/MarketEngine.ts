@@ -26,7 +26,9 @@ import {
     type GameEventCallback,
     type GameEventType,
     type GameSnapshot,
-    HARVEST_BASE_OUTPUT,
+    HARVEST_AUTOSCRIPT_BONUS,
+    HARVEST_BASE_FRACTION,
+    HARVEST_UPGRADE_BONUS,
     type Holding,
     type InfluenceDef,
     type InfluenceId,
@@ -644,23 +646,27 @@ export class MarketEngine {
 
     /**
      * Compute how many units a single harvest click produces for a commodity.
-     * Base (1) + per-commodity upgrade (+1) + global autoscript (+1).
+     * Starts tiny (5% of harvestQuantity ≈ $0.10/click), scales up fast with
+     * per-commodity upgrade (50% ≈ $1/click) and autoscript (100% ≈ $2/click).
      */
     public getHarvestOutput(commodityId: CommodityId): number {
-        let output = HARVEST_BASE_OUTPUT
+        let fraction = HARVEST_BASE_FRACTION
 
-        // Per-commodity harvest upgrade
+        // Per-commodity harvest upgrade — big jump
         const perAssetId = MarketEngine.HARVEST_UPGRADE_MAP[commodityId]
         if (perAssetId && this.ownedUpgrades.has(perAssetId)) {
-            output += 1
+            fraction += HARVEST_UPGRADE_BONUS
         }
 
-        // Global autoscript upgrade
+        // Global autoscript upgrade — tops it off
         if (this.ownedUpgrades.has("autoscript")) {
-            output += 1
+            fraction += HARVEST_AUTOSCRIPT_BONUS
         }
 
-        return output
+        const def = COMMODITIES.find((c) => c.id === commodityId)
+        const harvestQty = def?.harvestQuantity ?? 1
+
+        return harvestQty * fraction
     }
 
     /**

@@ -4,6 +4,7 @@ import { getLocaleManager } from "../localeManager"
 import { getMarketGame } from "../marketGame/MarketEngine"
 import {
     COMMODITIES,
+    type CommodityId,
     CORNER_MARKET_FLOAT,
     CORNER_MARKET_THRESHOLD,
     FACTORIES,
@@ -16,6 +17,7 @@ import { getCareerManager } from "../progression/CareerManager"
 import { getNodesForBranch } from "../progression/careers"
 import { getThemeManager } from "../themeManager"
 import type { AchievementManager } from "./AchievementManager"
+import type { CounterKey } from "./types"
 
 const TOURIST_WINDOWS: RoutableWindow[] = [
     "about",
@@ -195,11 +197,47 @@ function wireMarketGame(mgr: AchievementManager): void {
         mgr.earn("limit-filled")
     })
 
-    game.on("harvestExecuted", () => {
+    // Autoclicker detection state
+    const recentClicks: number[] = []
+    const AUTOCLICKER_WINDOW_MS = 2000
+    const AUTOCLICKER_THRESHOLD = 20
+
+    game.on("harvestExecuted", (data) => {
         const harvests = game.getTotalHarvests()
+
+        // Global tiers
         if (harvests >= 100) mgr.earn("harvest-100")
         if (harvests >= 1000) mgr.earn("harvest-1000")
         if (harvests >= 10000) mgr.earn("harvest-10000")
+        if (harvests >= 50000) mgr.earn("harvest-50000")
+        if (harvests >= 100000) mgr.earn("harvest-100000")
+
+        // Per-commodity tracking
+        const { commodityId } = data as { commodityId: CommodityId }
+        const counterKey = `harvest-${commodityId}` as CounterKey
+        const count = mgr.incrementCounter(counterKey)
+        if (count >= 500) {
+            if (commodityId === "EMAIL") mgr.earn("harvest-email-500")
+            if (commodityId === "ADS") mgr.earn("harvest-ads-500")
+            if (commodityId === "DOM") mgr.earn("harvest-dom-500")
+            if (commodityId === "BW") mgr.earn("harvest-bw-500")
+            if (commodityId === "SOFT") mgr.earn("harvest-soft-500")
+            if (commodityId === "VC") mgr.earn("harvest-vc-500")
+        }
+
+        // Autoclicker detection: 20+ clicks in 2 seconds
+        const now = Date.now()
+        recentClicks.push(now)
+        // Trim old clicks outside the window
+        while (
+            recentClicks.length > 0 &&
+            recentClicks[0] < now - AUTOCLICKER_WINDOW_MS
+        ) {
+            recentClicks.shift()
+        }
+        if (recentClicks.length >= AUTOCLICKER_THRESHOLD) {
+            mgr.earn("definitely-not-a-bot")
+        }
     })
 }
 
@@ -240,6 +278,20 @@ function wireTerminalEvents(mgr: AchievementManager): void {
                 mgr.earn("archivist")
             }
         }
+
+        if (cmd === "ls" || cmd === "dir") mgr.earn("ls-user")
+        if (cmd === "tree") mgr.earn("tree-hugger")
+        if (cmd === "pwd") mgr.earn("you-are-here")
+        if (cmd === "open") mgr.earn("open-sesame")
+        if (cmd === "edit") mgr.earn("red-pen")
+        if (cmd === "clear" || cmd === "cls") mgr.earn("clean-desk")
+        if (cmd === "whoami") mgr.earn("self-aware")
+        if (cmd === "help") mgr.earn("rtfm")
+        if (cmd === "touch") mgr.earn("from-nothing")
+        if (cmd === "mkdir") mgr.earn("empty-room")
+        if (cmd === "rm" || cmd === "del") mgr.earn("shredder")
+        if (cmd === "mv" || cmd === "ren" || cmd === "rename")
+            mgr.earn("witness-protection")
     })
 
     onAppEvent("terminal:file-saved", () => {

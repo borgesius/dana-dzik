@@ -287,6 +287,55 @@ export function createFile(
     return { success: true }
 }
 
+export function createDirectory(
+    fs: FileSystem,
+    dirPathStr: string,
+    name: string
+): { success: boolean; error?: string } {
+    const lm = getLocaleManager()
+    const resolved = resolvePath(fs, dirPathStr)
+    if (!resolved) {
+        return {
+            success: false,
+            error: lm.t("filesystem.invalidPath", { path: dirPathStr }),
+        }
+    }
+
+    const dirNode = getNode(fs, resolved)
+    if (!dirNode) {
+        return {
+            success: false,
+            error: lm.t("filesystem.dirNotFound", { path: dirPathStr }),
+        }
+    }
+
+    if (dirNode.type !== "directory") {
+        return {
+            success: false,
+            error: lm.t("filesystem.notADirectory", { path: dirPathStr }),
+        }
+    }
+
+    if (!dirNode.children) {
+        dirNode.children = {}
+    }
+
+    if (dirNode.children[name]) {
+        return {
+            success: false,
+            error: lm.t("filesystem.alreadyExists", { name }),
+        }
+    }
+
+    dirNode.children[name] = {
+        name,
+        type: "directory",
+        children: {},
+    }
+
+    return { success: true }
+}
+
 export function deleteFile(
     fs: FileSystem,
     pathStr: string

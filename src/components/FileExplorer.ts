@@ -1,10 +1,14 @@
 import type { RoutableWindow } from "../config/routing"
 import { emitAppEvent } from "../lib/events"
 import {
+    createDirectory,
+    createFile,
+    deleteFile,
     type FileSystem,
     formatPath,
     type FSNode,
     getNode,
+    renameFile,
     resolvePath,
 } from "../lib/terminal/filesystem"
 import { getSharedFilesystem } from "../lib/terminal/filesystemBuilder"
@@ -50,6 +54,14 @@ export class FileExplorer {
         this.container.appendChild(this.fileList)
 
         document.addEventListener("click", () => this.hideContextMenu())
+
+        this.fileList.addEventListener("contextmenu", (e) => {
+            // Only fire if clicking the empty area, not a file row
+            if ((e.target as HTMLElement).closest(".explorer-row")) return
+            e.preventDefault()
+            e.stopPropagation()
+            this.showBackgroundContextMenu(e)
+        })
 
         this.render()
     }
@@ -217,8 +229,136 @@ export class FileExplorer {
             )
         }
 
+        // ── Rename ────────────────────────────────────────────────────────
+        if (!node.readonly) {
+            menu.appendChild(
+                this.createMenuItem("Rename", () => {
+                    const newName = prompt("New name:", node.name)
+                    if (!newName || newName === node.name) return
+                    const pathStr =
+                        formatPath(this.currentPath) + "\\" + node.name
+                    const result = renameFile(this.fs, pathStr, newName)
+                    if (result.success) {
+                        emitAppEvent("terminal:command", {
+                            command: "mv",
+                            raw: `mv ${node.name} ${newName}`,
+                        })
+                        this.render()
+                    }
+                })
+            )
+        }
+
+        // ── Delete ────────────────────────────────────────────────────────
+        if (!node.readonly) {
+            menu.appendChild(
+                this.createMenuItem("Delete", () => {
+                    if (!confirm(`Delete "${node.name}"?`)) return
+                    const pathStr =
+                        formatPath(this.currentPath) + "\\" + node.name
+                    const result = deleteFile(this.fs, pathStr)
+                    if (result.success) {
+                        emitAppEvent("terminal:command", {
+                            command: "rm",
+                            raw: `rm ${node.name}`,
+                        })
+                        this.render()
+                    }
+                })
+            )
+        }
+
+        // ── New File / New Folder (on directories) ────────────────────────
+        if (node.type === "directory") {
+            menu.appendChild(this.createSeparator())
+            menu.appendChild(
+                this.createMenuItem("New File", () => {
+                    const name = prompt("File name:")
+                    if (!name) return
+                    const dirPath =
+                        formatPath(this.currentPath) + "\\" + node.name
+                    const result = createFile(this.fs, dirPath, name, "")
+                    if (result.success) {
+                        emitAppEvent("terminal:command", {
+                            command: "touch",
+                            raw: `touch ${name}`,
+                        })
+                        this.render()
+                    }
+                })
+            )
+            menu.appendChild(
+                this.createMenuItem("New Folder", () => {
+                    const name = prompt("Folder name:")
+                    if (!name) return
+                    const dirPath =
+                        formatPath(this.currentPath) + "\\" + node.name
+                    const result = createDirectory(this.fs, dirPath, name)
+                    if (result.success) {
+                        emitAppEvent("terminal:command", {
+                            command: "mkdir",
+                            raw: `mkdir ${name}`,
+                        })
+                        this.render()
+                    }
+                })
+            )
+        }
+
         document.body.appendChild(menu)
         this.contextMenu = menu
+    }
+
+    private showBackgroundContextMenu(e: MouseEvent): void {
+        this.hideContextMenu()
+
+        const menu = document.createElement("div")
+        menu.className = "explorer-context-menu"
+        menu.style.left = `${e.clientX}px`
+        menu.style.top = `${e.clientY}px`
+
+        menu.appendChild(
+            this.createMenuItem("New File", () => {
+                const name = prompt("File name:")
+                if (!name) return
+                const dirPath = formatPath(this.currentPath)
+                const result = createFile(this.fs, dirPath, name, "")
+                if (result.success) {
+                    emitAppEvent("terminal:command", {
+                        command: "touch",
+                        raw: `touch ${name}`,
+                    })
+                    this.render()
+                }
+            })
+        )
+        menu.appendChild(
+            this.createMenuItem("New Folder", () => {
+                const name = prompt("Folder name:")
+                if (!name) return
+                const dirPath = formatPath(this.currentPath)
+                const result = createDirectory(this.fs, dirPath, name)
+                if (result.success) {
+                    emitAppEvent("terminal:command", {
+                        command: "mkdir",
+                        raw: `mkdir ${name}`,
+                    })
+                    this.render()
+                }
+            })
+        )
+
+        document.body.appendChild(menu)
+        this.contextMenu = menu
+    }
+
+    private createSeparator(): HTMLElement {
+        const sep = document.createElement("div")
+        sep.className = "explorer-context-separator"
+        sep.style.height = "1px"
+        sep.style.background = "var(--theme-border-light, #888)"
+        sep.style.margin = "2px 4px"
+        return sep
     }
 
     private createMenuItem(label: string, onClick: () => void): HTMLElement {

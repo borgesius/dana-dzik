@@ -15,6 +15,9 @@ import { SYS_MEMORY } from "./content/systemFiles"
 import {
     buildTree,
     changeDirectory,
+    createDirectory,
+    createFile,
+    deleteFile,
     type FileSystem,
     type FileType,
     formatPath,
@@ -24,6 +27,7 @@ import {
     getNode,
     getNodeAtPath,
     listDirectory,
+    renameFile,
     resolvePath,
 } from "./filesystem"
 
@@ -91,6 +95,10 @@ const COMMANDS: Record<string, CommandHandler> = {
     type <file>   Display file contents
     open <file>   Open file/program
     edit <file>   Edit file (line editor)
+    touch <name>  Create empty file
+    mkdir <name>  Create directory
+    rm <file>     Delete file or empty directory
+    mv <f> <new>  Rename file or directory
 
   ${lm.t("terminalCommands.programs")}
     welt <file>        Run a .welt or .grund program
@@ -348,6 +356,126 @@ const COMMANDS: Record<string, CommandHandler> = {
     }),
 
     exit: (): CommandResult => ({ action: "exit" }),
+
+    touch: (args, ctx): CommandResult => {
+        const lm = getLocaleManager()
+        if (args.length === 0) {
+            return {
+                output: lm.t("terminalCommands.usageTouch"),
+                className: "error",
+            }
+        }
+
+        const filename = args.join(" ")
+        const dirPath = formatPath(ctx.fs.cwd)
+        const result = createFile(ctx.fs, dirPath, filename, "")
+        if (!result.success) {
+            return { output: result.error, className: "error" }
+        }
+
+        return {
+            output: lm.t("terminalCommands.created", { name: filename }),
+            className: "success",
+        }
+    },
+
+    mkdir: (args, ctx): CommandResult => {
+        const lm = getLocaleManager()
+        if (args.length === 0) {
+            return {
+                output: lm.t("terminalCommands.usageMkdir"),
+                className: "error",
+            }
+        }
+
+        const dirname = args.join(" ")
+        const dirPath = formatPath(ctx.fs.cwd)
+        const result = createDirectory(ctx.fs, dirPath, dirname)
+        if (!result.success) {
+            return { output: result.error, className: "error" }
+        }
+
+        return {
+            output: lm.t("terminalCommands.created", { name: dirname }),
+            className: "success",
+        }
+    },
+
+    rm: (args, ctx): CommandResult => {
+        const lm = getLocaleManager()
+        if (args.length === 0) {
+            return {
+                output: lm.t("terminalCommands.usageRm"),
+                className: "error",
+            }
+        }
+
+        const filename = args.join(" ")
+        const resolved = resolvePath(ctx.fs, filename)
+        if (resolved) {
+            const node = getNode(ctx.fs, resolved)
+            if (node?.readonly) {
+                return {
+                    output: lm.t("terminalCommands.accessDenied", { filename }),
+                    className: "error",
+                }
+            }
+        }
+
+        const result = deleteFile(ctx.fs, filename)
+        if (!result.success) {
+            return { output: result.error, className: "error" }
+        }
+
+        return {
+            output: lm.t("terminalCommands.deleted", { name: filename }),
+            className: "success",
+        }
+    },
+
+    del: (args, ctx) => COMMANDS.rm(args, ctx),
+
+    mv: (args, ctx): CommandResult => {
+        const lm = getLocaleManager()
+        if (args.length < 2) {
+            return {
+                output: lm.t("terminalCommands.usageMv"),
+                className: "error",
+            }
+        }
+
+        const source = args.slice(0, -1).join(" ")
+        const newName = args[args.length - 1]
+
+        const resolved = resolvePath(ctx.fs, source)
+        if (resolved) {
+            const node = getNode(ctx.fs, resolved)
+            if (node?.readonly) {
+                return {
+                    output: lm.t("terminalCommands.accessDenied", {
+                        filename: source,
+                    }),
+                    className: "error",
+                }
+            }
+        }
+
+        const result = renameFile(ctx.fs, source, newName)
+        if (!result.success) {
+            return { output: result.error, className: "error" }
+        }
+
+        return {
+            output: lm.t("terminalCommands.renamed", {
+                from: source,
+                to: newName,
+            }),
+            className: "success",
+        }
+    },
+
+    ren: (args, ctx) => COMMANDS.mv(args, ctx),
+    rename: (args, ctx) => COMMANDS.mv(args, ctx),
 
     sl: (): CommandResult => ({ action: "sl" }),
 }
