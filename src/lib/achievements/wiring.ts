@@ -206,7 +206,9 @@ function wireMetaAchievements(mgr: AchievementManager): void {
         if (total >= 10) mgr.earn("participation-trophy")
         if (total >= 25) mgr.earn("overachiever")
         if (total >= 50) mgr.earn("completionist")
-        if (total >= 100) mgr.earn("sisyphean")
+        if (total >= 100) mgr.earn("herculean")
+        if (total >= 150) mgr.earn("promethean")
+        if (total >= 200) mgr.earn("sisyphean")
 
         // Recursive: earn an achievement while viewing the achievements window
         if (achievementsWindowOpen) mgr.earn("achievement-achievement")
