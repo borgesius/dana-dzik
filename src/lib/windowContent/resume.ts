@@ -132,7 +132,9 @@ function renderSkillsSection(): string {
     `
 
     // Always show the base skills line
-    html += `<li>${SKILLS_STARTER_NODE.name} <span class="resume-skill-bonus">(${SKILLS_STARTER_NODE.bonusLabel})</span></li>`
+    html += `<li>${SKILLS_STARTER_NODE.name}
+        <div class="resume-entry-bonus">✓ ${SKILLS_STARTER_NODE.bonusLabel}</div>
+    </li>`
 
     // Show unlocked skill nodes
     const skillNodes = getNodesForBranch("skills")
@@ -141,7 +143,9 @@ function renderSkillsSection(): string {
         .sort((a, b) => a.tier - b.tier)
 
     for (const node of unlockedSkills) {
-        html += `<li>${node.name} <span class="resume-skill-bonus">(${node.bonusLabel})</span></li>`
+        html += `<li>${node.name}
+            <div class="resume-entry-bonus">✓ ${node.bonusLabel}</div>
+        </li>`
     }
 
     html += `</ul>`
