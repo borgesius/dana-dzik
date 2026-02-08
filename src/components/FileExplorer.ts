@@ -168,6 +168,24 @@ export class FileExplorer {
 
         const isWelt = node.name.endsWith(".welt")
 
+        if (isWelt) {
+            menu.appendChild(
+                this.createMenuItem("Run with WELT", () => {
+                    this.openTerminalWith(`welt ${node.name}`)
+                })
+            )
+            menu.appendChild(
+                this.createMenuItem("Compile to Grund", () => {
+                    this.openTerminalWith(`welt --grund ${node.name}`)
+                })
+            )
+            menu.appendChild(
+                this.createMenuItem("View source", () => {
+                    this.openTerminalWith(`cat ${node.name}`)
+                })
+            )
+        }
+
         if (node.type === "directory") {
             menu.appendChild(
                 this.createMenuItem("Open", () => {
