@@ -177,7 +177,6 @@ export class WindowManager {
      * @param windowId - The ID of the window to open
      */
     public openWindow(windowId: RoutableWindow): void {
-
         if (this.windows.has(windowId)) {
             this.focusWindow(windowId)
             return
