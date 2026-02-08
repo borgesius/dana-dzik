@@ -160,6 +160,11 @@ export class BusinessPanel {
             this.portfolio.render()
             this.tradeControls.render()
         })
+        this.game.on("harvestExecuted", () => {
+            if (!this.isExpanded) return
+            this.portfolio.render()
+            this.tradeControls.render()
+        })
     }
 
     public expand(): void {

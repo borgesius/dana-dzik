@@ -29,7 +29,7 @@ export const FACTORIES: FactoryDef[] = [
         produces: "EMAIL",
         cost: 3,
         minOutput: 0,
-        maxOutput: 3,
+        maxOutput: 2,
         ticksPerCycle: 1,
     },
     {
@@ -40,7 +40,7 @@ export const FACTORIES: FactoryDef[] = [
         produces: "ADS",
         cost: 8,
         minOutput: 0,
-        maxOutput: 3,
+        maxOutput: 2,
         ticksPerCycle: 2,
         conversionInput: { commodity: "EMAIL", quantity: 5 },
     },

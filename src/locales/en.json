@@ -344,6 +344,7 @@
             "buy": "BUY",
             "sell": "SELL",
             "sellAll": "SELL ALL",
+            "harvest": "HARVEST",
             "deploy": "DEPLOY",
             "acquire": "ACQUIRE",
             "execute": "EXECUTE",
@@ -440,6 +441,34 @@
             "moving-average": {
                 "name": "Moving Average Overlay",
                 "description": "Technical analysis tools for price chart."
+            },
+            "harvest-email": {
+                "name": "EMAIL Harvester",
+                "description": "Automated scraper. +1 EMAIL per harvest click."
+            },
+            "harvest-ads": {
+                "name": "ADS Generator",
+                "description": "Impression bot. +1 ADS per harvest click."
+            },
+            "harvest-dom": {
+                "name": "DOM Registrar",
+                "description": "Bulk registration script. +1 DOM per harvest click."
+            },
+            "harvest-bw": {
+                "name": "BW Allocator",
+                "description": "Bandwidth provisioner. +1 BW per harvest click."
+            },
+            "harvest-soft": {
+                "name": "SOFT Compiler",
+                "description": "License keygen. +1 SOFT per harvest click."
+            },
+            "harvest-vc": {
+                "name": "VC Pipeline",
+                "description": "Pitch deck generator. +1 VC per harvest click."
+            },
+            "autoscript": {
+                "name": "Autoscript",
+                "description": "Global automation. +1 unit per harvest click for ALL commodities."
             }
         },
         "influence": {
@@ -1081,6 +1110,18 @@
         "rainy-day": {
             "name": "400 Away for a Rainy Day",
             "description": "Fully repay all debt with 3+ DAS performing."
+        },
+        "harvest-100": {
+            "name": "Carpal Tunnel",
+            "description": "Harvest 100 times."
+        },
+        "harvest-1000": {
+            "name": "Repetitive Strain",
+            "description": "Harvest 1,000 times."
+        },
+        "harvest-10000": {
+            "name": "Macro Enabled",
+            "description": "Harvest 10,000 times."
         }
     }
 }

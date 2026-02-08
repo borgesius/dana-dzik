@@ -194,6 +194,13 @@ function wireMarketGame(mgr: AchievementManager): void {
     game.on("limitOrderFilled", () => {
         mgr.earn("limit-filled")
     })
+
+    game.on("harvestExecuted", () => {
+        const harvests = game.getTotalHarvests()
+        if (harvests >= 100) mgr.earn("harvest-100")
+        if (harvests >= 1000) mgr.earn("harvest-1000")
+        if (harvests >= 10000) mgr.earn("harvest-10000")
+    })
 }
 
 function wireTerminalEvents(mgr: AchievementManager): void {

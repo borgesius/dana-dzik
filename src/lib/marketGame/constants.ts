@@ -3,9 +3,9 @@ export const CORNER_MARKET_THRESHOLD = 0.5
 export const CORNER_MARKET_PRICE_BOOST = 0.02
 
 export const PHASE_THRESHOLDS = {
-    factories: 5,
-    upgrades: 150,
-    influence: 750,
+    factories: 3,
+    upgrades: 250,
+    influence: 1500,
 } as const
 
 export const POPUP_THRESHOLDS = [
@@ -26,3 +26,6 @@ export const MEAN_REVERSION_STRENGTH = 0.005
 
 export const STARTING_CASH = 0.1
 export const BULK_ORDER_QUANTITY = 10
+
+/** Base units generated per harvest click (before upgrades). */
+export const HARVEST_BASE_OUTPUT = 1

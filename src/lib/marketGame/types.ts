@@ -7,6 +7,7 @@ export {
     CORNER_MARKET_THRESHOLD,
     EVENT_MAX_TICKS,
     EVENT_MIN_TICKS,
+    HARVEST_BASE_OUTPUT,
     MEAN_REVERSION_STRENGTH,
     PHASE_THRESHOLDS,
     POPUP_THRESHOLDS,
@@ -71,6 +72,8 @@ export type GameEventType =
     | "employeeFired"
     | "orgChartChanged"
     | "moraleEvent"
+    // Clicker
+    | "harvestExecuted"
     // Phase 6: Structured Products Desk
     | "dasCreated"
     | "dasDefaulted"
@@ -225,6 +228,8 @@ export interface MarketSaveData {
     unlockedPhases: number[]
     limitOrders: LimitOrder[]
     popupLevel: number
+    /** Total harvest clicks (for achievements / stats) */
+    totalHarvests?: number
     /** Phase 5: HR org chart data (optional for backward compat) */
     orgChart?: OrgChartSaveData
     /** Phase 6: Structured Products Desk */

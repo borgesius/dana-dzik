@@ -1,7 +1,7 @@
 // ── Prestige thresholds ──────────────────────────────────────────────────────
 
 /** Minimum lifetime earnings before prestige becomes available */
-export const PRESTIGE_THRESHOLD = 5000
+export const PRESTIGE_THRESHOLD = 8000
 
 /**
  * Hindsight currency formula: sqrt(lifetimeEarnings / 100)
