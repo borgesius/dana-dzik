@@ -31,21 +31,27 @@ export interface CareerNodeDef {
 }
 
 // ── Engineering Branch ───────────────────────────────────────────────────────
+// The player already holds the Senior SWE role (shown on resume from the
+// start), so the tree begins at Staff.  The Senior SWE entry is exported
+// separately for the resume display and its bonus is applied passively.
+
+/** Starting role — not part of the unlockable tree; displayed on the resume
+ *  and its bonus (+5 % WELT thermal protection) is applied passively. */
+export const ENGINEERING_STARTER_NODE: CareerNodeDef = {
+    id: "eng-senior",
+    name: "Senior Software Engineer",
+    company: "Volley · San Francisco, CA",
+    dateRange: "2021 – Present",
+    bullets: [],
+    bonusLabel: "+5% WELT thermal protection",
+    branch: "engineering",
+    tier: 0,
+    prerequisites: [],
+    bonusType: "weltBonus",
+    bonusValue: 0.05,
+}
 
 const ENGINEERING_NODES: CareerNodeDef[] = [
-    {
-        id: "eng-senior",
-        name: "Senior Software Engineer",
-        company: "Volley · San Francisco, CA",
-        dateRange: "2021 – Present",
-        bullets: [],
-        bonusLabel: "+5% WELT thermal protection",
-        branch: "engineering",
-        tier: 1,
-        prerequisites: [],
-        bonusType: "weltBonus",
-        bonusValue: 0.05,
-    },
     {
         id: "eng-staff",
         name: "Staff Abstraction Architect",
@@ -58,8 +64,8 @@ const ENGINEERING_NODES: CareerNodeDef[] = [
         ],
         bonusLabel: "+10% hacking Clockwork stats",
         branch: "engineering",
-        tier: 2,
-        prerequisites: ["eng-senior"],
+        tier: 1,
+        prerequisites: [],
         bonusType: "autobattlerATK",
         bonusValue: 0.1,
     },
@@ -75,7 +81,7 @@ const ENGINEERING_NODES: CareerNodeDef[] = [
         ],
         bonusLabel: "WELT exercises grant 2× commodity rewards",
         branch: "engineering",
-        tier: 3,
+        tier: 2,
         prerequisites: ["eng-staff"],
         bonusType: "weltBonus",
         bonusValue: 0.25,
@@ -92,7 +98,7 @@ const ENGINEERING_NODES: CareerNodeDef[] = [
         ],
         bonusLabel: "+15% hacking unit HP",
         branch: "engineering",
-        tier: 4,
+        tier: 3,
         prerequisites: ["eng-principal"],
         bonusType: "autobattlerHP",
         bonusValue: 0.15,
@@ -109,9 +115,26 @@ const ENGINEERING_NODES: CareerNodeDef[] = [
         ],
         bonusLabel: "+10% GRUND compilation tolerance",
         branch: "engineering",
-        tier: 5,
+        tier: 4,
         prerequisites: ["eng-distinguished"],
         bonusType: "grundBonus",
+        bonusValue: 0.1,
+    },
+    {
+        id: "eng-emeritus",
+        name: "Architect Emeritus of Deprecated Systems",
+        company: "Legacy Systems Preservation Society · /dev/null",
+        dateRange: "2032 – ∞",
+        bullets: [
+            "Mass-migrated zero services to the new framework, citing 'philosophical objections'",
+            "Maintained sole custody of a cron job that no one dares restart",
+            "Gave a retirement talk that was actually a design doc; no one noticed",
+        ],
+        bonusLabel: "+10% factory output",
+        branch: "engineering",
+        tier: 5,
+        prerequisites: ["eng-fellow"],
+        bonusType: "factoryOutput",
         bonusValue: 0.1,
     },
 ]
