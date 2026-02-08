@@ -488,7 +488,7 @@ const WARNING_POPUPS: PopupContent[] = [
         type: "warning",
         title: "Certificate Warning",
         headline: "Security Certificate Expired",
-        body: "The security certificate for this site expired on January 1, 2004. Do you want to proceed?",
+        body: "The security certificate for this site expired on January 1, 1969. Do you want to proceed?",
         buttons: [
             { text: "Yes", className: "primary" },
             { text: "No", className: "" },
