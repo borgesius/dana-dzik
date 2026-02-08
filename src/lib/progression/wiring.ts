@@ -42,8 +42,14 @@ function wireAchievements(mgr: ProgressionManager): void {
 function wireMarketGame(mgr: ProgressionManager): void {
     const game = getMarketGame()
 
+    const TRADE_XP_COOLDOWN_MS = 5_000
+    let lastTradeXPTime = 0
     game.on("tradeExecuted", () => {
-        mgr.addXP(XP_REWARDS.trade)
+        const now = Date.now()
+        if (now - lastTradeXPTime >= TRADE_XP_COOLDOWN_MS) {
+            lastTradeXPTime = now
+            mgr.addXP(XP_REWARDS.trade)
+        }
     })
 
     game.on("phaseUnlocked", () => {
@@ -52,31 +58,36 @@ function wireMarketGame(mgr: ProgressionManager): void {
 }
 
 function wirePinball(mgr: ProgressionManager): void {
-    // Track which thresholds have been awarded this session to avoid
-    // double-awarding on repeat gameovers that report the same high score.
-    const awardedThresholds = new Set<number>()
-
     onAppEvent("pinball:gameover", (detail) => {
         const { score } = detail
 
-        if (score >= 1000 && !awardedThresholds.has(1000)) {
+        if (score >= 1000 && !mgr.hasPinballThreshold(1000)) {
             mgr.addXP(XP_REWARDS.pinballScore1k)
-            awardedThresholds.add(1000)
+            mgr.markPinballThreshold(1000)
         }
-        if (score >= 5000 && !awardedThresholds.has(5000)) {
+        if (score >= 5000 && !mgr.hasPinballThreshold(5000)) {
             mgr.addXP(XP_REWARDS.pinballScore5k)
-            awardedThresholds.add(5000)
+            mgr.markPinballThreshold(5000)
         }
-        if (score >= 10000 && !awardedThresholds.has(10000)) {
+        if (score >= 10000 && !mgr.hasPinballThreshold(10000)) {
             mgr.addXP(XP_REWARDS.pinballScore10k)
-            awardedThresholds.add(10000)
+            mgr.markPinballThreshold(10000)
         }
     })
 }
 
 function wireWelt(mgr: ProgressionManager): void {
+    const CODING_XP_COOLDOWN_MS = 20_000
+    let lastWeltXPTime = 0
+    let lastGrundCompileXPTime = 0
+    let lastGrundExecuteXPTime = 0
+
     onAppEvent("welt:completed", () => {
-        mgr.addXP(XP_REWARDS.weltProgram)
+        const now = Date.now()
+        if (now - lastWeltXPTime >= CODING_XP_COOLDOWN_MS) {
+            lastWeltXPTime = now
+            mgr.addXP(XP_REWARDS.weltProgram)
+        }
     })
 
     onAppEvent("welt:exercise-passed", () => {
@@ -84,11 +95,19 @@ function wireWelt(mgr: ProgressionManager): void {
     })
 
     onAppEvent("grund:compiled", () => {
-        mgr.addXP(XP_REWARDS.grundCompile)
+        const now = Date.now()
+        if (now - lastGrundCompileXPTime >= CODING_XP_COOLDOWN_MS) {
+            lastGrundCompileXPTime = now
+            mgr.addXP(XP_REWARDS.grundCompile)
+        }
     })
 
     onAppEvent("grund:executed", () => {
-        mgr.addXP(XP_REWARDS.grundExecute)
+        const now = Date.now()
+        if (now - lastGrundExecuteXPTime >= CODING_XP_COOLDOWN_MS) {
+            lastGrundExecuteXPTime = now
+            mgr.addXP(XP_REWARDS.grundExecute)
+        }
     })
 }
 
@@ -96,44 +115,43 @@ function wireExploration(
     mgr: ProgressionManager,
     onNewWindowOpen: (cb: (windowId: RoutableWindow) => void) => void
 ): void {
-    const openedWindows = new Set<string>()
-
     onNewWindowOpen((windowId: RoutableWindow) => {
-        if (!openedWindows.has(windowId)) {
-            openedWindows.add(windowId)
+        if (!mgr.hasSeenWindow(windowId)) {
+            mgr.markWindowSeen(windowId)
             mgr.addXP(XP_REWARDS.windowOpen)
         }
     })
 
-    const triedThemes = new Set<string>()
     getThemeManager().on("themeChanged", (data) => {
-        if (!triedThemes.has(data.theme)) {
-            triedThemes.add(data.theme)
+        if (!mgr.hasSeenTheme(data.theme)) {
+            mgr.markThemeSeen(data.theme)
             mgr.addXP(XP_REWARDS.themeChange)
         }
     })
 
-    const triedLocales = new Set<string>()
     getLocaleManager().on("localeChanged", (data) => {
-        if (!triedLocales.has(data.locale)) {
-            triedLocales.add(data.locale)
+        if (!mgr.hasSeenLocale(data.locale)) {
+            mgr.markLocaleSeen(data.locale)
             mgr.addXP(XP_REWARDS.localeChange)
         }
     })
 }
 
 function wireSocial(mgr: ProgressionManager): void {
+    const FELIX_XP_COOLDOWN_MS = 30_000
+    let lastFelixXPTime = 0
     onAppEvent("felix:message", () => {
-        mgr.addXP(XP_REWARDS.felixMessage)
+        const now = Date.now()
+        if (now - lastFelixXPTime >= FELIX_XP_COOLDOWN_MS) {
+            lastFelixXPTime = now
+            mgr.addXP(XP_REWARDS.felixMessage)
+        }
     })
 
-    // Guestbook sign is handled via DOM click listener, similar to achievement
-    // wiring. We use the same pattern to detect sign button clicks.
-    let signed = false
     document.addEventListener("click", (e) => {
         const target = e.target as HTMLElement
-        if (target.closest(".sign-btn") && !signed) {
-            signed = true
+        if (target.closest(".sign-btn") && !mgr.hasSignedGuestbook()) {
+            mgr.markGuestbookSigned()
             mgr.addXP(XP_REWARDS.guestbookSign)
         }
     })

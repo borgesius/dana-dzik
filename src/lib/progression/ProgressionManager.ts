@@ -25,6 +25,13 @@ export class ProgressionManager {
     /** Optional external XP rate bonus provider (returns a flat additive bonus, e.g. 0.1 = +10% XP) */
     public xpBonusProvider: (() => number) | null = null
 
+    // ── Persistent exploration guards ────────────────────────────────────────
+    private seenWindows: Set<string> = new Set()
+    private seenThemes: Set<string> = new Set()
+    private seenLocales: Set<string> = new Set()
+    private awardedPinballThresholds: Set<number> = new Set()
+    private guestbookSigned: boolean = false
+
     // ── Events ───────────────────────────────────────────────────────────────
 
     public on(
@@ -93,6 +100,53 @@ export class ProgressionManager {
         return xpToNextLevel(this.totalXP)
     }
 
+    // ── Exploration guards ─────────────────────────────────────────────────
+
+    public hasSeenWindow(windowId: string): boolean {
+        return this.seenWindows.has(windowId)
+    }
+
+    public markWindowSeen(windowId: string): void {
+        this.seenWindows.add(windowId)
+        this.onDirty?.()
+    }
+
+    public hasSeenTheme(themeId: string): boolean {
+        return this.seenThemes.has(themeId)
+    }
+
+    public markThemeSeen(themeId: string): void {
+        this.seenThemes.add(themeId)
+        this.onDirty?.()
+    }
+
+    public hasSeenLocale(localeId: string): boolean {
+        return this.seenLocales.has(localeId)
+    }
+
+    public markLocaleSeen(localeId: string): void {
+        this.seenLocales.add(localeId)
+        this.onDirty?.()
+    }
+
+    public hasPinballThreshold(threshold: number): boolean {
+        return this.awardedPinballThresholds.has(threshold)
+    }
+
+    public markPinballThreshold(threshold: number): void {
+        this.awardedPinballThresholds.add(threshold)
+        this.onDirty?.()
+    }
+
+    public hasSignedGuestbook(): boolean {
+        return this.guestbookSigned
+    }
+
+    public markGuestbookSigned(): void {
+        this.guestbookSigned = true
+        this.onDirty?.()
+    }
+
     // ── Dirty callback ───────────────────────────────────────────────────────
 
     public setDirtyCallback(fn: () => void): void {
@@ -106,6 +160,13 @@ export class ProgressionManager {
             ...createEmptyProgressionData(),
             totalXP: this.totalXP,
             level: this.level,
+            exploration: {
+                seenWindows: [...this.seenWindows],
+                seenThemes: [...this.seenThemes],
+                seenLocales: [...this.seenLocales],
+                awardedPinballThresholds: [...this.awardedPinballThresholds],
+                guestbookSigned: this.guestbookSigned,
+            },
         }
     }
 
@@ -117,6 +178,18 @@ export class ProgressionManager {
         const correctLevel = levelFromXP(this.totalXP)
         if (correctLevel !== this.level) {
             this.level = correctLevel
+        }
+
+        // Restore exploration guards
+        const ex = data.exploration
+        if (ex) {
+            this.seenWindows = new Set(ex.seenWindows ?? [])
+            this.seenThemes = new Set(ex.seenThemes ?? [])
+            this.seenLocales = new Set(ex.seenLocales ?? [])
+            this.awardedPinballThresholds = new Set(
+                ex.awardedPinballThresholds ?? []
+            )
+            this.guestbookSigned = ex.guestbookSigned ?? false
         }
     }
 }
