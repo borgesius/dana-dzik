@@ -1,9 +1,13 @@
 export type UpgradeId =
+    | "batch-processing"
     | "bulk-orders"
+    | "block-trading"
     | "limit-orders"
     | "trend-analysis"
     | "cpu-overclock"
+    | "overclock-ii"
     | "quality-assurance"
+    | "quality-assurance-ii"
     | "supply-chain"
     | "insider-newsletter"
     | "analyst-reports"
@@ -18,7 +22,9 @@ export type UpgradeId =
     | "harvest-bw"
     | "harvest-soft"
     | "harvest-vc"
-    | "autoscript"
+    | "autoscript-i"
+    | "autoscript-ii"
+    | "autoscript-iii"
 
 export type UpgradeCategory =
     | "trading"
@@ -35,47 +41,94 @@ export interface UpgradeDef {
 }
 
 export const UPGRADES: UpgradeDef[] = [
+    // ── Trading (5 upgrades) ────────────────────────────────────────────────
     {
-        id: "bulk-orders",
-        name: "Bulk Order Processing",
-        description: "Execute trades in quantities of 10.",
+        id: "batch-processing",
+        name: "Batch Processing",
+        description: "Execute trades in quantities of 5.",
         category: "trading",
-        cost: 20,
-    },
-    {
-        id: "limit-orders",
-        name: "Limit Order System",
-        description: "Set a target price. Holdings sold automatically.",
-        category: "trading",
-        cost: 40,
+        cost: 25,
     },
     {
         id: "trend-analysis",
         name: "Trend Analysis Package",
         description: "Directional indicators overlaid on price charts.",
         category: "trading",
-        cost: 30,
+        cost: 40,
     },
+    {
+        id: "bulk-orders",
+        name: "Bulk Order Processing",
+        description: "Execute trades in quantities of 10.",
+        category: "trading",
+        cost: 100,
+    },
+    {
+        id: "limit-orders",
+        name: "Limit Order System",
+        description: "Set a target price. Holdings sold automatically.",
+        category: "trading",
+        cost: 200,
+    },
+    {
+        id: "block-trading",
+        name: "Block Trading",
+        description: "Institutional-size lots. Execute trades in quantities of 50.",
+        category: "trading",
+        cost: 400,
+    },
+
+    // ── Production (5 upgrades) ─────────────────────────────────────────────
     {
         id: "cpu-overclock",
         name: "CPU Overclock",
-        description: "Increase production cycle speed. May cause instability.",
+        description: "Reduce production cycle by 1 tick. May cause instability.",
         category: "production",
-        cost: 50,
+        cost: 75,
     },
     {
         id: "quality-assurance",
         name: "Quality Assurance",
-        description: "Reduce output variance. Minimum yield guaranteed.",
+        description: "Reduce output variance. Minimum yield 25% of max.",
         category: "production",
-        cost: 60,
+        cost: 150,
+    },
+    {
+        id: "overclock-ii",
+        name: "Overclock II",
+        description: "Further cycle reduction. Total -2 ticks per cycle.",
+        category: "production",
+        cost: 300,
     },
     {
         id: "supply-chain",
         name: "Supply Chain Integration",
         description: "Convert surplus commodities into premium goods.",
         category: "production",
-        cost: 80,
+        cost: 500,
+    },
+    {
+        id: "quality-assurance-ii",
+        name: "Quality Assurance II",
+        description: "Tighter tolerances. Minimum yield 50% of max.",
+        category: "production",
+        cost: 800,
+    },
+
+    // ── Intelligence (7 upgrades) ───────────────────────────────────────────
+    {
+        id: "moving-average",
+        name: "Moving Average Overlay",
+        description: "Technical analysis tools for price chart.",
+        category: "intelligence",
+        cost: 30,
+    },
+    {
+        id: "analyst-reports",
+        name: "Analyst Reports",
+        description: "Numerical trend strength indicators.",
+        category: "intelligence",
+        cost: 50,
     },
     {
         id: "insider-newsletter",
@@ -83,21 +136,7 @@ export const UPGRADES: UpgradeDef[] = [
         description:
             "Advance notice of market-moving events. 10 second lead time.",
         category: "intelligence",
-        cost: 45,
-    },
-    {
-        id: "analyst-reports",
-        name: "Analyst Reports",
-        description: "Numerical trend strength indicators.",
-        category: "intelligence",
-        cost: 35,
-    },
-    {
-        id: "moving-average",
-        name: "Moving Average Overlay",
-        description: "Technical analysis tools for price chart.",
-        category: "intelligence",
-        cost: 25,
+        cost: 80,
     },
     {
         id: "confidential-tip",
@@ -105,7 +144,7 @@ export const UPGRADES: UpgradeDef[] = [
         description:
             "A friend at the fund. Trend duration countdown visible on charts.",
         category: "intelligence",
-        cost: 55,
+        cost: 125,
     },
     {
         id: "material-advantage",
@@ -113,7 +152,7 @@ export const UPGRADES: UpgradeDef[] = [
         description:
             "Material non-public information. Estimated price target on charts.",
         category: "intelligence",
-        cost: 70,
+        cost: 200,
     },
     {
         id: "seasonal-forecast",
@@ -121,7 +160,7 @@ export const UPGRADES: UpgradeDef[] = [
         description:
             "Quarterly outlook report. Shows the next trend direction after the current one ends.",
         category: "intelligence",
-        cost: 90,
+        cost: 350,
     },
     {
         id: "insider-calendar",
@@ -129,10 +168,10 @@ export const UPGRADES: UpgradeDef[] = [
         description:
             "The full schedule. Upcoming trend sequence visible as a forecast bar on charts.",
         category: "intelligence",
-        cost: 120,
+        cost: 600,
     },
 
-    // ── Automation (per-commodity harvest upgrades) ──────────────────────────
+    // ── Automation (per-commodity harvest upgrades + autoscript tiers) ───────
     {
         id: "harvest-email",
         name: "EMAIL Harvester",
@@ -145,42 +184,58 @@ export const UPGRADES: UpgradeDef[] = [
         name: "ADS Generator",
         description: "Impression bot. +1 ADS per harvest click.",
         category: "automation",
-        cost: 40,
+        cost: 50,
+    },
+    {
+        id: "autoscript-i",
+        name: "Autoscript I",
+        description:
+            "Basic automation. +25% harvest yield for all commodities.",
+        category: "automation",
+        cost: 100,
     },
     {
         id: "harvest-dom",
         name: "DOM Registrar",
         description: "Bulk registration script. +1 DOM per harvest click.",
         category: "automation",
-        cost: 100,
+        cost: 150,
     },
     {
         id: "harvest-bw",
         name: "BW Allocator",
         description: "Bandwidth provisioner. +1 BW per harvest click.",
         category: "automation",
-        cost: 250,
+        cost: 400,
+    },
+    {
+        id: "autoscript-ii",
+        name: "Autoscript II",
+        description:
+            "Advanced automation. +50% harvest yield for all commodities.",
+        category: "automation",
+        cost: 700,
     },
     {
         id: "harvest-soft",
         name: "SOFT Compiler",
         description: "License keygen. +1 SOFT per harvest click.",
         category: "automation",
-        cost: 600,
+        cost: 1000,
     },
     {
         id: "harvest-vc",
         name: "VC Pipeline",
         description: "Pitch deck generator. +1 VC per harvest click.",
         category: "automation",
-        cost: 1500,
+        cost: 2500,
     },
     {
-        id: "autoscript",
-        name: "Autoscript",
+        id: "autoscript-iii",
+        name: "Autoscript III",
         description:
-            "Global automation. +1 unit per harvest click for ALL commodities.",
+            "Full automation suite. +75% harvest yield for all commodities.",
         category: "automation",
-        cost: 80,
+        cost: 4000,
     },
 ]

@@ -189,14 +189,14 @@ export class PrestigeManager {
     }
 
     /**
-     * Factory cost scaling factor (default 1.15, reduced by Factory Blueprints).
-     * 0 purchases = 1.15, 1 = 1.12, 2 = 1.10
+     * Factory cost scaling factor (default 1.19, reduced by Factory Blueprints).
+     * 0 purchases = 1.19, 1 = 1.16, 2 = 1.14
      */
     public getFactoryCostScaling(): number {
         const count = this.getUpgradePurchaseCount("factory-blueprints")
-        if (count >= 2) return 1.1
-        if (count >= 1) return 1.12
-        return 1.15
+        if (count >= 2) return 1.14
+        if (count >= 1) return 1.16
+        return 1.19
     }
 
     /**

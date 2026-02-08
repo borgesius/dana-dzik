@@ -396,11 +396,15 @@
       "offshore-dev": { "name": "Offshore-Entwicklungsteam", "description": "24-Stunden-Entwicklungszyklus. Qualitätssicherung ausstehend." }
     },
     "upgrades": {
+      "batch-processing": { "name": "Stapelverarbeitung", "description": "Handeln Sie in Mengen von 5." },
       "bulk-orders": { "name": "Sammelbestellungsverarbeitung", "description": "Handeln Sie in Mengen von 10." },
+      "block-trading": { "name": "Blockhandel", "description": "Institutionelle Losgrößen. Handeln Sie in Mengen von 50." },
       "limit-orders": { "name": "Limit-Order-System", "description": "Zielpreis festlegen. Bestände werden automatisch verkauft." },
       "trend-analysis": { "name": "Trendanalyse-Paket", "description": "Richtungsindikatoren auf Preischarts." },
-      "cpu-overclock": { "name": "CPU-Übertaktung", "description": "Produktionszyklusgeschwindigkeit erhöhen. Kann Instabilität verursachen." },
-      "quality-assurance": { "name": "Qualitätssicherung", "description": "Produktionsvarianz reduzieren. Mindestausbeute garantiert." },
+      "cpu-overclock": { "name": "CPU-Übertaktung", "description": "Produktionszyklus um 1 Tick reduzieren. Kann Instabilität verursachen." },
+      "overclock-ii": { "name": "Übertaktung II", "description": "Weitere Zyklusreduktion. Insgesamt -2 Ticks pro Zyklus." },
+      "quality-assurance": { "name": "Qualitätssicherung", "description": "Produktionsvarianz reduzieren. Mindestausbeute 25% des Maximums." },
+      "quality-assurance-ii": { "name": "Qualitätssicherung II", "description": "Engere Toleranzen. Mindestausbeute 50% des Maximums." },
       "supply-chain": { "name": "Lieferkettenintegration", "description": "Überschüssige Rohstoffe in Premiumgüter umwandeln." },
       "insider-newsletter": { "name": "Insider-Newsletter", "description": "Frühwarnung bei marktbewegenden Ereignissen. 10 Sekunden Vorsprung." },
       "analyst-reports": { "name": "Analystenberichte", "description": "Numerische Trendstärke-Indikatoren." },
@@ -415,7 +419,9 @@
       "harvest-bw": { "name": "BW Allocator", "description": "Bandwidth provisioner. +1 BW per harvest click." },
       "harvest-soft": { "name": "SOFT Compiler", "description": "License keygen. +1 SOFT per harvest click." },
       "harvest-vc": { "name": "VC Pipeline", "description": "Pitch deck generator. +1 VC per harvest click." },
-      "autoscript": { "name": "Autoscript", "description": "Global automation. +1 unit per harvest click for ALL commodities." }
+      "autoscript-i": { "name": "Autoscript I", "description": "Basisautomatisierung. +25% Ernteertrag für alle Rohstoffe." },
+      "autoscript-ii": { "name": "Autoscript II", "description": "Erweiterte Automatisierung. +50% Ernteertrag für alle Rohstoffe." },
+      "autoscript-iii": { "name": "Autoscript III", "description": "Vollautomatisierung. +75% Ernteertrag für alle Rohstoffe." }
     },
     "influence": {
       "promo-campaign": { "name": "Werbekampagne", "description": "Künstliche Nachfrage für ausgewählten Rohstoff erzeugen." },

@@ -389,11 +389,15 @@
       "offshore-dev": { "name": "离岸开发团队", "description": "24小时开发周期。质量保证待定。" }
     },
     "upgrades": {
+      "batch-processing": { "name": "批处理", "description": "以5为单位执行交易。" },
       "bulk-orders": { "name": "批量订单处理", "description": "以10为单位执行交易。" },
+      "block-trading": { "name": "大宗交易", "description": "机构级别手数。以50为单位执行交易。" },
       "limit-orders": { "name": "限价订单系统", "description": "设定目标价格。持仓自动卖出。" },
       "trend-analysis": { "name": "趋势分析工具包", "description": "在价格图表上叠加方向性指标。" },
-      "cpu-overclock": { "name": "CPU超频", "description": "提高生产周期速度。可能导致不稳定。" },
-      "quality-assurance": { "name": "质量保证", "description": "减少产出波动。保证最低产量。" },
+      "cpu-overclock": { "name": "CPU超频", "description": "减少1个tick的生产周期。可能导致不稳定。" },
+      "overclock-ii": { "name": "超频 II", "description": "进一步缩短周期。每周期共减少2个tick。" },
+      "quality-assurance": { "name": "质量保证", "description": "减少产出波动。最低产量为最大值的25%。" },
+      "quality-assurance-ii": { "name": "质量保证 II", "description": "更严格的公差。最低产量为最大值的50%。" },
       "supply-chain": { "name": "供应链整合", "description": "将过剩商品转化为优质商品。" },
       "insider-newsletter": { "name": "内部通讯", "description": "市场动向事件提前通知。10秒领先时间。" },
       "analyst-reports": { "name": "分析师报告", "description": "趋势强度数值指标。" },
@@ -408,7 +412,9 @@
       "harvest-bw": { "name": "BW Allocator", "description": "Bandwidth provisioner. +1 BW per harvest click." },
       "harvest-soft": { "name": "SOFT Compiler", "description": "License keygen. +1 SOFT per harvest click." },
       "harvest-vc": { "name": "VC Pipeline", "description": "Pitch deck generator. +1 VC per harvest click." },
-      "autoscript": { "name": "Autoscript", "description": "Global automation. +1 unit per harvest click for ALL commodities." }
+      "autoscript-i": { "name": "Autoscript I", "description": "基础自动化。所有商品收获量+25%。" },
+      "autoscript-ii": { "name": "Autoscript II", "description": "高级自动化。所有商品收获量+50%。" },
+      "autoscript-iii": { "name": "Autoscript III", "description": "完整自动化套件。所有商品收获量+75%。" }
     },
     "influence": {
       "promo-campaign": { "name": "促销活动", "description": "为选定商品制造人为需求。" },

@@ -1,7 +1,7 @@
 // ── Prestige thresholds ──────────────────────────────────────────────────────
 
 /** Minimum lifetime earnings before prestige becomes available */
-export const PRESTIGE_THRESHOLD = 8000
+export const PRESTIGE_THRESHOLD = 15000
 
 /**
  * Hindsight currency formula: sqrt(lifetimeEarnings / 100)
@@ -133,7 +133,7 @@ export const HINDSIGHT_UPGRADES: HindsightUpgradeDef[] = [
     {
         id: "factory-blueprints",
         name: "Factory Blueprints",
-        description: "Factory cost scaling reduced (1.15x → 1.12x → 1.10x)",
+        description: "Factory cost scaling reduced (1.19x → 1.16x → 1.14x)",
         cost: 7,
         maxPurchases: 2,
         category: "production",

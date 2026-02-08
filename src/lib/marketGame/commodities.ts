@@ -44,7 +44,7 @@ export const COMMODITIES: CommodityDef[] = [
         description: "Pre-registered premium domain names.",
         basePrice: 2.0,
         volatility: 0.055,
-        unlockThreshold: 10,
+        unlockThreshold: 30,
         trendMinTicks: 10,
         trendMaxTicks: 28,
         harvestQuantity: 1, // 1 × $2.00 = $2.00
@@ -55,7 +55,7 @@ export const COMMODITIES: CommodityDef[] = [
         description: "Dedicated T1 line capacity. 1.544 Mbps.",
         basePrice: 8.0,
         volatility: 0.04,
-        unlockThreshold: 50,
+        unlockThreshold: 200,
         trendMinTicks: 12,
         trendMaxTicks: 36,
         harvestQuantity: 0.25, // 0.25 × $8.00 = $2.00
@@ -66,7 +66,7 @@ export const COMMODITIES: CommodityDef[] = [
         description: "Enterprise volume licensing. Shrinkwrap ready.",
         basePrice: 25.0,
         volatility: 0.03,
-        unlockThreshold: 250,
+        unlockThreshold: 1000,
         trendMinTicks: 18,
         trendMaxTicks: 50,
         harvestQuantity: 0.08, // 0.08 × $25.00 = $2.00
@@ -77,7 +77,7 @@ export const COMMODITIES: CommodityDef[] = [
         description: "Pre-IPO investment securities. Limited availability.",
         basePrice: 100.0,
         volatility: 0.035,
-        unlockThreshold: 2000,
+        unlockThreshold: 8000,
         trendMinTicks: 40,
         trendMaxTicks: 100,
         harvestQuantity: 0.02, // 0.02 × $100.00 = $2.00
