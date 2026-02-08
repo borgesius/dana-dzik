@@ -117,8 +117,8 @@
     "qaFallback3": "🔬 QA: N/A",
     "colorScheme": "カラー: {{scheme}}",
     "language": "言語: {{language}}",
-    "tradeOpen": "📈 TRADE ▲",
-    "tradeClosed": "📈 TRADE ▼",
+    "tradeOpen": "📈 TRADE ▶",
+    "tradeClosed": "📈 TRADE ◀",
     "github": "🐙 GitHub"
   },
   "qa": {

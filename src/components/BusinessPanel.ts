@@ -71,7 +71,6 @@ export class BusinessPanel {
     private createElement(): HTMLElement {
         const panel = document.createElement("div")
         panel.className = "business-panel"
-        panel.style.display = "none"
 
         const lm = getLocaleManager()
 
@@ -180,13 +179,13 @@ export class BusinessPanel {
 
     public expand(): void {
         this.isExpanded = true
-        this.element.style.display = "block"
+        this.element.classList.add("open")
         this.renderAll()
     }
 
     public collapse(): void {
         this.isExpanded = false
-        this.element.style.display = "none"
+        this.element.classList.remove("open")
     }
 
     public toggle(): void {

@@ -34,6 +34,8 @@ export class Desktop {
         this.desktopArea.className = "desktop-area corrupt"
         this.container.appendChild(this.desktopArea)
 
+        this.desktopArea.appendChild(this.toolbars.getBusinessPanelElement())
+
         this.floatingGifsContainer = document.createElement("div")
         this.floatingGifsContainer.className = "floating-gifs"
         this.desktopArea.appendChild(this.floatingGifsContainer)
