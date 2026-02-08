@@ -379,7 +379,9 @@ export class DeployWidget {
 
     private commitLabel(c: CommitInfo, maxLen: number): string {
         const firstLine = c.message ? c.message.split("\n")[0] : ""
-        return firstLine ? this.truncate(firstLine, maxLen) : c.sha.substring(0, 7)
+        return firstLine
+            ? this.truncate(firstLine, maxLen)
+            : c.sha.substring(0, 7)
     }
 
     /* ── Sub-tooltip ────────────────────────────────────────────────── */
