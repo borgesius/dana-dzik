@@ -1,19 +1,31 @@
 import { AchievementToast } from "../components/AchievementToast"
+import { LevelUpPopup } from "../components/LevelUpPopup"
 import { MobilePhone } from "../components/mobile/MobilePhone"
 import { MobilePopupManager } from "../components/mobile/MobilePopupManager"
 import { getAchievementManager } from "../lib/achievements/AchievementManager"
-import { wireAchievements } from "../lib/achievements/wiring"
+import {
+    wireAchievements,
+    wireVeilAchievements,
+} from "../lib/achievements/wiring"
 import { createAudioManager } from "../lib/audio"
+import { getCollectionManager } from "../lib/autobattler/CollectionManager"
 import { isCalmMode } from "../lib/calmMode"
+import { getCosmeticManager } from "../lib/cosmetics/CosmeticManager"
+import { wireCosmeticUnlocks } from "../lib/cosmetics/wiring"
 import { GlitchManager } from "../lib/glitchEffects"
 import { getLocaleManager } from "../lib/localeManager"
 import { getMarketGame } from "../lib/marketGame/MarketEngine"
+import { getPrestigeManager } from "../lib/prestige/PrestigeManager"
+import { getCareerManager } from "../lib/progression/CareerManager"
+import { getProgressionManager } from "../lib/progression/ProgressionManager"
+import { wireProgression } from "../lib/progression/wiring"
 import { Router } from "../lib/router"
 import { type SaveData, saveManager } from "../lib/saveManager"
 import { SystemCrashHandler } from "../lib/systemCrash"
 import { getSharedFilesystem } from "../lib/terminal/filesystemBuilder"
 import { diffFilesystem } from "../lib/terminal/filesystemDiff"
 import { getThemeManager } from "../lib/themeManager"
+import { getVeilManager } from "../lib/veil/VeilManager"
 import { isRoutableWindow } from "./core"
 
 export function initMobile(app: HTMLElement): void {
@@ -23,14 +35,22 @@ export function initMobile(app: HTMLElement): void {
     wireAchievements(achievements, (cb) => {
         phone.onAppOpen(cb)
     })
+    wireVeilAchievements()
     new AchievementToast(achievements)
+    new LevelUpPopup()
+
+    wireProgression(getProgressionManager(), (cb) => {
+        phone.onAppOpen(cb)
+    })
+
+    wireCosmeticUnlocks()
 
     saveManager.registerGatherFn((): SaveData => {
         const pinballHighScore =
             parseInt(localStorage.getItem("pinball-high-score") || "0", 10) || 0
 
         return {
-            version: 1,
+            version: 3,
             savedAt: Date.now(),
             game: getMarketGame().serialize(),
             pinball: { highScore: pinballHighScore },
@@ -42,6 +62,14 @@ export function initMobile(app: HTMLElement): void {
             },
             filesystem: diffFilesystem(getSharedFilesystem()),
             achievements: achievements.serialize(),
+            prestige: getPrestigeManager().serialize(),
+            progression: {
+                ...getProgressionManager().serialize(),
+                ...getCareerManager().serialize(),
+            },
+            autobattler: getCollectionManager().serialize(),
+            cosmetics: getCosmeticManager().serialize(),
+            veil: getVeilManager().serialize(),
         }
     })
 

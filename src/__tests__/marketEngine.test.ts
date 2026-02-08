@@ -129,7 +129,7 @@ describe("MarketEngine", () => {
 
     describe("factories", () => {
         beforeEach(() => {
-            engine.addBonus(10)
+            engine.addBonus(20)
         })
 
         it("cannot deploy factory before phase 2 unlock", () => {
@@ -218,7 +218,7 @@ describe("MarketEngine", () => {
 
     describe("upgrades", () => {
         beforeEach(() => {
-            engine.addBonus(200)
+            engine.addBonus(PHASE_THRESHOLDS.upgrades)
         })
 
         it("cannot purchase upgrade before phase 3 unlock", () => {
@@ -248,13 +248,14 @@ describe("MarketEngine", () => {
             eng2.purchaseUpgrade("supply-chain")
             eng2.purchaseUpgrade("quality-assurance")
             eng2.purchaseUpgrade("bulk-orders")
-            expect(eng2.purchaseUpgrade("cpu-overclock")).toBe(false)
+            eng2.purchaseUpgrade("cpu-overclock")
+            expect(eng2.purchaseUpgrade("insider-newsletter")).toBe(false)
         })
     })
 
     describe("supply chain conversion", () => {
         beforeEach(() => {
-            engine.addBonus(500)
+            engine.addBonus(1000)
             engine.purchaseUpgrade("supply-chain")
         })
 
@@ -429,8 +430,8 @@ describe("MarketEngine", () => {
             expect(FACTORIES.length).toBe(4)
         })
 
-        it("has 9 upgrades", () => {
-            expect(UPGRADES.length).toBe(9)
+        it("has 26 upgrades", () => {
+            expect(UPGRADES.length).toBe(26)
         })
 
         it("has 3 influences", () => {

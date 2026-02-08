@@ -15,7 +15,10 @@ const CLIENT_BUDGET_TTL_SECONDS = 86_400
 const MAX_FRESH_READS_PER_HOUR = 60
 
 /** Event types that bypass sampling entirely — always recorded */
-const CRITICAL_EVENT_TYPES: ReadonlySet<string> = new Set(["pageview"])
+const CRITICAL_EVENT_TYPES: ReadonlySet<string> = new Set([
+    "pageview",
+    "crash",
+])
 
 // ─── Types ──────────────────────────────────────────────────────────────────
 

@@ -10,13 +10,13 @@ import {
 } from "../lib/popupContent"
 
 const POPUP_LEVEL_INTERVALS: Record<number, number> = {
-    1: 15000,
-    2: 10000,
-    3: 6000,
+    1: 60000,
+    2: 45000,
+    3: 30000,
 }
 
-const DEFAULT_SPAWN_INTERVAL = 12000
-const SPAWN_JITTER = 5000
+const DEFAULT_SPAWN_INTERVAL = 60000
+const SPAWN_JITTER = 20000
 const BONUS_POPUP_CHANCE = 0.25
 const RECOVERY_POPUP_CHANCE = 0.6
 
@@ -224,7 +224,12 @@ export class PopupManager {
         `
 
         const closeBtn = titlebar.querySelector(".window-btn.close")
-        closeBtn?.addEventListener("click", () => this.closePopup(popup))
+        closeBtn?.addEventListener("click", () => {
+            emitAppEvent("popup:x-dismissed", {
+                headline: content.headline,
+            })
+            this.closePopup(popup)
+        })
 
         this.makeDraggable(popup, titlebar)
 

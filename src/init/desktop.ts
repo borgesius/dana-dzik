@@ -1,23 +1,39 @@
 import { AchievementToast } from "../components/AchievementToast"
 import { CursorTrail } from "../components/CursorTrail"
 import { Desktop } from "../components/Desktop"
+import { attachDevApi, DevPanel } from "../components/DevPanel"
+import { LevelUpPopup } from "../components/LevelUpPopup"
 import { PopupManager } from "../components/PopupManager"
 import { setTerminalInit } from "../components/Terminal"
 import { Widgets } from "../components/Widgets"
+import { getDeployEnv } from "../config/environment"
 import { getAchievementManager } from "../lib/achievements/AchievementManager"
-import { wireAchievements } from "../lib/achievements/wiring"
+import {
+    wireAchievements,
+    wireVeilAchievements,
+} from "../lib/achievements/wiring"
 import { createAudioManager } from "../lib/audio"
+import { getCollectionManager } from "../lib/autobattler/CollectionManager"
+import { recordBootEnd } from "../lib/bootTime"
 import { isCalmMode } from "../lib/calmMode"
+import { getCosmeticManager } from "../lib/cosmetics/CosmeticManager"
+import { wireCosmeticUnlocks } from "../lib/cosmetics/wiring"
 import { onAppEvent } from "../lib/events"
 import { GlitchManager } from "../lib/glitchEffects"
 import { getLocaleManager } from "../lib/localeManager"
 import { getMarketGame } from "../lib/marketGame/MarketEngine"
+import { getPrestigeManager } from "../lib/prestige/PrestigeManager"
+import { getCareerManager } from "../lib/progression/CareerManager"
+import { getProgressionManager } from "../lib/progression/ProgressionManager"
+import { wireProgression } from "../lib/progression/wiring"
 import { Router } from "../lib/router"
 import { type SaveData, saveManager } from "../lib/saveManager"
 import { SystemCrashHandler } from "../lib/systemCrash"
 import { getSharedFilesystem } from "../lib/terminal/filesystemBuilder"
 import { diffFilesystem } from "../lib/terminal/filesystemDiff"
 import { getThemeManager } from "../lib/themeManager"
+import { getVeilManager } from "../lib/veil/VeilManager"
+import { requestResumeCareerTab } from "../lib/windowContent"
 import { isRoutableWindow } from "./core"
 
 export function initDesktop(app: HTMLElement): void {
@@ -28,7 +44,15 @@ export function initDesktop(app: HTMLElement): void {
     wireAchievements(achievements, (cb) => {
         windowManager.onNewWindowOpen(cb)
     })
+    wireVeilAchievements()
     new AchievementToast(achievements)
+    new LevelUpPopup()
+
+    wireProgression(getProgressionManager(), (cb) => {
+        windowManager.onNewWindowOpen(cb)
+    })
+
+    wireCosmeticUnlocks()
 
     getThemeManager().on("themeChanged", () => saveManager.requestSave())
     getThemeManager().on("colorSchemeChanged", () => saveManager.requestSave())
@@ -41,7 +65,7 @@ export function initDesktop(app: HTMLElement): void {
             parseInt(localStorage.getItem("pinball-high-score") || "0", 10) || 0
 
         return {
-            version: 1,
+            version: 3,
             savedAt: Date.now(),
             game: getMarketGame().serialize(),
             pinball: { highScore: pinballHighScore },
@@ -53,11 +77,25 @@ export function initDesktop(app: HTMLElement): void {
             },
             filesystem: diffFilesystem(getSharedFilesystem()),
             achievements: achievements.serialize(),
+            prestige: getPrestigeManager().serialize(),
+            progression: {
+                ...getProgressionManager().serialize(),
+                ...getCareerManager().serialize(),
+            },
+            autobattler: getCollectionManager().serialize(),
+            cosmetics: getCosmeticManager().serialize(),
+            veil: getVeilManager().serialize(),
         }
     })
 
     const router = new Router((windowId) => {
         windowManager.openWindow(windowId)
+        // /career route now opens the resume window — switch to career tab
+        const route =
+            window.location.hash.replace("#", "") || window.location.pathname
+        if (route === "/career") {
+            requestResumeCareerTab()
+        }
     })
 
     windowManager.onWindowsChange(() => {
@@ -73,8 +111,32 @@ export function initDesktop(app: HTMLElement): void {
     new CursorTrail()
     createAudioManager()
     new GlitchManager()
+
+    // ── Cosmetic system: apply active wallpaper and chrome ────────────────
+    const applyCosmetics = (): void => {
+        const cm = getCosmeticManager()
+
+        // Wallpaper: apply CSS class to body
+        document.body.classList.forEach((cls) => {
+            if (cls.startsWith("wp-") || cls.startsWith("chrome-")) {
+                document.body.classList.remove(cls)
+            }
+        })
+        const wpId = cm.getActive("wallpaper")
+        if (wpId !== "default") {
+            document.body.classList.add(`wp-${wpId}`)
+        }
+        const chromeId = cm.getActive("window-chrome")
+        if (chromeId !== "default") {
+            document.body.classList.add(`chrome-${chromeId}`)
+        }
+    }
+    applyCosmetics()
+    getCosmeticManager().onChange(() => applyCosmetics())
     new SystemCrashHandler()
     new Widgets(app)
+
+    recordBootEnd()
 
     windowManager.onNewWindowOpen(() => {
         popupManager.onWindowOpen()
@@ -109,6 +171,15 @@ export function initDesktop(app: HTMLElement): void {
         windowManager.closeWindow("terminal")
         windowManager.openWindow("terminal")
     })
+
+    // ── Dev panel (development only) ────────────────────────────────────────
+    if (getDeployEnv() === "development") {
+        const devPanel = new DevPanel(windowManager)
+        attachDevApi(devPanel, windowManager)
+        // Expose toggle for the taskbar DEV badge
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access
+        ;(window as any).__devPanel = devPanel
+    }
 
     addFloatingGifs(desktop)
 }

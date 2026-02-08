@@ -1,0 +1,73 @@
+/* ── Frontier (wood/leather) ──────────────────────────────────────────────── */
+
+.chrome-frontier .window-titlebar {
+    background: linear-gradient(to bottom, #8b4513 0%, #a0522d 40%, #cd853f 80%, #8b4513 100%) !important;
+    color: #fdf5e6 !important;
+    border-bottom: 2px solid #5c3317;
+    text-shadow: 1px 1px 2px rgb(0 0 0 / 40%);
+}
+
+.chrome-frontier .window.inactive .window-titlebar {
+    background: linear-gradient(to bottom, #6b3510 0%, #7a4a2e 40%, #a07850 80%, #6b3510 100%) !important;
+    color: rgb(253 245 230 / 60%) !important;
+}
+
+.chrome-frontier .window {
+    border-color: #5c3317 !important;
+}
+
+.chrome-frontier .window-titlebar-buttons button {
+    background: #deb887 !important;
+    border-color: #8b4513 !important;
+    color: #5c3317 !important;
+}
+
+/* ── Corporate (dark glass) ──────────────────────────────────────────────── */
+
+.chrome-corporate .window-titlebar {
+    background: linear-gradient(to bottom, #1a1a2e 0%, #16213e 40%, #0f3460 80%, #1a1a2e 100%) !important;
+    color: #e0e0e0 !important;
+    border-bottom: 1px solid #0f3460;
+    text-shadow: 0 0 4px rgb(64 169 255 / 30%);
+}
+
+.chrome-corporate .window.inactive .window-titlebar {
+    background: linear-gradient(to bottom, #111111 0%, #1a1a1a 40%, #222222 80%, #111111 100%) !important;
+    color: #666666 !important;
+}
+
+.chrome-corporate .window {
+    border-color: #0f3460 !important;
+    box-shadow: 0 4px 16px rgb(0 0 0 / 40%);
+}
+
+.chrome-corporate .window-titlebar-buttons button {
+    background: #16213e !important;
+    border-color: #0f3460 !important;
+    color: #e0e0e0 !important;
+}
+
+/* ── Vintage (sepia-toned) ───────────────────────────────────────────────── */
+
+.chrome-vintage .window-titlebar {
+    background: linear-gradient(to bottom, #704214 0%, #8b6914 40%, #c4a35a 80%, #704214 100%) !important;
+    color: #f5e6c8 !important;
+    border-bottom: 2px solid #5c4033;
+    font-family: Georgia, serif;
+    text-shadow: 1px 1px 1px rgb(0 0 0 / 30%);
+}
+
+.chrome-vintage .window.inactive .window-titlebar {
+    background: linear-gradient(to bottom, #5a3510 0%, #6b5510 40%, #a08040 80%, #5a3510 100%) !important;
+    color: rgb(245 230 200 / 50%) !important;
+}
+
+.chrome-vintage .window {
+    border-color: #8b7355 !important;
+}
+
+.chrome-vintage .window-titlebar-buttons button {
+    background: #d2b48c !important;
+    border-color: #8b7355 !important;
+    color: #5c4033 !important;
+}

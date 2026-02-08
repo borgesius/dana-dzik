@@ -88,4 +88,26 @@ export const DESKTOP_ITEMS: DesktopItemConfig[] = [
         windowId: "explorer",
         fileType: "directory",
     },
+    {
+        id: "autobattler",
+        filename: "SYMPOSIUM.exe",
+        icon: "📜",
+        windowId: "autobattler",
+        fileType: "executable",
+    },
+    {
+        id: "career-development",
+        filename: "Career Development.exe",
+        label: "Career Development",
+        icon: "📋",
+        windowId: "resume",
+        fileType: "executable",
+    },
+    {
+        id: "finder",
+        filename: "My Computer",
+        icon: "🖥️",
+        windowId: "finder",
+        fileType: "executable",
+    },
 ]

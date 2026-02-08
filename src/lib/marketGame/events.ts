@@ -157,4 +157,16 @@ export const MARKET_EVENTS: MarketEventDef[] = [
         text: "TIP: Diversified portfolios reduce exposure to market volatility.",
         effect: "flavor",
     },
+    {
+        text: "SYSTEM: Stable connection maintained. All systems operational.",
+        effect: "flavor",
+    },
+    {
+        text: "TIP: Strong bonds yield better returns.",
+        effect: "flavor",
+    },
+    {
+        text: "NOTICE: Adhesive futures trading volume up 15% quarter-over-quarter.",
+        effect: "flavor",
+    },
 ]

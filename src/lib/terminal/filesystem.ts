@@ -1,3 +1,5 @@
+import { getLocaleManager } from "../localeManager"
+
 export type FileType = "file" | "directory" | "executable" | "shortcut"
 
 export interface FSNode {
@@ -97,21 +99,28 @@ export function changeDirectory(
     fs: FileSystem,
     pathStr: string
 ): { success: boolean; error?: string } {
+    const lm = getLocaleManager()
     const resolved = resolvePath(fs, pathStr)
     if (!resolved) {
-        return { success: false, error: `Invalid path: ${pathStr}` }
+        return {
+            success: false,
+            error: lm.t("filesystem.invalidPath", { path: pathStr }),
+        }
     }
 
     const node = getNode(fs, resolved)
     if (!node) {
         return {
             success: false,
-            error: `The system cannot find the path specified: ${pathStr}`,
+            error: lm.t("filesystem.pathNotFound", { path: pathStr }),
         }
     }
 
     if (node.type !== "directory") {
-        return { success: false, error: `Not a directory: ${pathStr}` }
+        return {
+            success: false,
+            error: lm.t("filesystem.notADirectory", { path: pathStr }),
+        }
     }
 
     fs.cwd = resolved
@@ -124,7 +133,10 @@ export function listDirectory(fs: FileSystem): {
 } {
     const node = getCurrentNode(fs)
     if (!node || node.type !== "directory" || !node.children) {
-        return { entries: [], error: "Cannot list: not a directory" }
+        return {
+            entries: [],
+            error: getLocaleManager().t("filesystem.cannotList"),
+        }
     }
 
     const entries = Object.values(node.children).map((child) => ({
@@ -145,18 +157,19 @@ export function getFileContent(
     fs: FileSystem,
     filename: string
 ): { content?: string; windowId?: string; error?: string } {
+    const lm = getLocaleManager()
     const resolved = resolvePath(fs, filename)
     if (!resolved) {
-        return { error: `Invalid path: ${filename}` }
+        return { error: lm.t("filesystem.invalidPath", { path: filename }) }
     }
 
     const node = getNode(fs, resolved)
     if (!node) {
-        return { error: `File not found: ${filename}` }
+        return { error: lm.t("filesystem.fileNotFound", { path: filename }) }
     }
 
     if (node.type === "directory") {
-        return { error: `${filename} is a directory` }
+        return { error: lm.t("filesystem.isADirectory", { path: filename }) }
     }
 
     return { content: node.content, windowId: node.windowId }
@@ -182,24 +195,34 @@ export function writeFile(
     pathStr: string,
     content: string
 ): { success: boolean; error?: string } {
+    const lm = getLocaleManager()
     const resolved = resolvePath(fs, pathStr)
     if (!resolved) {
-        return { success: false, error: `Invalid path: ${pathStr}` }
+        return {
+            success: false,
+            error: lm.t("filesystem.invalidPath", { path: pathStr }),
+        }
     }
 
     const node = getNode(fs, resolved)
     if (!node) {
-        return { success: false, error: `File not found: ${pathStr}` }
+        return {
+            success: false,
+            error: lm.t("filesystem.fileNotFound", { path: pathStr }),
+        }
     }
 
     if (node.type === "directory") {
-        return { success: false, error: `${pathStr} is a directory` }
+        return {
+            success: false,
+            error: lm.t("filesystem.isADirectory", { path: pathStr }),
+        }
     }
 
     if (new Blob([content]).size > MAX_FILE_BYTES) {
         return {
             success: false,
-            error: `File exceeds ${MAX_FILE_BYTES} byte limit`,
+            error: lm.t("filesystem.fileSizeLimit", { limit: MAX_FILE_BYTES }),
         }
     }
 
@@ -213,21 +236,28 @@ export function createFile(
     name: string,
     content: string
 ): { success: boolean; error?: string } {
+    const lm = getLocaleManager()
     const resolved = resolvePath(fs, dirPathStr)
     if (!resolved) {
-        return { success: false, error: `Invalid path: ${dirPathStr}` }
+        return {
+            success: false,
+            error: lm.t("filesystem.invalidPath", { path: dirPathStr }),
+        }
     }
 
     const dirNode = getNode(fs, resolved)
     if (!dirNode) {
         return {
             success: false,
-            error: `Directory not found: ${dirPathStr}`,
+            error: lm.t("filesystem.dirNotFound", { path: dirPathStr }),
         }
     }
 
     if (dirNode.type !== "directory") {
-        return { success: false, error: `Not a directory: ${dirPathStr}` }
+        return {
+            success: false,
+            error: lm.t("filesystem.notADirectory", { path: dirPathStr }),
+        }
     }
 
     if (!dirNode.children) {
@@ -235,13 +265,16 @@ export function createFile(
     }
 
     if (dirNode.children[name]) {
-        return { success: false, error: `File already exists: ${name}` }
+        return {
+            success: false,
+            error: lm.t("filesystem.fileExists", { name }),
+        }
     }
 
     if (new Blob([content]).size > MAX_FILE_BYTES) {
         return {
             success: false,
-            error: `File exceeds ${MAX_FILE_BYTES} byte limit`,
+            error: lm.t("filesystem.fileSizeLimit", { limit: MAX_FILE_BYTES }),
         }
     }
 
@@ -254,18 +287,74 @@ export function createFile(
     return { success: true }
 }
 
+export function createDirectory(
+    fs: FileSystem,
+    dirPathStr: string,
+    name: string
+): { success: boolean; error?: string } {
+    const lm = getLocaleManager()
+    const resolved = resolvePath(fs, dirPathStr)
+    if (!resolved) {
+        return {
+            success: false,
+            error: lm.t("filesystem.invalidPath", { path: dirPathStr }),
+        }
+    }
+
+    const dirNode = getNode(fs, resolved)
+    if (!dirNode) {
+        return {
+            success: false,
+            error: lm.t("filesystem.dirNotFound", { path: dirPathStr }),
+        }
+    }
+
+    if (dirNode.type !== "directory") {
+        return {
+            success: false,
+            error: lm.t("filesystem.notADirectory", { path: dirPathStr }),
+        }
+    }
+
+    if (!dirNode.children) {
+        dirNode.children = {}
+    }
+
+    if (dirNode.children[name]) {
+        return {
+            success: false,
+            error: lm.t("filesystem.alreadyExists", { name }),
+        }
+    }
+
+    dirNode.children[name] = {
+        name,
+        type: "directory",
+        children: {},
+    }
+
+    return { success: true }
+}
+
 export function deleteFile(
     fs: FileSystem,
     pathStr: string
 ): { success: boolean; error?: string } {
+    const lm = getLocaleManager()
     const resolved = resolvePath(fs, pathStr)
     if (!resolved || resolved.length < 2) {
-        return { success: false, error: `Invalid path: ${pathStr}` }
+        return {
+            success: false,
+            error: lm.t("filesystem.invalidPath", { path: pathStr }),
+        }
     }
 
     const node = getNode(fs, resolved)
     if (!node) {
-        return { success: false, error: `Not found: ${pathStr}` }
+        return {
+            success: false,
+            error: lm.t("filesystem.notFound", { path: pathStr }),
+        }
     }
 
     if (
@@ -275,7 +364,7 @@ export function deleteFile(
     ) {
         return {
             success: false,
-            error: `Directory not empty: ${pathStr}`,
+            error: lm.t("filesystem.dirNotEmpty", { path: pathStr }),
         }
     }
 
@@ -286,7 +375,7 @@ export function deleteFile(
         parentNode.type !== "directory" ||
         !parentNode.children
     ) {
-        return { success: false, error: `Parent directory not found` }
+        return { success: false, error: lm.t("filesystem.parentNotFound") }
     }
 
     const fileName = resolved[resolved.length - 1]
@@ -305,14 +394,21 @@ export function renameFile(
     pathStr: string,
     newName: string
 ): { success: boolean; error?: string } {
+    const lm = getLocaleManager()
     const resolved = resolvePath(fs, pathStr)
     if (!resolved || resolved.length < 2) {
-        return { success: false, error: `Invalid path: ${pathStr}` }
+        return {
+            success: false,
+            error: lm.t("filesystem.invalidPath", { path: pathStr }),
+        }
     }
 
     const node = getNode(fs, resolved)
     if (!node) {
-        return { success: false, error: `Not found: ${pathStr}` }
+        return {
+            success: false,
+            error: lm.t("filesystem.notFound", { path: pathStr }),
+        }
     }
 
     const parentPath = resolved.slice(0, -1)
@@ -322,13 +418,13 @@ export function renameFile(
         parentNode.type !== "directory" ||
         !parentNode.children
     ) {
-        return { success: false, error: `Parent directory not found` }
+        return { success: false, error: lm.t("filesystem.parentNotFound") }
     }
 
     if (parentNode.children[newName]) {
         return {
             success: false,
-            error: `Already exists: ${newName}`,
+            error: lm.t("filesystem.alreadyExists", { name: newName }),
         }
     }
 
@@ -336,7 +432,10 @@ export function renameFile(
         (k) => k.toLowerCase() === resolved[resolved.length - 1].toLowerCase()
     )
     if (!oldKey) {
-        return { success: false, error: `Not found: ${pathStr}` }
+        return {
+            success: false,
+            error: lm.t("filesystem.notFound", { path: pathStr }),
+        }
     }
 
     node.name = newName

@@ -1,3 +1,5 @@
+import { GITHUB_OWNER, GITHUB_REPO } from "./github"
+
 interface GitHubIssue {
     id: number
     title: string
@@ -12,8 +14,6 @@ interface GitHubIssue {
     pull_request?: unknown
 }
 
-const REPO = "borgesius/dana-dzik"
-
 export function initGuestbook(): void {
     void fetchAndDisplayEntries()
 }
@@ -24,7 +24,7 @@ async function fetchAndDisplayEntries(): Promise<void> {
 
     try {
         const response = await fetch(
-            `https://api.github.com/repos/${REPO}/issues?state=open&per_page=20`
+            `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/issues?state=open&per_page=20`
         )
 
         if (!response.ok) {

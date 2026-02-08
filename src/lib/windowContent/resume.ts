@@ -1,31 +1,285 @@
 import { getLocaleManager } from "../localeManager"
+import { getCareerManager } from "../progression/CareerManager"
+import {
+    CAREER_BRANCHES,
+    CAREER_NODE_MAP,
+    type CareerNodeDef,
+    EDUCATION_STARTER_NODE,
+    ENGINEERING_STARTER_NODE,
+    getNodesForBranch,
+    SKILLS_STARTER_NODE,
+} from "../progression/careers"
+import { renderCareerTreeWindow } from "./careerTree"
+
+// ── Base resume entries (always shown, even before unlock) ──────────────────
+
+const BASE_EXPERIENCE: CareerNodeDef = ENGINEERING_STARTER_NODE
+const BASE_EDUCATION: CareerNodeDef[] = [
+    CAREER_NODE_MAP.get("edu-undergrad") ?? ({} as CareerNodeDef),
+    EDUCATION_STARTER_NODE,
+]
+
+const RESUME_CAREER_TREE_ID = "resume-career-tree"
+
+let pendingCareerTab = false
+
+/**
+ * Request that the resume window switch to the Career Development tab.
+ * Works whether the window is already open or about to be rendered.
+ */
+export function requestResumeCareerTab(): void {
+    pendingCareerTab = true
+    // If already rendered, switch immediately
+    const tab = document.querySelector<HTMLElement>(
+        '.resume-tab[data-tab="career"]'
+    )
+    if (tab) {
+        tab.click()
+        pendingCareerTab = false
+    }
+}
 
 export function getResumeContent(): string {
+    return `<div id="resume-wrapper" class="resume-tabs-wrapper"></div>`
+}
+
+export function renderResumeWindow(): void {
+    const wrapper = document.getElementById("resume-wrapper")
+    if (!wrapper) return
+
     const lm = getLocaleManager()
+
+    wrapper.innerHTML = `
+        <div class="resume-tab-bar">
+            <button class="resume-tab active" data-tab="resume">${lm.t("resume.tabResume")}</button>
+            <button class="resume-tab" data-tab="career">${lm.t("resume.tabCareer")}</button>
+        </div>
+        <div id="resume-content" class="resume-content resume-tab-pane active"></div>
+        <div id="${RESUME_CAREER_TREE_ID}" class="career-tree-content resume-tab-pane"></div>
+    `
+
+    // Render the default (resume) tab
+    renderResumeTab()
+
+    // Wire up tab switching
+    wireResumeTabs(wrapper)
+
+    // If a career-tab request was made before the window rendered, honour it
+    if (pendingCareerTab) {
+        const careerTab = wrapper.querySelector<HTMLElement>(
+            '.resume-tab[data-tab="career"]'
+        )
+        if (careerTab) careerTab.click()
+        pendingCareerTab = false
+    }
+}
+
+// ── Tab switching ───────────────────────────────────────────────────────────
+
+function wireResumeTabs(wrapper: HTMLElement): void {
+    const tabs = wrapper.querySelectorAll<HTMLElement>(".resume-tab")
+    const resumePane = wrapper.querySelector("#resume-content") as HTMLElement
+    const careerPane = wrapper.querySelector(
+        `#${RESUME_CAREER_TREE_ID}`
+    ) as HTMLElement
+
+    let careerRendered = false
+
+    tabs.forEach((tab) => {
+        tab.addEventListener("click", () => {
+            const target = tab.dataset.tab
+
+            // Update active tab
+            tabs.forEach((t) => t.classList.remove("active"))
+            tab.classList.add("active")
+
+            // Show correct pane
+            if (target === "career") {
+                resumePane.classList.remove("active")
+                careerPane.classList.add("active")
+                if (!careerRendered) {
+                    renderCareerTreeWindow(RESUME_CAREER_TREE_ID)
+                    careerRendered = true
+                }
+            } else {
+                careerPane.classList.remove("active")
+                resumePane.classList.add("active")
+            }
+        })
+    })
+}
+
+// ── Resume tab content ──────────────────────────────────────────────────────
+
+function renderResumeTab(): void {
+    const container = document.getElementById("resume-content")
+    if (!container) return
+
+    const career = getCareerManager()
+    const lm = getLocaleManager()
+
+    let html = `
+        <header>
+            <h1>${lm.t("resume.name")}</h1>
+            <a href="mailto:danadzik@gmail.com">danadzik@gmail.com</a>
+        </header>
+        <hr />
+    `
+
+    // ── Experience section ──────────────────────────────────────────────
+    html += `<h2>${lm.t("resume.experience")}</h2>`
+
+    const activeCareer = career.getActiveCareer()
+    const allBranches = [
+        ...(activeCareer ? [activeCareer] : []),
+        ...CAREER_BRANCHES.filter((b) => b.id !== activeCareer).map(
+            (b) => b.id
+        ),
+    ]
+
+    // Determine the active job (highest-tier unlocked node in active career)
+    let activeJobId: string | null = null
+    if (activeCareer) {
+        const activeNodes = getNodesForBranch(activeCareer)
+            .filter((n) => career.isNodeUnlocked(n.id))
+            .sort((a, b) => b.tier - a.tier)
+        if (activeNodes.length > 0) {
+            activeJobId = activeNodes[0].id
+        }
+    }
+    // If no career nodes unlocked, the base experience is the active job
+    if (!activeJobId) {
+        activeJobId = BASE_EXPERIENCE.id
+    }
+
+    const shownNodeIds = new Set<string>()
+    let experienceHtml = ""
+
+    for (const branchId of allBranches) {
+        // Use unlock order from career manager (most recent first)
+        const unlockedIds = career.getUnlockedNodesForBranch(branchId)
+        const unlocked = [...unlockedIds]
+            .reverse()
+            .map((id) => CAREER_NODE_MAP.get(id))
+            .filter((n): n is CareerNodeDef => n !== undefined)
+
+        for (const node of unlocked) {
+            shownNodeIds.add(node.id)
+            const isDormant =
+                node.branch !== activeCareer && node.branch !== "education"
+            const isActiveJob = node.id === activeJobId
+            experienceHtml += renderResumeEntry(node, isDormant, isActiveJob)
+        }
+    }
+
+    // Always show the base Volley entry if it hasn't appeared via unlock
+    if (!shownNodeIds.has(BASE_EXPERIENCE.id) && BASE_EXPERIENCE.id) {
+        const isActiveJob = BASE_EXPERIENCE.id === activeJobId
+        experienceHtml =
+            renderResumeEntry(BASE_EXPERIENCE, false, isActiveJob) +
+            experienceHtml
+    }
+
+    html += experienceHtml
+
+    // ── Education section ───────────────────────────────────────────────
+    html += `<hr /><h2>${lm.t("resume.education")}</h2>`
+
+    // Use unlock order from career manager (most recent first)
+    const unlockedEduIds = career.getUnlockedNodesForBranch("education")
+    const unlockedEdu = [...unlockedEduIds]
+        .reverse()
+        .map((id) => CAREER_NODE_MAP.get(id))
+        .filter((n): n is CareerNodeDef => n !== undefined)
+
+    let educationHtml = ""
+    const shownEduIds = new Set<string>()
+
+    for (const node of unlockedEdu) {
+        shownEduIds.add(node.id)
+        educationHtml += renderResumeEntry(node, false)
+    }
+
+    // Always show base education entries if they haven't appeared via unlock
+    for (const base of BASE_EDUCATION) {
+        if (!shownEduIds.has(base.id) && base.id) {
+            educationHtml += renderResumeEntry(base, false)
+        }
+    }
+
+    html += educationHtml
+
+    // ── Skills section ────────────────────────────────────────────────────
+    html += renderSkillsSection()
+
+    container.innerHTML = html
+}
+
+// ── Render a single resume entry (read-only) ────────────────────────────────
+
+function renderResumeEntry(
+    node: CareerNodeDef,
+    isDormant: boolean,
+    isActiveJob: boolean = false
+): string {
+    const classes = [
+        "resume-entry",
+        isDormant ? "dormant" : "",
+        isActiveJob ? "active-job" : "",
+    ]
+        .filter(Boolean)
+        .join(" ")
+
     return `
-        <div class="resume-content">
-            <header>
-                <h1>${lm.t("resume.name")}</h1>
-                <a href="mailto:danadzik@gmail.com">danadzik@gmail.com</a>
-            </header>
-
-            <hr />
-
-            <h2>${lm.t("resume.experience")}</h2>
-            <div class="entry">
-                <strong>${lm.t("resume.title")}</strong>
-                ${lm.t("resume.company")}
-                <span class="meta">${lm.t("resume.dates")}</span>
+        <div class="${classes}">
+            <div class="resume-entry-header">
+                <strong class="resume-entry-title">${node.name}</strong>
+                <span class="resume-entry-dates">${node.dateRange}</span>
             </div>
-
-            <hr />
-
-            <h2>${lm.t("resume.education")}</h2>
-            <div class="entry">
-                <strong>${lm.t("resume.school")}</strong>
-                ${lm.t("resume.degree")}
-                <span class="meta">${lm.t("resume.location")}</span>
+            <div class="resume-entry-company">${node.company}</div>
+            <ul class="resume-entry-bullets">
+                ${node.bullets.map((b) => `<li>${b}</li>`).join("")}
+            </ul>
+            <div class="resume-entry-bonus ${isDormant ? "dormant" : ""}">
+                ${isDormant ? "🔒 " : "✓ "}${node.bonusLabel}${isDormant ? " (dormant — 50%)" : ""}
             </div>
         </div>
     `
+}
+
+// ── Skills section (base skills + unlockable skill nodes) ───────────────────
+
+function renderSkillsSection(): string {
+    const career = getCareerManager()
+    const lm = getLocaleManager()
+
+    let html = `
+        <hr />
+        <h2>${lm.t("resume.skills")}</h2>
+    `
+
+    // Always show the base skills line
+    html += `
+        <div class="resume-entry">
+            <strong class="resume-entry-title">${SKILLS_STARTER_NODE.name}</strong>
+            <div class="resume-entry-bonus">✓ ${SKILLS_STARTER_NODE.bonusLabel}</div>
+        </div>
+    `
+
+    // Show unlocked skill nodes (in order unlocked)
+    const unlockedSkillIds = career.getUnlockedNodesForBranch("skills")
+    const unlockedSkills = unlockedSkillIds
+        .map((id) => CAREER_NODE_MAP.get(id))
+        .filter((n): n is CareerNodeDef => n !== undefined)
+
+    for (const node of unlockedSkills) {
+        html += `
+            <div class="resume-entry">
+                <strong class="resume-entry-title">${node.name}</strong>
+                <div class="resume-entry-bonus">✓ ${node.bonusLabel}</div>
+            </div>
+        `
+    }
+
+    return html
 }

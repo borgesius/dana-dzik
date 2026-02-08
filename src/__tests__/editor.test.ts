@@ -29,7 +29,7 @@ describe("Editor", () => {
             new Editor(fs, "Users", callbacks)
 
             expect(callbacks.print).toHaveBeenCalledWith(
-                expect.stringContaining("Cannot edit a directory"),
+                expect.stringContaining("terminalEditor.cannotEditDir"),
                 "error"
             )
             expect(callbacks.onExit).toHaveBeenCalled()
@@ -93,7 +93,7 @@ describe("Editor", () => {
             new Editor(fs, "readme.txt", callbacks)
 
             const header = container.querySelector(".editor-header")
-            expect(header?.textContent).toContain("readme.txt")
+            expect(header?.textContent).toContain("terminalEditor.title")
         })
 
         it("shows line numbers in gutter", () => {

@@ -10,6 +10,9 @@ export function getLinksContent(): string {
                 <a href="https://github.com/borgesius" target="_blank" class="link-btn github">
                     🐙 GitHub
                 </a>
+                <a href="https://github.com/borgesius/dana-dzik" target="_blank" class="link-btn repo">
+                    📂 Source
+                </a>
                 <a href="https://linkedin.com/in/danadzik" target="_blank" class="link-btn linkedin">
                     💼 LinkedIn
                 </a>

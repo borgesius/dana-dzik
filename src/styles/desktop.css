@@ -184,7 +184,6 @@ body {
     font-weight: bold;
 }
 
-
 .toolbar-button:active {
     border-style: inset;
 }
@@ -262,7 +261,7 @@ body {
 }
 
 .qa-badge:hover {
-    background: #d0d0d0;
+    background: var(--theme-surface-secondary);
 }
 
 .qa-badge.qa-success {
@@ -318,7 +317,7 @@ body {
 }
 
 .qa-tooltip-label {
-    color: #404040;
+    color: var(--theme-tooltip-text);
 }
 
 .qa-tooltip-value {
@@ -330,7 +329,7 @@ body {
     padding-top: 3px;
     border-top: 1px solid var(--theme-border-dark);
     font-size: 9px;
-    color: #606060;
+    color: var(--theme-text-secondary);
 }
 
 .qa-tooltip-click {
@@ -411,7 +410,7 @@ body {
 
 .cost-section-header {
     font-size: 10px;
-    color: #aaaaaa;
+    color: var(--theme-text-secondary);
     margin-top: 8px;
     margin-bottom: 3px;
     text-align: left;
@@ -422,12 +421,12 @@ body {
 }
 
 .cost-row-sampled .cost-label {
-    color: #aaaaaa;
+    color: var(--theme-text-secondary);
     font-style: italic;
 }
 
 .cost-row-sampled .cost-value {
-    color: #aaaaaa;
+    color: var(--theme-text-secondary);
 }
 
 .cost-lottery {
@@ -448,11 +447,650 @@ body {
 .cost-total {
     font-size: 20px;
     font-weight: bold;
-    color: #cc0000;
+    color: var(--theme-color-danger);
     animation: cost-blink 1s step-end infinite;
 }
 
 @keyframes cost-blink {
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0;
+    }
+}
+
+/* ── Deploy Widget ───────────────────────────────────────────────────── */
+
+.toolbar-deploy {
+    position: relative;
+    padding: 4px 8px;
+    font-size: 13px;
+    font-family: "Courier New", monospace;
+    background: var(--theme-weather-bg);
+    border: 1px solid var(--theme-weather-border);
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.toolbar-deploy-tooltip {
+    position: absolute;
+    top: calc(100% + 4px);
+    right: 0;
+    background: var(--theme-tooltip-bg);
+    border: var(--theme-tooltip-border);
+    padding: 12px 16px;
+    font-size: 12px;
+    font-family: "Courier New", monospace;
+    color: var(--theme-tooltip-text);
+    white-space: nowrap;
+    z-index: 8000;
+    box-shadow: var(--theme-tooltip-shadow);
+    min-width: 300px;
+    pointer-events: auto;
+}
+
+/* Bridge the 4px gap so the mouse can travel from badge to tooltip */
+.toolbar-deploy-tooltip::before {
+    content: "";
+    position: absolute;
+    bottom: 100%;
+    left: 0;
+    right: 0;
+    height: 8px;
+}
+
+.deploy-title {
+    font-weight: bold;
+    font-size: 13px;
+    margin-bottom: 6px;
+    text-align: center;
+}
+
+.deploy-divider {
+    border-top: 1px solid var(--theme-border-dark);
+    margin: 6px 0;
+}
+
+/* ── Branch Visualizer (Vertical Graph) ────────────────────────────── */
+
+.deploy-branch-vis {
+    position: relative;
+    padding: 4px 0;
+}
+
+.deploy-branch-vis svg {
+    display: block;
+    width: 100%;
+    overflow: visible;
+}
+
+/* Column header labels */
+.branch-column-label {
+    font-family: "Courier New", monospace;
+    font-size: 10px;
+    font-weight: bold;
+    dominant-baseline: auto;
+}
+
+.branch-column-label-staging {
+    fill: #facc15;
+}
+
+.branch-column-label-main {
+    fill: #4ade80;
+}
+
+/* Vertical branch lines */
+.branch-line {
+    fill: none;
+    stroke-width: 2;
+    stroke-linecap: round;
+}
+
+.branch-line-main {
+    stroke: #4ade80;
+}
+
+.branch-line-staging {
+    stroke: #facc15;
+}
+
+/* Commit nodes */
+.branch-node {
+    stroke: none;
+}
+
+.branch-node-main {
+    fill: #4ade80;
+}
+
+.branch-node-staging {
+    fill: #facc15;
+}
+
+.branch-node-active {
+    animation: branch-pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes branch-pulse {
     0%, 100% { opacity: 1; }
-    50% { opacity: 0; }
+    50% { opacity: 0.4; }
+}
+
+/* Unreleased staging commits (above merge base) */
+.branch-node-unreleased {
+    filter: brightness(1.3);
+}
+
+/* "You are here" ring around local commit */
+.branch-node-here {
+    fill: none;
+    stroke: #60a5fa;
+    stroke-width: 2;
+    stroke-dasharray: 3 2;
+    animation: branch-pulse 1.5s ease-in-out infinite;
+}
+
+/* Merge connector path (curved line between columns) */
+.branch-merge-path {
+    fill: none;
+    stroke: var(--theme-tooltip-text);
+    stroke-width: 1.5;
+    stroke-dasharray: 4 3;
+    opacity: 0.35;
+}
+
+/* Commit labels next to nodes */
+.branch-commit-label {
+    font-family: "Courier New", monospace;
+    font-size: 9px;
+    fill: var(--theme-tooltip-text);
+    dominant-baseline: middle;
+    opacity: 0.7;
+}
+
+.branch-label-unreleased {
+    opacity: 1;
+    font-weight: bold;
+}
+
+/* ── Deploy Info Rows ──────────────────────────────────────────────── */
+
+.deploy-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 2px 0;
+}
+
+.deploy-label {
+    color: var(--theme-tooltip-text);
+}
+
+.deploy-value {
+    font-weight: bold;
+    text-align: right;
+}
+
+.deploy-commit-link {
+    color: var(--theme-link-color, #4a9eff);
+    text-decoration: none;
+    pointer-events: auto;
+}
+
+.deploy-commit-link:hover {
+    text-decoration: underline;
+}
+
+.deploy-env-links {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    padding-top: 4px;
+    font-size: 11px;
+}
+
+.deploy-env-link {
+    color: var(--theme-link-color, #4a9eff);
+    text-decoration: none;
+    pointer-events: auto;
+    cursor: pointer;
+}
+
+.deploy-env-link:hover {
+    text-decoration: underline;
+}
+
+.deploy-loading {
+    font-size: 10px;
+    text-align: center;
+    opacity: 0.5;
+    padding: 2px 0;
+}
+
+/* ── Branch Sub-tooltip (commit hover) ─────────────────────────────── */
+
+.branch-sub-tooltip {
+    position: absolute;
+    background: var(--theme-tooltip-bg);
+    border: var(--theme-tooltip-border);
+    box-shadow: var(--theme-tooltip-shadow);
+    padding: 8px 10px;
+    font-family: "Courier New", monospace;
+    font-size: 11px;
+    color: var(--theme-tooltip-text);
+    white-space: nowrap;
+    z-index: 8010;
+    pointer-events: auto;
+    min-width: 160px;
+    max-width: 280px;
+}
+
+/* Bridge gap between commit node and sub-tooltip (both sides) */
+.branch-sub-tooltip::before {
+    content: "";
+    position: absolute;
+    inset: -4px -12px;
+}
+
+.sub-tooltip-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 4px;
+}
+
+.sub-tooltip-sha {
+    font-weight: bold;
+}
+
+.sub-tooltip-branch {
+    font-size: 9px;
+    opacity: 0.5;
+    font-weight: normal;
+}
+
+.sub-tooltip-msg {
+    font-size: 10px;
+    opacity: 0.85;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 260px;
+    margin-bottom: 2px;
+}
+
+.sub-tooltip-meta {
+    font-size: 9px;
+    opacity: 0.5;
+}
+
+/* ── Boot Time Widget ───────────────────────────────────────────────── */
+
+.toolbar-boot {
+    position: relative;
+    padding: 4px 8px;
+    font-size: 13px;
+    font-family: "Courier New", monospace;
+    background: var(--theme-weather-bg);
+    border: 1px solid var(--theme-weather-border);
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.toolbar-boot-tooltip {
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--theme-tooltip-bg);
+    border: var(--theme-tooltip-border);
+    padding: 12px 16px;
+    font-size: 12px;
+    font-family: "Courier New", monospace;
+    color: var(--theme-tooltip-text);
+    white-space: nowrap;
+    z-index: 8000;
+    box-shadow: var(--theme-tooltip-shadow);
+    min-width: 220px;
+    text-align: center;
+    pointer-events: none;
+}
+
+.boot-title {
+    font-weight: bold;
+    font-size: 13px;
+    margin-bottom: 6px;
+}
+
+.boot-divider {
+    border-top: 1px solid var(--theme-border-dark);
+    margin: 6px 0;
+}
+
+.boot-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    text-align: left;
+    font-size: 12px;
+    line-height: 1.7;
+}
+
+.boot-label {
+    color: var(--theme-tooltip-text);
+}
+
+.boot-value {
+    font-weight: bold;
+    text-align: right;
+}
+
+.boot-total {
+    font-size: 16px;
+    font-weight: bold;
+    text-align: center;
+}
+
+/* ── Crash Counter Widget ──────────────────────────────────────────── */
+
+.toolbar-crash {
+    position: relative;
+    padding: 4px 8px;
+    font-size: 13px;
+    font-family: "Courier New", monospace;
+    background: var(--theme-weather-bg);
+    border: 1px solid var(--theme-weather-border);
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.toolbar-crash-tooltip {
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--theme-tooltip-bg);
+    border: var(--theme-tooltip-border);
+    padding: 12px 16px;
+    font-size: 12px;
+    font-family: "Courier New", monospace;
+    color: var(--theme-tooltip-text);
+    white-space: nowrap;
+    z-index: 8000;
+    box-shadow: var(--theme-tooltip-shadow);
+    min-width: 220px;
+    text-align: center;
+    pointer-events: none;
+}
+
+.crash-title {
+    font-weight: bold;
+    font-size: 13px;
+    margin-bottom: 2px;
+}
+
+.crash-subtitle {
+    font-size: 9px;
+    color: var(--theme-text-secondary);
+    margin-bottom: 6px;
+}
+
+.crash-divider {
+    border-top: 1px solid var(--theme-border-dark);
+    margin: 6px 0;
+}
+
+.crash-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    text-align: left;
+    font-size: 12px;
+    line-height: 1.7;
+}
+
+.crash-label {
+    color: var(--theme-tooltip-text);
+}
+
+.crash-value {
+    font-weight: bold;
+    text-align: right;
+}
+
+.crash-total {
+    font-size: 14px;
+    font-weight: bold;
+    text-align: center;
+}
+
+/* ── System Resources Widget ───────────────────────────────────────── */
+
+.toolbar-sysres {
+    position: relative;
+    padding: 4px 8px;
+    font-size: 13px;
+    font-family: "Courier New", monospace;
+    background: var(--theme-weather-bg);
+    border: 1px solid var(--theme-weather-border);
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.toolbar-sysres-tooltip {
+    position: absolute;
+    top: calc(100% + 4px);
+    right: 0;
+    background: var(--theme-tooltip-bg);
+    border: var(--theme-tooltip-border);
+    padding: 12px 16px;
+    font-size: 12px;
+    font-family: "Courier New", monospace;
+    color: var(--theme-tooltip-text);
+    white-space: nowrap;
+    z-index: 8000;
+    box-shadow: var(--theme-tooltip-shadow);
+    min-width: 240px;
+    pointer-events: none;
+}
+
+.sysres-title {
+    font-weight: bold;
+    font-size: 13px;
+    margin-bottom: 6px;
+    text-align: center;
+}
+
+.sysres-divider {
+    border-top: 1px solid var(--theme-border-dark);
+    margin: 6px 0;
+}
+
+.sysres-section-header {
+    font-size: 10px;
+    color: var(--theme-text-secondary);
+    margin-top: 8px;
+    margin-bottom: 3px;
+    text-align: left;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-bottom: 1px dotted var(--theme-border-dark);
+    padding-bottom: 3px;
+}
+
+.sysres-section-header:first-child {
+    margin-top: 0;
+}
+
+.sysres-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    text-align: left;
+    font-size: 12px;
+    line-height: 1.7;
+}
+
+.sysres-label {
+    color: var(--theme-tooltip-text);
+}
+
+.sysres-value {
+    font-weight: bold;
+    text-align: right;
+}
+
+/* ── Cosmetic Wallpapers ──────────────────────────────────────────────── */
+
+.wp-quickdraw-sunset .desktop {
+    background: linear-gradient(
+        135deg,
+        #8b2500 0%,
+        #cd661d 30%,
+        #ff8c00 60%,
+        #ffd700 100%
+    ) !important;
+}
+
+.wp-deputies-badge .desktop {
+    background: linear-gradient(
+        135deg,
+        #1a1a2e 0%,
+        #16213e 30%,
+        #4169e1 60%,
+        #b0c4de 100%
+    ) !important;
+}
+
+.wp-clockwork-gears .desktop {
+    background:
+        repeating-linear-gradient(
+                0deg,
+                rgb(100 149 237 / 8%) 0,
+                rgb(100 149 237 / 8%) 1px,
+                transparent 1px,
+                transparent 32px
+            ),
+        repeating-linear-gradient(
+                90deg,
+                rgb(100 149 237 / 8%) 0,
+                rgb(100 149 237 / 8%) 1px,
+                transparent 1px,
+                transparent 32px
+            ),
+        linear-gradient(
+            135deg,
+            #0a1628 0%,
+            #1a2a4a 40%,
+            #2a4a7a 70%,
+            #3a6aaa 100%
+        ) !important;
+}
+
+.wp-prospectors-mine .desktop {
+    background: linear-gradient(
+        135deg,
+        #1a0033 0%,
+        #2d1b4e 30%,
+        #2e8b57 60%,
+        #00ff7f 100%
+    ) !important;
+}
+
+.wp-prestige-gold .desktop {
+    background: linear-gradient(
+        135deg,
+        #462300 0%,
+        #b8860b 30%,
+        #ffd700 60%,
+        #fffacd 100%
+    ) !important;
+}
+
+/* ── Customization Window ─────────────────────────────────────────────── */
+
+.customize-container {
+    padding: 8px;
+    overflow-y: auto;
+    max-height: 100%;
+}
+
+.customize-section {
+    margin-bottom: 12px;
+}
+
+.customize-section h3 {
+    margin: 0 0 6px;
+    font-size: 13px;
+    border-bottom: 1px solid var(--win-border-dark, #808080);
+    padding-bottom: 2px;
+}
+
+.customize-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+    gap: 6px;
+}
+
+.cosmetic-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    padding: 8px 4px;
+    border: 2px solid var(--win-border-light, #dfdfdf);
+    background: var(--win-bg, #c0c0c0);
+    cursor: pointer;
+    text-align: center;
+    font-size: 10px;
+    position: relative;
+    transition: border-color 0.15s;
+}
+
+.cosmetic-card:hover:not(.locked) {
+    border-color: var(--theme-color-primary, #0078d4);
+}
+
+.cosmetic-card.active {
+    border-color: #00cc00;
+    background: rgb(0 204 0 / 10%);
+}
+
+.cosmetic-card.locked {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.cosmetic-icon {
+    font-size: 22px;
+}
+
+.cosmetic-name {
+    font-weight: 700;
+    font-size: 11px;
+}
+
+.cosmetic-desc {
+    color: #555555;
+}
+
+.cosmetic-hint {
+    color: #888888;
+    font-style: italic;
+    font-size: 9px;
+}
+
+.cosmetic-active-badge {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    background: #00cc00;
+    color: white;
+    font-size: 8px;
+    padding: 1px 4px;
+    border-radius: 2px;
+    font-weight: 700;
 }

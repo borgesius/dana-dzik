@@ -4,9 +4,12 @@ import {
     type MarketEngine,
 } from "../lib/marketGame/MarketEngine"
 import { ChartSection } from "./businessPanel/ChartSection"
+import { EmployeesSection } from "./businessPanel/EmployeesSection"
 import { FactoriesSection } from "./businessPanel/FactoriesSection"
 import { InfluenceSection } from "./businessPanel/InfluenceSection"
+import { PortfolioMgmtSection } from "./businessPanel/PortfolioMgmtSection"
 import { PortfolioSection } from "./businessPanel/PortfolioSection"
+import { PrestigeSection } from "./businessPanel/PrestigeSection"
 import { TradeControls } from "./businessPanel/TradeControls"
 import { UpgradesSection } from "./businessPanel/UpgradesSection"
 
@@ -22,6 +25,9 @@ export class BusinessPanel {
     private factories: FactoriesSection
     private upgrades: UpgradesSection
     private influence: InfluenceSection
+    private prestige: PrestigeSection
+    private employees: EmployeesSection
+    private portfolioMgmt: PortfolioMgmtSection
 
     constructor() {
         this.game = getMarketGame()
@@ -43,14 +49,28 @@ export class BusinessPanel {
             () => this.chart.getSelectedCommodity(),
             (type) => this.playSound(type)
         )
+        this.prestige = new PrestigeSection(this.game, (type) =>
+            this.playSound(type)
+        )
+        this.employees = new EmployeesSection(this.game, (type) =>
+            this.playSound(type)
+        )
+        this.portfolioMgmt = new PortfolioMgmtSection(this.game, (type) =>
+            this.playSound(type)
+        )
         this.element = this.createElement()
         this.setupEventListeners()
+
+        this.chart.setOnCommodityChange(() => {
+            if (!this.isExpanded) return
+            this.tradeControls.render()
+            this.influence.render()
+        })
     }
 
     private createElement(): HTMLElement {
         const panel = document.createElement("div")
         panel.className = "business-panel"
-        panel.style.display = "none"
 
         const lm = getLocaleManager()
 
@@ -84,6 +104,7 @@ export class BusinessPanel {
         leftCol.className = "panel-col-left"
         leftCol.appendChild(this.chart.getElement())
         leftCol.appendChild(this.tradeControls.getElement())
+        leftCol.appendChild(this.influence.getElement())
         content.appendChild(leftCol)
 
         const rightCol = document.createElement("div")
@@ -91,7 +112,9 @@ export class BusinessPanel {
         rightCol.appendChild(this.portfolio.getElement())
         rightCol.appendChild(this.factories.getElement())
         rightCol.appendChild(this.upgrades.getElement())
-        rightCol.appendChild(this.influence.getElement())
+        rightCol.appendChild(this.employees.getElement())
+        rightCol.appendChild(this.portfolioMgmt.getElement())
+        rightCol.appendChild(this.prestige.getElement())
         content.appendChild(rightCol)
 
         panel.appendChild(content)
@@ -105,6 +128,8 @@ export class BusinessPanel {
             this.chart.renderChart()
             this.portfolio.render()
             this.tradeControls.render()
+            this.employees.render()
+            this.portfolioMgmt.render()
         })
         this.game.on("moneyChanged", () => {
             if (!this.isExpanded) return
@@ -140,17 +165,27 @@ export class BusinessPanel {
             this.portfolio.render()
             this.tradeControls.render()
         })
+        this.game.on("harvestExecuted", () => {
+            if (!this.isExpanded) return
+            this.portfolio.render()
+            this.tradeControls.render()
+        })
+        this.game.on("stateChanged", () => {
+            if (!this.isExpanded) return
+            this.updatePhaseVisibility()
+            this.renderAll()
+        })
     }
 
     public expand(): void {
         this.isExpanded = true
-        this.element.style.display = "block"
+        this.element.classList.add("open")
         this.renderAll()
     }
 
     public collapse(): void {
         this.isExpanded = false
-        this.element.style.display = "none"
+        this.element.classList.remove("open")
     }
 
     public toggle(): void {
@@ -174,12 +209,18 @@ export class BusinessPanel {
         this.factories.render()
         this.upgrades.render()
         this.influence.render()
+        this.employees.render()
+        this.portfolioMgmt.render()
+        this.prestige.render()
     }
 
     private updatePhaseVisibility(): void {
         this.factories.updateVisibility()
         this.upgrades.updateVisibility()
         this.influence.updateVisibility()
+        this.employees.updateVisibility()
+        this.portfolioMgmt.updateVisibility()
+        this.prestige.updateVisibility()
     }
 
     private updateNewsTicker(text: string): void {

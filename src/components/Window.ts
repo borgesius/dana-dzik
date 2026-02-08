@@ -13,6 +13,9 @@ import { initVisitorCount } from "../lib/visitorCount"
 import {
     getWindowContent,
     renderAchievementsWindow,
+    renderAutobattlerWindow,
+    renderCustomizeWindow,
+    renderResumeWindow,
 } from "../lib/windowContent"
 import { FileExplorer } from "./FileExplorer"
 import { Terminal } from "./Terminal"
@@ -132,6 +135,14 @@ export class Window {
             this.initExplorer()
         } else if (this.config.contentType === "achievements") {
             renderAchievementsWindow()
+        } else if (this.config.contentType === "autobattler") {
+            renderAutobattlerWindow()
+        } else if (this.config.contentType === "resume") {
+            renderResumeWindow()
+        } else if (this.config.contentType === "customize") {
+            renderCustomizeWindow()
+        } else if (this.config.contentType === "finder") {
+            this.initFinder()
         }
     }
 
@@ -141,6 +152,15 @@ export class Window {
         ) as HTMLElement
         if (container) {
             new FileExplorer(container, "3:\\Users\\Dana\\Desktop\\WELT")
+        }
+    }
+
+    private initFinder(): void {
+        const container = this.element.querySelector(
+            "#finder-content"
+        ) as HTMLElement
+        if (container) {
+            new FileExplorer(container, "C:\\")
         }
     }
 
@@ -219,16 +239,38 @@ export class Window {
         if ((e.target as HTMLElement).closest(".window-btn")) return
 
         this.isDragging = true
-        const rect = this.element.getBoundingClientRect()
+
+        // Use offsetLeft/offsetTop (relative to offset parent) instead of
+        // getBoundingClientRect (viewport coords) so toolbar height doesn't
+        // cause the window to jump when dragging starts.
         this.dragOffset = {
-            x: e.clientX - rect.left,
-            y: e.clientY - rect.top,
+            x: e.clientX - this.element.offsetLeft,
+            y: e.clientY - this.element.offsetTop,
         }
 
         const onMouseMove = (e: MouseEvent): void => {
             if (!this.isDragging) return
-            this.element.style.left = `${e.clientX - this.dragOffset.x}px`
-            this.element.style.top = `${e.clientY - this.dragOffset.y}px`
+
+            let newLeft = e.clientX - this.dragOffset.x
+            let newTop = e.clientY - this.dragOffset.y
+
+            // Prevent dragging the titlebar above the desktop area (behind toolbars)
+            newTop = Math.max(0, newTop)
+
+            // Keep at least 100px of the window visible horizontally
+            const parent = this.element.parentElement
+            if (parent) {
+                const minVisible = 100
+                const maxLeft = parent.clientWidth - minVisible
+                newLeft = Math.max(
+                    -this.element.offsetWidth + minVisible,
+                    newLeft
+                )
+                newLeft = Math.min(maxLeft, newLeft)
+            }
+
+            this.element.style.left = `${newLeft}px`
+            this.element.style.top = `${newTop}px`
         }
 
         const onMouseUp = (): void => {

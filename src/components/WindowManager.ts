@@ -127,6 +127,33 @@ const WINDOW_CONFIGS: Record<RoutableWindow, WindowConfig> = {
         style: "winxp",
         contentType: "achievements",
     },
+    autobattler: {
+        id: "autobattler",
+        title: "SYMPOSIUM.exe",
+        icon: icon("autobattler"),
+        width: 600,
+        height: 550,
+        style: "win95",
+        contentType: "autobattler",
+    },
+    customize: {
+        id: "customize",
+        title: "Customization",
+        icon: "🎨",
+        width: 500,
+        height: 450,
+        style: "winxp",
+        contentType: "customize",
+    },
+    finder: {
+        id: "finder",
+        title: "My Computer",
+        icon: icon("finder"),
+        width: 550,
+        height: 450,
+        style: "win95",
+        contentType: "finder",
+    },
 }
 
 /**

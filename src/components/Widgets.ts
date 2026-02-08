@@ -1,6 +1,7 @@
 import { AudioWidget } from "./widgets/AudioWidget"
 import { NowPlayingWidget } from "./widgets/NowPlayingWidget"
 import { StravaWidget } from "./widgets/StravaWidget"
+import { VeilWidget } from "./widgets/VeilWidget"
 
 export class Widgets {
     private container: HTMLElement
@@ -18,5 +19,8 @@ export class Widgets {
 
         const strava = new StravaWidget()
         this.container.appendChild(strava.getElement())
+
+        const veil = new VeilWidget()
+        this.container.appendChild(veil.getElement())
     }
 }
