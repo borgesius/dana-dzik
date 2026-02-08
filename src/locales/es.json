@@ -941,7 +941,7 @@
             "description": "Completa una rotación completa del ring."
         },
         "ring-spin": {
-            "name": "Rueda de la Fortuna",
+            "name": "Slötzendämmerung",
             "description": "Sobrescribe cada posición en un ring lleno."
         },
         "thermal-protection": {
@@ -1195,7 +1195,7 @@
         "performance-review": { "name": "Performance Review", "description": "Abre la ventana de logros 10 veces." },
         "observer-effect": { "name": "Observer Effect", "description": "Abre la ventana de logros 50 veces." },
         "the-unexamined-life": { "name": "The Unexamined Life", "description": "Abre la ventana de logros 200 veces." },
-        "participation-trophy": { "name": "Participation Trophy", "description": "Obtén 10 logros." },
+        "participation-trophy": { "name": "High Achiever", "description": "Obtén 10 logros." },
         "overachiever": { "name": "Overachiever", "description": "Obtén 25 logros." },
         "completionist": { "name": "Completionist", "description": "Obtén 50 logros." },
         "sisyphean": { "name": "Sisyphean", "description": "Obtén 100 logros." },
@@ -1213,7 +1213,31 @@
         "640k-enough": { "name": "640K Ought to Be Enough", "description": "Visualiza en una pantalla suficientemente pequeña." },
         "lingua-franca": { "name": "Lingua Franca", "description": "Habla el idioma de los eruditos." },
         "dial-up-connection": { "name": "Dial-Up Connection", "description": "Conéctate a velocidades vintage." },
-        "achievement-achievement": { "name": "Achievement Achievement", "description": "Obtén un logro mientras ves los logros." }
+        "year-to-remember": { "name": "A Year to Remember", "description": "Pferd approved." },
+        "negative-timestamp": { "name": "fix: miscalculation in date.now()", "description": "Make the system clock E2E tests pass again." },
+        "achievement-achievement": { "name": "Achievement Achievement", "description": "Obtén un logro mientras ves los logros." },
+        "arcana-fool": { "name": "The Fool", "description": "Prestigia sin comprar mejoras de retrospectiva." },
+        "arcana-magician": { "name": "The Magician", "description": "Compra tu primera mejora del mercado." },
+        "arcana-priestess": { "name": "The High Priestess", "description": "Abre logros durante luna nueva en plena noche." },
+        "arcana-empress": { "name": "The Empress", "description": "Ten 10 o más fábricas desplegadas." },
+        "arcana-emperor": { "name": "The Emperor", "description": "Alcanza el nivel 20." },
+        "arcana-hierophant": { "name": "The Hierophant", "description": "Compila Grund 10 veces en una sola sesión." },
+        "arcana-lovers": { "name": "The Lovers", "description": "Gana un simposio con exactamente dos escuelas de pensamiento." },
+        "arcana-chariot": { "name": "The Chariot", "description": "Gana 5 simposios seguidos." },
+        "arcana-strength": { "name": "Strength", "description": "Recupérate de un evento de margen después de 100 ticks." },
+        "arcana-hermit": { "name": "The Hermit", "description": "Pasa 45 minutos en una sola sesión." },
+        "arcana-fortune": { "name": "Wheel of Fortune", "description": "Ejecuta 500 operaciones en total." },
+        "arcana-justice": { "name": "Justice", "description": "Mantén todas las materias primas en equilibrio perfecto." },
+        "arcana-hanged": { "name": "The Hanged Man", "description": "Abre logros mientras tres o más mercados están cayendo." },
+        "arcana-death": { "name": "Death", "description": "Prestigia por tercera vez." },
+        "arcana-temperance": { "name": "Temperance", "description": "Crea un producto estructurado sin deuda." },
+        "arcana-devil": { "name": "The Devil", "description": "Pide prestado al 95% o más de tu capacidad." },
+        "arcana-tower": { "name": "The Tower", "description": "Sufre una degradación de calificación crediticia." },
+        "arcana-star": { "name": "The Star", "description": "Abre logros mientras todos los mercados suben." },
+        "arcana-moon": { "name": "The Moon", "description": "Obtén los ocho logros del ciclo lunar." },
+        "arcana-sun": { "name": "The Sun", "description": "Abre logros en una tarde de fin de semana." },
+        "arcana-judgement": { "name": "Judgement", "description": "Obtén 75 logros en total." },
+        "arcana-world": { "name": "The World", "description": "Obtén todos los demás Arcanos Mayores." }
     },
     "symposium": {
         "factions": {

@@ -1200,12 +1200,158 @@ export const ACHIEVEMENTS: AchievementDef[] = [
         icon: "📞",
         hidden: true,
     },
+    {
+        id: "year-to-remember",
+        category: "exploration",
+        icon: "✊",
+        hidden: true,
+    },
+    {
+        id: "negative-timestamp",
+        category: "exploration",
+        icon: "🐛",
+        hidden: true,
+    },
 
     // ── Meta: Recursive (hidden) ─────────────────────────────────────────
     {
         id: "achievement-achievement",
         category: "exploration",
         icon: "🪆",
+        hidden: true,
+    },
+
+    // ── Major Arcana (hidden) ─────────────────────────────────────────────
+    {
+        id: "arcana-fool",
+        category: "arcana",
+        icon: "🃏",
+        hidden: true,
+    },
+    {
+        id: "arcana-magician",
+        category: "arcana",
+        icon: "🎩",
+        hidden: true,
+    },
+    {
+        id: "arcana-priestess",
+        category: "arcana",
+        icon: "🔮",
+        hidden: true,
+    },
+    {
+        id: "arcana-empress",
+        category: "arcana",
+        icon: "👑",
+        hidden: true,
+    },
+    {
+        id: "arcana-emperor",
+        category: "arcana",
+        icon: "🏛️",
+        hidden: true,
+    },
+    {
+        id: "arcana-hierophant",
+        category: "arcana",
+        icon: "📜",
+        hidden: true,
+    },
+    {
+        id: "arcana-lovers",
+        category: "arcana",
+        icon: "💕",
+        hidden: true,
+    },
+    {
+        id: "arcana-chariot",
+        category: "arcana",
+        icon: "⚔️",
+        hidden: true,
+    },
+    {
+        id: "arcana-strength",
+        category: "arcana",
+        icon: "🦁",
+        hidden: true,
+    },
+    {
+        id: "arcana-hermit",
+        category: "arcana",
+        icon: "🏔️",
+        hidden: true,
+    },
+    {
+        id: "arcana-fortune",
+        category: "arcana",
+        icon: "☸️",
+        hidden: true,
+    },
+    {
+        id: "arcana-justice",
+        category: "arcana",
+        icon: "⚖️",
+        hidden: true,
+    },
+    {
+        id: "arcana-hanged",
+        category: "arcana",
+        icon: "🙃",
+        hidden: true,
+    },
+    {
+        id: "arcana-death",
+        category: "arcana",
+        icon: "💀",
+        hidden: true,
+    },
+    {
+        id: "arcana-temperance",
+        category: "arcana",
+        icon: "🏺",
+        hidden: true,
+    },
+    {
+        id: "arcana-devil",
+        category: "arcana",
+        icon: "😈",
+        hidden: true,
+    },
+    {
+        id: "arcana-tower",
+        category: "arcana",
+        icon: "🗼",
+        hidden: true,
+    },
+    {
+        id: "arcana-star",
+        category: "arcana",
+        icon: "⭐",
+        hidden: true,
+    },
+    {
+        id: "arcana-moon",
+        category: "arcana",
+        icon: "🌙",
+        hidden: true,
+    },
+    {
+        id: "arcana-sun",
+        category: "arcana",
+        icon: "☀️",
+        hidden: true,
+    },
+    {
+        id: "arcana-judgement",
+        category: "arcana",
+        icon: "📯",
+        hidden: true,
+    },
+    {
+        id: "arcana-world",
+        category: "arcana",
+        icon: "🌍",
         hidden: true,
     },
 ]

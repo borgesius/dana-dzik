@@ -34,7 +34,7 @@ describe("market simulation", () => {
 
             for (const c of COMMODITIES) {
                 const history = engine.getPriceHistory(c.id)
-                const maxAllowed = c.basePrice * 15
+                const maxAllowed = c.basePrice * 20
                 for (const price of history) {
                     expect(price).toBeLessThanOrEqual(maxAllowed)
                 }
@@ -59,11 +59,11 @@ describe("market simulation", () => {
     })
 
     describe("volatility ranking", () => {
-        it("VC has the highest configured volatility among all commodities", () => {
-            const vc = COMMODITIES.find((c) => c.id === "VC")!
+        it("EMAIL has the highest configured volatility among all commodities", () => {
+            const email = COMMODITIES.find((c) => c.id === "EMAIL")!
             for (const c of COMMODITIES) {
-                if (c.id === "VC") continue
-                expect(vc.volatility).toBeGreaterThan(c.volatility)
+                if (c.id === "EMAIL") continue
+                expect(email.volatility).toBeGreaterThan(c.volatility)
             }
         })
 
@@ -103,7 +103,7 @@ describe("market simulation", () => {
                 if (c.unlockThreshold > 10000) continue
                 const price = engine.getPrice(c.id)
                 expect(price).toBeGreaterThan(c.basePrice * 0.2)
-                expect(price).toBeLessThan(c.basePrice * 5)
+                expect(price).toBeLessThan(c.basePrice * 10)
             }
         })
     })

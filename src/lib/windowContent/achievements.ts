@@ -75,6 +75,7 @@ export function renderAchievementsWindow(): void {
         { key: "prestige", label: "Prestige" },
         { key: "career", label: "Career" },
         { key: "cross-system", label: "Cross-System" },
+        { key: "arcana", label: "Major Arcana" },
     ]
 
     const tieredGroups = new Map<TieredGroup, AchievementDef[]>()

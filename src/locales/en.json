@@ -952,7 +952,7 @@
             "description": "Complete a full ring rotation."
         },
         "ring-spin": {
-            "name": "Wheel of Fortune",
+            "name": "Slötzendämmerung",
             "description": "Overwrite every slot in a full ring."
         },
         "thermal-protection": {
@@ -1275,7 +1275,7 @@
             "description": "Open the achievements window 200 times."
         },
         "participation-trophy": {
-            "name": "Participation Trophy",
+            "name": "High Achiever",
             "description": "Earn 10 achievements."
         },
         "overachiever": {
@@ -1346,9 +1346,105 @@
             "name": "Dial-Up Connection",
             "description": "Connect at vintage speeds."
         },
+        "year-to-remember": {
+            "name": "A Year to Remember",
+            "description": "Pferd approved."
+        },
+        "negative-timestamp": {
+            "name": "fix: miscalculation in date.now()",
+            "description": "Make the system clock E2E tests pass again."
+        },
         "achievement-achievement": {
             "name": "Achievement Achievement",
             "description": "Earn an achievement while viewing achievements."
+        },
+        "arcana-fool": {
+            "name": "The Fool",
+            "description": "Prestige without purchasing any hindsight upgrades."
+        },
+        "arcana-magician": {
+            "name": "The Magician",
+            "description": "Purchase your first market upgrade."
+        },
+        "arcana-priestess": {
+            "name": "The High Priestess",
+            "description": "Open achievements during a new moon in the dead of night."
+        },
+        "arcana-empress": {
+            "name": "The Empress",
+            "description": "Have 10 or more factories deployed."
+        },
+        "arcana-emperor": {
+            "name": "The Emperor",
+            "description": "Reach level 20."
+        },
+        "arcana-hierophant": {
+            "name": "The Hierophant",
+            "description": "Compile Grund 10 times in a single session."
+        },
+        "arcana-lovers": {
+            "name": "The Lovers",
+            "description": "Win a symposium with exactly two schools of thought."
+        },
+        "arcana-chariot": {
+            "name": "The Chariot",
+            "description": "Win 5 symposium runs in a row."
+        },
+        "arcana-strength": {
+            "name": "Strength",
+            "description": "Recover from a margin event after 100 ticks."
+        },
+        "arcana-hermit": {
+            "name": "The Hermit",
+            "description": "Spend 45 minutes in a single session."
+        },
+        "arcana-fortune": {
+            "name": "Wheel of Fortune",
+            "description": "Execute 500 lifetime trades."
+        },
+        "arcana-justice": {
+            "name": "Justice",
+            "description": "Hold all commodities in perfect balance."
+        },
+        "arcana-hanged": {
+            "name": "The Hanged Man",
+            "description": "Open achievements while three or more markets are falling."
+        },
+        "arcana-death": {
+            "name": "Death",
+            "description": "Prestige for the third time."
+        },
+        "arcana-temperance": {
+            "name": "Temperance",
+            "description": "Create a structured product while carrying no debt."
+        },
+        "arcana-devil": {
+            "name": "The Devil",
+            "description": "Borrow at 95% or more of capacity."
+        },
+        "arcana-tower": {
+            "name": "The Tower",
+            "description": "Experience a credit rating downgrade."
+        },
+        "arcana-star": {
+            "name": "The Star",
+            "description": "Open achievements while all markets are rising."
+        },
+        "arcana-moon": {
+            "name": "The Moon",
+            "description": "Earn all eight lunar cycle achievements."
+        },
+        "arcana-sun": {
+            "name": "The Sun",
+            "description": "Open achievements on a weekend afternoon."
+        },
+        "arcana-judgement": {
+            "name": "Judgement",
+            "description": "Earn 75 total achievements."
+        },
+        "arcana-world": {
+            "name": "The World",
+            "description": "Earn all other Major Arcana."
         }
     },
     "symposium": {

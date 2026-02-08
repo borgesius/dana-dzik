@@ -76,7 +76,7 @@ export const COMMODITIES: CommodityDef[] = [
         name: "Venture Capital",
         description: "Pre-IPO investment securities. Limited availability.",
         basePrice: 100.0,
-        volatility: 0.04,
+        volatility: 0.035,
         unlockThreshold: 2000,
         trendMinTicks: 40,
         trendMaxTicks: 100,
