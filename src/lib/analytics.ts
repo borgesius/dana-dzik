@@ -1,6 +1,6 @@
 import { ANALYTICS_CONFIG } from "../config/analytics"
 import type { RoutableWindow } from "../config/routing"
-import { emitAppEvent } from "./events"
+import { emitAppEvent, onAppEvent } from "./events"
 
 function isBot(): boolean {
     const ua = navigator.userAgent.toLowerCase()
@@ -78,10 +78,18 @@ export const PHOTO_VARIANTS = [
 export type PhotoVariant = (typeof PHOTO_VARIANTS)[number]["id"]
 
 interface AnalyticsEvent {
-    type: "pageview" | "window" | "funnel" | "ab_assign" | "ab_convert" | "perf"
+    type:
+        | "pageview"
+        | "window"
+        | "funnel"
+        | "ab_assign"
+        | "ab_convert"
+        | "perf"
+        | "crash"
     windowId?: string
     funnelStep?: string
     variant?: string
+    effectType?: string
     perf?: {
         resource: string
         duration: number
@@ -107,7 +115,7 @@ export function isClientSampled(visitorId: string): boolean {
 }
 
 function isCriticalEvent(eventType: string): boolean {
-    return eventType === "pageview"
+    return eventType === "pageview" || eventType === "crash"
 }
 
 function consumeSessionBudget(): boolean {
@@ -231,6 +239,10 @@ export function trackAbConversion(): void {
     }
 }
 
+export function trackCrash(effectType: string): void {
+    void sendEvent({ type: "crash", effectType })
+}
+
 function getPerfEventCount(): number {
     const stored = localStorage.getItem(PERF_COUNT_KEY)
     return stored ? parseInt(stored, 10) : 0
@@ -299,6 +311,12 @@ function getResourceType(ext: string): string {
         midi: "audio",
     }
     return types[ext.toLowerCase()] || "other"
+}
+
+export function initCrashTracking(): void {
+    onAppEvent("system-crash:triggered", (detail) => {
+        trackCrash(detail.effectType)
+    })
 }
 
 export { getVisitorId }

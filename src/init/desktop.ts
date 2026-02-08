@@ -14,11 +14,11 @@ import {
 } from "../lib/achievements/wiring"
 import { createAudioManager } from "../lib/audio"
 import { getCollectionManager } from "../lib/autobattler/CollectionManager"
+import { recordBootEnd } from "../lib/bootTime"
 import { isCalmMode } from "../lib/calmMode"
 import { getCosmeticManager } from "../lib/cosmetics/CosmeticManager"
 import { wireCosmeticUnlocks } from "../lib/cosmetics/wiring"
 import { onAppEvent } from "../lib/events"
-import { requestResumeCareerTab } from "../lib/windowContent"
 import { GlitchManager } from "../lib/glitchEffects"
 import { getLocaleManager } from "../lib/localeManager"
 import { getMarketGame } from "../lib/marketGame/MarketEngine"
@@ -33,6 +33,7 @@ import { getSharedFilesystem } from "../lib/terminal/filesystemBuilder"
 import { diffFilesystem } from "../lib/terminal/filesystemDiff"
 import { getThemeManager } from "../lib/themeManager"
 import { getVeilManager } from "../lib/veil/VeilManager"
+import { requestResumeCareerTab } from "../lib/windowContent"
 import { isRoutableWindow } from "./core"
 
 export function initDesktop(app: HTMLElement): void {
@@ -134,6 +135,8 @@ export function initDesktop(app: HTMLElement): void {
     getCosmeticManager().onChange(() => applyCosmetics())
     new SystemCrashHandler()
     new Widgets(app)
+
+    recordBootEnd()
 
     windowManager.onNewWindowOpen(() => {
         popupManager.onWindowOpen()
