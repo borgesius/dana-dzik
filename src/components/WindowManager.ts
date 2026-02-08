@@ -1,6 +1,5 @@
 import { DESKTOP_ITEMS } from "../config/desktop"
 import type { RoutableWindow } from "../config/routing"
-import { getAchievementManager } from "../lib/achievements/AchievementManager"
 import { Window, type WindowConfig } from "./Window"
 
 /** Information about an open window for the taskbar */
