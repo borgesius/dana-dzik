@@ -36,3 +36,8 @@ export const HARVEST_BASE_FRACTION = 0.05
 export const HARVEST_UPGRADE_BONUS = 0.45
 /** Autoscript bonus per tier: I = 0.25, II = 0.50, III = 0.75 */
 export const AUTOSCRIPT_TIER_BONUS = [0.25, 0.5, 0.75] as const
+
+/** How much of the price movement feeds through to $/click (0 = fully normalised, 1 = raw). */
+export const HARVEST_PRICE_SENSITIVITY = 0.25
+export const HARVEST_DOLLAR_FLOOR = 0.75
+export const HARVEST_DOLLAR_CEILING = 1.25
