@@ -73,7 +73,8 @@ export const UPGRADES: UpgradeDef[] = [
     {
         id: "block-trading",
         name: "Block Trading",
-        description: "Institutional-size lots. Execute trades in quantities of 50.",
+        description:
+            "Institutional-size lots. Execute trades in quantities of 50.",
         category: "trading",
         cost: 400,
     },
@@ -82,7 +83,8 @@ export const UPGRADES: UpgradeDef[] = [
     {
         id: "cpu-overclock",
         name: "CPU Overclock",
-        description: "Reduce production cycle by 1 tick. May cause instability.",
+        description:
+            "Reduce production cycle by 1 tick. May cause instability.",
         category: "production",
         cost: 75,
     },

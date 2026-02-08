@@ -393,9 +393,10 @@ export class ChartRenderer {
 
         const x = chartRight - 15
         // Position below the trend countdown (or trend arrow if no countdown)
-        const y = this.options.trendTicksRemaining != null
-            ? chartTop + 38
-            : chartTop + 24
+        const y =
+            this.options.trendTicksRemaining != null
+                ? chartTop + 38
+                : chartTop + 24
 
         ctx.save()
         ctx.globalAlpha = CHART_NEXT_ARROW_ALPHA
