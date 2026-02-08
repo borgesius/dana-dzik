@@ -22,7 +22,7 @@ const LOCALE_NAMES: Record<LocaleId, string> = {
 }
 
 const LOCALE_FLAGS: Record<LocaleId, string> = {
-    en: "🇬🇧",
+    en: "🇺🇸",
     de: "🇩🇪",
     it: "🇮🇹",
     es: "🇪🇸",
