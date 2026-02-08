@@ -186,14 +186,9 @@ const FILESYSTEM_STRUCTURE: FSNode = {
                             content: `HACKTERM v1.0
 =============
 
-A totally legitimate hacking terminal.
-For educational purposes only.
-
-Commands:
 - Type 'help' for available commands
-- Type 'sl' if you can't type 'ls' correctly
 
-(c) 2026 Dana Industries`,
+(c) Fatitech`,
                         },
                     },
                 },
