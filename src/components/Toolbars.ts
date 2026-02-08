@@ -62,9 +62,12 @@ export class Toolbars {
 
         container.appendChild(this.createToolbar1())
         container.appendChild(this.createToolbar2())
-        container.appendChild(this.businessPanel.getElement())
 
         return container
+    }
+
+    public getBusinessPanelElement(): HTMLElement {
+        return this.businessPanel.getElement()
     }
 
     private createToolbar1(): HTMLElement {

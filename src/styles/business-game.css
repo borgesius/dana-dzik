@@ -157,15 +157,26 @@
     gap: 10px;
 }
 
-/* Business Panel */
+/* Business Panel – right-side drawer */
 .business-panel {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 520px;
+    max-width: 90%;
     background: var(--theme-surface-primary);
-    border: 2px inset var(--theme-border-dark);
-    border-top: none;
+    border-left: 2px inset var(--theme-border-dark);
     padding: 0;
     font-size: 13px;
-    max-height: 520px;
     overflow-y: auto;
+    transform: translateX(100%);
+    transition: transform 0.25s ease;
+    z-index: 200;
+}
+
+.business-panel.open {
+    transform: translateX(0);
 }
 
 .business-panel-header {
@@ -228,24 +239,21 @@
 /* Content Area */
 .business-panel-content {
     display: flex;
+    flex-direction: column;
     gap: 8px;
     padding: 8px;
 }
 
 .panel-col-left {
-    flex: 1.5;
     display: flex;
     flex-direction: column;
     gap: 8px;
 }
 
 .panel-col-right {
-    flex: 1;
     display: flex;
     flex-direction: column;
     gap: 8px;
-    max-height: 440px;
-    overflow-y: auto;
 }
 
 /* Chart Section */
@@ -257,6 +265,7 @@
 
 .chart-header {
     display: flex;
+    flex-wrap: wrap;
     justify-content: space-between;
     align-items: stretch;
     background: var(--theme-surface-primary);
@@ -841,6 +850,7 @@
 
 .hr-pool-cards {
     display: flex;
+    flex-wrap: wrap;
     gap: 4px;
     margin-bottom: 4px;
 }
