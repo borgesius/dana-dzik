@@ -167,7 +167,7 @@ export function initDesktop(app: HTMLElement): void {
         const devPanel = new DevPanel(windowManager)
         attachDevApi(devPanel, windowManager)
         // Expose toggle for the taskbar DEV badge
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access
         ;(window as any).__devPanel = devPanel
     }
 
