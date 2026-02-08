@@ -7,8 +7,8 @@
     width: 340px;
     max-height: calc(100vh - 80px);
     background: var(--color-window-bg, #c0c0c0);
-    border: 2px solid var(--color-window-border, #000);
-    box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.3);
+    border: 2px solid var(--color-window-border, #000000);
+    box-shadow: 4px 4px 0 rgb(0 0 0 / 30%);
     z-index: 100000;
     display: flex;
     flex-direction: column;
@@ -22,7 +22,7 @@
     align-items: center;
     padding: 3px 6px;
     background: var(--color-titlebar-active, #000080);
-    color: var(--color-titlebar-text, #fff);
+    color: var(--color-titlebar-text, #ffffff);
     cursor: grab;
     user-select: none;
     font-weight: bold;
@@ -40,7 +40,7 @@
 .dev-panel-close {
     background: var(--color-button-bg, #c0c0c0);
     border: 1px outset var(--color-button-border, #dfdfdf);
-    color: var(--color-text, #000);
+    color: var(--color-text, #000000);
     width: 16px;
     height: 14px;
     font-size: 9px;
@@ -58,8 +58,7 @@
 }
 
 .dev-panel-body {
-    overflow-y: auto;
-    overflow-x: hidden;
+    overflow: hidden auto;
     flex: 1;
     padding: 4px;
 }
@@ -94,7 +93,7 @@
 
 .dev-section-content {
     padding: 4px 6px;
-    background: var(--color-window-bg, #fff);
+    background: var(--color-window-bg, #ffffff);
 }
 
 /* ── Buttons ─────────────────────────────────────────────────────────────── */
@@ -102,7 +101,7 @@
 .dev-btn {
     background: var(--color-button-bg, #c0c0c0);
     border: 1px outset var(--color-button-border, #dfdfdf);
-    color: var(--color-text, #000);
+    color: var(--color-text, #000000);
     padding: 2px 6px;
     font-size: 10px;
     font-family: inherit;
@@ -121,7 +120,7 @@
 
 .dev-btn.dev-flash {
     background: #4caf50;
-    color: #fff;
+    color: #ffffff;
     transition: background 0.15s;
 }
 
@@ -150,8 +149,8 @@
 .dev-input {
     flex: 1;
     border: 1px inset var(--color-button-border, #808080);
-    background: var(--color-window-bg, #fff);
-    color: var(--color-text, #000);
+    background: var(--color-window-bg, #ffffff);
+    color: var(--color-text, #000000);
     padding: 2px 4px;
     font-size: 10px;
     font-family: inherit;
@@ -159,7 +158,7 @@
 }
 
 .dev-input::placeholder {
-    color: #999;
+    color: #999999;
     font-style: italic;
 }
 
@@ -167,21 +166,21 @@
 
 .dev-label {
     font-weight: bold;
-    margin: 4px 0 2px 0;
+    margin: 4px 0 2px;
     font-size: 10px;
     text-transform: uppercase;
     letter-spacing: 0.3px;
-    color: var(--color-text, #666);
+    color: var(--color-text, #666666);
 }
 
 .dev-status {
-    background: var(--color-input-bg, #fff);
+    background: var(--color-input-bg, #ffffff);
     border: 1px inset var(--color-button-border, #808080);
     padding: 3px 5px;
     margin-bottom: 4px;
     font-family: monospace;
     font-size: 10px;
-    color: var(--color-text, #000);
+    color: var(--color-text, #000000);
     word-break: break-all;
 }
 

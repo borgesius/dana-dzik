@@ -330,12 +330,13 @@ function wireVeilTrigger(mgr: ProgressionManager): void {
     const collection = getCollectionManager()
 
     // Wire providers so VeilManager can check gates
-    veil.levelProvider = () => mgr.getLevel()
-    veil.prestigeCountProvider = () => prestige.getCount()
-    veil.autobattlerWinsProvider = () => collection.getWonRuns()
-    veil.bossesDefeatedProvider = () => collection.getTotalBossesDefeated()
-    veil.spiralCompleteProvider = () => collection.isSpiralComplete()
-    veil.phase5UnlockedProvider = () => game.isPhaseUnlocked(5)
+    veil.levelProvider = (): number => mgr.getLevel()
+    veil.prestigeCountProvider = (): number => prestige.getCount()
+    veil.autobattlerWinsProvider = (): number => collection.getWonRuns()
+    veil.bossesDefeatedProvider = (): number =>
+        collection.getTotalBossesDefeated()
+    veil.spiralCompleteProvider = (): boolean => collection.isSpiralComplete()
+    veil.phase5UnlockedProvider = (): boolean => game.isPhaseUnlocked(5)
 
     // Check trigger on each market tick
     game.on("marketTick", () => {
