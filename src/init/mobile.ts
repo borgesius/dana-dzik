@@ -1,4 +1,5 @@
 import { AchievementToast } from "../components/AchievementToast"
+import { CosmeticToast } from "../components/CosmeticToast"
 import { LevelUpPopup } from "../components/LevelUpPopup"
 import { MobilePhone } from "../components/mobile/MobilePhone"
 import { MobilePopupManager } from "../components/mobile/MobilePopupManager"
@@ -37,6 +38,7 @@ export function initMobile(app: HTMLElement): void {
     })
     wireVeilAchievements()
     new AchievementToast(achievements)
+    new CosmeticToast()
     new LevelUpPopup()
 
     wireProgression(getProgressionManager(), (cb) => {

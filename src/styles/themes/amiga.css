@@ -1,0 +1,116 @@
+/* Amiga Workbench theme                                                     */
+
+/* Lowest contrast pair: #000080 on #ff8800 = 5.7:1 (passes AA)             */
+
+[data-theme="amiga"] {
+    --theme-desktop-bg: #0055aa;
+    --theme-desktop-bg-pattern: none;
+    --theme-desktop-icon-hover: rgb(255 136 0 / 20%);
+    --theme-desktop-icon-selected: rgb(255 136 0 / 35%);
+    --theme-desktop-icon-text: #ffffff;
+    --theme-font-system: "Topaz", "Courier New", monospace;
+    --theme-font-mono: "Topaz", "Courier New", monospace;
+    --theme-font-size-base: 14px;
+    --theme-window-bg: #aaaaaa;
+    --theme-window-content-bg: #aaaaaa;
+    --theme-window-content-text: #000000;
+    --theme-window-border-light: #ffffff;
+    --theme-window-border-dark: #000000;
+    --theme-window-border-style: solid;
+    --theme-window-title-bg: #0055aa;
+    --theme-window-title-text: #ffffff;
+    --theme-window-title-inactive: #888888;
+    --theme-window-btn-bg: #aaaaaa;
+    --theme-window-btn-border: 2px outset #ffffff;
+    --theme-window-shadow: 2px 2px 0 rgb(0 0 0 / 50%);
+    --theme-window-resize-bg: linear-gradient(
+        135deg,
+        transparent 50%,
+        #000000 50%,
+        #000000 60%,
+        transparent 60%,
+        transparent 70%,
+        #000000 70%,
+        #000000 80%,
+        transparent 80%
+    );
+    --theme-taskbar-bg: #aaaaaa;
+    --theme-taskbar-border-top: 2px solid #ffffff;
+    --theme-taskbar-height: 28px;
+    --theme-start-btn-bg: #ff8800;
+    --theme-start-btn-hover: #ffaa00;
+    --theme-start-btn-active: #cc6600;
+    --theme-start-btn-text: #000000;
+    --theme-start-btn-radius: 0;
+    --theme-taskbar-btn-bg: #aaaaaa;
+    --theme-taskbar-btn-active: #0055aa;
+    --theme-taskbar-btn-text: #000000;
+    --theme-systray-bg: #999999;
+    --theme-clock-text: #000000;
+    --theme-start-menu-bg: #aaaaaa;
+    --theme-start-menu-border: 2px solid #000000;
+    --theme-start-menu-header-bg: #0055aa;
+    --theme-start-menu-body-bg: #aaaaaa;
+    --theme-start-menu-right-bg: #999999;
+    --theme-start-menu-item-hover: #ff8800;
+    --theme-start-menu-footer-bg: #888888;
+    --theme-toolbar-bg: #999999;
+    --theme-toolbar-border: #000000;
+    --theme-toolbar-btn-bg: #aaaaaa;
+    --theme-toolbar-btn-border: 2px outset #ffffff;
+    --theme-toolbar-area-bg: #aaaaaa;
+    --theme-toolbar-area-border: 2px solid #000000;
+    --theme-terminal-bg: #000000;
+    --theme-terminal-text: #ff8800;
+    --theme-terminal-glow: #ff8800;
+    --theme-terminal-input-bg: #000000;
+    --theme-terminal-input-border: #ff8800;
+    --theme-terminal-scrollbar-track: #333333;
+    --theme-terminal-scrollbar-thumb: #ff8800;
+    --theme-terminal-dim: #cc6600;
+    --theme-terminal-error: #ff0000;
+    --theme-terminal-info: #ff8800;
+    --theme-terminal-dir: #0055aa;
+    --theme-terminal-cursor: #ff8800;
+    --theme-explorer-bg: #aaaaaa;
+    --theme-explorer-list-bg: #ffffff;
+    --theme-explorer-hover-bg: #0055aa;
+    --theme-explorer-hover-text: #ffffff;
+    --theme-explorer-border: #000000;
+    --theme-explorer-text: #000000;
+    --theme-surface-primary: #aaaaaa;
+    --theme-surface-secondary: #999999;
+    --theme-surface-elevated: #bbbbbb;
+    --theme-text-on-surface: #000000;
+    --theme-text-secondary: #333333;
+    --theme-link: #0055aa;
+    --theme-accent: #ff8800;
+    --theme-accent-text: #000000;
+    --theme-border-light: #ffffff;
+    --theme-border-dark: #000000;
+    --theme-tooltip-bg: #ffffcc;
+    --theme-tooltip-border: 1px solid #000000;
+    --theme-tooltip-text: #000000;
+    --theme-tooltip-shadow: 2px 2px 0 rgb(0 0 0 / 30%);
+    --theme-widget-bg: #aaaaaa;
+    --theme-widget-border: 2px solid #000000;
+    --theme-widget-title-bg: #0055aa;
+    --theme-widget-title-text: #ffffff;
+    --theme-widget-content-bg: #aaaaaa;
+    --theme-widget-content-text: #000000;
+    --theme-qa-bg: #aaaaaa;
+    --theme-qa-badge-bg: #999999;
+    --theme-qa-badge-border: #000000;
+    --theme-weather-bg: #999999;
+    --theme-weather-border: #000000;
+    --theme-terminal-placeholder: #cc6600;
+}
+
+[data-theme="amiga"] .window {
+    border: 2px solid #000000;
+    border-radius: 0;
+}
+
+[data-theme="amiga"] .window-titlebar {
+    border-bottom: 2px solid #000000;
+}

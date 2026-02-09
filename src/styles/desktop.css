@@ -952,7 +952,7 @@ body {
 
 /* ── Cosmetic Wallpapers ──────────────────────────────────────────────── */
 
-.wp-quickdraw-sunset .desktop {
+.wp-existentialist-dusk .desktop {
     background: linear-gradient(
         135deg,
         #8b2500 0%,
@@ -962,7 +962,7 @@ body {
     ) !important;
 }
 
-.wp-deputies-badge .desktop {
+.wp-idealist-marble .desktop {
     background: linear-gradient(
         135deg,
         #1a1a2e 0%,
@@ -972,7 +972,7 @@ body {
     ) !important;
 }
 
-.wp-clockwork-gears .desktop {
+.wp-rationalist-blueprint .desktop {
     background:
         repeating-linear-gradient(
                 0deg,
@@ -997,7 +997,7 @@ body {
         ) !important;
 }
 
-.wp-prospectors-mine .desktop {
+.wp-post-structural-void .desktop {
     background: linear-gradient(
         135deg,
         #1a0033 0%,
@@ -1017,23 +1017,192 @@ body {
     ) !important;
 }
 
+.wp-beyond-veil .desktop {
+    background: linear-gradient(
+        180deg,
+        #0a0010 0%,
+        #0d0020 40%,
+        #120030 70%,
+        #0a0a0a 100%
+    ) !important;
+}
+
+.wp-pasture .desktop {
+    background: linear-gradient(
+        180deg,
+        #7cb342 0%,
+        #8bc34a 40%,
+        #aed581 70%,
+        #c8e6c9 100%
+    ) !important;
+}
+
+.wp-ocean .desktop {
+    background: linear-gradient(
+        180deg,
+        #0d47a1 0%,
+        #1565c0 25%,
+        #1e88e5 50%,
+        #42a5f5 75%,
+        #90caf9 100%
+    ) !important;
+}
+
+.wp-terminal-green .desktop {
+    background: repeating-linear-gradient(
+            180deg,
+            transparent 0,
+            transparent 2px,
+            rgb(0 255 0 / 3%) 2px,
+            rgb(0 255 0 / 3%) 4px
+        ),
+        linear-gradient(180deg, #001a00 0%, #002200 50%, #001100 100%) !important;
+}
+
+.wp-blueprint .desktop {
+    background: repeating-linear-gradient(
+            0deg,
+            rgb(255 255 255 / 5%) 0,
+            rgb(255 255 255 / 5%) 1px,
+            transparent 1px,
+            transparent 20px
+        ),
+        repeating-linear-gradient(
+            90deg,
+            rgb(255 255 255 / 5%) 0,
+            rgb(255 255 255 / 5%) 1px,
+            transparent 1px,
+            transparent 20px
+        ),
+        linear-gradient(135deg, #0d47a1 0%, #1565c0 50%, #0d47a1 100%) !important;
+}
+
+.wp-stable .desktop {
+    background: repeating-linear-gradient(
+            90deg,
+            rgb(0 0 0 / 5%) 0,
+            rgb(0 0 0 / 5%) 2px,
+            transparent 2px,
+            transparent 30px
+        ),
+        linear-gradient(180deg, #6d4c2a 0%, #8b6914 40%, #a0825a 70%, #d4b896 100%) !important;
+}
+
+.wp-starfield .desktop {
+    background: radial-gradient(
+            1px 1px at 20% 30%,
+            white,
+            transparent
+        ),
+        radial-gradient(1px 1px at 40% 70%, white, transparent),
+        radial-gradient(1px 1px at 80% 20%, white, transparent),
+        radial-gradient(1px 1px at 60% 50%, rgb(255 255 255 / 80%), transparent),
+        radial-gradient(2px 2px at 10% 80%, rgb(200 200 255 / 90%), transparent),
+        radial-gradient(2px 2px at 90% 40%, rgb(255 200 200 / 80%), transparent),
+        linear-gradient(180deg, #000010 0%, #000020 50%, #000010 100%) !important;
+}
+
+.wp-aurora .desktop {
+    background: linear-gradient(
+            180deg,
+            transparent 0%,
+            rgb(0 255 100 / 15%) 20%,
+            rgb(0 200 255 / 10%) 40%,
+            rgb(100 0 255 / 12%) 60%,
+            transparent 80%
+        ),
+        linear-gradient(180deg, #0a0a20 0%, #0d0d30 50%, #050515 100%) !important;
+    animation: aurora-shift 12s ease-in-out infinite;
+}
+
+@keyframes aurora-shift {
+    0%,
+    100% {
+        background-position:
+            0% 0%,
+            0% 0%;
+    }
+
+    50% {
+        background-position:
+            0% 10%,
+            0% 0%;
+    }
+}
+
+.wp-trading-floor .desktop {
+    background: repeating-linear-gradient(
+            90deg,
+            rgb(0 255 0 / 5%) 0,
+            transparent 1px,
+            transparent 40px
+        ),
+        repeating-linear-gradient(
+            0deg,
+            rgb(0 255 0 / 3%) 0,
+            transparent 1px,
+            transparent 20px
+        ),
+        linear-gradient(180deg, #0a0a0a 0%, #111111 50%, #0a0a0a 100%) !important;
+}
+
 /* ── Customization Window ─────────────────────────────────────────────── */
 
+.customize-root {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
 .customize-container {
-    padding: 8px;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow: hidden;
+}
+
+.customize-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2px;
+    padding: 4px 4px 0;
+    border-bottom: 2px solid var(--win-border-dark, #808080);
+    background: var(--win-bg, #c0c0c0);
+    flex-shrink: 0;
+}
+
+.customize-tab {
+    padding: 3px 8px;
+    font-size: 10px;
+    font-family: var(--font-system);
+    border: 1px solid var(--win-border-dark, #808080);
+    border-bottom: none;
+    background: var(--win-bg, #c0c0c0);
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.customize-tab:hover {
+    background: var(--theme-surface-primary);
+}
+
+.customize-tab.active {
+    background: var(--theme-surface-primary);
+    border-bottom: 1px solid var(--theme-surface-primary);
+    margin-bottom: -2px;
+    font-weight: 700;
+}
+
+.customize-panel {
+    flex: 1;
     overflow-y: auto;
-    max-height: 100%;
+    padding: 8px;
 }
 
-.customize-section {
-    margin-bottom: 12px;
-}
-
-.customize-section h3 {
-    margin: 0 0 6px;
-    font-size: 13px;
-    border-bottom: 1px solid var(--win-border-dark, #808080);
-    padding-bottom: 2px;
+.customize-section-header {
+    font-size: 10px;
+    color: var(--theme-text-secondary);
+    margin-bottom: 6px;
 }
 
 .customize-grid {
@@ -1100,4 +1269,29 @@ body {
     padding: 1px 4px;
     border-radius: 2px;
     font-weight: 700;
+}
+
+.cosmetic-rarity-badge {
+    font-size: 8px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    margin-top: 2px;
+}
+
+.cosmetic-rarity-badge.cosmetic-rarity-common {
+    color: #6b7280;
+}
+
+.cosmetic-rarity-badge.cosmetic-rarity-uncommon {
+    color: #059669;
+}
+
+.cosmetic-rarity-badge.cosmetic-rarity-rare {
+    color: #7c3aed;
+}
+
+.cosmetic-rarity-badge.cosmetic-rarity-legendary {
+    color: #9333ea;
+    text-shadow: 0 0 4px rgb(147 51 234 / 30%);
 }

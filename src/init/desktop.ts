@@ -1,4 +1,5 @@
 import { AchievementToast } from "../components/AchievementToast"
+import { CosmeticToast } from "../components/CosmeticToast"
 import { CursorTrail } from "../components/CursorTrail"
 import { Desktop } from "../components/Desktop"
 import { attachDevApi, DevPanel } from "../components/DevPanel"
@@ -47,6 +48,7 @@ export function initDesktop(app: HTMLElement): void {
     })
     wireVeilAchievements()
     new AchievementToast(achievements)
+    new CosmeticToast()
     new LevelUpPopup()
     new XPPopup()
 
@@ -114,23 +116,47 @@ export function initDesktop(app: HTMLElement): void {
     createAudioManager()
     new GlitchManager()
 
-    // ── Cosmetic system: apply active wallpaper and chrome ────────────────
+    // ── Cosmetic system: apply active cosmetics via CSS classes on body ────
+    const COSMETIC_CLASS_PREFIXES = [
+        "wp-",
+        "chrome-",
+        "font-",
+        "taskbar-",
+        "anim-",
+    ]
+
     const applyCosmetics = (): void => {
         const cm = getCosmeticManager()
 
-        // Wallpaper: apply CSS class to body
         document.body.classList.forEach((cls) => {
-            if (cls.startsWith("wp-") || cls.startsWith("chrome-")) {
+            if (COSMETIC_CLASS_PREFIXES.some((p) => cls.startsWith(p))) {
                 document.body.classList.remove(cls)
             }
         })
+
         const wpId = cm.getActive("wallpaper")
         if (wpId !== "default") {
             document.body.classList.add(`wp-${wpId}`)
         }
+
         const chromeId = cm.getActive("window-chrome")
         if (chromeId !== "default") {
             document.body.classList.add(`chrome-${chromeId}`)
+        }
+
+        const fontId = cm.getActive("system-font")
+        if (fontId !== "default") {
+            document.body.classList.add(`font-${fontId}`)
+        }
+
+        const taskbarId = cm.getActive("taskbar-style")
+        if (taskbarId !== "default") {
+            document.body.classList.add(`taskbar-${taskbarId}`)
+        }
+
+        const animId = cm.getActive("window-animation")
+        if (animId !== "default") {
+            document.body.classList.add(`anim-${animId}`)
         }
     }
     applyCosmetics()

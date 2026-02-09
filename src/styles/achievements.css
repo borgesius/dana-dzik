@@ -1,6 +1,6 @@
-/* ─── Achievement Toast ──────────────────────────────────────────────────── */
+/* ─── Shared Toast Container ─────────────────────────────────────────────── */
 
-.achievement-toast-container {
+.toast-container {
     position: fixed;
     bottom: 56px;
     right: 20px;
@@ -10,6 +10,8 @@
     gap: 12px;
     pointer-events: none;
 }
+
+/* ─── Achievement Toast ──────────────────────────────────────────────────── */
 
 .achievement-toast {
     position: relative;
@@ -45,13 +47,14 @@
         4px 4px 0 rgb(0 0 0 / 30%);
 }
 
-.achievement-toast-visible {
+.achievement-toast.toast-visible {
     opacity: 1;
     transform: translateX(0) scale(1);
     animation: achievement-bounce 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-.achievement-toast-exit {
+.achievement-toast.toast-exit,
+.cosmetic-toast.toast-exit {
     opacity: 0;
     transform: translateX(120%) scale(0.8);
     transition:
