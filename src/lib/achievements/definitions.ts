@@ -1626,6 +1626,50 @@ export const ACHIEVEMENTS: AchievementDef[] = [
         icon: "🌍",
         hidden: true,
     },
+
+    // ── Customization ───────────────────────────────────────────────────────
+    {
+        id: "window-shopper",
+        category: "customization",
+        icon: "🪟",
+        hidden: false,
+    },
+    {
+        id: "fashion-forward",
+        category: "customization",
+        icon: "👗",
+        hidden: false,
+    },
+    {
+        id: "makeover",
+        category: "customization",
+        icon: "💅",
+        hidden: false,
+    },
+    {
+        id: "ten-unlocked",
+        category: "customization",
+        icon: "🔓",
+        hidden: false,
+    },
+    {
+        id: "fashionista",
+        category: "customization",
+        icon: "👠",
+        hidden: false,
+    },
+    {
+        id: "aesthete",
+        category: "customization",
+        icon: "🎨",
+        hidden: false,
+    },
+    {
+        id: "pferd-couture",
+        category: "customization",
+        icon: "🐴",
+        hidden: true,
+    },
 ]
 
 export const ACHIEVEMENT_MAP: ReadonlyMap<string, AchievementDef> = new Map(

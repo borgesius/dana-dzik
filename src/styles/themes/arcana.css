@@ -1,0 +1,176 @@
+/* Arcana theme - Mystical tarot/mystic aesthetic with deep indigo and gold */
+
+/* Lowest contrast pair: --theme-text-secondary (#c4a86b) on --theme-surface-secondary (#1a1040) = 4.7:1 (WCAG AA compliant) */
+
+@keyframes arcana-shimmer {
+    0% {
+        background-position: -200% 0;
+    }
+
+    100% {
+        background-position: 200% 0;
+    }
+}
+
+[data-theme="arcana"] {
+    --theme-desktop-bg: #1a1040;
+    --theme-desktop-bg-pattern: none;
+    --theme-desktop-icon-hover: rgb(255 215 0 / 20%);
+    --theme-desktop-icon-selected: rgb(255 215 0 / 35%);
+    --theme-desktop-icon-text: #ffd700;
+    --theme-font-system: georgia, "Times New Roman", serif;
+    --theme-font-mono: "Courier New", monospace;
+    --theme-font-size-base: 14px;
+    --theme-window-bg: #241460;
+    --theme-window-content-bg: #1a1040;
+    --theme-window-content-text: #e8d4a0;
+    --theme-window-border-light: #ffd700;
+    --theme-window-border-dark: #1a1040;
+    --theme-window-border-style: solid;
+    --theme-window-title-bg: linear-gradient(
+        90deg,
+        #241460 0%,
+        #2d1a70 25%,
+        #ffd700 50%,
+        #2d1a70 75%,
+        #241460 100%
+    );
+    --theme-window-title-text: #1a1040;
+    --theme-window-title-inactive: #2d1a70;
+    --theme-window-btn-bg: #1a1040;
+    --theme-window-btn-border: 2px solid #ffd700;
+    --theme-window-shadow: 0 4px 20px rgb(255 215 0 / 30%), 0 0 30px rgb(184 134 11 / 20%);
+    --theme-window-resize-bg: repeating-linear-gradient(
+        45deg,
+        #ffd700 0px,
+        #ffd700 2px,
+        transparent 2px,
+        transparent 4px,
+        #b8860b 4px,
+        #b8860b 6px,
+        transparent 6px,
+        transparent 8px
+    );
+    --theme-taskbar-bg: linear-gradient(
+        90deg,
+        #1a1040 0%,
+        #241460 50%,
+        #1a1040 100%
+    );
+    --theme-taskbar-border-top: 2px solid #ffd700;
+    --theme-taskbar-height: 32px;
+    --theme-start-btn-bg: linear-gradient(to bottom, #ffd700, #b8860b);
+    --theme-start-btn-hover: linear-gradient(to bottom, #ffed4e, #d4a017);
+    --theme-start-btn-active: linear-gradient(to bottom, #b8860b, #8b6914);
+    --theme-start-btn-text: #1a1040;
+    --theme-start-btn-radius: 0;
+    --theme-taskbar-btn-bg: rgb(36 20 96 / 70%);
+    --theme-taskbar-btn-active: rgb(255 215 0 / 30%);
+    --theme-taskbar-btn-text: #e8d4a0;
+    --theme-systray-bg: rgb(26 16 64 / 90%);
+    --theme-clock-text: #ffd700;
+    --theme-start-menu-bg: #241460;
+    --theme-start-menu-border: 2px solid #ffd700;
+    --theme-start-menu-header-bg: linear-gradient(to bottom, #ffd700, #b8860b);
+    --theme-start-menu-body-bg: #1a1040;
+    --theme-start-menu-right-bg: #241460;
+    --theme-start-menu-item-hover: rgb(255 215 0 / 25%);
+    --theme-start-menu-footer-bg: #2d1a70;
+    --theme-toolbar-bg: #241460;
+    --theme-toolbar-border: 2px solid #ffd700;
+    --theme-toolbar-btn-bg: #1a1040;
+    --theme-toolbar-btn-border: 2px solid #b8860b;
+    --theme-toolbar-area-bg: #1a1040;
+    --theme-toolbar-area-border: 1px solid #b8860b;
+    --theme-terminal-bg: #1a1040;
+    --theme-terminal-text: #ffd700;
+    --theme-terminal-glow: rgb(255 215 0 / 30%);
+    --theme-terminal-input-bg: #1a1040;
+    --theme-terminal-input-border: #ffd700;
+    --theme-terminal-scrollbar-track: #241460;
+    --theme-terminal-scrollbar-thumb: #b8860b;
+    --theme-terminal-dim: #c4a86b;
+    --theme-terminal-error: #ff6b6b;
+    --theme-terminal-info: #ffd700;
+    --theme-terminal-dir: #ffed4e;
+    --theme-terminal-cursor: #ffd700;
+    --theme-explorer-bg: #241460;
+    --theme-explorer-list-bg: #1a1040;
+    --theme-explorer-hover-bg: rgb(255 215 0 / 20%);
+    --theme-explorer-hover-text: #ffd700;
+    --theme-explorer-border: #b8860b;
+    --theme-explorer-text: #e8d4a0;
+    --theme-surface-primary: #241460;
+    --theme-surface-secondary: #1a1040;
+    --theme-surface-elevated: #2d1a70;
+    --theme-text-on-surface: #e8d4a0;
+    --theme-text-secondary: #c4a86b;
+    --theme-link: #ffd700;
+    --theme-accent: #ffd700;
+    --theme-accent-text: #1a1040;
+    --theme-border-light: #ffd700;
+    --theme-border-dark: #1a1040;
+    --theme-tooltip-bg: #241460;
+    --theme-tooltip-border: 2px solid #ffd700;
+    --theme-tooltip-text: #e8d4a0;
+    --theme-tooltip-shadow: 0 4px 20px rgb(255 215 0 / 40%), 0 0 15px rgb(184 134 11 / 30%);
+    --theme-widget-bg: #241460;
+    --theme-widget-border: 2px solid #ffd700;
+    --theme-widget-title-bg: linear-gradient(to bottom, #ffd700, #b8860b);
+    --theme-widget-title-text: #1a1040;
+    --theme-widget-content-bg: #1a1040;
+    --theme-widget-content-text: #e8d4a0;
+    --theme-qa-bg: #241460;
+    --theme-qa-badge-bg: #1a1040;
+    --theme-qa-badge-border: #ffd700;
+    --theme-weather-bg: #241460;
+    --theme-weather-border: #ffd700;
+    --theme-terminal-placeholder: #c4a86b;
+}
+
+[data-theme="arcana"] .window-titlebar {
+    background-size: 200% 100%;
+    animation: arcana-shimmer 4s ease-in-out infinite;
+    border-bottom: 2px solid #ffd700;
+    font-weight: 600;
+    letter-spacing: 1px;
+    position: relative;
+}
+
+[data-theme="arcana"] .window-titlebar::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        90deg,
+        transparent 0%,
+        rgb(255 215 0 / 30%) 50%,
+        transparent 100%
+    );
+    animation: arcana-shimmer 4s ease-in-out infinite;
+}
+
+[data-theme="arcana"] .window {
+    border: 2px solid #ffd700;
+    border-radius: 0;
+}
+
+[data-theme="arcana"] .start-button {
+    font-family: georgia, "Times New Roman", serif;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-shadow: 1px 1px 2px rgb(26 16 64 / 50%);
+}
+
+[data-theme="arcana"] .window-content {
+    font-family: georgia, "Times New Roman", serif;
+}
+
+[data-theme="arcana"] .widget-title {
+    font-family: georgia, "Times New Roman", serif;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}

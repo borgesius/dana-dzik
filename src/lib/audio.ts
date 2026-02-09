@@ -1,3 +1,5 @@
+import { getCosmeticManager } from "./cosmetics/CosmeticManager"
+
 const SOUND_URLS: Record<string, string> = {
     startup: "/assets/sounds/retro_misc_05.ogg",
     click: "/assets/sounds/shot_01.ogg",
@@ -14,6 +16,11 @@ const SOUND_URLS: Record<string, string> = {
     pinball_target: "/assets/sounds/synth_beep_02.ogg",
     pinball_drain: "/assets/sounds/retro_die_01.ogg",
     pinball_gameover: "/assets/sounds/retro_die_01.ogg",
+    "startup-chime": "/assets/sounds/startup/chime.ogg",
+    "startup-retro": "/assets/sounds/startup/retro.ogg",
+    "startup-modem": "/assets/sounds/startup/modem.ogg",
+    "startup-whinny": "/assets/sounds/startup/whinny.ogg",
+    "startup-orchestral": "/assets/sounds/startup/orchestral.ogg",
 }
 
 export interface Track {
@@ -125,7 +132,15 @@ export class AudioManager {
             }
         })
 
-        this.playSound("startup")
+        const startupId = getCosmeticManager().getActive("startup-sound")
+        if (startupId !== "none") {
+            const key = `startup-${startupId}`
+            if (this.sounds.has(key)) {
+                this.playSound(key)
+            } else {
+                this.playSound("startup")
+            }
+        }
         this.aggressiveAutoplay()
     }
 

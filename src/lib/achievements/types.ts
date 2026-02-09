@@ -14,6 +14,7 @@ export type AchievementCategory =
     | "cross-system"
     | "veil"
     | "arcana"
+    | "customization"
 
 export type AchievementId =
     // Trading
@@ -282,6 +283,14 @@ export type AchievementId =
     | "arcana-sun"
     | "arcana-judgement"
     | "arcana-world"
+    // Customization
+    | "window-shopper"
+    | "fashion-forward"
+    | "makeover"
+    | "ten-unlocked"
+    | "fashionista"
+    | "aesthete"
+    | "pferd-couture"
 
 export type TieredGroup =
     | "mogul"

@@ -1,0 +1,140 @@
+/* Prestige Gold theme                                                           */
+
+/* Lowest contrast pair: #8b6914 on #fffacd = 4.6:1 (WCAG AA compliant)         */
+
+@keyframes gold-shimmer {
+    0% {
+        background-position: -200% 0;
+    }
+
+    100% {
+        background-position: 200% 0;
+    }
+}
+
+[data-theme="golden"] {
+    --theme-desktop-bg: #111111;
+    --theme-desktop-bg-pattern: none;
+    --theme-desktop-icon-hover: rgb(255 215 0 / 20%);
+    --theme-desktop-icon-selected: rgb(255 215 0 / 35%);
+    --theme-desktop-icon-text: #ffd700;
+    --theme-font-system: georgia, "Times New Roman", serif;
+    --theme-font-mono: "Courier New", monospace;
+    --theme-font-size-base: 14px;
+    --theme-window-bg: #fffacd;
+    --theme-window-content-bg: #fffef5;
+    --theme-window-content-text: #111111;
+    --theme-window-border-light: #ffd700;
+    --theme-window-border-dark: #8b6914;
+    --theme-window-border-style: solid;
+    --theme-window-title-bg: linear-gradient(to bottom, #ffd700, #8b6914);
+    --theme-window-title-text: #111111;
+    --theme-window-title-inactive: #8b6914;
+    --theme-window-btn-bg: #fffacd;
+    --theme-window-btn-border: 2px solid #8b6914;
+    --theme-window-shadow: 4px 4px 12px rgb(0 0 0 / 50%);
+    --theme-window-resize-bg: repeating-linear-gradient(
+        45deg,
+        #8b6914 0px,
+        #8b6914 2px,
+        transparent 2px,
+        transparent 4px,
+        #ffd700 4px,
+        #ffd700 6px,
+        transparent 6px,
+        transparent 8px
+    );
+    --theme-taskbar-bg: linear-gradient(
+        90deg,
+        #8b6914 0%,
+        #a67c1a 25%,
+        #ffd700 50%,
+        #a67c1a 75%,
+        #8b6914 100%
+    );
+    --theme-taskbar-border-top: 2px solid #ffd700;
+    --theme-taskbar-height: 32px;
+    --theme-start-btn-bg: linear-gradient(to bottom, #ffd700, #8b6914);
+    --theme-start-btn-hover: linear-gradient(to bottom, #ffed4e, #a67c1a);
+    --theme-start-btn-active: linear-gradient(to bottom, #8b6914, #5a4509);
+    --theme-start-btn-text: #111111;
+    --theme-start-btn-radius: 0;
+    --theme-taskbar-btn-bg: rgb(139 105 20 / 60%);
+    --theme-taskbar-btn-active: rgb(255 215 0 / 80%);
+    --theme-taskbar-btn-text: #fffacd;
+    --theme-systray-bg: rgb(139 105 20 / 80%);
+    --theme-clock-text: #ffd700;
+    --theme-start-menu-bg: #fffacd;
+    --theme-start-menu-border: 2px solid #8b6914;
+    --theme-start-menu-header-bg: linear-gradient(to bottom, #ffd700, #8b6914);
+    --theme-start-menu-body-bg: #fffef5;
+    --theme-start-menu-right-bg: #fffacd;
+    --theme-start-menu-item-hover: rgb(255 215 0 / 30%);
+    --theme-start-menu-footer-bg: #8b6914;
+    --theme-toolbar-bg: #fffacd;
+    --theme-toolbar-border: 2px solid #8b6914;
+    --theme-toolbar-btn-bg: #fffef5;
+    --theme-toolbar-btn-border: 1px solid #8b6914;
+    --theme-toolbar-area-bg: #fffef5;
+    --theme-toolbar-area-border: 1px solid #ffd700;
+    --theme-terminal-bg: #111111;
+    --theme-terminal-text: #ffd700;
+    --theme-terminal-glow: rgb(255 215 0 / 30%);
+    --theme-terminal-input-bg: #1a1a1a;
+    --theme-terminal-input-border: #ffd700;
+    --theme-terminal-scrollbar-track: #2a2a2a;
+    --theme-terminal-scrollbar-thumb: #8b6914;
+    --theme-terminal-dim: #a67c1a;
+    --theme-terminal-error: #ff6b6b;
+    --theme-terminal-info: #ffd700;
+    --theme-terminal-dir: #ffed4e;
+    --theme-terminal-cursor: #ffd700;
+    --theme-explorer-bg: #fffacd;
+    --theme-explorer-list-bg: #fffef5;
+    --theme-explorer-hover-bg: rgb(255 215 0 / 30%);
+    --theme-explorer-hover-text: #111111;
+    --theme-explorer-border: #8b6914;
+    --theme-explorer-text: #111111;
+    --theme-surface-primary: #fffacd;
+    --theme-surface-secondary: #fffef5;
+    --theme-surface-elevated: #ffffff;
+    --theme-text-on-surface: #111111;
+    --theme-text-secondary: #8b6914;
+    --theme-link: #8b6914;
+    --theme-accent: #ffd700;
+    --theme-accent-text: #111111;
+    --theme-border-light: #ffd700;
+    --theme-border-dark: #8b6914;
+    --theme-tooltip-bg: #fffacd;
+    --theme-tooltip-border: 2px solid #8b6914;
+    --theme-tooltip-text: #111111;
+    --theme-tooltip-shadow: 4px 4px 12px rgb(0 0 0 / 40%);
+    --theme-widget-bg: #fffacd;
+    --theme-widget-border: 2px solid #8b6914;
+    --theme-widget-title-bg: linear-gradient(to bottom, #ffd700, #8b6914);
+    --theme-widget-title-text: #111111;
+    --theme-widget-content-bg: #fffef5;
+    --theme-widget-content-text: #111111;
+    --theme-qa-bg: #fffacd;
+    --theme-qa-badge-bg: #ffd700;
+    --theme-qa-badge-border: #8b6914;
+    --theme-weather-bg: #fffacd;
+    --theme-weather-border: #8b6914;
+    --theme-terminal-placeholder: #a67c1a;
+}
+
+[data-theme="golden"] .taskbar {
+    background-size: 200% 100%;
+    animation: gold-shimmer 3s ease-in-out infinite;
+}
+
+[data-theme="golden"] .window {
+    border: 2px solid #8b6914;
+    border-radius: 0;
+}
+
+[data-theme="golden"] .window-titlebar {
+    border-bottom: 2px solid #8b6914;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
