@@ -1,3 +1,9 @@
+## [2.8.3](https://github.com/borgesius/dana-dzik/compare/v2.8.2...v2.8.3) (2026-02-09)
+
+### Bug Fixes
+
+* update cosmetic manager when switching theme ([8b595c0](https://github.com/borgesius/dana-dzik/commit/8b595c0d76a44945ff9a9705aab482ebe2f211f1))
+
 ## [2.8.2](https://github.com/borgesius/dana-dzik/compare/v2.8.1...v2.8.2) (2026-02-09)
 
 ### Bug Fixes
