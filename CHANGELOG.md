@@ -1,3 +1,9 @@
+## [2.6.0](https://github.com/borgesius/dana-dzik/compare/v2.5.0...v2.6.0) (2026-02-09)
+
+### Features
+
+* **cube runner:** ui polish and spawn times ([#50](https://github.com/borgesius/dana-dzik/issues/50)) ([5de07a7](https://github.com/borgesius/dana-dzik/commit/5de07a78a12f93bf70fdaaa8d5cb18dc3a8c95dd))
+
 ## [2.5.0](https://github.com/borgesius/dana-dzik/compare/v2.4.0...v2.5.0) (2026-02-09)
 
 ### Features
