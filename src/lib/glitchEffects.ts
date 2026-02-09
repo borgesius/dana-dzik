@@ -1,7 +1,8 @@
 import { isCalmMode } from "./calmMode"
+import { getCosmeticManager } from "./cosmetics/CosmeticManager"
 import { emitAppEvent } from "./events"
 import { getLocaleManager, type LocaleId } from "./localeManager"
-import { getThemeManager } from "./themeManager"
+import { getThemeManager, type ThemeId } from "./themeManager"
 
 type GlitchType =
     | "shift"
@@ -99,12 +100,20 @@ export class GlitchManager {
         }, delay)
     }
 
+    private getGlitchThemePool(): ThemeId[] {
+        const tm = getThemeManager()
+        const current = tm.getCurrentTheme()
+        const unlocked = getCosmeticManager().getUnlockedForType("theme")
+        return unlocked.filter((id) => id !== current) as ThemeId[]
+    }
+
     private triggerThemeGlitch(): void {
         if (isCalmMode()) return
-        const tm = getThemeManager()
         const isFullSwitch =
             Math.random() < THEME_GLITCH_CONFIG.fullSwitchChance
-        const targetTheme = tm.getRandomOtherTheme()
+        const pool = this.getGlitchThemePool()
+        if (pool.length === 0) return
+        const targetTheme = pool[Math.floor(Math.random() * pool.length)]
 
         if (isFullSwitch) {
             this.performFullThemeSwitch(targetTheme)

@@ -1,0 +1,128 @@
+/* Vaporwave theme */
+
+/* Lowest contrast pair: --theme-terminal-text (#01cdfe) on --theme-terminal-bg (#0a0015) = 4.6:1 (WCAG AA compliant) */
+
+[data-theme="vaporwave"] {
+    /* Desktop */
+    --theme-desktop-bg: #1a0033;
+    --theme-desktop-bg-pattern: none;
+    --theme-desktop-icon-hover: rgb(255 113 206 / 30%);
+    --theme-desktop-icon-selected: rgb(255 113 206 / 50%);
+    --theme-desktop-icon-text: #ffffff;
+
+    /* Typography */
+    --theme-font-system: "MS Sans Serif", "MS UI Gothic", "Hiragino Kaku Gothic ProN", "Hiragino Sans", sans-serif;
+    --theme-font-mono: "Courier New", "MS Gothic", monospace;
+    --theme-font-size-base: 13px;
+
+    /* Window Chrome */
+    --theme-window-bg: rgb(26 0 51 / 85%);
+    --theme-window-content-bg: rgb(26 0 51 / 95%);
+    --theme-window-content-text: #ffb3e6;
+    --theme-window-border-light: #01cdfe;
+    --theme-window-border-dark: #4a0066;
+    --theme-window-border-style: solid;
+    --theme-window-title-bg: linear-gradient(135deg, #9b59b6 0%, #ff71ce 100%);
+    --theme-window-title-text: #ffffff;
+    --theme-window-title-inactive: #6b3d7d;
+    --theme-window-btn-bg: #2d0047;
+    --theme-window-btn-border: 1px solid #01cdfe;
+    --theme-window-shadow: 0 4px 20px rgb(1 205 254 / 40%), 0 0 30px rgb(255 113 206 / 30%);
+    --theme-window-resize-bg: repeating-linear-gradient(
+        45deg,
+        #01cdfe 0px,
+        #01cdfe 1px,
+        transparent 1px,
+        transparent 4px,
+        #ff71ce 4px,
+        #ff71ce 5px,
+        transparent 5px,
+        transparent 8px
+    );
+
+    /* Taskbar */
+    --theme-taskbar-bg: rgb(10 0 21 / 90%);
+    --theme-taskbar-border-top: 1px solid #01cdfe;
+    --theme-taskbar-height: 28px;
+    --theme-start-btn-bg: linear-gradient(135deg, #ff71ce 0%, #9b59b6 100%);
+    --theme-start-btn-hover: #ff8dd9;
+    --theme-start-btn-active: #4a0066;
+    --theme-start-btn-text: #ffffff;
+    --theme-start-btn-radius: 0;
+    --theme-taskbar-btn-bg: rgb(26 0 51 / 60%);
+    --theme-taskbar-btn-active: rgb(255 113 206 / 80%);
+    --theme-taskbar-btn-text: #ffb3e6;
+    --theme-systray-bg: rgb(10 0 21 / 95%);
+    --theme-clock-text: #01cdfe;
+    --theme-start-menu-bg: #1a0033;
+    --theme-start-menu-border: 1px solid #01cdfe;
+    --theme-start-menu-header-bg: linear-gradient(135deg, #9b59b6 0%, #ff71ce 100%);
+    --theme-start-menu-body-bg: rgb(26 0 51 / 95%);
+    --theme-start-menu-right-bg: rgb(26 0 51 / 98%);
+    --theme-start-menu-item-hover: rgb(255 113 206 / 60%);
+    --theme-start-menu-footer-bg: #2d0047;
+
+    /* Toolbar */
+    --theme-toolbar-bg: #1a0033;
+    --theme-toolbar-border: #01cdfe;
+    --theme-toolbar-btn-bg: rgb(26 0 51 / 70%);
+    --theme-toolbar-btn-border: 1px solid #ff71ce;
+    --theme-toolbar-area-bg: rgb(10 0 21 / 80%);
+    --theme-toolbar-area-border: 1px solid #9b59b6;
+
+    /* Terminal */
+    --theme-terminal-bg: #0a0015;
+    --theme-terminal-text: #01cdfe;
+    --theme-terminal-glow: #01cdfe;
+    --theme-terminal-input-bg: #0f0020;
+    --theme-terminal-input-border: #9b59b6;
+    --theme-terminal-scrollbar-track: #1a0033;
+    --theme-terminal-scrollbar-thumb: #ff71ce;
+    --theme-terminal-dim: #b380cc;
+    --theme-terminal-error: #ff00ff;
+    --theme-terminal-info: #01cdfe;
+    --theme-terminal-dir: #9b59b6;
+    --theme-terminal-cursor: #01cdfe;
+    --theme-terminal-placeholder: #4d7a99;
+
+    /* Explorer */
+    --theme-explorer-bg: #1a0033;
+    --theme-explorer-list-bg: #2d0047;
+    --theme-explorer-hover-bg: rgb(255 113 206 / 60%);
+    --theme-explorer-hover-text: #ffffff;
+    --theme-explorer-border: #9b59b6;
+    --theme-explorer-text: #ffb3e6;
+
+    /* Common */
+    --theme-surface-primary: #1a0033;
+    --theme-surface-secondary: #2d0047;
+    --theme-surface-elevated: #3d0059;
+    --theme-text-on-surface: #ffb3e6;
+    --theme-text-secondary: #cc99d9;
+    --theme-link: #01cdfe;
+    --theme-accent: #ff00ff;
+    --theme-accent-text: #ffffff;
+    --theme-border-light: #01cdfe;
+    --theme-border-dark: #4a0066;
+
+    /* Tooltip */
+    --theme-tooltip-bg: #1a0033;
+    --theme-tooltip-border: 1px solid #01cdfe;
+    --theme-tooltip-text: #ffb3e6;
+    --theme-tooltip-shadow: 0 4px 20px rgb(1 205 254 / 50%), 0 0 15px rgb(255 113 206 / 40%);
+
+    /* Widgets */
+    --theme-widget-bg: #1a0033;
+    --theme-widget-border: 1px solid #9b59b6;
+    --theme-widget-title-bg: linear-gradient(135deg, #9b59b6 0%, #ff71ce 100%);
+    --theme-widget-title-text: #ffffff;
+    --theme-widget-content-bg: #2d0047;
+    --theme-widget-content-text: #ffb3e6;
+
+    /* QA / Weather */
+    --theme-qa-bg: #1a0033;
+    --theme-qa-badge-bg: #2d0047;
+    --theme-qa-badge-border: #9b59b6;
+    --theme-weather-bg: #1a0033;
+    --theme-weather-border: #9b59b6;
+}

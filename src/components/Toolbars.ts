@@ -9,7 +9,6 @@ import {
 import { getThemeManager } from "../lib/themeManager"
 import { BusinessPanel } from "./BusinessPanel"
 import { BootTimeWidget } from "./toolbars/BootTimeWidget"
-import { createColorSchemeToggle } from "./toolbars/ColorSchemeToggle"
 import { CostWidget } from "./toolbars/CostWidget"
 import { CrashCounterWidget } from "./toolbars/CrashCounterWidget"
 import { DeployWidget } from "./toolbars/DeployWidget"
@@ -17,7 +16,6 @@ import { createLanguageToggle } from "./toolbars/LanguageToggle"
 import { MarketTicker } from "./toolbars/MarketTicker"
 import { QAReportsWidget } from "./toolbars/QAReportsWidget"
 import { SystemResourcesWidget } from "./toolbars/SystemResourcesWidget"
-import { createThemeToggle } from "./toolbars/ThemeToggle"
 import { WeatherWidget } from "./toolbars/WeatherWidget"
 
 export class Toolbars {
@@ -96,10 +94,9 @@ export class Toolbars {
         toolbar.appendChild(spacer)
 
         toolbar.appendChild(this.createAchievementsButton())
+        toolbar.appendChild(this.createCustomizeButton())
         toolbar.appendChild(this.createCalmModeToggle())
         toolbar.appendChild(createLanguageToggle())
-        toolbar.appendChild(createThemeToggle())
-        toolbar.appendChild(createColorSchemeToggle())
 
         return toolbar
     }
@@ -111,6 +108,17 @@ export class Toolbars {
         btn.title = "Achievements"
         btn.addEventListener("click", () => {
             emitAppEvent("terminal:open-window", { windowId: "achievements" })
+        })
+        return btn
+    }
+
+    private createCustomizeButton(): HTMLElement {
+        const btn = document.createElement("button")
+        btn.className = "toolbar-button customize-button"
+        btn.textContent = "🎨"
+        btn.title = "Customize"
+        btn.addEventListener("click", () => {
+            emitAppEvent("terminal:open-window", { windowId: "customize" })
         })
         return btn
     }

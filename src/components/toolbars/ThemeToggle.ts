@@ -5,6 +5,13 @@ const THEME_ICONS: Record<ThemeId, string> = {
     "mac-classic": "🍎",
     apple2: "🖥️",
     c64: "📺",
+    amiga: "🖼️",
+    next: "⬛",
+    vaporwave: "🌸",
+    golden: "👑",
+    nocturnal: "🌑",
+    void: "🕳️",
+    arcana: "🔮",
 }
 
 const THEME_NAMES: Record<ThemeId, string> = {
@@ -12,6 +19,13 @@ const THEME_NAMES: Record<ThemeId, string> = {
     "mac-classic": "Mac Classic",
     apple2: "Apple II",
     c64: "Commodore 64",
+    amiga: "Amiga Workbench",
+    next: "NeXTSTEP",
+    vaporwave: "Vaporwave",
+    golden: "Prestige Gold",
+    nocturnal: "Nocturnal",
+    void: "The Void",
+    arcana: "Arcana",
 }
 
 export function createThemeToggle(): HTMLElement {

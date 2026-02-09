@@ -1,0 +1,134 @@
+/* ─── Cosmetic Taskbar Styles ────────────────────────────────────────────── */
+
+/* Applied via body class: taskbar-{id}                                      */
+
+.taskbar-minimal .taskbar {
+    padding: 1px 4px;
+    min-height: 24px;
+    background: rgb(192 192 192 / 85%);
+}
+
+.taskbar-minimal .taskbar button {
+    padding: 1px 6px;
+    font-size: 10px;
+}
+
+.taskbar-minimal .start-button {
+    padding: 1px 8px;
+}
+
+.taskbar-chunky .taskbar {
+    padding: 6px 8px;
+    min-height: 48px;
+}
+
+.taskbar-chunky .taskbar button {
+    padding: 4px 10px;
+    font-size: 13px;
+    border-width: 3px;
+}
+
+.taskbar-chunky .start-button {
+    padding: 4px 12px;
+    font-size: 14px;
+}
+
+.taskbar-dark-glass .taskbar {
+    background: rgb(20 20 30 / 80%) !important;
+    backdrop-filter: blur(8px);
+    border-top: 1px solid rgb(255 255 255 / 10%);
+}
+
+.taskbar-dark-glass .taskbar button {
+    color: #e0e0e0;
+    border-color: rgb(255 255 255 / 15%);
+    background: rgb(255 255 255 / 5%);
+}
+
+.taskbar-dark-glass .taskbar button:hover {
+    background: rgb(255 255 255 / 12%);
+}
+
+.taskbar-dark-glass .start-button {
+    color: #ffffff;
+}
+
+.taskbar-dark-glass .money-counter {
+    color: #e0e0e0;
+}
+
+.taskbar-holographic .taskbar {
+    border-top: 3px solid transparent;
+    border-image: linear-gradient(
+            90deg,
+            #ff0000,
+            #ff8800,
+            #ffff00,
+            #00ff00,
+            #0088ff,
+            #8800ff,
+            #ff0000
+        )
+        1;
+    background: rgb(192 192 192 / 90%);
+    animation: holographic-shift 4s linear infinite;
+    background-size: 200% 100%;
+}
+
+@keyframes holographic-shift {
+    0% {
+        border-image: linear-gradient(
+                90deg,
+                #ff0000,
+                #ff8800,
+                #ffff00,
+                #00ff00,
+                #0088ff,
+                #8800ff,
+                #ff0000
+            )
+            1;
+    }
+
+    33% {
+        border-image: linear-gradient(
+                90deg,
+                #00ff00,
+                #0088ff,
+                #8800ff,
+                #ff0000,
+                #ff8800,
+                #ffff00,
+                #00ff00
+            )
+            1;
+    }
+
+    66% {
+        border-image: linear-gradient(
+                90deg,
+                #8800ff,
+                #ff0000,
+                #ff8800,
+                #ffff00,
+                #00ff00,
+                #0088ff,
+                #8800ff
+            )
+            1;
+    }
+
+    100% {
+        border-image: linear-gradient(
+                90deg,
+                #ff0000,
+                #ff8800,
+                #ffff00,
+                #00ff00,
+                #0088ff,
+                #8800ff,
+                #ff0000
+            )
+            1;
+    }
+}
