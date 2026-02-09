@@ -1,3 +1,9 @@
+## [2.8.1](https://github.com/borgesius/dana-dzik/compare/v2.8.0...v2.8.1) (2026-02-09)
+
+### Bug Fixes
+
+* **symposium:** sync ui to buffs/debuffs ([988fa0d](https://github.com/borgesius/dana-dzik/commit/988fa0dda7ea549e718b53132bdc82d7d5182e4c))
+
 ## [2.8.0](https://github.com/borgesius/dana-dzik/compare/v2.7.1...v2.8.0) (2026-02-09)
 
 ### Features
