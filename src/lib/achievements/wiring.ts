@@ -8,6 +8,7 @@ import {
     CORNER_MARKET_FLOAT,
     CORNER_MARKET_THRESHOLD,
     FACTORIES,
+    TICK_INTERVAL_MS,
     type TradeResult,
     UPGRADES,
 } from "../marketGame/types"
@@ -760,28 +761,24 @@ function wireProgressionEvents(mgr: AchievementManager): void {
     })
 
     // ── Autobattler achievements ─────────────────────────────────────────
-    let consecutiveWins = 0
-    let totalAutobattlerWins = 0
     onAppEvent("autobattler:run-complete", (detail) => {
         mgr.earn("first-draft")
-        if (detail.won) {
-            mgr.earn("posse-up")
-            totalAutobattlerWins++
-            consecutiveWins++
 
-            // Wrangler tiered group
-            if (totalAutobattlerWins >= 1) mgr.earn("greenhorn")
-            if (totalAutobattlerWins >= 5) mgr.earn("deputy")
-            if (totalAutobattlerWins >= 15) mgr.earn("sheriff")
-            if (totalAutobattlerWins >= 50) mgr.earn("marshal")
+        const clearedBoss = detail.highestRound >= 6
 
-            // Win streak (3 in a row)
-            if (consecutiveWins >= 3) mgr.earn("win-streak")
+        if (clearedBoss) {
+            mgr.earn("greenhorn")
+        }
 
-            // VII - The Chariot: 5 consecutive wins
-            if (consecutiveWins >= 5) mgr.earn("arcana-chariot")
+        // Escalation milestones
+        if (detail.highestRound >= 10) mgr.earn("tenure-track")
+        if (detail.highestRound >= 15) mgr.earn("associate-prof")
+        if (detail.highestRound >= 20) mgr.earn("full-prof")
+        if (detail.highestRound >= 25) mgr.earn("endowed-chair")
 
-            // VI - The Lovers: win with exactly 2 distinct factions
+        // Composition achievements require clearing the first boss
+        if (clearedBoss) {
+            // VI - The Lovers: exactly 2 distinct factions
             const distinctFactions = new Set(
                 detail.lineupFactions.filter((f) => f !== "drifters")
             )
@@ -790,7 +787,6 @@ function wireProgressionEvents(mgr: AchievementManager): void {
             // ── Concept achievements ──────────────────────────────────────
             const locale = getLocaleManager().getCurrentLocale()
 
-            // Locale-sensitive
             if (detail.majorityFaction === "prospectors" && locale === "fr") {
                 mgr.earn("la-pensee-francaise")
             }
@@ -819,7 +815,7 @@ function wireProgressionEvents(mgr: AchievementManager): void {
                 mgr.earn("independent-study")
             }
 
-            // Survey course (win with each faction as majority)
+            // Survey course (reach round 6+ with each faction as majority)
             if (detail.majorityFaction) {
                 const factionCount = mgr.addToSet(
                     "factions-won-with",
@@ -836,19 +832,6 @@ function wireProgressionEvents(mgr: AchievementManager): void {
             if (factionSet.has("clockwork") && factionSet.has("prospectors")) {
                 mgr.earn("expressionism-in-philosophy")
             }
-            // Escalation milestones
-            if (detail.highestRound >= 10) mgr.earn("tenure-track")
-            if (detail.highestRound >= 15) mgr.earn("associate-prof")
-            if (detail.highestRound >= 20) mgr.earn("full-prof")
-            if (detail.highestRound >= 25) mgr.earn("endowed-chair")
-        } else {
-            consecutiveWins = 0
-
-            // Escalation milestones (awarded on loss too)
-            if (detail.highestRound >= 10) mgr.earn("tenure-track")
-            if (detail.highestRound >= 15) mgr.earn("associate-prof")
-            if (detail.highestRound >= 20) mgr.earn("full-prof")
-            if (detail.highestRound >= 25) mgr.earn("endowed-chair")
         }
     })
 
@@ -860,6 +843,8 @@ function wireProgressionEvents(mgr: AchievementManager): void {
         // Perfect boss (no units lost)
         if (detail.noUnitsLost) {
             mgr.earn("summa-cum-laude")
+            // VII - The Chariot: flawless boss victory
+            mgr.earn("arcana-chariot")
         }
 
         // All 4 bosses (use addToSet to track unique boss IDs)
@@ -941,16 +926,28 @@ function wireProgressionEvents(mgr: AchievementManager): void {
     })
 
     // ── HR / Phase 5 achievements ────────────────────────────────────────
+    const TRANSITION_PLAN_TICKS = 10 // PLACEHOLDER: needs tuning
+    let lastFireTimestamp = 0
+
     let totalHires = 0
     onAppEvent("market:employee-hired", () => {
         mgr.earn("that-ones-a-person")
         totalHires++
         if (totalHires >= 9) mgr.earn("we-make-nothing")
+
+        if (
+            lastFireTimestamp > 0 &&
+            Date.now() - lastFireTimestamp <=
+                TRANSITION_PLAN_TICKS * TICK_INTERVAL_MS
+        ) {
+            mgr.earn("transition-plan")
+        }
     })
 
     let totalFires = 0
     onAppEvent("market:employee-fired", () => {
         totalFires++
+        lastFireTimestamp = Date.now()
         if (totalFires >= 3) mgr.earn("you-dont-get-to-choose")
     })
 
@@ -972,11 +969,11 @@ function wireProgressionEvents(mgr: AchievementManager): void {
         // rely on the level-up event to pick this up
     })
 
-    // "Full Stack" = prestige + win autobattler + first resume upgrade
+    // "Full Stack" = prestige + clear first boss + first resume upgrade
     const checkFullStack = (): void => {
         if (
             mgr.hasEarned("ive-been-wrong") &&
-            mgr.hasEarned("posse-up") &&
+            mgr.hasEarned("greenhorn") &&
             mgr.hasEarned("career-starter")
         ) {
             mgr.earn("full-stack")

@@ -1136,9 +1136,13 @@
             "name": "Reorg",
             "description": "Reorganize the org chart."
         },
+        "transition-plan": {
+            "name": "The Firm Has Worked Out Its Transition Plan",
+            "description": "Replace a fired employee within 10 ticks."
+        },
         "greenhorn": {
             "name": "Postdoc",
-            "description": "Win your first symposium."
+            "description": "Clear the first boss in the symposium."
         },
         "deputy": { "name": "Adjunct", "description": "Win 5 symposia." },
         "sheriff": { "name": "Lecturer", "description": "Win 15 symposia." },
@@ -1524,7 +1528,7 @@
         },
         "arcana-chariot": {
             "name": "The Chariot",
-            "description": "Win 5 symposium runs in a row."
+            "description": "Defeat a boss with all units surviving."
         },
         "arcana-strength": {
             "name": "Strength",

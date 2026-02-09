@@ -48,7 +48,6 @@ export interface AppEventMap {
     "prestige:ascension": { count: number; foresight: number }
     "prestige:foresight-purchase": { upgradeId: string }
     "autobattler:run-complete": {
-        won: boolean
         majorityFaction?: string
         losses: number
         lineupFactions: string[]

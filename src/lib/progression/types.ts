@@ -87,14 +87,10 @@ export interface AutobattlerUnitEntry {
 export interface AutobattlerSaveData {
     collection: AutobattlerUnitEntry[]
     completedRuns: number
-    wonRuns: number
-    bestStreak: number
-    currentStreak: number
     unlockedFactions: string[]
     spiralProgress: Record<string, boolean>
     /** Personal bests */
     highestRound?: number
-    bestWinLoss?: { wins: number; losses: number }
     totalBossesDefeated?: number
     /** Set of defeated boss IDs for Comprehensive Exams achievement */
     bossesDefeatedSet?: string[]
@@ -104,9 +100,6 @@ export function createEmptyAutobattlerData(): AutobattlerSaveData {
     return {
         collection: [],
         completedRuns: 0,
-        wonRuns: 0,
-        bestStreak: 0,
-        currentStreak: 0,
         unlockedFactions: [],
         spiralProgress: {},
         highestRound: 0,
