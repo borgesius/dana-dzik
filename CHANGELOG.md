@@ -1,3 +1,10 @@
+## [2.7.1](https://github.com/borgesius/dana-dzik/compare/v2.7.0...v2.7.1) (2026-02-09)
+
+### Bug Fixes
+
+* bug ([9d2593d](https://github.com/borgesius/dana-dzik/commit/9d2593d64ddb1773e804e2d752ac617d297e32e7))
+* symposium unit tooltips ([2d75782](https://github.com/borgesius/dana-dzik/commit/2d7578297f51cde7b5e8d94a332d8576f80ebcf2))
+
 ## [2.7.0](https://github.com/borgesius/dana-dzik/compare/v2.6.1...v2.7.0) (2026-02-09)
 
 ### Features
