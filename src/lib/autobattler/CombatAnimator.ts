@@ -155,10 +155,13 @@ export class CombatAnimator {
             this.animateDeath(desc)
         } else if (desc.includes(" ability deals ")) {
             this.animateAbilityDamage(desc)
+        } else if (desc.includes(" ability heals ")) {
+            this.animateHeal(desc)
         } else if (desc.includes(" summons ")) {
             this.animateSummon(desc)
+        } else if (desc.includes(" gains +") && desc.includes(" HP")) {
+            this.animateHpGain(desc)
         }
-        // Buffs, heals, and shield changes are implicit in stat updates
     }
 
     private appendLogEntry(entry: CombatLogEntry): void {
@@ -246,6 +249,70 @@ export class CombatAnimator {
         }
 
         this.applyDamageToUnit(targetId, dmg)
+    }
+
+    private animateHeal(desc: string): void {
+        const match = desc.match(/^(\S+) ability heals (\S+) for (\d+)/)
+        if (!match) return
+
+        const [, , targetId, healStr] = match
+        const heal = parseInt(healStr)
+
+        const card = this.findCardByUnitDefId(targetId)
+        if (card) {
+            this.showHealNumber(card, heal)
+        }
+
+        this.applyHealToUnit(targetId, heal, false)
+    }
+
+    private animateHpGain(desc: string): void {
+        const match = desc.match(/^(\S+) gains \+(\d+) HP/)
+        if (!match) return
+
+        const [, targetId, amountStr] = match
+        const amount = parseInt(amountStr)
+
+        const card = this.findCardByUnitDefId(targetId)
+        if (card) {
+            this.showHealNumber(card, amount)
+        }
+
+        this.applyHealToUnit(targetId, amount, true)
+    }
+
+    private showHealNumber(card: HTMLElement, amount: number): void {
+        const numEl = document.createElement("span")
+        numEl.className = "uc-heal-number"
+        numEl.textContent = `+${amount}`
+        card.style.position = "relative"
+        card.appendChild(numEl)
+        setTimeout(() => numEl.remove(), 600)
+    }
+
+    private applyHealToUnit(
+        unitDefId: string,
+        amount: number,
+        increasesMax: boolean
+    ): void {
+        const card = this.findCardByUnitDefId(unitDefId)
+        if (!card) return
+
+        const hpBar = card.querySelector<HTMLElement>(".uc-hp-fill")
+        const hpText = card.querySelector(".uc-hp-text")
+        if (!hpBar || !hpText) return
+
+        const hpMatch = hpText.textContent?.match(/(\d+)\/(\d+)/)
+        if (!hpMatch) return
+
+        const maxHP = parseInt(hpMatch[2]) + (increasesMax ? amount : 0)
+        const currentHP = Math.min(maxHP, parseInt(hpMatch[1]) + amount)
+        const pct = Math.max(0, Math.round((currentHP / maxHP) * 100))
+        const color = pct > 60 ? "#228b22" : pct > 30 ? "#d4a017" : "#cc0000"
+
+        hpBar.style.width = `${pct}%`
+        hpBar.style.background = color
+        hpText.textContent = `${currentHP}/${maxHP}`
     }
 
     private animateSummon(desc: string): void {
