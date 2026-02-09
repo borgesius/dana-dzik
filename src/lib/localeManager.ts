@@ -106,7 +106,7 @@ class LocaleManager {
 
     public t(key: string, options?: Record<string, unknown>): string {
         if (!this.initialized) {
-            return key
+            return (options?.defaultValue as string) ?? key
         }
         return i18next.t(key, options)
     }
