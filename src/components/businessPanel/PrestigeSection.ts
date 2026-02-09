@@ -1,6 +1,9 @@
 import { formatMoney } from "../../lib/formatMoney"
 import type { MarketEngine } from "../../lib/marketGame/MarketEngine"
-import { FORESIGHT_UPGRADES } from "../../lib/prestige/ascension"
+import {
+    ASCENSION_PRESERVED_UPGRADES,
+    FORESIGHT_UPGRADES,
+} from "../../lib/prestige/ascension"
 import {
     HINDSIGHT_UPGRADES,
     PRESTIGE_THRESHOLD,
@@ -18,6 +21,7 @@ export class PrestigeSection {
     private game: MarketEngine
     private prestige: PrestigeManager
     private playSound: (type: string) => void
+    private activeTooltip: HTMLElement | null = null
 
     constructor(game: MarketEngine, playSound: (type: string) => void) {
         this.game = game
@@ -39,10 +43,117 @@ export class PrestigeSection {
 
         const heading = document.createElement("h3")
         heading.textContent = "The Bubble Pop"
+
+        const infoBtn = document.createElement("button")
+        infoBtn.className = "prestige-info-btn"
+        infoBtn.textContent = "?"
+        infoBtn.addEventListener("click", (e) => {
+            e.stopPropagation()
+            this.togglePrestigeTooltip(infoBtn)
+        })
+        heading.appendChild(infoBtn)
+
         section.appendChild(heading)
         section.appendChild(this.contentEl)
 
         return section
+    }
+
+    private togglePrestigeTooltip(anchor: HTMLElement): void {
+        if (this.activeTooltip) {
+            this.dismissTooltip()
+            return
+        }
+
+        const lifetime = this.game.getLifetimeEarnings()
+        const preview = this.prestige.getHindsightPreview(lifetime)
+        const canPrestige = this.prestige.canPrestige(lifetime)
+
+        let previewLine: string
+        if (canPrestige) {
+            previewLine = `<strong>+${preview} 💎</strong> Hindsight available now`
+        } else if (preview > 0) {
+            previewLine = `Would earn <strong>${preview} 💎</strong> (need ${formatMoney(PRESTIGE_THRESHOLD - lifetime)} more)`
+        } else {
+            previewLine = `Earn at least ${formatMoney(PRESTIGE_THRESHOLD)} to pop`
+        }
+
+        this.showTooltip(
+            anchor,
+            `<div class="prestige-tooltip-title">What is The Bubble Pop?</div>
+            <p>Popping the bubble <strong>resets</strong> your current run — cash, inventory, factories, upgrades, and employees go back to zero.</p>
+            <p>In return you earn <strong>Hindsight 💎</strong>, a permanent currency used to buy upgrades that persist across runs.</p>
+            <div class="prestige-tooltip-section">
+                <div class="prestige-tooltip-label">You lose:</div>
+                <div>Cash, holdings, factories, market upgrades, employees</div>
+            </div>
+            <div class="prestige-tooltip-section">
+                <div class="prestige-tooltip-label">You keep:</div>
+                <div>Hindsight 💎, Hindsight Shop purchases, career progress, Foresight 🔮</div>
+            </div>
+            <div class="prestige-tooltip-preview">${previewLine}</div>`
+        )
+    }
+
+    private toggleAscensionTooltip(anchor: HTMLElement): void {
+        if (this.activeTooltip) {
+            this.dismissTooltip()
+            return
+        }
+
+        const foresightPreview = this.prestige.getForesightPreview()
+
+        const preservedNames = HINDSIGHT_UPGRADES.filter((u) =>
+            ASCENSION_PRESERVED_UPGRADES.has(u.id)
+        ).map((u) => u.name)
+
+        const resetNames = HINDSIGHT_UPGRADES.filter(
+            (u) => !ASCENSION_PRESERVED_UPGRADES.has(u.id)
+        ).map((u) => u.name)
+
+        this.showTooltip(
+            anchor,
+            `<div class="prestige-tooltip-title">What is Ascension?</div>
+            <p>Ascension is a <strong>deeper reset</strong>. It resets your prestige count, Hindsight balance, and most Hindsight Shop upgrades.</p>
+            <p>In return you earn <strong>Foresight 🔮</strong>, used for powerful upgrades that survive all future ascensions.</p>
+            <div class="prestige-tooltip-section">
+                <div class="prestige-tooltip-label">You lose:</div>
+                <div>Prestige count, Hindsight 💎, upgrades: ${resetNames.join(", ")}</div>
+            </div>
+            <div class="prestige-tooltip-section">
+                <div class="prestige-tooltip-label">You keep:</div>
+                <div>Foresight 🔮, Foresight Shop purchases, upgrades: ${preservedNames.join(", ")}</div>
+            </div>
+            <div class="prestige-tooltip-section">
+                <div class="prestige-tooltip-label">Requires:</div>
+                <div>All Hindsight Shop upgrades fully purchased</div>
+            </div>
+            <div class="prestige-tooltip-preview">Would earn <strong>+${foresightPreview} 🔮</strong> Foresight</div>`
+        )
+    }
+
+    private showTooltip(anchor: HTMLElement, html: string): void {
+        this.dismissTooltip()
+
+        const tooltip = document.createElement("div")
+        tooltip.className = "prestige-tooltip"
+        tooltip.innerHTML = html
+
+        const dismiss = (e: MouseEvent): void => {
+            if (!tooltip.contains(e.target as Node) && e.target !== anchor) {
+                this.dismissTooltip()
+                document.removeEventListener("click", dismiss)
+            }
+        }
+        requestAnimationFrame(() => document.addEventListener("click", dismiss))
+
+        anchor.parentElement?.appendChild(tooltip)
+        this.activeTooltip = tooltip
+    }
+
+    private dismissTooltip(): void {
+        this.activeTooltip?.remove()
+        this.activeTooltip = null
     }
 
     public updateVisibility(): void {
@@ -89,6 +200,13 @@ export class PrestigeSection {
                     Earn ${formatMoney(Math.max(0, remaining))} more to pop
                 </div>
             `
+            if (preview > 0) {
+                html += `
+                    <div class="prestige-preview-hint">
+                        Popping now would earn <strong>${preview} 💎</strong> Hindsight
+                    </div>
+                `
+            }
         }
 
         if (prestigeCount > 0 || currentHindsight > 0) {
@@ -125,7 +243,7 @@ export class PrestigeSection {
 
         if (canAscend || ascCount > 0) {
             html += `<div class="ascension-section">`
-            html += `<h4>Ascension${ascCount > 0 ? ` (x${ascCount})` : ""}</h4>`
+            html += `<h4>Ascension${ascCount > 0 ? ` (x${ascCount})` : ""}<button class="prestige-info-btn ascension-info-btn">?</button></h4>`
 
             if (foresightBalance > 0 || ascCount > 0) {
                 html += `<div class="prestige-stat"><span>Foresight:</span><span class="prestige-currency">${foresightBalance} 🔮</span></div>`
@@ -190,6 +308,16 @@ export class PrestigeSection {
                     }
                 })
             })
+
+        const ascensionInfoBtn = this.contentEl.querySelector(
+            ".ascension-info-btn"
+        )
+        if (ascensionInfoBtn) {
+            ascensionInfoBtn.addEventListener("click", (e) => {
+                e.stopPropagation()
+                this.toggleAscensionTooltip(ascensionInfoBtn as HTMLElement)
+            })
+        }
 
         const ascensionBtn = this.contentEl.querySelector(
             ".ascension-trigger-btn"

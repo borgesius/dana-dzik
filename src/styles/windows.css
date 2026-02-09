@@ -89,6 +89,10 @@
     font-family: Marlett, sans-serif;
 }
 
+.window-btn:hover {
+    filter: brightness(1.1);
+}
+
 .window-btn:active {
     border-style: inset;
 }
@@ -125,6 +129,15 @@
         #b33b3b 50%,
         #9a2828 100%
     );
+}
+
+.window.winxp .window-btn.minimize:hover,
+.window.winxp .window-btn.maximize:hover {
+    filter: brightness(1.2);
+}
+
+.window.winxp .window-btn.close:hover {
+    filter: brightness(1.2);
 }
 
 .window-menubar {
@@ -254,6 +267,10 @@
     border: var(--theme-window-btn-border);
     cursor: pointer;
     font-size: 12px;
+}
+
+.popup-btn:hover {
+    filter: brightness(1.1);
 }
 
 .popup-btn:active {

@@ -1,3 +1,4 @@
+import { onAppEvent } from "../events"
 import { getLocaleManager } from "../localeManager"
 import { getCareerManager } from "../progression/CareerManager"
 import {
@@ -48,6 +49,7 @@ export function renderResumeWindow(): void {
     if (!wrapper) return
 
     const lm = getLocaleManager()
+    const career = getCareerManager()
 
     wrapper.innerHTML = `
         <div class="resume-tab-bar">
@@ -58,13 +60,22 @@ export function renderResumeWindow(): void {
         <div id="${RESUME_CAREER_TREE_ID}" class="career-tree-content resume-tab-pane"></div>
     `
 
-    // Render the default (resume) tab
     renderResumeTab()
-
-    // Wire up tab switching
     wireResumeTabs(wrapper)
 
-    // If a career-tab request was made before the window rendered, honour it
+    const refreshVisibleTab = (): void => {
+        if (!document.getElementById("resume-wrapper")) return
+        const activeTab = wrapper.querySelector(".resume-tab.active")
+        if (activeTab?.getAttribute("data-tab") === "career") {
+            renderCareerTreeWindow(RESUME_CAREER_TREE_ID)
+        }
+        renderResumeTab()
+    }
+
+    career.on("nodeUnlocked", refreshVisibleTab)
+    career.on("careerSwitched", refreshVisibleTab)
+    onAppEvent("progression:level-up", refreshVisibleTab)
+
     if (pendingCareerTab) {
         const careerTab = wrapper.querySelector<HTMLElement>(
             '.resume-tab[data-tab="career"]'
@@ -83,27 +94,21 @@ function wireResumeTabs(wrapper: HTMLElement): void {
         `#${RESUME_CAREER_TREE_ID}`
     ) as HTMLElement
 
-    let careerRendered = false
-
     tabs.forEach((tab) => {
         tab.addEventListener("click", () => {
             const target = tab.dataset.tab
 
-            // Update active tab
             tabs.forEach((t) => t.classList.remove("active"))
             tab.classList.add("active")
 
-            // Show correct pane
             if (target === "career") {
                 resumePane.classList.remove("active")
                 careerPane.classList.add("active")
-                if (!careerRendered) {
-                    renderCareerTreeWindow(RESUME_CAREER_TREE_ID)
-                    careerRendered = true
-                }
+                renderCareerTreeWindow(RESUME_CAREER_TREE_ID)
             } else {
                 careerPane.classList.remove("active")
                 resumePane.classList.add("active")
+                renderResumeTab()
             }
         })
     })
