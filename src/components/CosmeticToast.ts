@@ -28,8 +28,8 @@ export class CosmeticToast {
         const lm = getLocaleManager()
         const nameKey = `cosmetics.${type}.${id}.name`
         const descKey = `cosmetics.${type}.${id}.description`
-        const name = lm.t(nameKey)
-        const description = lm.t(descKey)
+        const name = lm.t(nameKey, { defaultValue: def.name })
+        const description = lm.t(descKey, { defaultValue: def.description })
 
         const toast = document.createElement("div")
         toast.className = `cosmetic-toast cosmetic-toast-${def.rarity}`
