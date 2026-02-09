@@ -395,6 +395,8 @@ export class CubeRunner {
     private bossHeartbeatBpm: number = 60
     private finalCrescendo: boolean = false
 
+    private winFlash: number = 0
+
     // Audio
     private audio: VeilAudio
 
@@ -704,9 +706,9 @@ export class CubeRunner {
             this.graceTimer -= dt
         }
 
-        // Win condition
         if (this.elapsed >= this.config.survivalSeconds) {
             this._state = "won"
+            this.winFlash = 1
             this.audio.playWin()
             this.audio.fadeOut()
             this.spawnWinParticles()
@@ -1018,7 +1020,6 @@ export class CubeRunner {
         const activeLanes = this.getActiveLanes()
         const minLane = this.glueWalls ? this.glueWalls.leftNarrow : 0
 
-        // Fix #16: Track used lanes per delay slot for gap validation
         const usedSlots = new Map<number, Set<number>>()
 
         for (const wave of pattern.waves) {
@@ -1041,8 +1042,6 @@ export class CubeRunner {
 
             let width: number
             if (wave.type === "wall") {
-                // Fix #16: Wall gap -- the wall covers activeLanes-1 width,
-                // and lane indicates the gap position
                 width = Math.max(1, activeLanes - 1)
                 lane = minLane + Math.floor(Math.random() * activeLanes)
             } else if (wave.type === "double") {
@@ -1051,8 +1050,13 @@ export class CubeRunner {
                 width = wave.width ?? 1
             }
 
-            // Fix #16: Validate that this doesn't create an impossible block
-            const delayKey = Math.round(wave.delay * 100) // bucket by ~10ms
+            const isReverse = wave.reverse ?? false
+            const spawnDepth = isReverse ? -0.1 : 1.0
+
+            if (this.isLaneBlockedAt(lane, width, spawnDepth)) continue
+            if (this.wouldBlockAllLanes(lane, width, spawnDepth)) continue
+
+            const delayKey = Math.round(wave.delay * 100)
             if (!usedSlots.has(delayKey)) {
                 usedSlots.set(delayKey, new Set())
             }
@@ -1066,14 +1070,12 @@ export class CubeRunner {
                     }
                 }
             }
-            // Ensure at least one gap lane exists in this time slot
             if (!blocked && wave.type !== "wall") {
                 for (let l = lane; l < lane + width; l++) {
                     slotLanes.add(l)
                 }
-                // Check: are ALL lanes now blocked?
                 if (slotLanes.size >= activeLanes) {
-                    blocked = true // would create impossible config
+                    blocked = true
                 }
             }
 
@@ -1083,12 +1085,56 @@ export class CubeRunner {
                     lane,
                     type: wave.type,
                     width,
-                    reverse: wave.reverse ?? false,
+                    reverse: isReverse,
                 })
             }
         }
 
         this.patternCooldown = 2
+    }
+
+    private isLaneBlockedAt(
+        lane: number,
+        width: number,
+        depth: number
+    ): boolean {
+        const gap = this.config.minDepthGap
+        for (const obs of this.obstacles) {
+            if (Math.abs(obs.depth - depth) >= gap) continue
+            const obsEnd = obs.lane + obs.width
+            const proposedEnd = lane + width
+            if (lane < obsEnd && proposedEnd > obs.lane) {
+                return true
+            }
+        }
+        return false
+    }
+
+    private wouldBlockAllLanes(
+        lane: number,
+        width: number,
+        depth: number
+    ): boolean {
+        const gap = this.config.minDepthGap
+        const activeLanes = this.getActiveLanes()
+        const minLane = this.glueWalls ? this.glueWalls.leftNarrow : 0
+
+        const blocked = new Set<number>()
+        for (let l = lane; l < lane + width; l++) {
+            blocked.add(l)
+        }
+
+        for (const obs of this.obstacles) {
+            if (Math.abs(obs.depth - depth) >= gap) continue
+            for (let l = obs.lane; l < obs.lane + obs.width; l++) {
+                blocked.add(l)
+            }
+        }
+
+        for (let l = minLane; l < minLane + activeLanes; l++) {
+            if (!blocked.has(l)) return false
+        }
+        return true
     }
 
     private spawnObstacle(): void {
@@ -1102,21 +1148,30 @@ export class CubeRunner {
         if (type === "double") width = 2
         if (type === "wall") width = Math.max(1, activeLanes - 1)
 
-        const maxStartLane = minLane + activeLanes - width
-        const lane =
-            minLane + Math.floor(Math.random() * (maxStartLane - minLane + 1))
-
         const reverse = this.config.reverseObstacles && Math.random() < 0.2
+        const spawnDepth = reverse ? -0.1 : 1.0
 
-        this.obstacles.push({
-            lane,
-            depth: reverse ? -0.1 : 1.0,
-            type,
-            width,
-            reverse,
-            depthJitter: 0,
-            nearMissTriggered: false,
-        })
+        const MAX_ATTEMPTS = 5
+        for (let attempt = 0; attempt < MAX_ATTEMPTS; attempt++) {
+            const maxStartLane = minLane + activeLanes - width
+            const lane =
+                minLane +
+                Math.floor(Math.random() * (maxStartLane - minLane + 1))
+
+            if (this.isLaneBlockedAt(lane, width, spawnDepth)) continue
+            if (this.wouldBlockAllLanes(lane, width, spawnDepth)) continue
+
+            this.obstacles.push({
+                lane,
+                depth: spawnDepth,
+                type,
+                width,
+                reverse,
+                depthJitter: 0,
+                nearMissTriggered: false,
+            })
+            return
+        }
     }
 
     // ── Particles ───────────────────────────────────────────────────────────
@@ -1282,11 +1337,41 @@ export class CubeRunner {
             const sy = HORIZON_Y + (PLAYER_Y - HORIZON_Y) * (1 - star.depth)
             const sx =
                 VANISHING_X + (star.x - VANISHING_X) * (1 - star.depth * 0.8)
-            const alpha = star.brightness * (1 - star.depth * 0.5)
-            const size = 1 + (1 - star.depth) * 1.5
-            ctx.fillStyle = this.alphaColor(theme.starColor, alpha)
-            ctx.fillRect(sx, sy, size, size)
+            const nearness = 1 - star.depth
+            const alpha = star.brightness * (0.3 + nearness * 0.7)
+            const size =
+                star.depth > 0.6 ? 0.5 + nearness * 0.5 : 1 + nearness * 2
+
+            if (star.brightness > 0.7 && star.depth < 0.5) {
+                ctx.save()
+                ctx.shadowColor = theme.starColor
+                ctx.shadowBlur = 3
+                ctx.fillStyle = this.alphaColor(theme.starColor, alpha)
+                ctx.beginPath()
+                ctx.arc(sx, sy, size * 0.5, 0, Math.PI * 2)
+                ctx.fill()
+                ctx.restore()
+            } else {
+                ctx.fillStyle = this.alphaColor(theme.starColor, alpha)
+                ctx.beginPath()
+                ctx.arc(sx, sy, size * 0.5, 0, Math.PI * 2)
+                ctx.fill()
+            }
         }
+
+        // ── Horizon fog band ─────────────────────────────────────────────
+        const fogGrad = ctx.createLinearGradient(
+            0,
+            HORIZON_Y - 30,
+            0,
+            HORIZON_Y + 60
+        )
+        fogGrad.addColorStop(0, "transparent")
+        fogGrad.addColorStop(0.4, this.alphaColor(theme.bgColor, 0.5))
+        fogGrad.addColorStop(0.7, this.alphaColor(theme.fogColor, 0.4))
+        fogGrad.addColorStop(1, "transparent")
+        ctx.fillStyle = fogGrad
+        ctx.fillRect(0, HORIZON_Y - 30, w, 90)
 
         // ── Scanlines ───────────────────────────────────────────────────
         ctx.fillStyle = `rgba(0, 0, 0, 0.08)`
@@ -1420,6 +1505,15 @@ export class CubeRunner {
             ctx.fillRect(0, 0, w, h)
         }
 
+        // ── Win flash ────────────────────────────────────────────────────
+        if (this.winFlash > 0) {
+            ctx.fillStyle = this.alphaColor(
+                theme.playerColor,
+                this.winFlash * 0.5
+            )
+            ctx.fillRect(0, 0, w, h)
+        }
+
         // ── Boss final crescendo screen corruption ──────────────────────
         if (this.finalCrescendo && this._state === "playing") {
             if (Math.random() < 0.1) {
@@ -1460,21 +1554,45 @@ export class CubeRunner {
         const roadRight =
             ROAD_LEFT + offset + laneWidth * activeLanes + this.laneShiftOffset
 
-        // Road edges
-        ctx.strokeStyle = theme.roadColor
-        ctx.lineWidth = 1.5
+        const surfaceGrad = ctx.createLinearGradient(0, HORIZON_Y, 0, PLAYER_Y)
+        surfaceGrad.addColorStop(0, "transparent")
+        surfaceGrad.addColorStop(0.4, this.alphaColor(theme.roadColor, 0.03))
+        surfaceGrad.addColorStop(1, this.alphaColor(theme.roadColor, 0.07))
+        ctx.fillStyle = surfaceGrad
+        ctx.beginPath()
+        ctx.moveTo(VANISHING_X, HORIZON_Y)
+        ctx.lineTo(roadLeft, PLAYER_Y)
+        ctx.lineTo(roadRight, PLAYER_Y)
+        ctx.closePath()
+        ctx.fill()
 
+        ctx.save()
+        ctx.shadowColor = theme.roadColor
+        ctx.shadowBlur = 6
+        ctx.strokeStyle = theme.roadColor
+        ctx.lineWidth = 3
+        ctx.globalAlpha = 0.25
         ctx.beginPath()
         ctx.moveTo(roadLeft, PLAYER_Y)
         ctx.lineTo(VANISHING_X, HORIZON_Y)
         ctx.stroke()
+        ctx.beginPath()
+        ctx.moveTo(roadRight, PLAYER_Y)
+        ctx.lineTo(VANISHING_X, HORIZON_Y)
+        ctx.stroke()
+        ctx.restore()
 
+        ctx.strokeStyle = theme.roadColor
+        ctx.lineWidth = 1.5
+        ctx.beginPath()
+        ctx.moveTo(roadLeft, PLAYER_Y)
+        ctx.lineTo(VANISHING_X, HORIZON_Y)
+        ctx.stroke()
         ctx.beginPath()
         ctx.moveTo(roadRight, PLAYER_Y)
         ctx.lineTo(VANISHING_X, HORIZON_Y)
         ctx.stroke()
 
-        // Lane dividers
         ctx.strokeStyle = theme.laneColor
         ctx.lineWidth = 1
         for (let i = 1; i < activeLanes; i++) {
@@ -1485,20 +1603,24 @@ export class CubeRunner {
             ctx.stroke()
         }
 
-        // Fix #11: Animated depth markers (road surface scroll)
-        ctx.strokeStyle = theme.depthMarkerColor
-        const scrollOffset = (this.elapsed * 0.8) % 0.1 // scroll speed
+        const scrollOffset = (this.elapsed * 0.8) % 0.1
+        let markerIndex = 0
         for (let d = scrollOffset; d < 1; d += 0.1) {
-            const y = this.depthToY(d)
-            const scale = this.depthToScale(d)
-            const left = VANISHING_X - (VANISHING_X - roadLeft) * scale
-            const right = VANISHING_X + (roadRight - VANISHING_X) * scale
-            // Dashed style
-            ctx.setLineDash([4 * scale, 8 * scale])
+            const my = this.depthToY(d)
+            const mScale = this.depthToScale(d)
+            const left = VANISHING_X - (VANISHING_X - roadLeft) * mScale
+            const right = VANISHING_X + (roadRight - VANISHING_X) * mScale
+            const isBright = markerIndex % 2 === 0
+            ctx.strokeStyle = isBright
+                ? this.alphaColor(theme.roadColor, 0.15)
+                : theme.depthMarkerColor
+            ctx.lineWidth = isBright ? 1.2 : 0.8
+            ctx.setLineDash([4 * mScale, 8 * mScale])
             ctx.beginPath()
-            ctx.moveTo(left, y)
-            ctx.lineTo(right, y)
+            ctx.moveTo(left, my)
+            ctx.lineTo(right, my)
             ctx.stroke()
+            markerIndex++
         }
         ctx.setLineDash([])
     }
@@ -1537,7 +1659,6 @@ export class CubeRunner {
         const obsW = laneWidth * obs.width * scale * 0.8
         const obsH = PLAYER_SIZE * scale
 
-        // Fog-based alpha
         const alpha = Math.min(1, (1 - rawDepth) * 2.2)
 
         let color: string
@@ -1561,14 +1682,12 @@ export class CubeRunner {
 
         ctx.globalAlpha = alpha
 
-        // Obstacle glow (telegraph when first appearing at horizon)
         if (rawDepth > 0.85) {
             const glowAlpha = ((rawDepth - 0.85) / 0.15) * 0.3
             ctx.shadowColor = color
             ctx.shadowBlur = 20 * glowAlpha
         }
 
-        // Fix #12: Brightness pulse as obstacles enter danger zone
         if (rawDepth < 0.15) {
             const dangerPulse =
                 1 + Math.sin(this.elapsed * 20) * 0.3 * (1 - rawDepth / 0.15)
@@ -1576,36 +1695,121 @@ export class CubeRunner {
             ctx.shadowBlur = 12 * dangerPulse
         }
 
-        // Wireframe cube
+        if (rawDepth < 0.6) {
+            ctx.save()
+            ctx.globalAlpha = alpha * 0.15 * (1 - rawDepth)
+            ctx.fillStyle = "#000000"
+            ctx.beginPath()
+            ctx.ellipse(
+                screenX,
+                y + 2,
+                obsW * 0.4,
+                obsH * 0.15,
+                0,
+                0,
+                Math.PI * 2
+            )
+            ctx.fill()
+            ctx.restore()
+            ctx.globalAlpha = alpha
+        }
+
+        const fillGrad = ctx.createLinearGradient(screenX, y - obsH, screenX, y)
+        fillGrad.addColorStop(0, this.alphaColor(color, 0.18))
+        fillGrad.addColorStop(1, this.alphaColor(color, 0.03))
+
         ctx.strokeStyle = color
         ctx.lineWidth = Math.max(1, 2 * scale)
 
-        // Front face
         ctx.strokeRect(screenX - obsW / 2, y - obsH, obsW, obsH)
-
-        // Inner fill (faint)
-        ctx.fillStyle = this.alphaColor(color, 0.1)
+        ctx.fillStyle = fillGrad
         ctx.fillRect(screenX - obsW / 2, y - obsH, obsW, obsH)
 
-        // Top face (perspective lines to back)
+        if (obs.type === "wall") {
+            const inset = Math.max(2, 3 * scale)
+            ctx.strokeStyle = this.alphaColor(color, 0.4)
+            ctx.lineWidth = Math.max(0.5, 1 * scale)
+            ctx.strokeRect(
+                screenX - obsW / 2 + inset,
+                y - obsH + inset,
+                obsW - inset * 2,
+                obsH - inset * 2
+            )
+            ctx.beginPath()
+            const step = Math.max(4, 8 * scale)
+            for (
+                let cx = screenX - obsW / 2;
+                cx < screenX + obsW / 2;
+                cx += step
+            ) {
+                ctx.moveTo(cx, y - obsH)
+                ctx.lineTo(cx + step * 0.5, y)
+            }
+            ctx.strokeStyle = this.alphaColor(color, 0.08)
+            ctx.stroke()
+        }
+
+        if (obs.type === "glue") {
+            ctx.beginPath()
+            ctx.moveTo(screenX - obsW / 2, y)
+            const dripCount = Math.max(3, Math.floor(obsW / 4))
+            for (let i = 0; i <= dripCount; i++) {
+                const px = screenX - obsW / 2 + (obsW * i) / dripCount
+                const dripH =
+                    (Math.sin(i * 2.7 + this.elapsed * 3) * 0.5 + 0.5) *
+                    obsH *
+                    0.4
+                ctx.lineTo(px, y + dripH)
+            }
+            ctx.lineTo(screenX + obsW / 2, y)
+            ctx.fillStyle = this.alphaColor(color, 0.2)
+            ctx.fill()
+        }
+
+        if (obs.type === "double") {
+            ctx.beginPath()
+            ctx.moveTo(screenX, y - obsH)
+            ctx.lineTo(screenX, y)
+            ctx.strokeStyle = this.alphaColor(color, 0.25)
+            ctx.lineWidth = Math.max(0.5, 1 * scale)
+            ctx.setLineDash([3 * scale, 3 * scale])
+            ctx.stroke()
+            ctx.setLineDash([])
+        }
+
+        ctx.strokeStyle = color
+        ctx.lineWidth = Math.max(1, 2 * scale)
+
         const backScale = this.depthToScale(rawDepth + 0.03)
         const backW = obsW * (backScale / scale)
         const backY = this.depthToY(rawDepth + 0.03)
+        const backTopY = backY - obsH * (backScale / scale)
 
         ctx.beginPath()
         ctx.moveTo(screenX - obsW / 2, y - obsH)
-        ctx.lineTo(screenX - backW / 2, backY - obsH * (backScale / scale))
+        ctx.lineTo(screenX - backW / 2, backTopY)
         ctx.stroke()
 
         ctx.beginPath()
         ctx.moveTo(screenX + obsW / 2, y - obsH)
-        ctx.lineTo(screenX + backW / 2, backY - obsH * (backScale / scale))
+        ctx.lineTo(screenX + backW / 2, backTopY)
         ctx.stroke()
 
         ctx.beginPath()
-        ctx.moveTo(screenX - backW / 2, backY - obsH * (backScale / scale))
-        ctx.lineTo(screenX + backW / 2, backY - obsH * (backScale / scale))
+        ctx.moveTo(screenX - backW / 2, backTopY)
+        ctx.lineTo(screenX + backW / 2, backTopY)
         ctx.stroke()
+
+        if (rawDepth < 0.5 && rawDepth > 0.05) {
+            const trailLen = obsH * 0.6
+            const dir = obs.reverse ? 1 : -1
+            ctx.strokeStyle = this.alphaColor(color, 0.08 * (1 - rawDepth * 2))
+            ctx.lineWidth = Math.max(1, obsW * 0.6)
+            ctx.beginPath()
+            ctx.moveTo(screenX, y - obsH / 2)
+            ctx.lineTo(screenX, y - obsH / 2 + dir * trailLen)
+            ctx.stroke()
+        }
 
         ctx.shadowBlur = 0
         ctx.globalAlpha = 1
@@ -1632,36 +1836,68 @@ export class CubeRunner {
         const y = PLAYER_Y
         const size = PLAYER_SIZE
         const theme = this.theme
+        const breathe = 0.85 + Math.sin(this.elapsed * 2.5) * 0.15
 
         ctx.save()
 
-        // Fix #5: Apply tilt (lean into movement direction)
         if (Math.abs(this.playerTilt) > 0.01) {
             ctx.translate(x, y - size / 2)
-            ctx.transform(1, 0, this.playerTilt * 0.3, 1, 0, 0) // skewX
+            ctx.transform(1, 0, this.playerTilt * 0.3, 1, 0, 0)
             ctx.translate(-x, -(y - size / 2))
         }
 
-        // Glow
-        ctx.shadowColor = theme.playerColor
-        ctx.shadowBlur = 18
+        const isoX = 7
+        const isoY = 9
 
-        // Player cube (wireframe)
+        ctx.shadowColor = theme.playerColor
+        ctx.shadowBlur = 14 + breathe * 8
+
+        const grad = ctx.createRadialGradient(
+            x,
+            y - size / 2,
+            0,
+            x,
+            y - size / 2,
+            size * 0.8
+        )
+        grad.addColorStop(0, this.alphaColor(theme.playerColor, 0.3 * breathe))
+        grad.addColorStop(1, "transparent")
+        ctx.fillStyle = grad
+        ctx.fillRect(x - size / 2, y - size, size, size)
+
         ctx.strokeStyle = theme.playerColor
         ctx.lineWidth = 2
         ctx.strokeRect(x - size / 2, y - size, size, size)
 
-        // Inner fill
-        ctx.fillStyle = theme.playerFill
-        ctx.fillRect(x - size / 2, y - size, size, size)
-
-        // Top face hint
         ctx.beginPath()
         ctx.moveTo(x - size / 2, y - size)
-        ctx.lineTo(x - size / 2 + 6, y - size - 8)
-        ctx.lineTo(x + size / 2 + 6, y - size - 8)
+        ctx.lineTo(x - size / 2 + isoX, y - size - isoY)
+        ctx.lineTo(x + size / 2 + isoX, y - size - isoY)
         ctx.lineTo(x + size / 2, y - size)
-        ctx.strokeStyle = this.alphaColor(theme.playerColor, 0.5)
+        ctx.closePath()
+        ctx.fillStyle = this.alphaColor(theme.playerColor, 0.12 * breathe)
+        ctx.fill()
+        ctx.strokeStyle = this.alphaColor(theme.playerColor, 0.6)
+        ctx.lineWidth = 1.5
+        ctx.stroke()
+
+        ctx.beginPath()
+        ctx.moveTo(x + size / 2, y - size)
+        ctx.lineTo(x + size / 2 + isoX, y - size - isoY)
+        ctx.lineTo(x + size / 2 + isoX, y - isoY)
+        ctx.lineTo(x + size / 2, y)
+        ctx.closePath()
+        ctx.fillStyle = this.alphaColor(theme.playerColor, 0.08 * breathe)
+        ctx.fill()
+        ctx.strokeStyle = this.alphaColor(theme.playerColor, 0.4)
+        ctx.lineWidth = 1.5
+        ctx.stroke()
+
+        ctx.strokeStyle = this.alphaColor(theme.playerColor, 0.9)
+        ctx.lineWidth = 2.5
+        ctx.beginPath()
+        ctx.moveTo(x + size / 2, y - size)
+        ctx.lineTo(x + size / 2 + isoX, y - size - isoY)
         ctx.stroke()
 
         ctx.shadowBlur = 0
@@ -1790,21 +2026,47 @@ export class CubeRunner {
     private renderHUD(ctx: CanvasRenderingContext2D): void {
         const theme = this.theme
         const remaining = this.timeRemaining
+        const timerColor = remaining < 5 ? "#ff4444" : theme.playerColor
+        const timerText = remaining.toFixed(1) + "s"
 
+        ctx.save()
         ctx.font = "bold 20px monospace"
         ctx.textAlign = "right"
-        ctx.fillStyle = remaining < 5 ? "#ff4444" : theme.playerColor
-        ctx.fillText(remaining.toFixed(1) + "s", LOGICAL_W - 20, 30)
+        ctx.shadowColor = timerColor
+        ctx.shadowBlur = 12
+        ctx.fillStyle = this.alphaColor(timerColor, 0.4)
+        ctx.fillText(timerText, LOGICAL_W - 20, 30)
+        ctx.shadowBlur = 0
+        ctx.fillStyle = timerColor
+        ctx.fillText(timerText, LOGICAL_W - 20, 30)
+        ctx.restore()
 
         const barW = 200
-        const barH = 4
+        const barH = 5
+        const barR = barH / 2
         const barX = LOGICAL_W - 20 - barW
         const barY = 40
 
-        ctx.fillStyle = this.alphaColor(theme.playerColor, 0.2)
-        ctx.fillRect(barX, barY, barW, barH)
-        ctx.fillStyle = theme.playerColor
-        ctx.fillRect(barX, barY, barW * this.progress, barH)
+        ctx.save()
+        ctx.beginPath()
+        ctx.roundRect(barX, barY, barW, barH, barR)
+        ctx.fillStyle = this.alphaColor(theme.playerColor, 0.15)
+        ctx.fill()
+
+        if (this.progress > 0) {
+            const fillW = Math.max(barH, barW * this.progress)
+            ctx.beginPath()
+            ctx.roundRect(barX, barY, fillW, barH, barR)
+            ctx.fillStyle = theme.playerColor
+            ctx.fill()
+        }
+
+        ctx.fillStyle = this.alphaColor(theme.playerColor, 0.25)
+        for (const frac of [0.25, 0.5, 0.75]) {
+            const tx = barX + barW * frac
+            ctx.fillRect(tx - 0.5, barY - 1, 1, barH + 2)
+        }
+        ctx.restore()
 
         ctx.font = "bold 14px monospace"
         ctx.textAlign = "left"
@@ -1817,6 +2079,8 @@ export class CubeRunner {
 
     private renderCountdown(ctx: CanvasRenderingContext2D): void {
         const num = Math.ceil(this.countdownRemaining)
+        const fractional =
+            this.countdownRemaining - Math.floor(this.countdownRemaining)
 
         ctx.font = "bold 120px monospace"
         ctx.textAlign = "center"
@@ -1836,6 +2100,18 @@ export class CubeRunner {
         )
 
         ctx.shadowBlur = 0
+
+        const ringProgress = 1 - fractional
+        const ringRadius = 60 + ringProgress * 80
+        const ringAlpha = (1 - ringProgress) * 0.5
+        if (ringAlpha > 0.02) {
+            ctx.strokeStyle = this.alphaColor(this.theme.playerColor, ringAlpha)
+            ctx.lineWidth = 2 * (1 - ringProgress) + 0.5
+            ctx.beginPath()
+            ctx.arc(LOGICAL_W / 2, LOGICAL_H / 2, ringRadius, 0, Math.PI * 2)
+            ctx.stroke()
+        }
+
         ctx.globalAlpha = 1
         ctx.textBaseline = "alphabetic"
     }

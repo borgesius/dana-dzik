@@ -108,6 +108,11 @@ export interface LevelConfig {
     /** Chance (0-1) of spawning a pattern instead of random obstacle */
     patternChance: number
 
+    // ── Fairness ─────────────────────────────────────────────────────────
+    /** Minimum depth separation between obstacles occupying the same lane(s).
+     *  Larger = more reaction time. Ensures the player can always dodge. */
+    minDepthGap: number
+
     // ── Environment hazards ─────────────────────────────────────────────
     /** Visual road edge warping (purely visual disorientation) */
     roadWarp: boolean
