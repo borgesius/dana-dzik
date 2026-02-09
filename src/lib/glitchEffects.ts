@@ -165,12 +165,14 @@ export class GlitchManager {
 
     private performFullThemeSwitch(targetTheme: string): void {
         const tm = getThemeManager()
+        const cm = getCosmeticManager()
 
         this.applyGlitch(this.generateGlitchEvent("corruption", 1.0, 300))
         this.applyGlitch(this.generateGlitchEvent("tear", 0.9, 300))
         this.applyGlitch(this.generateGlitchEvent("noise", 1.0, 300))
 
         setTimeout(() => {
+            cm.setActive("theme", targetTheme)
             tm.setTheme(
                 targetTheme as "win95" | "mac-classic" | "apple2" | "c64"
             )
