@@ -74,6 +74,10 @@ export class AudioManager {
     private autoplayInterval: ReturnType<typeof setInterval> | null = null
     private userEngaged = false
 
+    private audioContext: AudioContext | null = null
+    private analyser: AnalyserNode | null = null
+    private sourceNode: MediaElementAudioSourceNode | null = null
+
     private onTrackChangeCallbacks: AudioEventCallback[] = []
     private onPlayStateChangeCallbacks: AudioEventCallback[] = []
 
@@ -276,6 +280,39 @@ export class AudioManager {
 
     public getIsPlaying(): boolean {
         return this.isPlaying
+    }
+
+    public getAnalyser(): AnalyserNode | null {
+        if (!this.player) return null
+
+        if (!this.audioContext) {
+            try {
+                this.audioContext = new AudioContext()
+            } catch {
+                return null
+            }
+        }
+
+        if (!this.sourceNode) {
+            try {
+                this.sourceNode = this.audioContext.createMediaElementSource(
+                    this.player
+                )
+                this.analyser = this.audioContext.createAnalyser()
+                this.analyser.fftSize = 256
+                this.analyser.smoothingTimeConstant = 0.7
+                this.sourceNode.connect(this.analyser)
+                this.analyser.connect(this.audioContext.destination)
+            } catch {
+                return null
+            }
+        }
+
+        if (this.audioContext.state === "suspended") {
+            this.audioContext.resume().catch(() => {})
+        }
+
+        return this.analyser
     }
 
     public onTrackChange(callback: AudioEventCallback): void {
