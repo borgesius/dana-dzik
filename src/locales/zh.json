@@ -1652,6 +1652,34 @@
         "horse-whisperer": {
             "name": "Pferdeflüsterer",
             "description": "Defeat T. Pferd in 3 attempts or fewer."
+        },
+        "window-shopper": {
+            "name": "橱窗购物",
+            "description": "打开自定义窗口。"
+        },
+        "fashion-forward": {
+            "name": "时尚先锋",
+            "description": "装备一个非默认的装饰品。"
+        },
+        "makeover": {
+            "name": "焕然一新",
+            "description": "同时激活3个非默认装饰品。"
+        },
+        "ten-unlocked": {
+            "name": "收藏家",
+            "description": "解锁10个装饰品。"
+        },
+        "fashionista": {
+            "name": "时尚达人",
+            "description": "同时激活8个非默认装饰品。"
+        },
+        "aesthete": {
+            "name": "审美家",
+            "description": "解锁25个装饰品。"
+        },
+        "pferd-couture": {
+            "name": "Pferd高定",
+            "description": "同时装备3个Pferd主题装饰品。"
         }
     },
     "symposium": {

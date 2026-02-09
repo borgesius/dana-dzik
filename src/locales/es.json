@@ -1652,6 +1652,34 @@
         "horse-whisperer": {
             "name": "Pferdeflüsterer",
             "description": "Defeat T. Pferd in 3 attempts or fewer."
+        },
+        "window-shopper": {
+            "name": "Mirando Vitrinas",
+            "description": "Abre la ventana de personalización."
+        },
+        "fashion-forward": {
+            "name": "A la Moda",
+            "description": "Equipa un cosmético no predeterminado."
+        },
+        "makeover": {
+            "name": "Cambio de Look",
+            "description": "Ten 3 cosméticos no predeterminados activos a la vez."
+        },
+        "ten-unlocked": {
+            "name": "Coleccionista",
+            "description": "Desbloquea 10 cosméticos."
+        },
+        "fashionista": {
+            "name": "Fashionista",
+            "description": "Ten 8 cosméticos no predeterminados activos a la vez."
+        },
+        "aesthete": {
+            "name": "Esteta",
+            "description": "Desbloquea 25 cosméticos."
+        },
+        "pferd-couture": {
+            "name": "Pferd Couture",
+            "description": "Equipa 3 cosméticos temáticos de Pferd a la vez."
         }
     },
     "symposium": {
