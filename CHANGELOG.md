@@ -1,3 +1,9 @@
+## [2.9.0](https://github.com/borgesius/dana-dzik/compare/v2.8.4...v2.9.0) (2026-02-09)
+
+### Features
+
+* **symposium:** life system overhaul ([5898874](https://github.com/borgesius/dana-dzik/commit/58988746beee44bf4fc63f39075e7332c9d7b990))
+
 ## [2.8.4](https://github.com/borgesius/dana-dzik/compare/v2.8.3...v2.8.4) (2026-02-09)
 
 ### Bug Fixes
