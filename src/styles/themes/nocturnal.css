@@ -1,10 +1,10 @@
-
 /* Nocturnal theme - Vampire/Pferd aesthetic                                    */
 
 /* Lowest contrast pair: --theme-text-secondary (#ccaaaa) on --theme-surface-secondary (#1a0505) = 4.6:1 (WCAG AA compliant) */
 
 @keyframes nocturnal-pulse {
-    0%, 100% {
+    0%,
+    100% {
         border-color: #4a1515;
         opacity: 1;
     }
@@ -35,7 +35,8 @@
     --theme-window-title-inactive: #4a1515;
     --theme-window-btn-bg: #2a0a0a;
     --theme-window-btn-border: 1px solid #8b0000;
-    --theme-window-shadow: 0 4px 12px rgb(139 0 0 / 40%), 0 0 20px rgb(139 0 0 / 20%);
+    --theme-window-shadow:
+        0 4px 12px rgb(139 0 0 / 40%), 0 0 20px rgb(139 0 0 / 20%);
     --theme-window-resize-bg: repeating-linear-gradient(
         135deg,
         #8b0000 0px,
@@ -105,7 +106,8 @@
     --theme-tooltip-bg: #2a0a0a;
     --theme-tooltip-border: 1px solid #8b0000;
     --theme-tooltip-text: #e8c0c0;
-    --theme-tooltip-shadow: 0 4px 12px rgb(139 0 0 / 50%), 0 0 15px rgb(204 51 51 / 30%);
+    --theme-tooltip-shadow:
+        0 4px 12px rgb(139 0 0 / 50%), 0 0 15px rgb(204 51 51 / 30%);
     --theme-widget-bg: #2a0a0a;
     --theme-widget-border: 1px solid #8b0000;
     --theme-widget-title-bg: #8b0000;
