@@ -362,10 +362,10 @@ function applyEffect(
             const amount = effect.amount + bonus
             const targets = selectTargets(effect.target, enemies)
             for (const t of targets) {
-                dealDamage(t, amount)
+                const dealt = dealDamage(t, amount)
                 log.push({
                     round,
-                    description: `${owner.unitDefId} ability deals ${amount} to ${t.unitDefId}`,
+                    description: `${owner.unitDefId} ability deals ${dealt} to ${t.unitDefId}`,
                 })
             }
             break
@@ -374,12 +374,25 @@ function applyEffect(
             const amount = effect.amount + bonus
             const targets = selectBuffTargets(effect.target, owner, allies)
             for (const t of targets) {
-                if (effect.stat === "atk") t.currentATK += amount
-                else if (effect.stat === "hp") {
+                if (effect.stat === "atk") {
+                    t.currentATK += amount
+                    log.push({
+                        round,
+                        description: `${t.unitDefId} gains +${amount} ATK`,
+                    })
+                } else if (effect.stat === "hp") {
                     t.currentHP += amount
                     t.maxHP += amount
+                    log.push({
+                        round,
+                        description: `${t.unitDefId} gains +${amount} HP`,
+                    })
                 } else if (effect.stat === "shield") {
                     t.shield += amount
+                    log.push({
+                        round,
+                        description: `${t.unitDefId} gains +${amount} shield`,
+                    })
                 }
             }
             break
@@ -414,6 +427,12 @@ function applyEffect(
             for (const t of targets) {
                 const healAmt = Math.min(amount, t.maxHP - t.currentHP)
                 t.currentHP += healAmt
+                if (healAmt > 0) {
+                    log.push({
+                        round,
+                        description: `${owner.unitDefId} ability heals ${t.unitDefId} for ${healAmt}`,
+                    })
+                }
             }
             break
         }
