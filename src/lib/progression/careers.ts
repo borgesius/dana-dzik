@@ -66,12 +66,12 @@ const ENGINEERING_NODES: CareerNodeDef[] = [
             "Achieved 'one microservice per CRUD operation' principles.",
             "Authored a 14-page RFC to rename a variable, unanimously self-approved",
         ],
-        bonusLabel: "+10% symposium Rationalist stats",
+        bonusLabel: "+6% symposium Rationalist stats",
         branch: "engineering",
         tier: 1,
         prerequisites: [],
         bonusType: "autobattlerATK_clockwork",
-        bonusValue: 0.1,
+        bonusValue: 0.06,
     },
     {
         id: "eng-principal",
@@ -83,12 +83,12 @@ const ENGINEERING_NODES: CareerNodeDef[] = [
             "Reduced production incidents by 90% by shipping 90% less code",
             "Built an internal tool to track internal tools. Won an internal award",
         ],
-        bonusLabel: "WELT exercises grant 2× commodity rewards",
+        bonusLabel: "+10% WELT commodity rewards",
         branch: "engineering",
         tier: 2,
         prerequisites: ["eng-staff"],
         bonusType: "weltBonus",
-        bonusValue: 0.25,
+        bonusValue: 0.1,
     },
     {
         id: "eng-distinguished",
@@ -117,12 +117,12 @@ const ENGINEERING_NODES: CareerNodeDef[] = [
             "Published a monograph on why the previous monograph was wrong",
             "Advised on a rank'n'yank process colloquially known as 'Thunderdome'",
         ],
-        bonusLabel: "+10% GRUND compilation tolerance",
+        bonusLabel: "+18% GRUND compilation tolerance",
         branch: "engineering",
         tier: 4,
         prerequisites: ["eng-distinguished"],
         bonusType: "grundBonus",
-        bonusValue: 0.1,
+        bonusValue: 0.18,
     },
     {
         id: "eng-emeritus",
@@ -134,12 +134,12 @@ const ENGINEERING_NODES: CareerNodeDef[] = [
             "Maintained sole custody of a cron job that no one dares restart",
             "Gave a retirement talk that was actually a design doc; no one noticed",
         ],
-        bonusLabel: "+10% factory output",
+        bonusLabel: "+25% factory output",
         branch: "engineering",
         tier: 5,
         prerequisites: ["eng-fellow"],
         bonusType: "factoryOutput",
-        bonusValue: 0.1,
+        bonusValue: 0.25,
     },
 ]
 
@@ -157,12 +157,12 @@ const TRADING_NODES: CareerNodeDef[] = [
             "Developed a proprietary vibes-based model. Backtested against horoscopes with comparable accuracy",
             "Wrote a white paper on why the efficient market hypothesis does not apply to me",
         ],
-        bonusLabel: "+10% trade profit",
+        bonusLabel: "+6% trade profit",
         branch: "trading",
         tier: 1,
         prerequisites: [],
         bonusType: "tradeProfit",
-        bonusValue: 0.1,
+        bonusValue: 0.06,
     },
     {
         id: "trade-quant",
@@ -174,12 +174,12 @@ const TRADING_NODES: CareerNodeDef[] = [
             "Structured a CDO complex enough that compliance resigned preemptively",
             "Wine cellar organized by yield curve inversions",
         ],
-        bonusLabel: "+15% factory output",
+        bonusLabel: "+10% factory output",
         branch: "trading",
         tier: 2,
         prerequisites: ["trade-analyst"],
         bonusType: "factoryOutput",
-        bonusValue: 0.15,
+        bonusValue: 0.1,
     },
     {
         id: "trade-pm",
@@ -191,12 +191,12 @@ const TRADING_NODES: CareerNodeDef[] = [
             "Achieved 40% returns by redefining what counts as a return",
             "Avoided regulatory scrutiny through careful use of the word 'allegedly'",
         ],
-        bonusLabel: "Start with +$0.50 cash after prestige",
+        bonusLabel: "Start with +$0.35 cash after prestige",
         branch: "trading",
         tier: 3,
         prerequisites: ["trade-quant"],
         bonusType: "startingCash",
-        bonusValue: 0.5,
+        bonusValue: 0.35,
     },
     {
         id: "trade-md",
@@ -208,12 +208,12 @@ const TRADING_NODES: CareerNodeDef[] = [
             "Increased org chart depth by four levels. Output unchanged",
             "Pioneered lateral delegation at scale",
         ],
-        bonusLabel: "+10% symposium Idealist stats",
+        bonusLabel: "+18% symposium Idealist stats",
         branch: "trading",
         tier: 4,
         prerequisites: ["trade-pm"],
         bonusType: "autobattlerATK_deputies",
-        bonusValue: 0.1,
+        bonusValue: 0.18,
     },
     {
         id: "trade-partner",
@@ -248,12 +248,12 @@ const GROWTH_NODES: CareerNodeDef[] = [
             "A/B tested 47 shades of blue for the CTA button; winner was orange",
             "Grew email list by 10,000 through a pop-up that could not be closed on mobile",
         ],
-        bonusLabel: "+25% popup bonus cash",
+        bonusLabel: "+8% popup bonus cash",
         branch: "growth",
         tier: 1,
         prerequisites: [],
         bonusType: "popupBonus",
-        bonusValue: 0.25,
+        bonusValue: 0.08,
     },
     {
         id: "growth-head",
@@ -265,12 +265,12 @@ const GROWTH_NODES: CareerNodeDef[] = [
             "Redefined 'active user' to include anyone who has heard of the product. Churn improved overnight",
             "Three disruptions deep. All organic",
         ],
-        bonusLabel: "+10% XP from all sources",
+        bonusLabel: "+5% XP from all sources",
         branch: "growth",
         tier: 2,
         prerequisites: ["growth-hacker"],
         bonusType: "xpRate",
-        bonusValue: 0.1,
+        bonusValue: 0.05,
     },
     {
         id: "growth-vp",
@@ -282,12 +282,12 @@ const GROWTH_NODES: CareerNodeDef[] = [
             "Shipped a 'we miss you' email campaign that sent 3 emails per day",
             "Crafted payment copy to increase accidental subscriptions by 380%",
         ],
-        bonusLabel: "+10% symposium Existentialist stats",
+        bonusLabel: "+12% symposium Existentialist stats",
         branch: "growth",
         tier: 3,
         prerequisites: ["growth-head"],
         bonusType: "autobattlerATK_quickdraw",
-        bonusValue: 0.1,
+        bonusValue: 0.12,
     },
     {
         id: "growth-cmo",
@@ -299,12 +299,12 @@ const GROWTH_NODES: CareerNodeDef[] = [
             "Keynoted at 12 conferences on the topic of 'authentic personal branding'",
             "Achieved inbox zero by auto-replying 'let's take this offline' to all emails",
         ],
-        bonusLabel: "+15% symposium unit HP",
+        bonusLabel: "+18% symposium unit HP",
         branch: "growth",
         tier: 4,
         prerequisites: ["growth-vp"],
         bonusType: "autobattlerHP",
-        bonusValue: 0.15,
+        bonusValue: 0.18,
     },
     {
         id: "growth-cvo",
@@ -316,12 +316,12 @@ const GROWTH_NODES: CareerNodeDef[] = [
             "Content strategy was a single tweet linking to itself",
             "Coined 'engagement-driven engagement.' Still in the OKRs",
         ],
-        bonusLabel: "+15% XP from all sources",
+        bonusLabel: "+12% XP from all sources",
         branch: "growth",
         tier: 5,
         prerequisites: ["growth-cmo"],
         bonusType: "xpRate",
-        bonusValue: 0.15,
+        bonusValue: 0.12,
     },
 ]
 
@@ -339,12 +339,12 @@ const EXECUTIVE_NODES: CareerNodeDef[] = [
             "Wrote a PRD so comprehensive it was longer than the codebase it described",
             "Increased engineer throughput with a combination of explicit gamification and implicit manipulation",
         ],
-        bonusLabel: "+10% pinball high score bonus",
+        bonusLabel: "+6% pinball high score bonus",
         branch: "executive",
         tier: 1,
         prerequisites: [],
         bonusType: "pinballBonus",
-        bonusValue: 0.1,
+        bonusValue: 0.06,
     },
     {
         id: "exec-director",
@@ -373,12 +373,12 @@ const EXECUTIVE_NODES: CareerNodeDef[] = [
             "Reduced operational costs by 15% through a strategic initiative called 'layoffs'",
             "Synergy achieved. Unable to describe what changed",
         ],
-        bonusLabel: "+15% trade profit",
+        bonusLabel: "+14% trade profit",
         branch: "executive",
         tier: 3,
         prerequisites: ["exec-director"],
         bonusType: "tradeProfit",
-        bonusValue: 0.15,
+        bonusValue: 0.14,
     },
     {
         id: "exec-ceo",
@@ -407,12 +407,12 @@ const EXECUTIVE_NODES: CareerNodeDef[] = [
             "Compensation package includes a compensation package review committee",
             "Is really more 'Post-Executive' than anything",
         ],
-        bonusLabel: "+10% factory output",
+        bonusLabel: "+25% factory output",
         branch: "executive",
         tier: 5,
         prerequisites: ["exec-ceo"],
         bonusType: "factoryOutput",
-        bonusValue: 0.1,
+        bonusValue: 0.25,
     },
 ]
 
@@ -440,12 +440,12 @@ const EDUCATION_NODES: CareerNodeDef[] = [
         company: "University of Chicago · Chicago, IL",
         dateRange: "2015 – 2019",
         bullets: ["Fourth week, am I right?"],
-        bonusLabel: "+5% GRUND compilation tolerance",
+        bonusLabel: "+4% GRUND compilation tolerance",
         branch: "education",
         tier: 1,
         prerequisites: [],
         bonusType: "grundBonus",
-        bonusValue: 0.05,
+        bonusValue: 0.04,
     },
     {
         id: "edu-honors",
@@ -456,12 +456,12 @@ const EDUCATION_NODES: CareerNodeDef[] = [
             "One of the three readers was contractually obligated",
             "Explored the intersection of two fields that do not intersect",
         ],
-        bonusLabel: "+5% Hindsight rate",
+        bonusLabel: "+6% Hindsight rate",
         branch: "education",
         tier: 2,
         prerequisites: ["edu-undergrad"],
         bonusType: "hindsightRate",
-        bonusValue: 0.05,
+        bonusValue: 0.06,
     },
     {
         id: "edu-grad-cert",
@@ -472,12 +472,12 @@ const EDUCATION_NODES: CareerNodeDef[] = [
             "Completed 6 of 8 modules. Received the certificate anyway",
             "Final project was a pitch deck for a pitch deck generator",
         ],
-        bonusLabel: "Career switch penalty reduced 10%",
+        bonusLabel: "Career switch penalty reduced 8%",
         branch: "education",
         tier: 3,
         prerequisites: ["edu-honors"],
         bonusType: "switchPenaltyReduction",
-        bonusValue: 0.1,
+        bonusValue: 0.08,
     },
     {
         id: "edu-phd",
@@ -489,12 +489,12 @@ const EDUCATION_NODES: CareerNodeDef[] = [
             "Advisor described work as 'technically a contribution'",
             "Teaching evaluations described as 'present'",
         ],
-        bonusLabel: "+10% XP from all sources",
+        bonusLabel: "+12% XP from all sources",
         branch: "education",
         tier: 4,
         prerequisites: ["edu-grad-cert"],
         bonusType: "xpRate",
-        bonusValue: 0.1,
+        bonusValue: 0.12,
     },
 ]
 
@@ -524,12 +524,12 @@ const SKILLS_NODES: CareerNodeDef[] = [
         company: "Every Job Ever",
         dateRange: "",
         bullets: [],
-        bonusLabel: "+5% popup bonus cash",
+        bonusLabel: "+4% popup bonus cash",
         branch: "skills",
         tier: 1,
         prerequisites: [],
         bonusType: "popupBonus",
-        bonusValue: 0.05,
+        bonusValue: 0.04,
     },
     {
         id: "skill-passive-email",
@@ -537,12 +537,12 @@ const SKILLS_NODES: CareerNodeDef[] = [
         company: "Per My Last Email LLC",
         dateRange: "",
         bullets: [],
-        bonusLabel: "+5% trade profit",
+        bonusLabel: "+6% trade profit",
         branch: "skills",
         tier: 2,
         prerequisites: ["skill-comms"],
         bonusType: "tradeProfit",
-        bonusValue: 0.05,
+        bonusValue: 0.06,
     },
     {
         id: "skill-read-receipts",
@@ -564,12 +564,12 @@ const SKILLS_NODES: CareerNodeDef[] = [
         company: "Your Local Codeowners",
         dateRange: "",
         bullets: [],
-        bonusLabel: "+5% GRUND compilation tolerance",
+        bonusLabel: "+4% GRUND compilation tolerance",
         branch: "skills",
         tier: 1,
         prerequisites: [],
         bonusType: "grundBonus",
-        bonusValue: 0.05,
+        bonusValue: 0.04,
     },
     {
         id: "skill-nitpicking",
@@ -577,12 +577,12 @@ const SKILLS_NODES: CareerNodeDef[] = [
         company: "My Teammate's SEV-1",
         dateRange: "",
         bullets: [],
-        bonusLabel: "+5% factory output",
+        bonusLabel: "+6% factory output",
         branch: "skills",
         tier: 2,
         prerequisites: ["skill-code-review"],
         bonusType: "factoryOutput",
-        bonusValue: 0.05,
+        bonusValue: 0.06,
     },
     {
         id: "skill-assassination",
@@ -604,12 +604,12 @@ const SKILLS_NODES: CareerNodeDef[] = [
         company: "SELECT * FROM experience",
         dateRange: "",
         bullets: [],
-        bonusLabel: "+5% XP from all sources",
+        bonusLabel: "+3% XP from all sources",
         branch: "skills",
         tier: 1,
         prerequisites: [],
         bonusType: "xpRate",
-        bonusValue: 0.05,
+        bonusValue: 0.03,
     },
     {
         id: "skill-dashboards",
@@ -617,12 +617,12 @@ const SKILLS_NODES: CareerNodeDef[] = [
         company: "Church of Grafana",
         dateRange: "",
         bullets: [],
-        bonusLabel: "+5% Hindsight rate",
+        bonusLabel: "+6% Hindsight rate",
         branch: "skills",
         tier: 2,
         prerequisites: ["skill-sql"],
         bonusType: "hindsightRate",
-        bonusValue: 0.05,
+        bonusValue: 0.06,
     },
     {
         id: "skill-divination",
@@ -688,9 +688,30 @@ export const CAREER_BRANCHES: {
     },
 ]
 
-/** Skill points earned per level (1 per level) */
+/** Cumulative skill points earned up to a given level.
+ *  Each level grants floor(level / 5) + 1 SP, so higher levels are more rewarding. */
 export function skillPointsForLevel(level: number): number {
-    return level
+    let total = 0
+    for (let l = 1; l <= level; l++) {
+        total += Math.floor(l / 5) + 1
+    }
+    return total
+}
+
+/** SP cost to unlock a career/education/skill node (derived from tier). */
+export function nodeCost(tier: number): number {
+    return Math.max(1, tier)
+}
+
+/** SP cost to purchase the next rank of a mastery (escalating: rank N+1 costs N+2). */
+export function masteryCost(currentRanks: number): number {
+    return currentRanks + 2
+}
+
+/** Total SP spent on all ranks of a mastery: sum of (k+2) for k = 0..ranks-1. */
+export function totalMasteryCost(ranks: number): number {
+    if (ranks <= 0) return 0
+    return ranks * 2 + (ranks * (ranks - 1)) / 2
 }
 
 /** Dormant skill point effectiveness (50% when career is dormant) */

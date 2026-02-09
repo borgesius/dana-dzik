@@ -1,3 +1,21 @@
+## [2.3.0](https://github.com/borgesius/dana-dzik/compare/v2.2.0...v2.3.0) (2026-02-09)
+
+### Features
+
+* more ui tweaks and bugfix ([#47](https://github.com/borgesius/dana-dzik/issues/47)) ([a85747d](https://github.com/borgesius/dana-dzik/commit/a85747df70bc8f52c1438418620179c28eaa5c52)), closes [#37](https://github.com/borgesius/dana-dzik/issues/37) [#44](https://github.com/borgesius/dana-dzik/issues/44) [#46](https://github.com/borgesius/dana-dzik/issues/46)
+
+## [2.2.0](https://github.com/borgesius/dana-dzik/compare/v2.1.0...v2.2.0) (2026-02-09)
+
+### Features
+
+* some ui stuff and bugfixes ([#45](https://github.com/borgesius/dana-dzik/issues/45)) ([db78213](https://github.com/borgesius/dana-dzik/commit/db78213ec2c11657524e3a7116e0fb845c9a0bdd)), closes [#37](https://github.com/borgesius/dana-dzik/issues/37) [#44](https://github.com/borgesius/dana-dzik/issues/44) [#46](https://github.com/borgesius/dana-dzik/issues/46)
+
+## [2.1.0](https://github.com/borgesius/dana-dzik/compare/v2.0.0...v2.1.0) (2026-02-08)
+
+### Features
+
+* xp rebalance ([#41](https://github.com/borgesius/dana-dzik/issues/41)) ([388c2e6](https://github.com/borgesius/dana-dzik/commit/388c2e6cd6a7c0fc793c88b84cfa378c724a2870))
+
 ## [2.0.0](https://github.com/borgesius/dana-dzik/compare/v1.40.0...v2.0.0) (2026-02-08)
 
 ### ⚠ BREAKING CHANGES

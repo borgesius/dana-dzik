@@ -7,6 +7,8 @@ import {
     type CareerNodeDef,
     getNodesForBranch,
     MASTERY_DEFS,
+    masteryCost,
+    nodeCost,
 } from "../progression/careers"
 import type { CareerBranch } from "../progression/types"
 
@@ -146,13 +148,15 @@ function renderNode(
     `
 
     if (canUnlock) {
-        html += `<button class="ct-unlock-btn" data-node="${node.id}">Accept Position (1 SP)</button>`
+        const cost = nodeCost(node.tier)
+        html += `<button class="ct-unlock-btn" data-node="${node.id}">Accept Position (${cost} SP)</button>`
     } else if (!isUnlocked && !prereqsMet) {
         html += `<div class="ct-node-prereq">Requires: ${getPrereqNames(node)}</div>`
     } else if (!isUnlocked && prereqsMet && !isBranchActive) {
         html += `<div class="ct-node-prereq">Switch to this career to unlock</div>`
     } else if (!isUnlocked && prereqsMet) {
-        html += `<div class="ct-node-prereq">Requires skill point</div>`
+        const cost = nodeCost(node.tier)
+        html += `<div class="ct-node-prereq">Requires ${cost} skill points</div>`
     }
 
     html += `</div>`
@@ -182,6 +186,7 @@ function renderMasterySection(career: CareerManager): string {
         const rank = career.getMasteryRank(mastery.id)
         const canBuy = career.canPurchaseMastery(mastery.id)
         const maxed = mastery.maxRanks > 0 && rank >= mastery.maxRanks
+        const nextCost = masteryCost(rank)
 
         html += `
             <div class="ct-node ${maxed ? "ct-unlocked" : canBuy ? "ct-available" : "ct-locked"}">
@@ -191,7 +196,7 @@ function renderMasterySection(career: CareerManager): string {
                     <span class="ct-node-tier">Rank ${rank}${mastery.maxRanks > 0 ? `/${mastery.maxRanks}` : ""}</span>
                 </div>
                 <div class="ct-node-bonus">${mastery.description}</div>
-                ${canBuy ? `<button class="ct-mastery-btn" data-mastery="${mastery.id}">Invest (1 SP)</button>` : ""}
+                ${canBuy ? `<button class="ct-mastery-btn" data-mastery="${mastery.id}">Invest (${nextCost} SP)</button>` : ""}
             </div>
         `
     }
