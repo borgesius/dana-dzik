@@ -331,13 +331,13 @@ const GROWTH_NODES: CareerNodeDef[] = [
 const EXECUTIVE_NODES: CareerNodeDef[] = [
     {
         id: "exec-pm",
-        name: "Product Manager (No Technical Background)",
+        name: "Decidedly Nontechnical Product Manager",
         company: "Stealth Startup · Palo Alto, CA",
         dateRange: "Stealth – Launch (Soft)",
         bullets: [
-            "Had strong opinions about sprint velocity; could not define the word 'sprint'",
-            "Increased Jira ticket count by 200%, directly correlating with team morale decrease",
+            "Increased Jira ticket count by 600%",
             "Wrote a PRD so comprehensive it was longer than the codebase it described",
+            "Increased engineer throughput with a combination of explicit gamification and implicit manipulation",
         ],
         bonusLabel: "+10% pinball high score bonus",
         branch: "executive",
@@ -352,7 +352,7 @@ const EXECUTIVE_NODES: CareerNodeDef[] = [
         company: "Alignment Solutions Group · Denver, CO",
         dateRange: "Reorg I – Reorg III",
         bullets: [
-            "Survived three reorgs. Unclear if any of them were different",
+            "Survived eleven reorgs. Teammates became numbers on a spreadsheet.",
             "Introduced a weekly meeting to discuss which meetings could be emails",
             "Formed a cross-functional task force to investigate cross-functional inefficiency",
         ],
@@ -403,9 +403,9 @@ const EXECUTIVE_NODES: CareerNodeDef[] = [
         company: "Board of Boards LLC · Abstracted",
         dateRange: "Advisory – ∞ (Vesting)",
         bullets: [
-            "Chairs a board that oversees two other boards",
-            "Title contains both 'Executive' and 'Non-Executive'; no one has questioned this",
+            "Four trusts to a holding company, two holding companies to a Cayman, and each Cayman back to a trust held by your mother.",
             "Compensation package includes a compensation package review committee",
+            "Is really more 'Post-Executive' than anything",
         ],
         bonusLabel: "+10% factory output",
         branch: "executive",
