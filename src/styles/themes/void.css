@@ -3,7 +3,8 @@
 /* Lowest contrast pair: --theme-text-secondary (#88ccaa) on --theme-surface-secondary (#0a0010) = 4.6:1 (WCAG AA compliant) */
 
 @keyframes void-flicker {
-    0%, 100% {
+    0%,
+    100% {
         border-color: #00ff80;
         opacity: 1;
     }
@@ -44,7 +45,8 @@
     --theme-window-title-inactive: #1a0040;
     --theme-window-btn-bg: #0a0010;
     --theme-window-btn-border: 1px solid #00ff80;
-    --theme-window-shadow: 0 0 20px rgb(0 255 128 / 30%), 0 0 40px rgb(0 255 128 / 10%);
+    --theme-window-shadow:
+        0 0 20px rgb(0 255 128 / 30%), 0 0 40px rgb(0 255 128 / 10%);
     --theme-window-resize-bg: repeating-linear-gradient(
         135deg,
         #00ff80 0px,
@@ -113,7 +115,8 @@
     --theme-tooltip-bg: #120030;
     --theme-tooltip-border: 1px solid #00ff80;
     --theme-tooltip-text: #88ccaa;
-    --theme-tooltip-shadow: 0 0 20px rgb(0 255 128 / 40%), 0 0 10px rgb(0 255 128 / 20%);
+    --theme-tooltip-shadow:
+        0 0 20px rgb(0 255 128 / 40%), 0 0 10px rgb(0 255 128 / 20%);
     --theme-widget-bg: #120030;
     --theme-widget-border: 1px solid #00ff80;
     --theme-widget-title-bg: #0a0010;

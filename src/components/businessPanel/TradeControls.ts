@@ -50,7 +50,7 @@ export class TradeControls {
                 <span class="trade-holding">${lm.t("commodityExchange.ui.qty")}: ${formatQuantity(qty)}</span>
             </div>
             <div class="trade-buttons">
-                <button class="toolbar-button trade-btn harvest-btn">${lm.t(`commodityExchange.ui.harvest_${commodity}`) || lm.t("commodityExchange.ui.harvest")} (${formatQuantityFixed(harvestOutput, harvestDecimals)})</button>
+                <button class="toolbar-button trade-btn harvest-btn">${lm.t(`commodityExchange.ui.harvest_${commodity}`, { defaultValue: "" }) || lm.t("commodityExchange.ui.harvest", { defaultValue: "Harvest" })} (${formatQuantityFixed(harvestOutput, harvestDecimals)})</button>
                 <button class="toolbar-button trade-btn buy-btn" ${canBuy ? "" : "disabled"}>${lm.t("commodityExchange.ui.buy")}</button>
                 <button class="toolbar-button trade-btn sell-btn" ${canSell ? "" : "disabled"}>${lm.t("commodityExchange.ui.sell")}</button>
                 <button class="toolbar-button trade-btn sell-all-btn" ${canSell ? "" : "disabled"}>${lm.t("commodityExchange.ui.sellAll")}</button>

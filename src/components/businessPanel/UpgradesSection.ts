@@ -80,15 +80,15 @@ export class UpgradesSection {
 
             if (isOwned) {
                 btn.innerHTML = `
-                    <span class="upgrade-name">${lm.t(`commodityExchange.upgrades.${u.id}.name`)}</span>
+                    <span class="upgrade-name">${lm.t(`commodityExchange.upgrades.${u.id}.name`, { defaultValue: u.name })}</span>
                     <span class="upgrade-badge">${lm.t("commodityExchange.ui.installed")}</span>
                 `
                 btn.disabled = true
             } else {
                 btn.innerHTML = `
-                    <span class="upgrade-name">${lm.t(`commodityExchange.upgrades.${u.id}.name`)}</span>
+                    <span class="upgrade-name">${lm.t(`commodityExchange.upgrades.${u.id}.name`, { defaultValue: u.name })}</span>
                     <span class="upgrade-cost">${formatMoney(u.cost)}</span>
-                    <span class="upgrade-desc">${lm.t(`commodityExchange.upgrades.${u.id}.description`)}</span>
+                    <span class="upgrade-desc">${lm.t(`commodityExchange.upgrades.${u.id}.description`, { defaultValue: u.description })}</span>
                 `
                 btn.disabled = !canAfford
                 btn.addEventListener("click", () => {

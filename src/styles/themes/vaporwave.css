@@ -11,7 +11,9 @@
     --theme-desktop-icon-text: #ffffff;
 
     /* Typography */
-    --theme-font-system: "MS Sans Serif", "MS UI Gothic", "Hiragino Kaku Gothic ProN", "Hiragino Sans", sans-serif;
+    --theme-font-system:
+        "MS Sans Serif", "MS UI Gothic", "Hiragino Kaku Gothic ProN",
+        "Hiragino Sans", sans-serif;
     --theme-font-mono: "Courier New", "MS Gothic", monospace;
     --theme-font-size-base: 13px;
 
@@ -27,7 +29,8 @@
     --theme-window-title-inactive: #6b3d7d;
     --theme-window-btn-bg: #2d0047;
     --theme-window-btn-border: 1px solid #01cdfe;
-    --theme-window-shadow: 0 4px 20px rgb(1 205 254 / 40%), 0 0 30px rgb(255 113 206 / 30%);
+    --theme-window-shadow:
+        0 4px 20px rgb(1 205 254 / 40%), 0 0 30px rgb(255 113 206 / 30%);
     --theme-window-resize-bg: repeating-linear-gradient(
         45deg,
         #01cdfe 0px,
@@ -56,7 +59,11 @@
     --theme-clock-text: #01cdfe;
     --theme-start-menu-bg: #1a0033;
     --theme-start-menu-border: 1px solid #01cdfe;
-    --theme-start-menu-header-bg: linear-gradient(135deg, #9b59b6 0%, #ff71ce 100%);
+    --theme-start-menu-header-bg: linear-gradient(
+        135deg,
+        #9b59b6 0%,
+        #ff71ce 100%
+    );
     --theme-start-menu-body-bg: rgb(26 0 51 / 95%);
     --theme-start-menu-right-bg: rgb(26 0 51 / 98%);
     --theme-start-menu-item-hover: rgb(255 113 206 / 60%);
@@ -109,7 +116,8 @@
     --theme-tooltip-bg: #1a0033;
     --theme-tooltip-border: 1px solid #01cdfe;
     --theme-tooltip-text: #ffb3e6;
-    --theme-tooltip-shadow: 0 4px 20px rgb(1 205 254 / 50%), 0 0 15px rgb(255 113 206 / 40%);
+    --theme-tooltip-shadow:
+        0 4px 20px rgb(1 205 254 / 50%), 0 0 15px rgb(255 113 206 / 40%);
 
     /* Widgets */
     --theme-widget-bg: #1a0033;

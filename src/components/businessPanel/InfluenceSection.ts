@@ -117,8 +117,8 @@ export class InfluenceSection {
 
             card.innerHTML = `
                 <div class="influence-info">
-                    <span class="influence-name">${lm.t(`commodityExchange.influence.${inf.id}.name`)}</span>
-                    <span class="influence-desc">${lm.t(`commodityExchange.influence.${inf.id}.description`)}</span>
+                    <span class="influence-name">${lm.t(`commodityExchange.influence.${inf.id}.name`, { defaultValue: inf.name })}</span>
+                    <span class="influence-desc">${lm.t(`commodityExchange.influence.${inf.id}.description`, { defaultValue: inf.description })}</span>
                     <span class="influence-cost">${costParts.join(" + ")}</span>
                 </div>
                 <button class="toolbar-button influence-exec-btn" ${canExecute ? "" : "disabled"}>

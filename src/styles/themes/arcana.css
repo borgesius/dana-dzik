@@ -39,7 +39,8 @@
     --theme-window-title-inactive: #2d1a70;
     --theme-window-btn-bg: #1a1040;
     --theme-window-btn-border: 2px solid #ffd700;
-    --theme-window-shadow: 0 4px 20px rgb(255 215 0 / 30%), 0 0 30px rgb(184 134 11 / 20%);
+    --theme-window-shadow:
+        0 4px 20px rgb(255 215 0 / 30%), 0 0 30px rgb(184 134 11 / 20%);
     --theme-window-resize-bg: repeating-linear-gradient(
         45deg,
         #ffd700 0px,
@@ -113,7 +114,8 @@
     --theme-tooltip-bg: #241460;
     --theme-tooltip-border: 2px solid #ffd700;
     --theme-tooltip-text: #e8d4a0;
-    --theme-tooltip-shadow: 0 4px 20px rgb(255 215 0 / 40%), 0 0 15px rgb(184 134 11 / 30%);
+    --theme-tooltip-shadow:
+        0 4px 20px rgb(255 215 0 / 40%), 0 0 15px rgb(184 134 11 / 30%);
     --theme-widget-bg: #241460;
     --theme-widget-border: 2px solid #ffd700;
     --theme-widget-title-bg: linear-gradient(to bottom, #ffd700, #b8860b);
