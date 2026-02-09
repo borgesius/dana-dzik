@@ -1652,6 +1652,34 @@
         "horse-whisperer": {
             "name": "Pferdeflüsterer",
             "description": "Defeat T. Pferd in 3 attempts or fewer."
+        },
+        "window-shopper": {
+            "name": "Schaufensterbummel",
+            "description": "Öffne das Anpassen-Fenster."
+        },
+        "fashion-forward": {
+            "name": "Modebewusst",
+            "description": "Rüste ein nicht-standardmäßiges Kosmetik-Item aus."
+        },
+        "makeover": {
+            "name": "Umstyling",
+            "description": "Habe 3 nicht-standardmäßige Kosmetik-Items gleichzeitig aktiv."
+        },
+        "ten-unlocked": {
+            "name": "Sammler",
+            "description": "Schalte 10 Kosmetik-Items frei."
+        },
+        "fashionista": {
+            "name": "Fashionista",
+            "description": "Habe 8 nicht-standardmäßige Kosmetik-Items gleichzeitig aktiv."
+        },
+        "aesthete": {
+            "name": "Ästhet",
+            "description": "Schalte 25 Kosmetik-Items frei."
+        },
+        "pferd-couture": {
+            "name": "Pferd Couture",
+            "description": "Rüste 3 Pferd-Kosmetik-Items gleichzeitig aus."
         }
     },
     "symposium": {

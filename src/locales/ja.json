@@ -1652,6 +1652,34 @@
         "horse-whisperer": {
             "name": "Pferdeflüsterer",
             "description": "Defeat T. Pferd in 3 attempts or fewer."
+        },
+        "window-shopper": {
+            "name": "ウィンドウショッパー",
+            "description": "カスタマイズウィンドウを開く。"
+        },
+        "fashion-forward": {
+            "name": "ファッション先駆者",
+            "description": "デフォルト以外のコスメティックを装備する。"
+        },
+        "makeover": {
+            "name": "イメチェン",
+            "description": "デフォルト以外のコスメティックを3つ同時に有効にする。"
+        },
+        "ten-unlocked": {
+            "name": "コレクター",
+            "description": "コスメティックを10個アンロックする。"
+        },
+        "fashionista": {
+            "name": "ファッショニスタ",
+            "description": "デフォルト以外のコスメティックを8つ同時に有効にする。"
+        },
+        "aesthete": {
+            "name": "審美家",
+            "description": "コスメティックを25個アンロックする。"
+        },
+        "pferd-couture": {
+            "name": "プフェルト・クチュール",
+            "description": "Pferdテーマのコスメティックを3つ同時に装備する。"
         }
     },
     "symposium": {
