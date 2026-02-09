@@ -89,9 +89,11 @@ export { ACHIEVEMENTS } from "../lib/achievements/definitions"
 // ── Offline catchup ──────────────────────────────────────────────────────────
 
 export const CATCHUP = {
-    maxOfflineMs: 48 * 60 * 60 * 1000,
+    maxOfflineMs: 24 * 60 * 60 * 1000,
+    fullEfficiencyMs: 12 * 60 * 60 * 1000,
     minOfflineMs: 30_000,
     productionEfficiency: 0.8,
+    decayRate: 3,
 } as const
 
 // ── Autobattler run reward constants (from RunManager internals) ─────────

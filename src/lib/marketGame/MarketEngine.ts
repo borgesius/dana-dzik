@@ -1,3 +1,4 @@
+import { CATCHUP } from "../../config/balance"
 import { isCalmMode } from "../calmMode"
 import { type Employee, getEmployeeSalary } from "./employees"
 import { OrgChart } from "./orgChart"
@@ -1977,9 +1978,9 @@ export class MarketEngine {
     // -----------------------------------------------------------------------
 
     public offlineCatchup(elapsedMs: number): OfflineSummary {
-        const maxMs = 48 * 60 * 60 * 1000 // cap at 48 hours
-        const clampedMs = Math.max(0, Math.min(elapsedMs, maxMs))
+        const clampedMs = Math.max(0, Math.min(elapsedMs, CATCHUP.maxOfflineMs))
         const ticks = Math.floor(clampedMs / TICK_INTERVAL_MS)
+        const effectiveTicks = MarketEngine.computeEffectiveTicks(clampedMs)
 
         const commoditiesProduced: Record<string, number> = {}
         let salariesPaid = 0
@@ -1994,7 +1995,7 @@ export class MarketEngine {
                 if (count === 0) continue
 
                 const effectiveCycle = fDef.ticksPerCycle
-                const cycleCount = Math.floor(ticks / effectiveCycle)
+                const cycleCount = Math.floor(effectiveTicks / effectiveCycle)
                 if (cycleCount === 0) continue
 
                 const avgOutput = (fDef.minOutput + fDef.maxOutput) / 2
@@ -2021,7 +2022,6 @@ export class MarketEngine {
             salariesPaid = totalSalary
             this.cash -= totalSalary
 
-            // Graceful payroll shedding: fire most expensive while cash < 0
             while (this.cash < 0 && this.orgChart.getEmployeeCount() > 0) {
                 const result = this.orgChart.fireMostExpensive()
                 if (result) {
@@ -2047,6 +2047,38 @@ export class MarketEngine {
             salariesPaid,
             employeesFired,
         }
+    }
+
+    /**
+     * Computes effective ticks accounting for time-based decay.
+     * Full efficiency for the first 12 hours, then combined
+     * exponential + linear decay from 12–24h reaching zero at 24h.
+     *
+     * Decay function for t > 12h: (1 - p) * e^(-k*p)
+     * where p = (t - 12h) / 12h, k = CATCHUP.decayRate
+     */
+    public static computeEffectiveTicks(clampedMs: number): number {
+        if (clampedMs <= CATCHUP.fullEfficiencyMs) {
+            return Math.floor(clampedMs / TICK_INTERVAL_MS)
+        }
+
+        const fullTicks = Math.floor(
+            CATCHUP.fullEfficiencyMs / TICK_INTERVAL_MS
+        )
+        const decayMs = clampedMs - CATCHUP.fullEfficiencyMs
+        const decayDurationMs = CATCHUP.maxOfflineMs - CATCHUP.fullEfficiencyMs
+        const CHUNKS = 100
+        const chunkMs = decayMs / CHUNKS
+
+        let effectiveDecayMs = 0
+        for (let i = 0; i < CHUNKS; i++) {
+            const midpointMs = (i + 0.5) * chunkMs
+            const p = midpointMs / decayDurationMs
+            const efficiency = (1 - p) * Math.exp(-CATCHUP.decayRate * p)
+            effectiveDecayMs += chunkMs * efficiency
+        }
+
+        return fullTicks + Math.floor(effectiveDecayMs / TICK_INTERVAL_MS)
     }
 }
 
