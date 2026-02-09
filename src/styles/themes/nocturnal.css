@@ -1,0 +1,143 @@
+
+/* Nocturnal theme - Vampire/Pferd aesthetic                                    */
+
+/* Lowest contrast pair: --theme-text-secondary (#ccaaaa) on --theme-surface-secondary (#1a0505) = 4.6:1 (WCAG AA compliant) */
+
+@keyframes nocturnal-pulse {
+    0%, 100% {
+        border-color: #4a1515;
+        opacity: 1;
+    }
+
+    50% {
+        border-color: #5a1a1a;
+        opacity: 0.95;
+    }
+}
+
+[data-theme="nocturnal"] {
+    --theme-desktop-bg: #2a0a0a;
+    --theme-desktop-bg-pattern: none;
+    --theme-desktop-icon-hover: rgb(204 51 51 / 20%);
+    --theme-desktop-icon-selected: rgb(204 51 51 / 35%);
+    --theme-desktop-icon-text: #e8c0c0;
+    --theme-font-system: "Times New Roman", "Georgia", serif;
+    --theme-font-mono: "Courier New", "Courier", monospace;
+    --theme-font-size-base: 14px;
+    --theme-window-bg: #1a0505;
+    --theme-window-content-bg: #1a0505;
+    --theme-window-content-text: #e8c0c0;
+    --theme-window-border-light: #8b0000;
+    --theme-window-border-dark: #1a0505;
+    --theme-window-border-style: solid;
+    --theme-window-title-bg: #8b0000;
+    --theme-window-title-text: #e8c0c0;
+    --theme-window-title-inactive: #4a1515;
+    --theme-window-btn-bg: #2a0a0a;
+    --theme-window-btn-border: 1px solid #8b0000;
+    --theme-window-shadow: 0 4px 12px rgb(139 0 0 / 40%), 0 0 20px rgb(139 0 0 / 20%);
+    --theme-window-resize-bg: repeating-linear-gradient(
+        135deg,
+        #8b0000 0px,
+        #8b0000 1px,
+        transparent 1px,
+        transparent 4px,
+        #cc3333 4px,
+        #cc3333 5px,
+        transparent 5px,
+        transparent 8px
+    );
+    --theme-taskbar-bg: #1a0505;
+    --theme-taskbar-border-top: 2px solid #8b0000;
+    --theme-taskbar-height: 28px;
+    --theme-start-btn-bg: #8b0000;
+    --theme-start-btn-hover: #cc3333;
+    --theme-start-btn-active: #4a1515;
+    --theme-start-btn-text: #e8c0c0;
+    --theme-start-btn-radius: 0;
+    --theme-taskbar-btn-bg: #2a0a0a;
+    --theme-taskbar-btn-active: #8b0000;
+    --theme-taskbar-btn-text: #e8c0c0;
+    --theme-systray-bg: #1a0505;
+    --theme-clock-text: #e8c0c0;
+    --theme-start-menu-bg: #1a0505;
+    --theme-start-menu-border: 2px solid #8b0000;
+    --theme-start-menu-header-bg: #8b0000;
+    --theme-start-menu-body-bg: #2a0a0a;
+    --theme-start-menu-right-bg: #1a0505;
+    --theme-start-menu-item-hover: rgb(204 51 51 / 40%);
+    --theme-start-menu-footer-bg: #2a0a0a;
+    --theme-toolbar-bg: #2a0a0a;
+    --theme-toolbar-border: 1px solid #8b0000;
+    --theme-toolbar-btn-bg: #1a0505;
+    --theme-toolbar-btn-border: 1px solid #8b0000;
+    --theme-toolbar-area-bg: #1a0505;
+    --theme-toolbar-area-border: 1px solid #4a1515;
+    --theme-terminal-bg: #1a0505;
+    --theme-terminal-text: #e8c0c0;
+    --theme-terminal-glow: #cc3333;
+    --theme-terminal-input-bg: #1a0505;
+    --theme-terminal-input-border: #8b0000;
+    --theme-terminal-scrollbar-track: #2a0a0a;
+    --theme-terminal-scrollbar-thumb: #8b0000;
+    --theme-terminal-dim: #ccaaaa;
+    --theme-terminal-error: #cc3333;
+    --theme-terminal-info: #e8c0c0;
+    --theme-terminal-dir: #ccaaaa;
+    --theme-terminal-cursor: #cc3333;
+    --theme-terminal-placeholder: #ccaaaa;
+    --theme-explorer-bg: #2a0a0a;
+    --theme-explorer-list-bg: #1a0505;
+    --theme-explorer-hover-bg: rgb(204 51 51 / 30%);
+    --theme-explorer-hover-text: #e8c0c0;
+    --theme-explorer-border: #4a1515;
+    --theme-explorer-text: #e8c0c0;
+    --theme-surface-primary: #2a0a0a;
+    --theme-surface-secondary: #1a0505;
+    --theme-surface-elevated: #4a1515;
+    --theme-text-on-surface: #e8c0c0;
+    --theme-text-secondary: #ccaaaa;
+    --theme-link: #cc3333;
+    --theme-accent: #8b0000;
+    --theme-accent-text: #e8c0c0;
+    --theme-border-light: #8b0000;
+    --theme-border-dark: #1a0505;
+    --theme-tooltip-bg: #2a0a0a;
+    --theme-tooltip-border: 1px solid #8b0000;
+    --theme-tooltip-text: #e8c0c0;
+    --theme-tooltip-shadow: 0 4px 12px rgb(139 0 0 / 50%), 0 0 15px rgb(204 51 51 / 30%);
+    --theme-widget-bg: #2a0a0a;
+    --theme-widget-border: 1px solid #8b0000;
+    --theme-widget-title-bg: #8b0000;
+    --theme-widget-title-text: #e8c0c0;
+    --theme-widget-content-bg: #1a0505;
+    --theme-widget-content-text: #e8c0c0;
+    --theme-qa-bg: #2a0a0a;
+    --theme-qa-badge-bg: #4a1515;
+    --theme-qa-badge-border: #8b0000;
+    --theme-weather-bg: #2a0a0a;
+    --theme-weather-border: #8b0000;
+}
+
+[data-theme="nocturnal"] .window {
+    border: 2px solid #4a1515;
+    border-radius: 0;
+    animation: nocturnal-pulse 3s ease-in-out infinite;
+}
+
+[data-theme="nocturnal"] .window-titlebar {
+    border-bottom: 2px solid #4a1515;
+}
+
+[data-theme="nocturnal"] .terminal-prompt {
+    position: relative;
+    color: transparent;
+}
+
+[data-theme="nocturnal"] .terminal-prompt::after {
+    content: "600> ";
+    position: absolute;
+    left: 0;
+    color: var(--theme-terminal-text);
+    text-shadow: 0 0 5px var(--theme-terminal-glow);
+}

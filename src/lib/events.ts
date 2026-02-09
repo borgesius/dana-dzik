@@ -70,6 +70,7 @@ export interface AppEventMap {
     "market:scrap-dividend": Record<string, never>
     "autobattler:faction-complete": { faction: string }
     "cosmetic:unlocked": { type: string; id: string }
+    "cosmetic:changed": { type: string; id: string }
     "glitch:triggered": { type: string }
     "system-crash:triggered": { effectType: string }
     // Veil system events

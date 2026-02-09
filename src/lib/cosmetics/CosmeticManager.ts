@@ -1,6 +1,16 @@
 import { emitAppEvent } from "../events"
 
-export type CosmeticType = "cursor-trail" | "wallpaper" | "window-chrome"
+export type CosmeticType =
+    | "cursor-trail"
+    | "wallpaper"
+    | "window-chrome"
+    | "theme"
+    | "system-font"
+    | "taskbar-style"
+    | "window-animation"
+    | "startup-sound"
+
+export type CosmeticRarity = "common" | "uncommon" | "rare" | "legendary"
 
 export interface CosmeticSaveData {
     unlocked: string[]
@@ -18,6 +28,17 @@ export function getCosmeticManager(): CosmeticManager {
     return instance
 }
 
+const PFERD_COSMETIC_IDS = new Set([
+    "cursor-trail:earthen",
+    "cursor-trail:instrumentalization",
+    "wallpaper:pasture",
+    "wallpaper:stable",
+    "window-chrome:sanguine",
+    "window-animation:viscous",
+    "theme:nocturnal",
+    "startup-sound:whinny",
+])
+
 export class CosmeticManager {
     private unlocked: Set<string> = new Set()
     private active: Map<CosmeticType, string> = new Map()
@@ -25,16 +46,25 @@ export class CosmeticManager {
     private dirtyCallback: (() => void) | null = null
 
     constructor() {
-        // Defaults are always unlocked
         this.unlocked.add("cursor-trail:default")
         this.unlocked.add("wallpaper:default")
         this.unlocked.add("window-chrome:default")
+        this.unlocked.add("theme:default")
+        this.unlocked.add("system-font:default")
+        this.unlocked.add("taskbar-style:default")
+        this.unlocked.add("window-animation:default")
+        this.unlocked.add("startup-sound:none")
+
         this.active.set("cursor-trail", "default")
         this.active.set("wallpaper", "default")
         this.active.set("window-chrome", "default")
+        this.active.set("theme", "default")
+        this.active.set("system-font", "default")
+        this.active.set("taskbar-style", "default")
+        this.active.set("window-animation", "default")
+        this.active.set("startup-sound", "none")
     }
 
-    /** Register a callback for cosmetic changes */
     public onChange(cb: CosmeticCallback): void {
         this.changeCallbacks.push(cb)
     }
@@ -43,7 +73,6 @@ export class CosmeticManager {
         this.dirtyCallback = cb
     }
 
-    /** Unlock a cosmetic */
     public unlock(type: CosmeticType, id: string): boolean {
         const key = `${type}:${id}`
         if (this.unlocked.has(key)) return false
@@ -53,26 +82,23 @@ export class CosmeticManager {
         return true
     }
 
-    /** Check if a cosmetic is unlocked */
     public isUnlocked(type: CosmeticType, id: string): boolean {
         return this.unlocked.has(`${type}:${id}`)
     }
 
-    /** Set the active cosmetic for a type */
     public setActive(type: CosmeticType, id: string): boolean {
         if (!this.isUnlocked(type, id)) return false
         this.active.set(type, id)
         this.changeCallbacks.forEach((cb) => cb(type, id))
         this.dirtyCallback?.()
+        emitAppEvent("cosmetic:changed", { type, id })
         return true
     }
 
-    /** Get the active cosmetic for a type */
     public getActive(type: CosmeticType): string {
         return this.active.get(type) ?? "default"
     }
 
-    /** Get all unlocked cosmetics for a type */
     public getUnlockedForType(type: CosmeticType): string[] {
         const prefix = `${type}:`
         return [...this.unlocked]
@@ -80,9 +106,27 @@ export class CosmeticManager {
             .map((k) => k.slice(prefix.length))
     }
 
-    /** Get total number of unlocked cosmetics */
     public getUnlockedCount(): number {
         return this.unlocked.size
+    }
+
+    /** Count how many distinct non-default categories have an active cosmetic */
+    public getActiveNonDefaultCount(): number {
+        let count = 0
+        for (const [type, id] of this.active) {
+            const defaultId = type === "startup-sound" ? "none" : "default"
+            if (id !== defaultId) count++
+        }
+        return count
+    }
+
+    /** Count how many active Pferd-themed cosmetics are equipped */
+    public getActivePferdCount(): number {
+        let count = 0
+        for (const [type, id] of this.active) {
+            if (PFERD_COSMETIC_IDS.has(`${type}:${id}`)) count++
+        }
+        return count
     }
 
     // ── Serialization ─────────────────────────────────────────────────────

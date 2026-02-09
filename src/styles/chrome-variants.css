@@ -71,3 +71,233 @@
     border-color: #8b7355 !important;
     color: #5c4033 !important;
 }
+
+/* ── Minimal (hairline, nearly borderless) ────────────────────────────────── */
+
+.chrome-minimal .window-titlebar {
+    background: var(--win-bg, #c0c0c0) !important;
+    border-bottom: 1px solid rgb(0 0 0 / 12%);
+    padding: 2px 4px;
+    min-height: 20px;
+}
+
+.chrome-minimal .window {
+    border: 1px solid rgb(0 0 0 / 15%) !important;
+    box-shadow: 0 1px 4px rgb(0 0 0 / 10%);
+}
+
+.chrome-minimal .window-titlebar-buttons button {
+    border: none !important;
+    background: transparent !important;
+    opacity: 0.5;
+}
+
+.chrome-minimal .window-titlebar-buttons button:hover {
+    opacity: 1;
+}
+
+/* ── Terminal (green-on-black) ────────────────────────────────────────────── */
+
+.chrome-terminal .window-titlebar {
+    background: #0a0a0a !important;
+    color: #00cc00 !important;
+    border-bottom: 1px solid #003300;
+    font-family: "Courier New", monospace;
+    text-shadow: 0 0 4px rgb(0 204 0 / 40%);
+}
+
+.chrome-terminal .window.inactive .window-titlebar {
+    background: #050505 !important;
+    color: #006600 !important;
+}
+
+.chrome-terminal .window {
+    border-color: #003300 !important;
+}
+
+.chrome-terminal .window-titlebar-buttons button {
+    background: #001a00 !important;
+    border-color: #003300 !important;
+    color: #00cc00 !important;
+}
+
+/* ── Sanguine (deep burgundy, Pferd-themed) ──────────────────────────────── */
+
+.chrome-sanguine .window-titlebar {
+    background: linear-gradient(
+        to bottom,
+        #4a1515 0%,
+        #6a2020 40%,
+        #4a1515 100%
+    ) !important;
+    color: #e8c0c0 !important;
+    border-bottom: 2px solid #3a0a0a;
+}
+
+.chrome-sanguine .window.inactive .window-titlebar {
+    background: linear-gradient(
+        to bottom,
+        #1a0808 0%,
+        #2a0a0a 40%,
+        #1a0808 100%
+    ) !important;
+    color: #665050 !important;
+}
+
+.chrome-sanguine .window {
+    border-color: #3a0a0a !important;
+}
+
+.chrome-sanguine .window-titlebar-buttons button {
+    background: #3a0a0a !important;
+    border-color: #2a0505 !important;
+    color: #cc8080 !important;
+}
+
+/* ── Neon (glowing colored border) ────────────────────────────────────────── */
+
+.chrome-neon .window-titlebar {
+    background: #1a1a2e !important;
+    color: #00ffff !important;
+    text-shadow: 0 0 8px rgb(0 255 255 / 60%);
+    border-bottom: 1px solid #00ffff;
+}
+
+.chrome-neon .window.inactive .window-titlebar {
+    background: #111122 !important;
+    color: #448888 !important;
+    text-shadow: none;
+    border-bottom-color: #336666;
+}
+
+.chrome-neon .window {
+    border: 2px solid #00ffff !important;
+    box-shadow:
+        0 0 8px rgb(0 255 255 / 30%),
+        inset 0 0 8px rgb(0 255 255 / 10%);
+    animation: neon-pulse 3s ease-in-out infinite;
+}
+
+.chrome-neon .window-titlebar-buttons button {
+    background: transparent !important;
+    border: 1px solid #00ffff !important;
+    color: #00ffff !important;
+    text-shadow: 0 0 4px rgb(0 255 255 / 50%);
+}
+
+@keyframes neon-pulse {
+    0%,
+    100% {
+        box-shadow:
+            0 0 8px rgb(0 255 255 / 30%),
+            inset 0 0 8px rgb(0 255 255 / 10%);
+    }
+
+    50% {
+        box-shadow:
+            0 0 16px rgb(0 255 255 / 50%),
+            inset 0 0 12px rgb(0 255 255 / 15%);
+    }
+}
+
+/* ── Dial-Up (static/noise) ──────────────────────────────────────────────── */
+
+.chrome-dialup .window-titlebar {
+    background: linear-gradient(
+        to right,
+        #333333 0%,
+        #444444 20%,
+        #222222 40%,
+        #555555 60%,
+        #333333 80%,
+        #444444 100%
+    ) !important;
+    color: #e0e0e0 !important;
+    animation: dialup-static 0.15s steps(3) infinite;
+}
+
+.chrome-dialup .window {
+    border-color: #555555 !important;
+}
+
+.chrome-dialup .window-titlebar-buttons button {
+    background: #333333 !important;
+    border-color: #555555 !important;
+    color: #cccccc !important;
+}
+
+@keyframes dialup-static {
+    0% {
+        background-position: 0 0;
+    }
+
+    50% {
+        background-position: 5px -3px;
+    }
+
+    100% {
+        background-position: -2px 2px;
+    }
+}
+
+/* ── Arcane (gold filigree) ──────────────────────────────────────────────── */
+
+.chrome-arcane .window-titlebar {
+    background: linear-gradient(
+        to bottom,
+        #1a1040 0%,
+        #241460 40%,
+        #1a1040 100%
+    ) !important;
+    color: #ffd700 !important;
+    font-family: Georgia, serif;
+    text-shadow: 0 0 6px rgb(255 215 0 / 40%);
+    border-bottom: 2px solid #b8860b;
+}
+
+.chrome-arcane .window.inactive .window-titlebar {
+    background: linear-gradient(
+        to bottom,
+        #0d0820 0%,
+        #120a30 40%,
+        #0d0820 100%
+    ) !important;
+    color: #8b6914 !important;
+}
+
+.chrome-arcane .window {
+    border: 2px solid #b8860b !important;
+    box-shadow:
+        0 0 12px rgb(184 134 11 / 20%),
+        inset 0 0 4px rgb(255 215 0 / 10%);
+}
+
+.chrome-arcane .window-titlebar-buttons button {
+    background: #1a1040 !important;
+    border: 1px solid #b8860b !important;
+    color: #ffd700 !important;
+}
+
+.chrome-arcane .window-titlebar::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        90deg,
+        transparent 0%,
+        rgb(255 215 0 / 15%) 50%,
+        transparent 100%
+    );
+    animation: arcane-shimmer 3s ease-in-out infinite;
+    pointer-events: none;
+}
+
+@keyframes arcane-shimmer {
+    0% {
+        transform: translateX(-100%);
+    }
+
+    100% {
+        transform: translateX(200%);
+    }
+}
