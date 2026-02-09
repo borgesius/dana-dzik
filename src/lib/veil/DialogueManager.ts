@@ -60,6 +60,7 @@ export class DialogueManager {
 
     private showNode(node: DialogueNode): void {
         this.stopTyping()
+        this.clearTypingCursors()
 
         const nodeEl = document.createElement("div")
         nodeEl.className = "veil-dialogue-node veil-dialogue-entering"
@@ -75,12 +76,13 @@ export class DialogueManager {
         nodeEl.appendChild(speaker)
 
         const textEl = document.createElement("div")
-        textEl.className = "veil-dialogue-text"
+        textEl.className = "veil-dialogue-text veil-dialogue-typing"
         nodeEl.appendChild(textEl)
 
         const choicesEl = document.createElement("div")
         choicesEl.className = "veil-dialogue-choices"
         choicesEl.style.display = "none"
+        choicesEl.style.flexDirection = "column"
         nodeEl.appendChild(choicesEl)
 
         this.container.appendChild(nodeEl)
@@ -117,8 +119,16 @@ export class DialogueManager {
         nodeEl.addEventListener("click", skipHandler)
     }
 
+    private clearTypingCursors(): void {
+        const active = this.container.querySelectorAll(".veil-dialogue-typing")
+        for (const el of active) {
+            el.classList.remove("veil-dialogue-typing")
+        }
+    }
+
     private onTypingComplete(node: DialogueNode, choicesEl: HTMLElement): void {
         this.isTyping = false
+        this.clearTypingCursors()
 
         // Handle spooky effects (fire-and-continue)
         if (node.effect === "spooky_reveal") {
@@ -129,7 +139,7 @@ export class DialogueManager {
         }
 
         if (node.effect === "complete") {
-            choicesEl.style.display = "block"
+            choicesEl.style.display = "flex"
             const btn = document.createElement("button")
             btn.className = "veil-dialogue-choice-btn"
             btn.innerHTML = `<span class="veil-choice-prefix">&gt;</span> ${this.escapeHtml(this.resolveText("veil.ui.continue"))}`
@@ -142,7 +152,7 @@ export class DialogueManager {
         }
 
         if (node.effect === "trigger_boss") {
-            choicesEl.style.display = "block"
+            choicesEl.style.display = "flex"
             const btn = document.createElement("button")
             btn.className = "veil-dialogue-choice-btn veil-choice-boss"
             btn.innerHTML = `<span class="veil-choice-prefix">&gt;</span> ${this.escapeHtml(this.resolveText("veil.ui.enter_facility"))}`
@@ -155,7 +165,7 @@ export class DialogueManager {
         }
 
         if (node.choices && node.choices.length > 0) {
-            choicesEl.style.display = "block"
+            choicesEl.style.display = "flex"
             for (const choice of node.choices) {
                 const btn = document.createElement("button")
                 btn.className = "veil-dialogue-choice-btn"
