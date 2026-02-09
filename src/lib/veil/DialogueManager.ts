@@ -45,18 +45,28 @@ export class DialogueManager {
         return this.textResolver?.(key) ?? key
     }
 
+    private scrollToBottom(): void {
+        this.container.scrollTo({
+            top: this.container.scrollHeight,
+            behavior: "smooth",
+        })
+    }
+
+    private speakerLabel(speaker: DialogueNode["speaker"]): string {
+        if (speaker === "you") return "> YOU"
+        if (speaker === "T. PFERD") return "\u25C6 T. PFERD"
+        return "\u2022 ???"
+    }
+
     private showNode(node: DialogueNode): void {
         this.stopTyping()
 
-        // Build node display
         const nodeEl = document.createElement("div")
-        nodeEl.className = "veil-dialogue-node"
+        nodeEl.className = "veil-dialogue-node veil-dialogue-entering"
 
-        // Speaker label
         const speaker = document.createElement("div")
         speaker.className = "veil-dialogue-speaker"
-        speaker.textContent =
-            node.speaker === "you" ? "> YOU" : `> ${node.speaker}`
+        speaker.textContent = this.speakerLabel(node.speaker)
         if (node.speaker === "T. PFERD") {
             speaker.classList.add("veil-speaker-pferd")
         } else if (node.speaker === "???") {
@@ -64,23 +74,18 @@ export class DialogueManager {
         }
         nodeEl.appendChild(speaker)
 
-        // Text area
         const textEl = document.createElement("div")
         textEl.className = "veil-dialogue-text"
         nodeEl.appendChild(textEl)
 
-        // Choices container (hidden until typing finishes)
         const choicesEl = document.createElement("div")
         choicesEl.className = "veil-dialogue-choices"
         choicesEl.style.display = "none"
         nodeEl.appendChild(choicesEl)
 
         this.container.appendChild(nodeEl)
+        this.scrollToBottom()
 
-        // Auto-scroll to latest node
-        this.container.scrollTop = this.container.scrollHeight
-
-        // Start typing
         this.fullText = this.resolveText(node.text)
         this.displayedText = ""
         this.isTyping = true
@@ -93,14 +98,13 @@ export class DialogueManager {
                 this.displayedText += this.fullText[charIndex]
                 textEl.textContent = this.displayedText
                 charIndex++
-                this.container.scrollTop = this.container.scrollHeight
+                this.scrollToBottom()
             } else {
                 this.stopTyping()
                 this.onTypingComplete(node, choicesEl)
             }
         }, speed)
 
-        // Click to skip typing
         const skipHandler = (): void => {
             if (this.isTyping) {
                 this.stopTyping()
@@ -124,18 +128,16 @@ export class DialogueManager {
             this.triggerSpookyPlan()
         }
 
-        // Handle terminal effects
         if (node.effect === "complete") {
-            // Show "continue" button, then fire complete
             choicesEl.style.display = "block"
             const btn = document.createElement("button")
             btn.className = "veil-dialogue-choice-btn"
-            btn.textContent = this.resolveText("veil.ui.continue")
+            btn.innerHTML = `<span class="veil-choice-prefix">&gt;</span> ${this.escapeHtml(this.resolveText("veil.ui.continue"))}`
             btn.addEventListener("click", () => {
                 this.onComplete?.()
             })
             choicesEl.appendChild(btn)
-            this.container.scrollTop = this.container.scrollHeight
+            this.scrollToBottom()
             return
         }
 
@@ -143,28 +145,27 @@ export class DialogueManager {
             choicesEl.style.display = "block"
             const btn = document.createElement("button")
             btn.className = "veil-dialogue-choice-btn veil-choice-boss"
-            btn.textContent = this.resolveText("veil.ui.enter_facility")
+            btn.innerHTML = `<span class="veil-choice-prefix">&gt;</span> ${this.escapeHtml(this.resolveText("veil.ui.enter_facility"))}`
             btn.addEventListener("click", () => {
                 this.onTriggerBoss?.()
             })
             choicesEl.appendChild(btn)
-            this.container.scrollTop = this.container.scrollHeight
+            this.scrollToBottom()
             return
         }
 
-        // Choices
         if (node.choices && node.choices.length > 0) {
             choicesEl.style.display = "block"
             for (const choice of node.choices) {
                 const btn = document.createElement("button")
                 btn.className = "veil-dialogue-choice-btn"
-                btn.textContent = this.resolveText(choice.label)
+                btn.innerHTML = `<span class="veil-choice-prefix">&gt;</span> ${this.escapeHtml(this.resolveText(choice.label))}`
                 btn.addEventListener("click", () => {
                     this.advanceTo(choice.next)
                 })
                 choicesEl.appendChild(btn)
             }
-            this.container.scrollTop = this.container.scrollHeight
+            this.scrollToBottom()
             return
         }
 
@@ -192,6 +193,12 @@ export class DialogueManager {
             this.typingInterval = null
         }
         this.isTyping = false
+    }
+
+    private escapeHtml(text: string): string {
+        const el = document.createElement("span")
+        el.textContent = text
+        return el.innerHTML
     }
 
     // ── Spooky effects ─────────────────────────────────────────────────────
