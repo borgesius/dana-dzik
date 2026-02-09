@@ -375,8 +375,13 @@ function renderRunView(container: HTMLElement): void {
 
 // ── Shop phase ──────────────────────────────────────────────────────────────
 
+function removeStaleTooltips(): void {
+    document.querySelectorAll(".ab-tooltip").forEach((el) => el.remove())
+}
+
 function renderShopPhase(container: HTMLElement): void {
     if (!activeRun) return
+    removeStaleTooltips()
 
     const state = activeRun.getState()
     const offers = activeRun.getShopOffers()
@@ -617,10 +622,7 @@ function wireDragDrop(container: HTMLElement): void {
 
             e.preventDefault()
 
-            // Dismiss any stuck tooltip
-            document
-                .querySelectorAll(".ab-tooltip")
-                .forEach((el) => el.remove())
+            removeStaleTooltips()
             const source = card.getAttribute("data-source") as
                 | "lineup"
                 | "bench"
@@ -784,6 +786,7 @@ function executeDrop(
 
 function renderCombatPhase(container: HTMLElement): void {
     if (!activeRun) return
+    removeStaleTooltips()
 
     const state = activeRun.getState()
     const opponent = activeRun.getPreviewedOpponent()

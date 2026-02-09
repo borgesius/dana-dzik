@@ -77,8 +77,8 @@ export class FactoriesSection {
 
             card.innerHTML = `
                 <div class="factory-info">
-                    <span class="factory-name">${lm.t(`commodityExchange.factories.${f.id}.name`)}</span>
-                    <span class="factory-desc">${lm.t(`commodityExchange.factories.${f.id}.description`)}</span>
+                    <span class="factory-name">${lm.t(`commodityExchange.factories.${f.id}.name`, { defaultValue: f.name })}</span>
+                    <span class="factory-desc">${lm.t(`commodityExchange.factories.${f.id}.description`, { defaultValue: f.description })}</span>
                     <span class="factory-output">${f.produces} ~${((f.minOutput + f.maxOutput) / 2).toFixed(1)}/${lm.t("commodityExchange.ui.tick")}</span>
                     ${count > 0 ? `<span class="factory-count">x${count} ${lm.t("commodityExchange.ui.deployed")}</span>` : ""}
                 </div>
