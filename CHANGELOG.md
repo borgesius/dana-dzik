@@ -1,3 +1,9 @@
+## [2.6.1](https://github.com/borgesius/dana-dzik/compare/v2.6.0...v2.6.1) (2026-02-09)
+
+### Bug Fixes
+
+* cosmetic names in toast tab ([#51](https://github.com/borgesius/dana-dzik/issues/51)) ([922f9d1](https://github.com/borgesius/dana-dzik/commit/922f9d12bf2a3f52ae5ca58092c1603e40772a89))
+
 ## [2.6.0](https://github.com/borgesius/dana-dzik/compare/v2.5.0...v2.6.0) (2026-02-09)
 
 ### Features
