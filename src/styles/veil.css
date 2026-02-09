@@ -329,10 +329,11 @@
 
 .veil-dialogue-text {
     min-height: 1.6em;
+    overflow-wrap: break-word;
 }
 
-/* Typing cursor */
-.veil-dialogue-text::after {
+/* Typing cursor — only shown on the actively typing node */
+.veil-dialogue-text.veil-dialogue-typing::after {
     content: "\2588";
     animation: veil-cursor-blink 0.6s steps(1) infinite;
     color: #00ff80;
