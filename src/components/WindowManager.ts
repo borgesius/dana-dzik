@@ -1,3 +1,5 @@
+import { log } from "@/core/Logger"
+
 import { DESKTOP_ITEMS } from "../config/desktop"
 import type { RoutableWindow } from "../config/routing"
 import { Window, type WindowConfig } from "./Window"
@@ -184,7 +186,7 @@ export class WindowManager {
 
         const config = WINDOW_CONFIGS[windowId]
         if (!config) {
-            console.error(`Unknown window: ${windowId}`)
+            log.ui("Unknown window: %s", windowId)
             return
         }
 

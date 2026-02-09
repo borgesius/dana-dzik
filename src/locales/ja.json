@@ -135,7 +135,7 @@
         "status": "ステータス",
         "allTestsPassing": "全テスト合格",
         "testsFailing": "テスト失敗",
-        "chromiumLatest": "Chromium · mainの最新版",
+        "chromiumLatest": "Chromium · {{branch}}の最新版",
         "statements": "ステートメント",
         "branches": "分岐",
         "functions": "関数",

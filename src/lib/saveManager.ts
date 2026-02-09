@@ -1,3 +1,5 @@
+import { log } from "@/core/Logger"
+
 import type { AchievementSaveData } from "./achievements/types"
 import type { CosmeticSaveData } from "./cosmetics/CosmeticManager"
 import type { MarketSaveData } from "./marketGame/types"
@@ -293,15 +295,19 @@ class SaveManagerImpl {
         const bytes = new Blob([json]).size
 
         if (bytes > MAX_SAVE_BYTES) {
-            console.warn(
-                `[SaveManager] Save rejected: ${bytes} bytes exceeds ${MAX_SAVE_BYTES} byte limit`
+            log.save(
+                "Save rejected: %d bytes exceeds %d byte limit",
+                bytes,
+                MAX_SAVE_BYTES
             )
             return
         }
 
         if (bytes > WARN_SAVE_BYTES && !this.lastWarned) {
-            console.warn(
-                `[SaveManager] Save approaching limit: ${bytes}/${MAX_SAVE_BYTES} bytes`
+            log.save(
+                "Save approaching limit: %d/%d bytes",
+                bytes,
+                MAX_SAVE_BYTES
             )
             this.lastWarned = true
         } else if (bytes <= WARN_SAVE_BYTES) {

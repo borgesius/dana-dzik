@@ -31,4 +31,7 @@ export const log = {
     api: createLogger("api"),
     auth: createLogger("auth"),
     app: createLogger("app"),
+    save: createLogger("save"),
+    ui: createLogger("ui"),
+    widgets: createLogger("widgets"),
 }

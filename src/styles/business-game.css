@@ -445,6 +445,74 @@
     color: var(--theme-color-danger);
 }
 
+/* Limit Orders */
+.limit-orders-section {
+    margin-top: 6px;
+    border-top: 1px solid var(--theme-border-dark);
+    padding-top: 6px;
+}
+
+.limit-orders-header {
+    font-size: 11px;
+    font-weight: bold;
+    color: var(--theme-text-secondary);
+    margin-bottom: 4px;
+    font-family: "Courier New", monospace;
+}
+
+.limit-order-form {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 4px;
+}
+
+.limit-order-form input {
+    width: 80px;
+    font-size: 12px;
+    font-family: "Courier New", monospace;
+    padding: 2px 4px;
+    background: var(--theme-terminal-bg);
+    color: var(--theme-terminal-text);
+    border: 1px solid var(--theme-border-dark);
+}
+
+.limit-order-add-btn:not(:disabled) {
+    color: var(--theme-color-warning);
+}
+
+.limit-order-list {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.limit-order-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    font-family: "Courier New", monospace;
+    padding: 2px 4px;
+    background: var(--theme-terminal-bg);
+}
+
+.limit-order-detail {
+    color: var(--theme-terminal-text);
+}
+
+.limit-order-pct {
+    color: var(--theme-text-secondary);
+    font-size: 11px;
+}
+
+.limit-order-remove-btn {
+    margin-left: auto;
+    font-size: 12px;
+    padding: 0 4px;
+    color: var(--theme-color-danger);
+    cursor: pointer;
+}
+
 /* Portfolio Section */
 .portfolio-section h3,
 .factories-section h3,
@@ -723,6 +791,11 @@
     padding-top: 8px;
 }
 
+.prestige-section h3,
+.ascension-section h4 {
+    position: relative;
+}
+
 .prestige-section h3 {
     margin: 0 0 8px;
     font-size: 14px;
@@ -838,6 +911,92 @@
     color: var(--theme-text-secondary);
     font-size: 11px;
     margin-top: 2px;
+}
+
+/* Prestige info button */
+.prestige-info-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 16px;
+    height: 16px;
+    margin-left: 6px;
+    padding: 0;
+    font-size: 10px;
+    font-weight: 700;
+    line-height: 1;
+    vertical-align: middle;
+    border: 1px solid var(--theme-border-dark);
+    background: var(--theme-surface-primary);
+    color: var(--theme-text-secondary);
+    cursor: pointer;
+}
+
+.prestige-info-btn:hover {
+    background: var(--theme-surface-secondary);
+    color: var(--theme-text-on-surface);
+}
+
+/* Prestige tooltip popover */
+.prestige-tooltip {
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 0;
+    right: 0;
+    z-index: 500;
+    background: var(--theme-surface-primary);
+    border: 2px outset var(--theme-border-light);
+    padding: 10px 12px;
+    font-size: 12px;
+    line-height: 1.5;
+    color: var(--theme-text-on-surface);
+    box-shadow: 2px 2px 8px rgb(0 0 0 / 25%);
+}
+
+.prestige-tooltip p {
+    margin: 0 0 6px;
+}
+
+.prestige-tooltip-title {
+    font-weight: 700;
+    font-size: 13px;
+    margin-bottom: 6px;
+    color: var(--theme-accent);
+}
+
+.prestige-tooltip-section {
+    margin-bottom: 6px;
+    padding-left: 4px;
+    border-left: 2px solid var(--theme-border-dark);
+}
+
+.prestige-tooltip-label {
+    font-weight: 700;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    color: var(--theme-text-secondary);
+    margin-bottom: 1px;
+}
+
+.prestige-tooltip-preview {
+    margin-top: 8px;
+    padding: 6px 8px;
+    background: var(--theme-terminal-bg);
+    border: 1px inset var(--theme-border-dark);
+    font-family: "Courier New", monospace;
+    font-size: 12px;
+    color: var(--theme-terminal-text);
+    text-align: center;
+}
+
+/* Prestige preview hint (shown below threshold) */
+.prestige-preview-hint {
+    text-align: center;
+    font-size: 11px;
+    color: var(--theme-text-secondary);
+    padding: 2px 6px 6px;
+    font-style: italic;
 }
 
 /* Prestige notification toast */
