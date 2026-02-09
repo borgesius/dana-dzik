@@ -83,6 +83,7 @@ export function renderAchievementsWindow(): void {
             { key: "cross-system", label: "Cross-System" },
             { key: "veil", label: "Piercing the Veil" },
             { key: "arcana", label: "Major Arcana" },
+            { key: "customization", label: "Customization" },
         ]
 
         const tieredGroups = new Map<TieredGroup, AchievementDef[]>()
@@ -125,12 +126,22 @@ export function renderAchievementsWindow(): void {
             for (const def of defs) {
                 const isEarned = mgr.hasEarned(def.id)
                 const isHidden = def.hidden && !isEarned
-                const name = lm.t(`achievements.${def.id}.name`)
+                const fallbackName = def.id
+                    .split("-")
+                    .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+                    .join(" ")
+                const name = lm.t(`achievements.${def.id}.name`, {
+                    defaultValue: fallbackName,
+                })
                 const description = isEarned
-                    ? lm.t(`achievements.${def.id}.description`)
+                    ? lm.t(`achievements.${def.id}.description`, {
+                          defaultValue: "",
+                      })
                     : isHidden
                       ? "???"
-                      : lm.t(`achievements.${def.id}.description`)
+                      : lm.t(`achievements.${def.id}.description`, {
+                            defaultValue: "",
+                        })
 
                 let dateStr = ""
                 if (isEarned) {

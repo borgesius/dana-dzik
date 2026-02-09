@@ -17,8 +17,16 @@ export class AchievementToast {
         if (!def) return
 
         const lm = getLocaleManager()
-        const name = lm.t(`achievements.${id}.name`)
-        const description = lm.t(`achievements.${id}.description`)
+        const fallbackName = id
+            .split("-")
+            .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+            .join(" ")
+        const name = lm.t(`achievements.${id}.name`, {
+            defaultValue: fallbackName,
+        })
+        const description = lm.t(`achievements.${id}.description`, {
+            defaultValue: "",
+        })
 
         const toast = document.createElement("div")
         toast.className = "achievement-toast"
