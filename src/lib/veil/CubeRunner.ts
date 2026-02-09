@@ -1020,7 +1020,6 @@ export class CubeRunner {
         const activeLanes = this.getActiveLanes()
         const minLane = this.glueWalls ? this.glueWalls.leftNarrow : 0
 
-        // Fix #16: Track used lanes per delay slot for gap validation
         const usedSlots = new Map<number, Set<number>>()
 
         for (const wave of pattern.waves) {
@@ -1043,8 +1042,6 @@ export class CubeRunner {
 
             let width: number
             if (wave.type === "wall") {
-                // Fix #16: Wall gap -- the wall covers activeLanes-1 width,
-                // and lane indicates the gap position
                 width = Math.max(1, activeLanes - 1)
                 lane = minLane + Math.floor(Math.random() * activeLanes)
             } else if (wave.type === "double") {
@@ -1053,8 +1050,13 @@ export class CubeRunner {
                 width = wave.width ?? 1
             }
 
-            // Fix #16: Validate that this doesn't create an impossible block
-            const delayKey = Math.round(wave.delay * 100) // bucket by ~10ms
+            const isReverse = wave.reverse ?? false
+            const spawnDepth = isReverse ? -0.1 : 1.0
+
+            if (this.isLaneBlockedAt(lane, width, spawnDepth)) continue
+            if (this.wouldBlockAllLanes(lane, width, spawnDepth)) continue
+
+            const delayKey = Math.round(wave.delay * 100)
             if (!usedSlots.has(delayKey)) {
                 usedSlots.set(delayKey, new Set())
             }
@@ -1068,14 +1070,12 @@ export class CubeRunner {
                     }
                 }
             }
-            // Ensure at least one gap lane exists in this time slot
             if (!blocked && wave.type !== "wall") {
                 for (let l = lane; l < lane + width; l++) {
                     slotLanes.add(l)
                 }
-                // Check: are ALL lanes now blocked?
                 if (slotLanes.size >= activeLanes) {
-                    blocked = true // would create impossible config
+                    blocked = true
                 }
             }
 
@@ -1085,12 +1085,56 @@ export class CubeRunner {
                     lane,
                     type: wave.type,
                     width,
-                    reverse: wave.reverse ?? false,
+                    reverse: isReverse,
                 })
             }
         }
 
         this.patternCooldown = 2
+    }
+
+    private isLaneBlockedAt(
+        lane: number,
+        width: number,
+        depth: number
+    ): boolean {
+        const gap = this.config.minDepthGap
+        for (const obs of this.obstacles) {
+            if (Math.abs(obs.depth - depth) >= gap) continue
+            const obsEnd = obs.lane + obs.width
+            const proposedEnd = lane + width
+            if (lane < obsEnd && proposedEnd > obs.lane) {
+                return true
+            }
+        }
+        return false
+    }
+
+    private wouldBlockAllLanes(
+        lane: number,
+        width: number,
+        depth: number
+    ): boolean {
+        const gap = this.config.minDepthGap
+        const activeLanes = this.getActiveLanes()
+        const minLane = this.glueWalls ? this.glueWalls.leftNarrow : 0
+
+        const blocked = new Set<number>()
+        for (let l = lane; l < lane + width; l++) {
+            blocked.add(l)
+        }
+
+        for (const obs of this.obstacles) {
+            if (Math.abs(obs.depth - depth) >= gap) continue
+            for (let l = obs.lane; l < obs.lane + obs.width; l++) {
+                blocked.add(l)
+            }
+        }
+
+        for (let l = minLane; l < minLane + activeLanes; l++) {
+            if (!blocked.has(l)) return false
+        }
+        return true
     }
 
     private spawnObstacle(): void {
@@ -1104,21 +1148,30 @@ export class CubeRunner {
         if (type === "double") width = 2
         if (type === "wall") width = Math.max(1, activeLanes - 1)
 
-        const maxStartLane = minLane + activeLanes - width
-        const lane =
-            minLane + Math.floor(Math.random() * (maxStartLane - minLane + 1))
-
         const reverse = this.config.reverseObstacles && Math.random() < 0.2
+        const spawnDepth = reverse ? -0.1 : 1.0
 
-        this.obstacles.push({
-            lane,
-            depth: reverse ? -0.1 : 1.0,
-            type,
-            width,
-            reverse,
-            depthJitter: 0,
-            nearMissTriggered: false,
-        })
+        const MAX_ATTEMPTS = 5
+        for (let attempt = 0; attempt < MAX_ATTEMPTS; attempt++) {
+            const maxStartLane = minLane + activeLanes - width
+            const lane =
+                minLane +
+                Math.floor(Math.random() * (maxStartLane - minLane + 1))
+
+            if (this.isLaneBlockedAt(lane, width, spawnDepth)) continue
+            if (this.wouldBlockAllLanes(lane, width, spawnDepth)) continue
+
+            this.obstacles.push({
+                lane,
+                depth: spawnDepth,
+                type,
+                width,
+                reverse,
+                depthJitter: 0,
+                nearMissTriggered: false,
+            })
+            return
+        }
     }
 
     // ── Particles ───────────────────────────────────────────────────────────
