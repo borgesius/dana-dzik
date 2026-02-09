@@ -1,3 +1,9 @@
+## [2.9.1](https://github.com/borgesius/dana-dzik/compare/v2.9.0...v2.9.1) (2026-02-09)
+
+### Bug Fixes
+
+* **pierce the veil:** dialogue tree bugs ([ac56f5e](https://github.com/borgesius/dana-dzik/commit/ac56f5eb6bc895737fcf6816f2d62d98468cf53c))
+
 ## [2.9.0](https://github.com/borgesius/dana-dzik/compare/v2.8.4...v2.9.0) (2026-02-09)
 
 ### Features
