@@ -545,6 +545,18 @@ export class DeployWidget {
             links.appendChild(stgLink)
         }
 
+        if (env === "development") {
+            const devLabel = document.createElement("span")
+            devLabel.className = "deploy-env-link"
+            devLabel.textContent = "Dev Panel"
+            devLabel.title = "Ctrl+Shift+D"
+            devLabel.addEventListener("click", (e) => {
+                e.stopPropagation()
+                window.__devPanel?.toggle()
+            })
+            links.appendChild(devLabel)
+        }
+
         this.tooltipEl.appendChild(links)
     }
 
