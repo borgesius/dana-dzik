@@ -625,13 +625,6 @@ export const ACHIEVEMENTS: AchievementDef[] = [
         desktopOnly: true,
     },
     {
-        id: "posse-up",
-        category: "autobattler",
-        icon: "📜",
-        hidden: false,
-        desktopOnly: true,
-    },
-    {
         id: "faction-recruit",
         category: "autobattler",
         icon: "🏴",
@@ -781,43 +774,20 @@ export const ACHIEVEMENTS: AchievementDef[] = [
         icon: "🔀",
         hidden: true,
     },
+    {
+        id: "transition-plan",
+        category: "production",
+        icon: "📋",
+        hidden: true,
+    },
 
-    // ── Autobattler (tiered - Wrangler) ─────────────────────────────────────
+    // ── Autobattler (first boss clear) ──────────────────────────────────────
     {
         id: "greenhorn",
         category: "autobattler",
         icon: "🎓",
         hidden: false,
         desktopOnly: true,
-        tieredGroup: "wrangler",
-        tier: 1,
-    },
-    {
-        id: "deputy",
-        category: "autobattler",
-        icon: "🎓",
-        hidden: false,
-        desktopOnly: true,
-        tieredGroup: "wrangler",
-        tier: 2,
-    },
-    {
-        id: "sheriff",
-        category: "autobattler",
-        icon: "🎓",
-        hidden: false,
-        desktopOnly: true,
-        tieredGroup: "wrangler",
-        tier: 3,
-    },
-    {
-        id: "marshal",
-        category: "autobattler",
-        icon: "🎓",
-        hidden: false,
-        desktopOnly: true,
-        tieredGroup: "wrangler",
-        tier: 4,
     },
 
     // ── Autobattler (tiered - Depth) ──────────────────────────────────────
@@ -998,13 +968,6 @@ export const ACHIEVEMENTS: AchievementDef[] = [
     },
 
     // ── Standalone new achievements ──────────────────────────────────────
-    {
-        id: "win-streak",
-        category: "autobattler",
-        icon: "🔥",
-        hidden: true,
-        desktopOnly: true,
-    },
     {
         id: "serial-pivoter",
         category: "career",

@@ -32,15 +32,11 @@ import type {
 } from "./types"
 import { getUnitsForFaction, UNIT_MAP } from "./units"
 
-/** Minimum combat wins to count a run as "won" */
-export const WIN_THRESHOLD = 5
-
 type RunEventType =
     | "shopOpened"
     | "combatStarted"
     | "combatEnded"
-    | "runCompleted"
-    | "runLost"
+    | "runEnded"
     | "bossDefeated"
 type RunCallback = (data?: unknown) => void
 
@@ -366,12 +362,7 @@ export class RunManager {
 
         if (this.state.losses >= 3) {
             this.state.phase = "finished"
-            const won = this.state.wins >= WIN_THRESHOLD
-            if (won) {
-                this.emit("runCompleted", { wins: this.state.wins })
-            } else {
-                this.emit("runLost", { wins: this.state.wins })
-            }
+            this.emit("runEnded")
         } else {
             this.state.phase = "reward"
         }
@@ -385,7 +376,10 @@ export class RunManager {
     public nextRound(): boolean {
         if (this.state.phase !== "reward") return false
 
-        this.state.round++
+        if (this.lastCombatResult?.winner === "player") {
+            this.state.round++
+        }
+
         addRoundScrap(this.shopState)
         this.totalScrapEarned += 3 // SCRAP_PER_ROUND
 
@@ -433,7 +427,6 @@ export class RunManager {
 
         return {
             highestRound: state.round,
-            wins: state.wins,
             losses: state.losses,
             bossesDefeated: [...this.bossesDefeated],
             majorityFaction,

@@ -167,7 +167,7 @@ export class Editor {
 
         const felixBtn = document.createElement("button")
         felixBtn.className = "editor-felix-btn"
-        const felixLocked = !getAchievementManager().hasEarned("posse-up")
+        const felixLocked = !getAchievementManager().hasEarned("greenhorn")
         if (felixLocked) {
             felixBtn.textContent = lm.t("terminalEditor.felixgptLocked")
             felixBtn.title = lm.t("terminalEditor.felixgptLockedTooltip")

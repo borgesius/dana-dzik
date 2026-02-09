@@ -24,7 +24,6 @@ export {
     getBuffCost,
     RUN_BUFFS,
 } from "../lib/autobattler/runBuffs"
-export { WIN_THRESHOLD } from "../lib/autobattler/RunManager"
 export {
     BASE_LINE_SLOTS,
     INITIAL_SCRAP,

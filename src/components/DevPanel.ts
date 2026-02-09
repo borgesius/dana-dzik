@@ -446,7 +446,7 @@ export class DevPanel {
         const status = document.createElement("div")
         status.className = "dev-status"
         const updateStatus = (): void => {
-            status.textContent = `Wins: ${cm.getWonRuns()} | Runs: ${cm.getCompletedRuns()} | Units: ${cm.getCollectionSize()}/${ALL_UNITS.length} | Bosses: ${cm.getTotalBossesDefeated()}`
+            status.textContent = `Runs: ${cm.getCompletedRuns()} | Best Round: ${cm.getHighestRound()} | Units: ${cm.getCollectionSize()}/${ALL_UNITS.length} | Bosses: ${cm.getTotalBossesDefeated()}`
         }
         updateStatus()
         content.appendChild(status)
@@ -458,13 +458,13 @@ export class DevPanel {
                     saveManager.requestSave()
                     updateStatus()
                 }),
-                this.btn("+5 Wins", () => {
-                    cm.devAddWins(5)
+                this.btn("Set Best Round 10", () => {
+                    cm.recordRunComplete(undefined, 1, [], 10)
                     saveManager.requestSave()
                     updateStatus()
                 }),
-                this.btn("+10 Wins", () => {
-                    cm.devAddWins(10)
+                this.btn("Set Best Round 20", () => {
+                    cm.recordRunComplete(undefined, 1, [], 20)
                     saveManager.requestSave()
                     updateStatus()
                 })
@@ -473,8 +473,8 @@ export class DevPanel {
 
         content.appendChild(
             this.btnRow(
-                this.btn("Record Win", () => {
-                    cm.recordRunComplete(true, undefined, 0, [], 10)
+                this.btn("Record Run (R10)", () => {
+                    cm.recordRunComplete(undefined, 1, [], 10)
                     saveManager.requestSave()
                     updateStatus()
                 }),
