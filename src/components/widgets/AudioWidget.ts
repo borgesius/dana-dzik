@@ -1,3 +1,4 @@
+import { AudioVisualizer } from "../../lib/AudioVisualizer"
 import { getLocaleManager } from "../../lib/localeManager"
 import { createWidgetFrame } from "./WidgetFrame"
 
@@ -13,12 +14,14 @@ type AudioManagerType = {
     getCurrentTrackIndex: () => number
     getPlaylistLength: () => number
     getIsPlaying: () => boolean
+    getAnalyser: () => AnalyserNode | null
     onTrackChange: (cb: () => void) => void
     onPlayStateChange: (cb: () => void) => void
 }
 
 export class AudioWidget {
     private widget: HTMLElement
+    private visualizer: AudioVisualizer | null = null
 
     constructor() {
         this.widget = createWidgetFrame("WINAMP", "audio-widget")
@@ -33,24 +36,7 @@ export class AudioWidget {
                 </div>
                 <div class="winamp-right">
                     <div class="winamp-display">
-                        <div class="winamp-visualizer">
-                            <div class="bar"></div>
-                            <div class="bar"></div>
-                            <div class="bar"></div>
-                            <div class="bar"></div>
-                            <div class="bar"></div>
-                            <div class="bar"></div>
-                            <div class="bar"></div>
-                            <div class="bar"></div>
-                            <div class="bar"></div>
-                            <div class="bar"></div>
-                            <div class="bar"></div>
-                            <div class="bar"></div>
-                            <div class="bar"></div>
-                            <div class="bar"></div>
-                            <div class="bar"></div>
-                            <div class="bar"></div>
-                        </div>
+                        <canvas class="winamp-visualizer" width="120" height="22"></canvas>
                     </div>
                     <div class="winamp-info">
                         <div class="winamp-status">STOPPED</div>
@@ -92,6 +78,21 @@ export class AudioWidget {
             .audioManager
     }
 
+    private ensureVisualizer(canvas: HTMLCanvasElement): void {
+        if (this.visualizer) return
+
+        const audioManager = this.getAudioManager()
+        if (!audioManager) return
+
+        try {
+            this.visualizer = new AudioVisualizer(canvas, () =>
+                audioManager.getAnalyser()
+            )
+        } catch {
+            this.visualizer = null
+        }
+    }
+
     private initControls(content: HTMLElement): void {
         const playBtn = content.querySelector(
             "#audio-play"
@@ -113,9 +114,9 @@ export class AudioWidget {
             ".winamp-track-num"
         ) as HTMLElement
         const tickerText = content.querySelector(".ticker-text") as HTMLElement
-        const visualizer = content.querySelector(
+        const visualizerCanvas = content.querySelector(
             ".winamp-visualizer"
-        ) as HTMLElement
+        ) as HTMLCanvasElement
         const playlistItems = content.querySelectorAll(".playlist-item")
 
         const updateUI = (): void => {
@@ -131,11 +132,12 @@ export class AudioWidget {
             if (isPlaying) {
                 statusEl.textContent = lm.t("widgets.winamp.playing")
                 statusEl.classList.add("playing")
-                visualizer.classList.add("playing")
+                this.ensureVisualizer(visualizerCanvas)
+                this.visualizer?.start()
             } else {
                 statusEl.textContent = lm.t("widgets.winamp.paused")
                 statusEl.classList.remove("playing")
-                visualizer.classList.remove("playing")
+                this.visualizer?.stop()
             }
 
             trackNumEl.textContent = `${String(trackIndex + 1).padStart(2, "0")}/${String(playlistLength).padStart(2, "0")}`
@@ -176,7 +178,7 @@ export class AudioWidget {
                     "widgets.winamp.stopped"
                 )
                 statusEl.classList.remove("playing")
-                visualizer.classList.remove("playing")
+                this.visualizer?.stop()
             }
         })
         prevBtn.addEventListener("click", () => {
