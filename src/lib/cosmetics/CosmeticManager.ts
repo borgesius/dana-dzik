@@ -49,7 +49,10 @@ export class CosmeticManager {
         this.unlocked.add("cursor-trail:default")
         this.unlocked.add("wallpaper:default")
         this.unlocked.add("window-chrome:default")
-        this.unlocked.add("theme:default")
+        this.unlocked.add("theme:win95")
+        this.unlocked.add("theme:mac-classic")
+        this.unlocked.add("theme:apple2")
+        this.unlocked.add("theme:c64")
         this.unlocked.add("system-font:default")
         this.unlocked.add("taskbar-style:default")
         this.unlocked.add("window-animation:default")
@@ -58,7 +61,7 @@ export class CosmeticManager {
         this.active.set("cursor-trail", "default")
         this.active.set("wallpaper", "default")
         this.active.set("window-chrome", "default")
-        this.active.set("theme", "default")
+        this.active.set("theme", "win95")
         this.active.set("system-font", "default")
         this.active.set("taskbar-style", "default")
         this.active.set("window-animation", "default")
@@ -114,7 +117,12 @@ export class CosmeticManager {
     public getActiveNonDefaultCount(): number {
         let count = 0
         for (const [type, id] of this.active) {
-            const defaultId = type === "startup-sound" ? "none" : "default"
+            const defaultId =
+                type === "startup-sound"
+                    ? "none"
+                    : type === "theme"
+                      ? "win95"
+                      : "default"
             if (id !== defaultId) count++
         }
         return count
