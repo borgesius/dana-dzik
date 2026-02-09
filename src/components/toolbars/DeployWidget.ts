@@ -5,7 +5,7 @@ import {
     getStagingUrl,
 } from "../../config/environment"
 import { getBuildInfo } from "../../lib/buildInfo"
-import { fetchGitHubAPI, githubCommitUrl } from "../../lib/github"
+import { fetchGitHubAPI, GITHUB_OWNER, githubCommitUrl } from "../../lib/github"
 
 /* ── Types ──────────────────────────────────────────────────────────── */
 
@@ -24,6 +24,12 @@ interface GitHubCompare {
     merge_base_commit: { sha: string }
 }
 
+interface GitHubPullRequest {
+    merged_at: string | null
+    merge_commit_sha: string | null
+    head: { sha: string }
+}
+
 interface CommitInfo {
     sha: string
     message: string
@@ -35,6 +41,7 @@ interface DeploymentData {
     main: CommitInfo[]
     staging: CommitInfo[]
     mergeBaseSha: string | null
+    lastReleasePR: { stagingSha: string; mainSha: string } | null
 }
 
 /** Positioned node for sub-tooltip wiring. */
@@ -154,6 +161,7 @@ export class DeployWidget {
             main: [],
             staging: [],
             mergeBaseSha: null,
+            lastReleasePR: null,
         })
 
         const loading = document.createElement("div")
@@ -184,10 +192,13 @@ export class DeployWidget {
     }
 
     private async fetchDeploymentData(): Promise<DeploymentData | null> {
-        const [mainRes, stagingRes, compareRes] = await Promise.all([
+        const [mainRes, stagingRes, compareRes, prRes] = await Promise.all([
             fetchGitHubAPI<GitHubCommit[]>("/commits?sha=main&per_page=5"),
             fetchGitHubAPI<GitHubCommit[]>("/commits?sha=staging&per_page=8"),
             fetchGitHubAPI<GitHubCompare>("/compare/main...staging"),
+            fetchGitHubAPI<GitHubPullRequest[]>(
+                `/pulls?state=closed&base=main&head=${GITHUB_OWNER}:staging&sort=updated&direction=desc&per_page=5`
+            ),
         ])
 
         if (!mainRes && !stagingRes) return null
@@ -200,10 +211,19 @@ export class DeployWidget {
                 author: c.commit.author.name,
             }))
 
+        const mergedPR = prRes?.find((pr) => pr.merged_at !== null) ?? null
+        const lastReleasePR = mergedPR?.merge_commit_sha
+            ? {
+                  stagingSha: mergedPR.head.sha,
+                  mainSha: mergedPR.merge_commit_sha,
+              }
+            : null
+
         return {
             main: toCommits(mainRes),
             staging: toCommits(stagingRes),
             mergeBaseSha: compareRes?.merge_base_commit?.sha ?? null,
+            lastReleasePR,
         }
     }
 
@@ -268,11 +288,26 @@ export class DeployWidget {
             return { svg, nodes: [] }
         }
 
-        // Find merge base position in staging list
+        // Find merge base position in staging list (compare API)
         const mergeBase = data.mergeBaseSha
-        const mergeBaseIdx = mergeBase
+        let mergeBaseIdx = mergeBase
             ? staging.findIndex((c) => c.sha === mergeBase)
             : -1
+        let mergeTargetIdx = 0
+
+        // If compare API merge base is outside our window, fall back to
+        // the most recent squash-merged PR to locate the branch point.
+        if (mergeBaseIdx < 0 && data.lastReleasePR) {
+            mergeBaseIdx = staging.findIndex(
+                (c) => c.sha === data.lastReleasePR!.stagingSha
+            )
+            const mainIdx = main.findIndex(
+                (c) => c.sha === data.lastReleasePR!.mainSha
+            )
+            if (mainIdx >= 0) mergeTargetIdx = mainIdx
+        }
+
+        const hasMergeData = mergeBase !== null || data.lastReleasePR !== null
 
         const rowY = (i: number): number => HEADER_H + i * ROW_H + ROW_H / 2
         const svgH = HEADER_H + numRows * ROW_H + 8
@@ -291,13 +326,11 @@ export class DeployWidget {
 
         // ── Merge connector ──
         if (mergeBaseIdx >= 0 && main.length > 0) {
-            // Connect merge base on staging to the top (HEAD) of main
             const sy = rowY(mergeBaseIdx)
-            const my = rowY(0)
+            const my = rowY(mergeTargetIdx)
             const midX = (STAGING_X + MAIN_X) / 2
             svg += `<path d="M ${STAGING_X} ${sy} C ${midX} ${sy}, ${midX} ${my}, ${MAIN_X} ${my}" class="branch-merge-path"/>`
         } else if (staging.length > 0 && main.length > 0) {
-            // No merge base in our data — connect bottoms
             const sy = rowY(staging.length - 1)
             const my = rowY(main.length - 1)
             const midX = (STAGING_X + MAIN_X) / 2
@@ -310,7 +343,7 @@ export class DeployWidget {
             const isHead = i === 0
             const isLocal = localSha !== "local" && c.sha === localSha
             const isUnreleased =
-                mergeBase !== null && (mergeBaseIdx < 0 || i < mergeBaseIdx)
+                hasMergeData && (mergeBaseIdx < 0 || i < mergeBaseIdx)
             const isActive = isHead && env === "staging"
 
             if (isLocal) {
