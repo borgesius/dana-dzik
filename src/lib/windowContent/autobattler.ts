@@ -3,7 +3,7 @@ import { createCombatUnit } from "../autobattler/combat"
 import { CombatAnimator } from "../autobattler/CombatAnimator"
 import { BOSS_MAP, getOpponentStatMultiplier } from "../autobattler/opponents"
 import { getBuffCost, RUN_BUFFS, type RunBuff } from "../autobattler/runBuffs"
-import { RunManager, WIN_THRESHOLD } from "../autobattler/RunManager"
+import { RunManager } from "../autobattler/RunManager"
 import { getMaxLineSlots, MAX_BENCH_SIZE } from "../autobattler/shop"
 import type { FactionId, RunSummary } from "../autobattler/types"
 import {
@@ -23,6 +23,15 @@ import { getPrestigeManager } from "../prestige/PrestigeManager"
 import { getCareerManager } from "../progression/CareerManager"
 import { getProgressionManager } from "../progression/ProgressionManager"
 import { saveManager } from "../saveManager"
+
+const MAX_LIVES = 3
+
+function renderLives(losses: number): string {
+    const remaining = MAX_LIVES - losses
+    const filled = "&#9829;".repeat(Math.max(0, remaining))
+    const empty = "&#9825;".repeat(Math.min(MAX_LIVES, losses))
+    return `<span class="ab-lives">${filled}${empty}</span>`
+}
 
 let activeRun: RunManager | null = null
 let activeAnimator: CombatAnimator | null = null
@@ -80,23 +89,18 @@ function renderLobbyView(container: HTMLElement): void {
 
             <div class="ab-stats">
                 <div class="ab-stat"><span class="ab-stat-label">${t("symposium.ui.runs")}</span><span class="ab-stat-value">${collection.getCompletedRuns()}</span></div>
-                <div class="ab-stat"><span class="ab-stat-label">${t("symposium.ui.wins")}</span><span class="ab-stat-value">${collection.getWonRuns()}</span></div>
-                <div class="ab-stat"><span class="ab-stat-label">${t("symposium.ui.bestStreak")}</span><span class="ab-stat-value">${collection.getBestStreak()}</span></div>
+                <div class="ab-stat"><span class="ab-stat-label">${t("symposium.ui.highestRound")}</span><span class="ab-stat-value">${collection.getHighestRound()}</span></div>
                 <div class="ab-stat"><span class="ab-stat-label">${t("symposium.ui.collectionLabel")}</span><span class="ab-stat-value">${collection.getCollectionSize()}</span></div>
             </div>
     `
 
     // Personal bests section
-    const highestRound = collection.getHighestRound()
-    const bestWL = collection.getBestWinLoss()
     const totalBosses = collection.getTotalBossesDefeated()
-    if (highestRound > 0 || totalBosses > 0) {
+    if (collection.getHighestRound() > 0 || totalBosses > 0) {
         html += `
             <div class="ab-personal-bests">
                 <div class="ab-section-heading">${t("symposium.ui.personalBests")}</div>
                 <div class="ab-bests-grid">
-                    <div class="ab-best-item"><span class="ab-best-label">${t("symposium.ui.highestRound")}</span><span class="ab-best-value">${highestRound}</span></div>
-                    ${bestWL ? `<div class="ab-best-item"><span class="ab-best-label">${t("symposium.ui.wl", { wins: bestWL.wins, losses: bestWL.losses })}</span><span class="ab-best-value">Best</span></div>` : ""}
                     <div class="ab-best-item"><span class="ab-best-label">${t("symposium.ui.bossesDefeated")}</span><span class="ab-best-value">${totalBosses}</span></div>
                 </div>
             </div>
@@ -312,35 +316,17 @@ function startNewRun(buffs: RunBuff[] = []): void {
     const scrapBonus = getPrestigeManager().getScrapReservesBonus()
     if (scrapBonus > 0) activeRun.addBonusScrap(scrapBonus)
 
-    activeRun.on("runCompleted", () => {
+    activeRun.on("runEnded", () => {
         const summary = activeRun!.getRunSummary()
         const state = activeRun!.getState()
         const factions = [...new Set(state.lineup.map((u) => u.faction))]
         const collection = getCollectionManager()
         collection.recordRunComplete(
-            true,
             summary.majorityFaction,
             summary.losses,
             factions,
             summary.highestRound
         )
-        collection.updateBestWinLoss(summary.wins, summary.losses)
-        saveManager.requestSave()
-    })
-    activeRun.on("runLost", () => {
-        const summary = activeRun!.getRunSummary()
-        const state = activeRun!.getState()
-        const factions = [...new Set(state.lineup.map((u) => u.faction))]
-        const won = summary.wins >= WIN_THRESHOLD
-        const collection = getCollectionManager()
-        collection.recordRunComplete(
-            won,
-            won ? summary.majorityFaction : undefined,
-            summary.losses,
-            factions,
-            summary.highestRound
-        )
-        collection.updateBestWinLoss(summary.wins, summary.losses)
         saveManager.requestSave()
     })
     activeRun.on("bossDefeated", (data: unknown) => {
@@ -398,7 +384,7 @@ function renderShopPhase(container: HTMLElement): void {
         <div class="ab-run-header ${state.isBossRound ? "boss" : ""}">
             <span class="ab-header-cell">${roundLabel}</span>
             <span class="ab-header-cell">${t("symposium.ui.thoughts", { amount: state.scrap })}</span>
-            <span class="ab-header-cell">${t("symposium.ui.wl", { wins: state.wins, losses: state.losses })}</span>
+            <span class="ab-header-cell">${renderLives(state.losses)}</span>
         </div>
 
         <div class="ab-shop-section">
@@ -837,7 +823,7 @@ function renderCombatPhase(container: HTMLElement): void {
         <div class="ab-run-header ${state.isBossRound ? "boss" : ""}">
             <span class="ab-header-cell">${roundLabel}</span>
             <span class="ab-header-cell">vs ${opponent.name}</span>
-            <span class="ab-header-cell">${t("symposium.ui.wl", { wins: updatedState.wins, losses: updatedState.losses })}</span>
+            <span class="ab-header-cell">${renderLives(updatedState.losses)}</span>
         </div>
     `
     container.innerHTML = headerHtml + `<div id="ab-combat-container"></div>`
@@ -928,7 +914,7 @@ function renderResultPhase(container: HTMLElement): void {
     let html = `
         <div class="ab-run-header ${state.isBossRound ? "boss" : ""}">
             <span class="ab-header-cell">${roundLabel}</span>
-            <span class="ab-header-cell">${t("symposium.ui.wl", { wins: state.wins, losses: state.losses })}</span>
+            <span class="ab-header-cell">${renderLives(state.losses)}</span>
         </div>
         <div class="ab-combat-result ${resultClass}">
             <h2>${resultText}</h2>
@@ -1048,10 +1034,6 @@ function renderRunSummary(
                 <div class="ab-summary-row">
                     <span class="ab-summary-label">${t("symposium.ui.highestRound")}</span>
                     <span class="ab-summary-value">${summary.highestRound}</span>
-                </div>
-                <div class="ab-summary-row">
-                    <span class="ab-summary-label">${t("symposium.ui.wl", { wins: summary.wins, losses: summary.losses })}</span>
-                    <span class="ab-summary-value">Record</span>
                 </div>
                 <div class="ab-summary-row">
                     <span class="ab-summary-label">${t("symposium.ui.majorityFaction")}</span>

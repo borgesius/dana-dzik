@@ -28,9 +28,6 @@ const FACTIONS: FactionId[] = [
 export class CollectionManager {
     private collection: Map<string, number> = new Map() // unitId -> count
     private completedRuns: number = 0
-    private wonRuns: number = 0
-    private bestStreak: number = 0
-    private currentStreak: number = 0
     private unlockedFactions: Set<string> = new Set()
     private spiralProgress: Map<string, boolean> = new Map()
     private onDirty: (() => void) | null = null
@@ -39,7 +36,6 @@ export class CollectionManager {
 
     // ── Personal bests ──────────────────────────────────────────────────────
     private highestRound: number = 0
-    private bestWinLoss: { wins: number; losses: number } | null = null
     private totalBossesDefeated: number = 0
     private bossesDefeatedSet: Set<string> = new Set()
 
@@ -129,41 +125,18 @@ export class CollectionManager {
     // ── Run tracking ─────────────────────────────────────────────────────────
 
     public recordRunComplete(
-        won: boolean,
         majorityFaction?: string,
         losses: number = 0,
         lineupFactions: string[] = [],
         highestRound: number = 0
     ): void {
         this.completedRuns++
-        if (won) {
-            this.wonRuns++
-            this.currentStreak++
-            if (this.currentStreak > this.bestStreak) {
-                this.bestStreak = this.currentStreak
-            }
-        } else {
-            this.currentStreak = 0
-        }
 
-        // Update personal bests
         if (highestRound > this.highestRound) {
             this.highestRound = highestRound
         }
 
-        // Best W-L: highest wins, then fewest losses as tiebreaker
-        const wins = won ? highestRound - losses : highestRound - losses
-        if (
-            !this.bestWinLoss ||
-            wins > this.bestWinLoss.wins ||
-            (wins === this.bestWinLoss.wins && losses < this.bestWinLoss.losses)
-        ) {
-            // Recalculate from the run's actual W-L
-            // We need the actual wins count, not highestRound
-        }
-
         emitAppEvent("autobattler:run-complete", {
-            won,
             majorityFaction,
             losses,
             lineupFactions,
@@ -183,36 +156,10 @@ export class CollectionManager {
         return this.bossesDefeatedSet.size
     }
 
-    /**
-     * Update the best W-L record (called with actual win/loss counts).
-     */
-    public updateBestWinLoss(wins: number, losses: number): void {
-        if (
-            !this.bestWinLoss ||
-            wins > this.bestWinLoss.wins ||
-            (wins === this.bestWinLoss.wins && losses < this.bestWinLoss.losses)
-        ) {
-            this.bestWinLoss = { wins, losses }
-        }
-        this.onDirty?.()
-    }
-
     // ── Getters ──────────────────────────────────────────────────────────────
 
     public getCompletedRuns(): number {
         return this.completedRuns
-    }
-
-    public getWonRuns(): number {
-        return this.wonRuns
-    }
-
-    public getBestStreak(): number {
-        return this.bestStreak
-    }
-
-    public getCurrentStreak(): number {
-        return this.currentStreak
     }
 
     public getUnlockedFactions(): string[] {
@@ -221,10 +168,6 @@ export class CollectionManager {
 
     public getHighestRound(): number {
         return this.highestRound
-    }
-
-    public getBestWinLoss(): { wins: number; losses: number } | null {
-        return this.bestWinLoss
     }
 
     public getTotalBossesDefeated(): number {
@@ -243,12 +186,6 @@ export class CollectionManager {
                 this.addUnit(unit.id)
             }
         }
-    }
-
-    public devAddWins(count: number): void {
-        this.wonRuns += count
-        this.completedRuns += count
-        this.onDirty?.()
     }
 
     public devSetBossesDefeated(count: number): void {
@@ -274,13 +211,9 @@ export class CollectionManager {
         return {
             collection,
             completedRuns: this.completedRuns,
-            wonRuns: this.wonRuns,
-            bestStreak: this.bestStreak,
-            currentStreak: this.currentStreak,
             unlockedFactions: [...this.unlockedFactions],
             spiralProgress: spiral,
             highestRound: this.highestRound,
-            bestWinLoss: this.bestWinLoss ?? undefined,
             totalBossesDefeated: this.totalBossesDefeated,
             bossesDefeatedSet: [...this.bossesDefeatedSet],
         }
@@ -299,9 +232,6 @@ export class CollectionManager {
         }
 
         this.completedRuns = data.completedRuns ?? 0
-        this.wonRuns = data.wonRuns ?? 0
-        this.bestStreak = data.bestStreak ?? 0
-        this.currentStreak = data.currentStreak ?? 0
 
         if (data.unlockedFactions) {
             for (const f of data.unlockedFactions) {
@@ -317,7 +247,6 @@ export class CollectionManager {
 
         // Personal bests
         this.highestRound = data.highestRound ?? 0
-        this.bestWinLoss = data.bestWinLoss ?? null
         this.totalBossesDefeated = data.totalBossesDefeated ?? 0
         if (data.bossesDefeatedSet) {
             for (const id of data.bossesDefeatedSet) {

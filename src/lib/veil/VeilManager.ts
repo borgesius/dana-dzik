@@ -19,14 +19,14 @@ export function getVeilManager(): VeilManager {
 interface VeilGate {
     minLevel: number
     minPrestigeCount?: number
-    minAutobattlerWins?: number
+    minHighestRound?: number
     minBossesDefeated?: number
     requireSpiralOrPhase5?: boolean
 }
 
 const VEIL_GATES: Record<number, VeilGate> = {
     0: { minLevel: 5, minPrestigeCount: 1 },
-    1: { minLevel: 10, minAutobattlerWins: 1 },
+    1: { minLevel: 10, minHighestRound: 6 },
     2: { minLevel: 15, minBossesDefeated: 3 },
     3: { minLevel: 20, requireSpiralOrPhase5: true },
     // Veil 4 is deterministic, triggered from veil 3 dialogue
@@ -57,7 +57,7 @@ export class VeilManager {
 
     public levelProvider: (() => number) | null = null
     public prestigeCountProvider: (() => number) | null = null
-    public autobattlerWinsProvider: (() => number) | null = null
+    public highestRoundProvider: (() => number) | null = null
     public bossesDefeatedProvider: (() => number) | null = null
     public spiralCompleteProvider: (() => boolean) | null = null
     public phase5UnlockedProvider: (() => boolean) | null = null
@@ -189,8 +189,8 @@ export class VeilManager {
         }
 
         if (
-            gate.minAutobattlerWins !== undefined &&
-            (this.autobattlerWinsProvider?.() ?? 0) < gate.minAutobattlerWins
+            gate.minHighestRound !== undefined &&
+            (this.highestRoundProvider?.() ?? 0) < gate.minHighestRound
         ) {
             return false
         }

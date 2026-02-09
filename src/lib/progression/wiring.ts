@@ -160,7 +160,9 @@ function wireSocial(mgr: ProgressionManager): void {
 function wireAutobattler(mgr: ProgressionManager): void {
     onAppEvent("autobattler:run-complete", (detail) => {
         mgr.addXP(
-            detail.won ? XP_REWARDS.autobattlerWin : XP_REWARDS.autobattlerRun
+            detail.highestRound >= 6
+                ? XP_REWARDS.autobattlerWin
+                : XP_REWARDS.autobattlerRun
         )
     })
     onAppEvent("autobattler:unit-unlocked", () => {
@@ -230,7 +232,7 @@ function wireCrossSystemHooks(): void {
 
     // Autobattler run completion -> grant cash + commodities
     onAppEvent("autobattler:run-complete", (detail) => {
-        const cashReward = detail.won ? 0.5 : 0.1
+        const cashReward = detail.highestRound >= 6 ? 0.5 : 0.1
         game.addBonus(cashReward)
     })
 
@@ -257,7 +259,7 @@ function wireCrossSystemHooks(): void {
  * Wire Phase 5 (HR) cross-system unlock conditions:
  * - First prestige completed
  * - Player level 8+
- * - 3+ autobattler run wins
+ * - Reached round 6+ in the autobattler (cleared first boss)
  *
  * Also wire 3rd VP slot unlock: level 15 or 2nd prestige.
  */
@@ -272,9 +274,9 @@ function wirePhase5Unlock(mgr: ProgressionManager): void {
 
         const hasPrestiged = prestige.getCount() >= 1
         const hasLevel = mgr.getLevel() >= 8
-        const hasWins = collection.getWonRuns() >= 3
+        const hasRound = collection.getHighestRound() >= 6
 
-        if (hasPrestiged && hasLevel && hasWins) {
+        if (hasPrestiged && hasLevel && hasRound) {
             game.unlockPhase(5)
         }
     }
@@ -350,7 +352,7 @@ function wireVeilTrigger(mgr: ProgressionManager): void {
     // Wire providers so VeilManager can check gates
     veil.levelProvider = (): number => mgr.getLevel()
     veil.prestigeCountProvider = (): number => prestige.getCount()
-    veil.autobattlerWinsProvider = (): number => collection.getWonRuns()
+    veil.highestRoundProvider = (): number => collection.getHighestRound()
     veil.bossesDefeatedProvider = (): number =>
         collection.getTotalBossesDefeated()
     veil.spiralCompleteProvider = (): boolean => collection.isSpiralComplete()
