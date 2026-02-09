@@ -545,7 +545,7 @@ export class DeployWidget {
             links.appendChild(stgLink)
         }
 
-        if (env !== "development") {
+        if (env === "development") {
             const devLabel = document.createElement("span")
             devLabel.className = "deploy-env-link"
             devLabel.textContent = "Dev Panel"
