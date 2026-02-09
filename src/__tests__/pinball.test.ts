@@ -1011,6 +1011,50 @@ describe("Pinball", () => {
             expect(game.score).toBe(expectedScore)
         })
 
+        it("ball saver prevents life loss shortly after launch", async () => {
+            const { PinballGame } = await import("../lib/pinball/PinballGame")
+            const canvas = createMockCanvas()
+            const game = new PinballGame(canvas)
+
+            game.startGame()
+            expect(game.ballsRemaining).toBe(3)
+
+            canvas.dispatchEvent(
+                new KeyboardEvent("keydown", { key: " ", code: "Space" })
+            )
+            for (let i = 0; i < 5; i++) game.stepPhysics()
+            canvas.dispatchEvent(
+                new KeyboardEvent("keyup", { key: " ", code: "Space" })
+            )
+
+            const ball = game.getBall()
+            expect(ball.active).toBe(true)
+            expect(game.ballSaveActive).toBe(true)
+
+            ball.position = new Vector2D(150, 600)
+            game.stepPhysics()
+
+            expect(game.ballsRemaining).toBe(3)
+            expect(ball.active).toBe(false)
+            expect(game.ballSaveActive).toBe(false)
+        })
+
+        it("ball saver does not activate without launch handler", async () => {
+            const { PinballGame } = await import("../lib/pinball/PinballGame")
+            const canvas = createMockCanvas()
+            const game = new PinballGame(canvas)
+
+            game.startGame()
+            expect(game.ballSaveActive).toBe(false)
+
+            const ball = game.getBall()
+            ball.active = true
+            ball.position = new Vector2D(150, 600)
+            game.stepPhysics()
+
+            expect(game.ballsRemaining).toBe(2)
+        })
+
         it("target hit and reset across balls", async () => {
             const { PinballGame } = await import("../lib/pinball/PinballGame")
             const canvas = createMockCanvas()

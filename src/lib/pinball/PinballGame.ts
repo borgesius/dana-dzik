@@ -1,6 +1,6 @@
 import { emitAppEvent } from "../events"
 import { Ball, Bumper, Flipper, Launcher, Target, Wall } from "./entities"
-import { LOGICAL_HEIGHT, SUBSTEPS, Vector2D } from "./physics"
+import { LOGICAL_HEIGHT, SUBSTEPS } from "./physics"
 import { PinballRenderer } from "./renderer"
 
 export type GameState = "idle" | "launching" | "playing" | "gameOver"
@@ -16,6 +16,7 @@ const BALL_START_Y = 420
 const BALL_RADIUS = 8
 
 const DRAIN_Y = LOGICAL_HEIGHT + BALL_RADIUS + 5
+const BALL_SAVE_DURATION = 180
 
 export class PinballGame {
     private canvas: HTMLCanvasElement
@@ -34,7 +35,7 @@ export class PinballGame {
     private _highScore: number = 0
     private _ballsRemaining: number = 3
     private _gameState: GameState = "idle"
-    private launcherSettleFrames: number = 0
+    private ballSaveFrames: number = 0
 
     private audioManager: AudioManager | null = null
 
@@ -71,6 +72,10 @@ export class PinballGame {
 
     public get gameState(): GameState {
         return this._gameState
+    }
+
+    public get ballSaveActive(): boolean {
+        return this.ballSaveFrames > 0
     }
 
     public getBall(): Ball {
@@ -137,38 +142,45 @@ export class PinballGame {
     private buildPlayfield(): void {
         this.walls = []
 
-        this.walls.push(new Wall(15, 55, 15, 415))
-        this.walls.push(new Wall(15, 55, 250, 55))
+        this.walls.push(new Wall(15, 55, 15, 410))
+        this.walls.push(new Wall(15, 55, 245, 55))
 
-        this.walls.push(new Wall(330, 445, 260, 55, 0.95))
+        this.walls.push(new Wall(325, 445, 270, 80, 0.95))
+        this.walls.push(new Wall(270, 80, 245, 55, 0.9))
+        this.walls.push(new Wall(248, 430, 325, 445, 0.7))
 
-        this.walls.push(new Wall(260, 440, 330, 445, 0.7))
+        this.walls.push(new Wall(15, 410, 75, 452))
+        this.walls.push(new Wall(246, 385, 182, 446))
 
-        this.walls.push(new Wall(15, 415, 82, 452))
-        this.walls.push(new Wall(245, 400, 215, 454))
+        this.walls.push(new Wall(22, 330, 50, 398, 1.3))
+        this.walls.push(new Wall(50, 398, 22, 390, 1.3))
 
-        this.walls.push(new Wall(18, 320, 42, 380, 0.8))
-        this.walls.push(new Wall(232, 380, 248, 320, 0.8))
+        this.walls.push(new Wall(232, 330, 212, 398, 1.3))
+        this.walls.push(new Wall(212, 398, 232, 390, 1.3))
 
         const flipperY = 454
         this.flippers = [
-            new Flipper(90, flipperY, 58, "left"),
-            new Flipper(205, flipperY, 58, "right"),
+            new Flipper(85, flipperY, 58, "left"),
+            new Flipper(210, flipperY, 58, "right"),
         ]
 
-        const cx = 130
         this.bumpers = [
-            new Bumper(cx, 215, 18, 100),
-            new Bumper(cx - 50, 270, 16, 100),
-            new Bumper(cx + 50, 270, 16, 100),
-            new Bumper(cx, 325, 15, 150),
+            new Bumper(130, 155, 20, 100),
+            new Bumper(95, 215, 18, 100),
+            new Bumper(165, 215, 18, 100),
+            new Bumper(60, 290, 15, 150),
+            new Bumper(200, 290, 15, 150),
+            new Bumper(105, 345, 14, 150),
+            new Bumper(160, 345, 14, 150),
         ]
 
         this.targets = [
-            new Target(35, 230, 12, 35, 500),
-            new Target(230, 230, 12, 35, 500),
-            new Target(cx - 30, 370, 10, 28, 300),
-            new Target(cx + 30, 370, 10, 28, 300),
+            new Target(35, 140, 10, 28, 500),
+            new Target(35, 175, 10, 28, 500),
+            new Target(35, 210, 10, 28, 500),
+            new Target(235, 140, 10, 28, 500),
+            new Target(235, 175, 10, 28, 500),
+            new Target(235, 210, 10, 28, 500),
         ]
 
         this.launcher = new Launcher(300, 370, 22, 60)
@@ -212,6 +224,7 @@ export class PinballGame {
                 if (this.launcher.isCharging && !this.ball.active) {
                     const power = this.launcher.release()
                     this.ball.launch(power)
+                    this.ballSaveFrames = BALL_SAVE_DURATION
                     this.playSound("pinball_launch")
                 }
             }
@@ -242,6 +255,7 @@ export class PinballGame {
             if (this.launcher.isCharging && !this.ball.active) {
                 const power = this.launcher.release()
                 this.ball.launch(power)
+                this.ballSaveFrames = BALL_SAVE_DURATION
                 this.playSound("pinball_launch")
             }
         })
@@ -313,51 +327,33 @@ export class PinballGame {
             })
         }
 
-        if (
-            this.ball.active &&
-            this.ball.position.x > 260 &&
-            this.ball.position.y > 200 &&
-            this.ball.velocity.y > 0
-        ) {
-            this.ball.velocity = new Vector2D(
-                Math.min(this.ball.velocity.x, -1.5),
-                this.ball.velocity.y
-            )
-        }
-
-        if (
-            this.ball.active &&
-            this.ball.position.y > 430 &&
-            this.ball.position.x > 260 &&
-            this.ball.velocity.magnitude() < 1.0
-        ) {
-            this.launcherSettleFrames++
-            if (this.launcherSettleFrames > 30) {
-                this.ball.reset(BALL_START_X, BALL_START_Y)
-                this.launcherSettleFrames = 0
-            }
-        } else {
-            this.launcherSettleFrames = 0
+        if (this.ballSaveFrames > 0) {
+            this.ballSaveFrames--
         }
 
         if (this.ball.active && this.checkBallLost()) {
-            this._ballsRemaining--
-            this.playSound("pinball_drain")
-
-            if (this._ballsRemaining <= 0) {
-                this._gameState = "gameOver"
-                this.saveHighScore()
-                this.playSound("pinball_gameover")
-
-                const allTargetsHit = this.targets.every((t) => t.isHit)
-                emitAppEvent("pinball:gameover", {
-                    score: this._score,
-                    highScore: this._highScore,
-                    allTargetsHit,
-                })
-            } else {
+            if (this.ballSaveFrames > 0) {
                 this.resetBallPosition()
-                this.targets.forEach((t) => t.reset())
+                this.ballSaveFrames = 0
+            } else {
+                this._ballsRemaining--
+                this.playSound("pinball_drain")
+
+                if (this._ballsRemaining <= 0) {
+                    this._gameState = "gameOver"
+                    this.saveHighScore()
+                    this.playSound("pinball_gameover")
+
+                    const allTargetsHit = this.targets.every((t) => t.isHit)
+                    emitAppEvent("pinball:gameover", {
+                        score: this._score,
+                        highScore: this._highScore,
+                        allTargetsHit,
+                    })
+                } else {
+                    this.resetBallPosition()
+                    this.targets.forEach((t) => t.reset())
+                }
             }
         }
     }
