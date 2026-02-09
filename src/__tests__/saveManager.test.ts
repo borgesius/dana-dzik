@@ -235,7 +235,7 @@ describe("SaveManager", () => {
             expect(data.progression.totalXP).toBe(0)
             expect(data.progression.activeCareer).toBeNull()
             expect(data.autobattler.collection).toEqual([])
-            expect(data.autobattler.wonRuns).toBe(0)
+            expect(data.autobattler.completedRuns).toBe(0)
         })
 
         it("migrates v2 save to v3 by adding progression fields", async () => {

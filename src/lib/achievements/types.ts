@@ -109,7 +109,6 @@ export type AchievementId =
     | "qa-inspector"
     // Autobattler
     | "first-draft"
-    | "posse-up"
     | "faction-recruit"
     | "full-spiral"
     | "no-drifters"
@@ -129,6 +128,7 @@ export type AchievementId =
     | "we-make-nothing"
     | "you-dont-get-to-choose"
     | "reorg"
+    | "transition-plan"
     // Autobattler (faction complete)
     | "syndicate-complete"
     | "deputies-complete"
@@ -137,11 +137,8 @@ export type AchievementId =
     // Cross-system (hidden)
     | "vertical-integration"
     | "exit-interview"
-    // Autobattler (tiered - Wrangler)
+    // Autobattler (first boss clear)
     | "greenhorn"
-    | "deputy"
-    | "sheriff"
-    | "marshal"
     // Autobattler (tiered - Depth)
     | "tenure-track"
     | "associate-prof"
@@ -168,7 +165,6 @@ export type AchievementId =
     | "it-goes-quickly"
     | "rainy-day"
     // Standalone new
-    | "win-streak"
     | "serial-pivoter"
     | "overqualified"
     | "executive-material"
@@ -298,7 +294,6 @@ export type TieredGroup =
     | "arcade"
     | "industrialist"
     | "phases"
-    | "wrangler"
     | "depth"
     | "rank"
     | "harvester"

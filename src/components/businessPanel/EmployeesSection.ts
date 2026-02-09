@@ -1,5 +1,6 @@
 import { emitAppEvent } from "../../lib/events"
 import { formatMoney } from "../../lib/formatMoney"
+import { getLocaleManager } from "../../lib/localeManager"
 import {
     CHEMISTRY,
     type Employee,
@@ -100,8 +101,8 @@ export class EmployeesSection {
             this.element.style.display = "block"
             this.contentEl.style.display = "none"
             this.lockedEl.style.display = ""
-            this.lockedEl.textContent =
-                "Requires: 1st Prestige · Level 8 · 3 hacking wins"
+            const lm = getLocaleManager()
+            this.lockedEl.textContent = lm.t("commodityExchange.ui.phase5Hint")
         } else {
             this.element.style.display = "none"
         }

@@ -168,7 +168,6 @@ export interface OpponentDef {
 
 export interface RunSummary {
     highestRound: number
-    wins: number
     losses: number
     bossesDefeated: string[]
     majorityFaction?: string
