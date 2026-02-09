@@ -1,3 +1,9 @@
+## [2.8.2](https://github.com/borgesius/dana-dzik/compare/v2.8.1...v2.8.2) (2026-02-09)
+
+### Bug Fixes
+
+* include four common themes in cosmetics list ([dc45bc9](https://github.com/borgesius/dana-dzik/commit/dc45bc9c4ee1a3941292bde7d997a3fe980b5ee5))
+
 ## [2.8.1](https://github.com/borgesius/dana-dzik/compare/v2.8.0...v2.8.1) (2026-02-09)
 
 ### Bug Fixes
