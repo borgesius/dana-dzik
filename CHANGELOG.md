@@ -1,3 +1,9 @@
+## [2.8.4](https://github.com/borgesius/dana-dzik/compare/v2.8.3...v2.8.4) (2026-02-09)
+
+### Bug Fixes
+
+* **trade:** limit order auto price accounts for commodity's order of precision ([8f2eb4f](https://github.com/borgesius/dana-dzik/commit/8f2eb4f8f14fbcdc6faa281a4176137341ecacf1))
+
 ## [2.8.3](https://github.com/borgesius/dana-dzik/compare/v2.8.2...v2.8.3) (2026-02-09)
 
 ### Bug Fixes
