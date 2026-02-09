@@ -1157,6 +1157,10 @@
             "name": "Reorg",
             "description": "Reorganize the org chart."
         },
+        "transition-plan": {
+            "name": "The Firm Has Worked Out Its Transition Plan",
+            "description": "Replace a fired employee within 10 ticks."
+        },
         "greenhorn": {
             "name": "Postdoc",
             "description": "Win your first symposium."
