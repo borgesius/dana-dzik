@@ -135,7 +135,7 @@
         "status": "状态",
         "allTestsPassing": "所有测试通过",
         "testsFailing": "测试失败",
-        "chromiumLatest": "Chromium · 主分支最新版",
+        "chromiumLatest": "Chromium · {{branch}}最新版",
         "statements": "语句",
         "branches": "分支",
         "functions": "函数",

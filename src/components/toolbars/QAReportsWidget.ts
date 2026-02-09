@@ -1,3 +1,4 @@
+import { getDeployEnv } from "../../config/environment"
 import { emitAppEvent } from "../../lib/events"
 import { getLocaleManager } from "../../lib/localeManager"
 
@@ -153,7 +154,7 @@ export class QAReportsWidget {
                     <span class="qa-tooltip-label">${lm.t("qa.status")}</span>
                     <span class="qa-tooltip-value">${statusEmoji} ${statusText}</span>
                 </div>
-                <div class="qa-tooltip-status">${lm.t("qa.chromiumLatest")}${dateStr ? ` · ${dateStr}` : ""}</div>
+                <div class="qa-tooltip-status">${lm.t("qa.chromiumLatest", { branch: getDeployEnv() === "staging" ? "staging" : "main" })}${dateStr ? ` · ${dateStr}` : ""}</div>
                 <div class="qa-tooltip-click">${lm.t("qa.clickFullReport")}</div>
             </div>
         `

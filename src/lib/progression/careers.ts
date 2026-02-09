@@ -93,12 +93,12 @@ const ENGINEERING_NODES: CareerNodeDef[] = [
     {
         id: "eng-distinguished",
         name: "Distinguished Thought Compiler",
-        company: "Vibes Engineering Corp · The Cloud",
+        company: "Dronie.ai · The Cloud",
         dateRange: "Series D – Acqui-hire",
         bullets: [
-            "Converted vibes into production incidents at scale",
-            "Slack messages sent and lines of code shipped held at a steady 1:1 ratio",
+            "Converted jargon into production incidents at scale",
             "Voted 'Most Distinguished' three years running by a committee I chair",
+            "Architected a foundation for frameworks of paradigms",
         ],
         bonusLabel: "+15% symposium unit HP",
         branch: "engineering",
@@ -115,7 +115,7 @@ const ENGINEERING_NODES: CareerNodeDef[] = [
         bullets: [
             "Spent two calendar years considering the code before writing any",
             "Published a monograph on why the previous monograph was wrong",
-            "Mentored other Fellows in the art of productive procrastination",
+            "Advised on a rank'n'yank process colloquially known as 'Thunderdome'",
         ],
         bonusLabel: "+10% GRUND compilation tolerance",
         branch: "engineering",
@@ -280,7 +280,7 @@ const GROWTH_NODES: CareerNodeDef[] = [
         bullets: [
             "DAUs went up. Do not ask how. Do not look at the denominator",
             "Shipped a 'we miss you' email campaign that sent 3 emails per day",
-            "Introduced gamification to the onboarding flow; no one has finished onboarding since",
+            "Crafted payment copy to increase accidental subscriptions by 380%",
         ],
         bonusLabel: "+10% symposium Existentialist stats",
         branch: "growth",
