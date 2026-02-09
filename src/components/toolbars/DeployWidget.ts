@@ -552,11 +552,7 @@ export class DeployWidget {
             devLabel.title = "Ctrl+Shift+D"
             devLabel.addEventListener("click", (e) => {
                 e.stopPropagation()
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access
-                const panel = (window as any).__devPanel as
-                    | { toggle?: () => void }
-                    | undefined
-                panel?.toggle?.()
+                window.__devPanel?.toggle()
             })
             links.appendChild(devLabel)
         }

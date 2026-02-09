@@ -93,6 +93,7 @@ export class MarketEngine {
 
     private eventListeners: Map<GameEventType, GameEventCallback[]> = new Map()
     private tickInterval: ReturnType<typeof setInterval> | null = null
+    private pumpDumpTimeout: ReturnType<typeof setTimeout> | null = null
     private ticksSinceEvent: number = 0
     private nextEventTicks: number = 0
 
@@ -317,6 +318,10 @@ export class MarketEngine {
         if (this.tickInterval) {
             clearInterval(this.tickInterval)
             this.tickInterval = null
+        }
+        if (this.pumpDumpTimeout) {
+            clearTimeout(this.pumpDumpTimeout)
+            this.pumpDumpTimeout = null
         }
     }
 
@@ -997,7 +1002,8 @@ export class MarketEngine {
                     const scheduledSellTick = Math.floor(
                         def.durationTicks * 0.8
                     )
-                    setTimeout(() => {
+                    this.pumpDumpTimeout = setTimeout(() => {
+                        this.pumpDumpTimeout = null
                         this.sellAll(targetCommodity)
                     }, scheduledSellTick * TICK_INTERVAL_MS)
                 }
@@ -1972,7 +1978,7 @@ export class MarketEngine {
 
     public offlineCatchup(elapsedMs: number): OfflineSummary {
         const maxMs = 48 * 60 * 60 * 1000 // cap at 48 hours
-        const clampedMs = Math.min(elapsedMs, maxMs)
+        const clampedMs = Math.max(0, Math.min(elapsedMs, maxMs))
         const ticks = Math.floor(clampedMs / TICK_INTERVAL_MS)
 
         const commoditiesProduced: Record<string, number> = {}
