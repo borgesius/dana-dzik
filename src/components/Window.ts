@@ -160,7 +160,7 @@ export class Window {
             "#finder-content"
         ) as HTMLElement
         if (container) {
-            new FileExplorer(container, "C:\\")
+            new FileExplorer(container, "3:\\")
         }
     }
 
