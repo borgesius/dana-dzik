@@ -1,3 +1,15 @@
+## [2.7.0](https://github.com/borgesius/dana-dzik/compare/v2.6.1...v2.7.0) (2026-02-09)
+
+### Features
+
+* **cube runner:** ui polish ([41fdaaa](https://github.com/borgesius/dana-dzik/commit/41fdaaa324f3c5dda59640523ca0153b5aa6a061))
+* **pierce the veil:** obstacle timings ([c5e9d64](https://github.com/borgesius/dana-dzik/commit/c5e9d64f1a3a4ae76829f75bdeee01f0b7871a01))
+
+### Bug Fixes
+
+* achievement toast names ([dad8c9e](https://github.com/borgesius/dana-dzik/commit/dad8c9e2b6a1ecc5d5f0550f8d8612b45b99cd6a))
+* cosmetic names in toast tab ([66c13c6](https://github.com/borgesius/dana-dzik/commit/66c13c6c47bc3674614e7409956c01354108f8cf))
+
 ## [2.6.1](https://github.com/borgesius/dana-dzik/compare/v2.6.0...v2.6.1) (2026-02-09)
 
 ### Bug Fixes
