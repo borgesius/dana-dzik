@@ -51,13 +51,13 @@ export class Vector2D {
 export const LOGICAL_WIDTH = 350
 export const LOGICAL_HEIGHT = 500
 
-export const SUBSTEPS = 4
-export const GRAVITY = 0.03
+export const SUBSTEPS = 6
+export const GRAVITY = 0.025
 export const FRICTION = 0.984
-export const FLIPPER_FORCE = 7
-export const BUMPER_FORCE = 3
+export const FLIPPER_FORCE = 11
+export const BUMPER_FORCE = 5
 export const WALL_DAMPING = 0.92
-export const MAX_VELOCITY = 5
+export const MAX_VELOCITY = 12
 
 export function circleCircleCollision(
     pos1: Vector2D,
