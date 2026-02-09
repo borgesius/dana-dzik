@@ -1,3 +1,9 @@
+## [2.4.0](https://github.com/borgesius/dana-dzik/compare/v2.3.0...v2.4.0) (2026-02-09)
+
+### Features
+
+* **ui:** some ui improvements ([#48](https://github.com/borgesius/dana-dzik/issues/48)) ([5604a05](https://github.com/borgesius/dana-dzik/commit/5604a05751738903ee71d0102f5d13894999cb3f)), closes [#37](https://github.com/borgesius/dana-dzik/issues/37) [#44](https://github.com/borgesius/dana-dzik/issues/44) [#46](https://github.com/borgesius/dana-dzik/issues/46)
+
 ## [2.3.0](https://github.com/borgesius/dana-dzik/compare/v2.2.0...v2.3.0) (2026-02-09)
 
 ### Features
