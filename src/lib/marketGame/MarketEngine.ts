@@ -835,6 +835,18 @@ export class MarketEngine {
     }
 
     /**
+     * Fixed number of decimal places appropriate for a commodity's price.
+     * Derived from the base price so that sub-dollar commodities get enough
+     * precision for meaningful limit-order targets.
+     */
+    public getPriceDecimals(commodityId: CommodityId): number {
+        const def = COMMODITIES.find((c) => c.id === commodityId)
+        const basePrice = def?.basePrice ?? 1
+        if (basePrice >= 1) return 2
+        return Math.ceil(-Math.log10(basePrice)) + 1
+    }
+
+    /**
      * Harvest: generate free commodity units via click.
      * Returns the quantity produced, or 0 if the commodity is locked.
      */

@@ -75,11 +75,18 @@ export class TradeControls {
             .map((order, idx) => ({ ...order, globalIndex: idx }))
             .filter((o) => o.commodityId === commodity)
 
+        const priceDecimals = this.game.getPriceDecimals(commodity)
+        const factor = 10 ** priceDecimals
+        const autoPrice = (
+            Math.ceil(currentPrice * 1.1 * factor) / factor
+        ).toFixed(priceDecimals)
+        const step = (1 / factor).toString()
+
         let html = `<div class="limit-orders-section">`
         html += `<div class="limit-orders-header">LIMIT ORDERS</div>`
 
         html += `<div class="limit-order-form">`
-        html += `<input type="number" class="limit-order-price" placeholder="Target price" min="0" step="0.01" value="${Math.ceil(currentPrice * 1.1)}" />`
+        html += `<input type="number" class="limit-order-price" placeholder="Target price" min="0" step="${step}" value="${autoPrice}" />`
         html += `<input type="number" class="limit-order-qty" placeholder="Qty" min="1" step="1" max="${Math.floor(qty)}" value="${Math.min(1, Math.floor(qty))}" />`
         html += `<button class="toolbar-button trade-btn limit-order-add-btn"${qty < 1 ? " disabled" : ""}>SET LIMIT</button>`
         html += `</div>`
