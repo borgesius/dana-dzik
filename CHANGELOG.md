@@ -1,3 +1,18 @@
+## [2.5.0](https://github.com/borgesius/dana-dzik/compare/v2.4.0...v2.5.0) (2026-02-09)
+
+### Features
+
+* customization rework ([#49](https://github.com/borgesius/dana-dzik/issues/49)) ([1be01ac](https://github.com/borgesius/dana-dzik/commit/1be01acd50c774827b2d1a7ff24cedeadcd9bc1f)), closes [#37](https://github.com/borgesius/dana-dzik/issues/37) [#44](https://github.com/borgesius/dana-dzik/issues/44) [#46](https://github.com/borgesius/dana-dzik/issues/46)
+* **grund:** allow compile to grund from explorer ([#37](https://github.com/borgesius/dana-dzik/issues/37)) ([9bd8357](https://github.com/borgesius/dana-dzik/commit/9bd835796644d87ce09441c0f7d193861580435b))
+* show squash merges in git graph ([#44](https://github.com/borgesius/dana-dzik/issues/44)) ([f555a3e](https://github.com/borgesius/dana-dzik/commit/f555a3e7d946d94a8f1ed3c9c51e87ba64887964))
+* skills ([75832ed](https://github.com/borgesius/dana-dzik/commit/75832ed6727390d7714a5647dea047d7beeea152))
+* some ui stuff and bugfixes ([#46](https://github.com/borgesius/dana-dzik/issues/46)) ([dc45814](https://github.com/borgesius/dana-dzik/commit/dc4581475676e64a10ea163003b93ac0a0a1d224))
+
+### Bug Fixes
+
+* show skills bonus display ([2fa2186](https://github.com/borgesius/dana-dzik/commit/2fa2186403ab1f2cc51aa370f7c4b6462687f08f))
+* unlock non-codeowner felixgpt for fresh save ([d990a5d](https://github.com/borgesius/dana-dzik/commit/d990a5dcb3cb96d818e78e52fd250a0806a90170))
+
 ## [2.4.0](https://github.com/borgesius/dana-dzik/compare/v2.3.0...v2.4.0) (2026-02-09)
 
 ### Features
