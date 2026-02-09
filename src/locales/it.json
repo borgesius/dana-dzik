@@ -135,7 +135,7 @@
         "status": "Stato",
         "allTestsPassing": "Tutti i test superati",
         "testsFailing": "Test falliti",
-        "chromiumLatest": "Chromium · Ultimo su main",
+        "chromiumLatest": "Chromium · Ultimo su {{branch}}",
         "statements": "Istruzioni",
         "branches": "Rami",
         "functions": "Funzioni",

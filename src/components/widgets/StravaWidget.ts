@@ -1,3 +1,5 @@
+import { log } from "@/core/Logger"
+
 import { createWidgetFrame } from "./WidgetFrame"
 
 interface ActivitySummary {
@@ -72,7 +74,7 @@ export class StravaWidget {
                 ${this.renderStat("🚴 Longest Ride (3mo)", longestRide)}
             `
         } catch (error) {
-            console.error("[Widgets] Strava error:", error)
+            log.widgets("Strava error: %O", error)
             content.innerHTML = `<div class="strava-error">Could not load</div>`
         }
     }

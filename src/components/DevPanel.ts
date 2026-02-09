@@ -796,7 +796,7 @@ export class DevPanel {
 
 // ── window.__dev console API ─────────────────────────────────────────────────
 
-interface DevApi {
+export interface DevApi {
     addCash: (amount: number) => void
     addXP: (amount: number) => void
     setLevel: (level: number) => void
@@ -900,8 +900,7 @@ export function attachDevApi(
         togglePanel: () => panel.toggle(),
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access
-    ;(window as any).__dev = api
+    window.__dev = api
     console.log(
         "%c[DevPanel] Dev cheats loaded. Use window.__dev for console access.",
         "color: #00ff88; font-weight: bold"
