@@ -1,3 +1,9 @@
+## [2.8.0](https://github.com/borgesius/dana-dzik/compare/v2.7.1...v2.8.0) (2026-02-09)
+
+### Features
+
+* **market:** downscale catchup rewards ([0068320](https://github.com/borgesius/dana-dzik/commit/006832091c61be2cc58ad68f844c2673f64e1bc6))
+
 ## [2.7.1](https://github.com/borgesius/dana-dzik/compare/v2.7.0...v2.7.1) (2026-02-09)
 
 ### Bug Fixes
