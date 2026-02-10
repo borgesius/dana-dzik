@@ -985,7 +985,7 @@ describe("Pinball", () => {
             expect(game.ballsRemaining).toBe(3)
         })
 
-        it("multi-bumper combo accumulates score", async () => {
+        it("multi-bumper combo accumulates score with multiplier", async () => {
             const { PinballGame } = await import("../lib/pinball/PinballGame")
             const canvas = createMockCanvas()
             const game = new PinballGame(canvas)
@@ -995,14 +995,17 @@ describe("Pinball", () => {
             const bumpers = game.getBumpers()
             let expectedScore = 0
 
-            for (const bumper of bumpers.slice(0, 3)) {
+            // Combo multiplier: 1x for hits 1-2, 2x at hit 3+
+            const comboMultipliers = [1, 1, 2]
+            for (let i = 0; i < 3; i++) {
+                const bumper = bumpers[i]
                 ball.active = true
                 ball.position = bumper.position.add(
                     new Vector2D(0, bumper.radius + ball.radius - 3)
                 )
                 ball.velocity = new Vector2D(0, -5)
                 game.stepPhysics()
-                expectedScore += bumper.points
+                expectedScore += bumper.points * comboMultipliers[i]
 
                 ball.velocity = new Vector2D(0, 0)
                 ball.position = new Vector2D(150, 300)
