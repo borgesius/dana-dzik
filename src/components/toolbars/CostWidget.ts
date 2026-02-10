@@ -78,7 +78,7 @@ export class CostWidget {
 
         const sampledSection =
             sampled.length > 0
-                ? `<div class="cost-section-header">Sampled (0.1%)</div>` +
+                ? `<div class="cost-section-header">Sampled (1%)</div>` +
                   sampled
                       .map((item) => {
                           const costStr = this.formatCostValue(item.cost)

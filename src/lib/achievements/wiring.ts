@@ -1,4 +1,5 @@
 import { ROUTABLE_WINDOWS, type RoutableWindow } from "../../config/routing"
+import { scheduleAchievementReport } from "../analytics"
 import { onAppEvent } from "../events"
 import { getLocaleManager } from "../localeManager"
 import { getMarketGame } from "../marketGame/MarketEngine"
@@ -58,6 +59,7 @@ export function wireAchievements(
     wireSessionCost(mgr)
     wireQAReports(mgr)
     wireProgressionEvents(mgr)
+    wireAchievementReporting(mgr)
 }
 
 // ── Lunar helpers ────────────────────────────────────────────────────────
@@ -1129,5 +1131,15 @@ export function wireVeilAchievements(): void {
 
     onAppEvent("veil:failed", () => {
         mgr.incrementCounter("veil-attempts")
+    })
+}
+
+function wireAchievementReporting(mgr: AchievementManager): void {
+    // Report any previously-earned-but-unreported achievements on load
+    scheduleAchievementReport()
+
+    // Report whenever a new achievement is earned (debounced)
+    mgr.onEarned(() => {
+        scheduleAchievementReport()
     })
 }

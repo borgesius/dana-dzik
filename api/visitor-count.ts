@@ -1,6 +1,6 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node"
 
-import { cachedRead, isConfigured } from "./lib/redisGateway"
+import { cachedRead, isConfigured, prefixKey } from "./lib/redisGateway"
 
 const VISITOR_COUNT_CACHE_KEY = "cache:visitor-count"
 const VISITOR_COUNT_CACHE_TTL = 60
@@ -33,7 +33,7 @@ export default async function handler(
             VISITOR_COUNT_CACHE_KEY,
             VISITOR_COUNT_CACHE_TTL,
             async (client) => {
-                const count = await client.get<number>("stats:views:total")
+                const count = await client.get<number>(prefixKey("stats:views:total"))
                 return count ?? 0
             }
         )

@@ -144,9 +144,9 @@ function getVisitorId(): string {
 //     Client-side gating mirrors the server-side redisGateway:
 //
 //     1. Critical events (pageview) → always sent
-//     2. Non-sampled visitors (99.9%) → non-critical events dropped here,
+//     2. Non-sampled visitors (99%) → non-critical events dropped here,
 //        never hitting the server or Redis at all
-//     3. Sampled visitors (0.1%) → non-critical events sent up to the
+//     3. Sampled visitors (1%) → non-critical events sent up to the
 //        per-session budget, then stopped
 //
 //     The server enforces the same rules as defense-in-depth, but the
@@ -317,6 +317,83 @@ export function initCrashTracking(): void {
     onAppEvent("system-crash:triggered", (detail) => {
         trackCrash(detail.effectType)
     })
+}
+
+// ─── Achievement Reporting ──────────────────────────────────────────────────
+//     NOT sampled — every user reports earned achievements so global counts
+//     are accurate. The server deduplicates per visitor.
+
+let reportTimer: ReturnType<typeof setTimeout> | null = null
+const REPORT_DEBOUNCE_MS = 2000
+
+export function scheduleAchievementReport(): void {
+    if (reportTimer) clearTimeout(reportTimer)
+    reportTimer = setTimeout(() => {
+        reportTimer = null
+        void reportAchievements()
+    }, REPORT_DEBOUNCE_MS)
+}
+
+async function reportAchievements(): Promise<void> {
+    if (isBot()) return
+
+    const { getAchievementManager } =
+        await import("./achievements/AchievementManager")
+    const mgr = getAchievementManager()
+    const unreported = mgr.getUnreported()
+    if (unreported.length === 0) return
+
+    const visitorId = getVisitorId()
+
+    try {
+        const res = await fetch("/api/achievement-counts", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-Visitor-Id": visitorId,
+            },
+            body: JSON.stringify({ achievements: unreported }),
+        })
+
+        if (res.ok) {
+            for (const id of unreported) {
+                mgr.markReported(id)
+            }
+        }
+    } catch {
+        // Silently fail — will retry on next earn
+    }
+}
+
+// ─── Achievement Counts (GET) ───────────────────────────────────────────────
+
+export interface AchievementCountsData {
+    counts: Record<string, number>
+    totalUsers: number
+}
+
+let cachedCounts: AchievementCountsData | null = null
+
+export async function fetchAchievementCounts(): Promise<AchievementCountsData> {
+    if (cachedCounts) return cachedCounts
+
+    try {
+        const res = await fetch("/api/achievement-counts")
+        if (!res.ok) return { counts: {}, totalUsers: 0 }
+
+        const json = (await res.json()) as {
+            ok: boolean
+            data?: AchievementCountsData
+        }
+        if (json.ok && json.data) {
+            cachedCounts = json.data
+            return cachedCounts
+        }
+    } catch {
+        // Silently fail
+    }
+
+    return { counts: {}, totalUsers: 0 }
 }
 
 export { getVisitorId }
