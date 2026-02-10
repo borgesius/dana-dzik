@@ -1,4 +1,13 @@
-import type { Ball, Bumper, Flipper, Launcher, Target, Wall } from "./entities"
+import type {
+    Ball,
+    Bumper,
+    Flipper,
+    Launcher,
+    Post,
+    Slingshot,
+    Target,
+    Wall,
+} from "./entities"
 import type { FloatingText, Particle } from "./particles"
 import { LOGICAL_HEIGHT, LOGICAL_WIDTH } from "./physics"
 
@@ -277,6 +286,109 @@ export class PinballRenderer {
         this.ctx.strokeStyle = COLORS.wall
         this.ctx.lineWidth = 4
         this.ctx.lineCap = "round"
+        this.ctx.stroke()
+    }
+
+    public drawSlingshot(slingshot: Slingshot): void {
+        const [v0, v1, v2] = slingshot.vertices
+        const anim = slingshot.hitAnimation
+
+        // Filled triangle body
+        this.ctx.beginPath()
+        this.ctx.moveTo(v0.x, v0.y)
+        this.ctx.lineTo(v1.x, v1.y)
+        this.ctx.lineTo(v2.x, v2.y)
+        this.ctx.closePath()
+
+        if (anim > 0) {
+            // Flash bright on hit
+            const r = Math.round(140 + 115 * anim)
+            const g = Math.round(115 + 85 * anim)
+            const b = Math.round(85 + 45 * anim)
+            this.ctx.fillStyle = `rgb(${r}, ${g}, ${b})`
+        } else {
+            this.ctx.fillStyle = COLORS.wall
+        }
+        this.ctx.fill()
+
+        // Outline with bevel effect
+        this.ctx.strokeStyle = COLORS.wallHighlight
+        this.ctx.lineWidth = 2
+        this.ctx.stroke()
+
+        this.ctx.beginPath()
+        this.ctx.moveTo(v0.x + 1, v0.y + 1)
+        this.ctx.lineTo(v1.x + 1, v1.y + 1)
+        this.ctx.lineTo(v2.x + 1, v2.y + 1)
+        this.ctx.closePath()
+        this.ctx.strokeStyle = COLORS.wallShadow
+        this.ctx.lineWidth = 1.5
+        this.ctx.stroke()
+
+        // Hit flash overlay
+        if (anim > 0) {
+            this.ctx.beginPath()
+            this.ctx.moveTo(v0.x, v0.y)
+            this.ctx.lineTo(v1.x, v1.y)
+            this.ctx.lineTo(v2.x, v2.y)
+            this.ctx.closePath()
+            this.ctx.fillStyle = `rgba(255, 255, 200, ${anim * 0.4})`
+            this.ctx.fill()
+        }
+    }
+
+    public drawPost(post: Post): void {
+        const { x, y } = post.position
+        const r = post.radius
+        const anim = post.hitAnimation
+
+        // Metallic base circle
+        const grad = this.ctx.createRadialGradient(
+            x - r * 0.3,
+            y - r * 0.3,
+            0,
+            x,
+            y,
+            r
+        )
+        grad.addColorStop(0, "#E0E0E0")
+        grad.addColorStop(0.6, "#A0A0A0")
+        grad.addColorStop(1, "#686868")
+
+        this.ctx.beginPath()
+        this.ctx.arc(x, y, r, 0, Math.PI * 2)
+        this.ctx.fillStyle = grad
+        this.ctx.fill()
+
+        // Highlight dot
+        this.ctx.beginPath()
+        this.ctx.arc(x - r * 0.25, y - r * 0.25, r * 0.35, 0, Math.PI * 2)
+        this.ctx.fillStyle = "rgba(255, 255, 255, 0.6)"
+        this.ctx.fill()
+
+        // Hit flash
+        if (anim > 0) {
+            this.ctx.beginPath()
+            this.ctx.arc(x, y, r + 2, 0, Math.PI * 2)
+            this.ctx.fillStyle = `rgba(255, 255, 220, ${anim * 0.5})`
+            this.ctx.fill()
+        }
+    }
+
+    public drawGuideRail(wall: Wall): void {
+        this.ctx.beginPath()
+        this.ctx.moveTo(wall.start.x, wall.start.y)
+        this.ctx.lineTo(wall.end.x, wall.end.y)
+        this.ctx.strokeStyle = "rgba(139, 115, 85, 0.5)"
+        this.ctx.lineWidth = 2
+        this.ctx.stroke()
+
+        // Subtle highlight
+        this.ctx.beginPath()
+        this.ctx.moveTo(wall.start.x, wall.start.y - 0.5)
+        this.ctx.lineTo(wall.end.x, wall.end.y - 0.5)
+        this.ctx.strokeStyle = "rgba(196, 168, 130, 0.3)"
+        this.ctx.lineWidth = 1
         this.ctx.stroke()
     }
 
