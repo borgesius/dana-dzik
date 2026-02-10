@@ -1,3 +1,9 @@
+## [2.9.2](https://github.com/borgesius/dana-dzik/compare/v2.9.1...v2.9.2) (2026-02-10)
+
+### Bug Fixes
+
+* rerender prestige display during gameplay ([0cd94e6](https://github.com/borgesius/dana-dzik/commit/0cd94e659bb86ac77f943e019bb3b7f26a4b47ef))
+
 ## [2.9.1](https://github.com/borgesius/dana-dzik/compare/v2.9.0...v2.9.1) (2026-02-09)
 
 ### Bug Fixes
