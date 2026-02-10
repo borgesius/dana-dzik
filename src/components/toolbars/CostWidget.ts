@@ -1,4 +1,5 @@
 import {
+    type CostBreakdown,
     getSessionCostTracker,
     type SessionCostTracker,
 } from "../../lib/sessionCost"
@@ -37,7 +38,7 @@ export class CostWidget {
 
         const update = (): void => {
             const breakdown = tracker.getBreakdown()
-            const costText = this.formatCostValue(breakdown.totalCost)
+            const costText = this.formatCostValue(breakdown.lifetimeCost)
             this.el.firstChild!.textContent = `💸 ${costText}`
             this.tooltipEl.innerHTML = this.renderTooltip(breakdown)
         }
@@ -50,18 +51,7 @@ export class CostWidget {
         return `$${cost.toFixed(6)}`
     }
 
-    private renderTooltip(breakdown: {
-        items: Array<{
-            label: string
-            cost: number
-            count: number
-            sampled: boolean
-        }>
-        bandwidthBytes: number
-        bandwidthCost: number
-        totalCost: number
-        isSampled: boolean
-    }): string {
+    private renderTooltip(breakdown: CostBreakdown): string {
         const alwaysTracked = breakdown.items.filter((i) => !i.sampled)
         const sampled = breakdown.items.filter((i) => i.sampled)
 
@@ -91,7 +81,8 @@ export class CostWidget {
             ? `<div class="cost-lottery cost-blink">🎰 YOU WON THE LOTTERY</div>`
             : ""
 
-        const totalStr = this.formatCostValue(breakdown.totalCost)
+        const sessionStr = this.formatCostValue(breakdown.totalCost)
+        const lifetimeStr = this.formatCostValue(breakdown.lifetimeCost)
 
         return `
             <picture>
@@ -100,12 +91,14 @@ export class CostWidget {
             </picture>
             <div class="cost-title">Normalized User Cost</div>
             <div class="cost-divider"></div>
+            <div class="cost-section-header">This Session</div>
             ${alwaysRows}
             ${bandwidthRow}
             ${sampledSection}
             ${lotteryHtml}
             <div class="cost-total-divider"></div>
-            <div class="cost-total">-${totalStr} :(</div>
+            <div class="cost-row"><span class="cost-label">Session</span><span class="cost-value">-${sessionStr}</span></div>
+            <div class="cost-total">-${lifetimeStr} lifetime :(</div>
         `
     }
 }

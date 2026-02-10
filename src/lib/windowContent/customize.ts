@@ -17,6 +17,23 @@ export function getCustomizeContent(): string {
     return `<div id="customize-root" class="customize-root"></div>`
 }
 
+// ── External tab-switch support (called from CosmeticToast) ─────────────
+
+let pendingTab: string | null = null
+let activeRenderFn: ((switchTo?: string) => void) | null = null
+
+/**
+ * Request the customize window switch to a specific tab.
+ * Works whether the window is already open or about to be rendered.
+ */
+export function requestCustomizeTab(tab: string): void {
+    pendingTab = tab
+    if (activeRenderFn) {
+        activeRenderFn(tab)
+        pendingTab = null
+    }
+}
+
 interface TabDef {
     id: string
     label: string
@@ -54,10 +71,12 @@ export function renderCustomizeWindow(): void {
     const cm = getCosmeticManager()
     const tm = getThemeManager()
     const lm = getLocaleManager()
-    let activeTab = "theme"
+    let activeTab = pendingTab ?? "theme"
+    pendingTab = null
 
-    function render(): void {
+    function render(switchTo?: string): void {
         if (!root) return
+        if (switchTo) activeTab = switchTo
 
         let html = `<div class="customize-container">`
 
@@ -190,6 +209,7 @@ export function renderCustomizeWindow(): void {
         })
     }
 
+    activeRenderFn = render
     render()
 
     cm.onChange(() => render())

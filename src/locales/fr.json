@@ -1071,17 +1071,33 @@
             "name": "Survivant du Bug de l'An 2000",
             "description": "Ayez une session active pendant 30 minutes."
         },
-        "big-spender": {
-            "name": "Coup de Fric",
-            "description": "Accumulez un coût de session normalisé de 0,001 $."
+        "cost-1": {
+            "name": "C'est la maison qui offre",
+            "description": "Hé, bienvenue. Mi casa su casa."
         },
-        "whale": {
-            "name": "Chasseur de Billets",
-            "description": "Accumulez un coût de session normalisé de 0,002 $."
+        "cost-2": {
+            "name": "Faites comme chez vous",
+            "description": "Mettez-vous à l'aise. J'insiste."
         },
-        "leviathan": {
-            "name": "Léviathan",
-            "description": "Accumulez un coût de session normalisé de 0,003 $."
+        "cost-3": {
+            "name": "Sur l'ardoise",
+            "description": "Tu sais que c'est pas gratuit pour moi, hein ?"
+        },
+        "cost-4": {
+            "name": "Pique-assiette",
+            "description": "Hé champion, t'as réfléchi à ce dont on avait parlé pour un boulot ?"
+        },
+        "cost-5": {
+            "name": "Droit du squatteur",
+            "description": "Tu as 7 ticks de marché pour dégager."
+        },
+        "cost-6": {
+            "name": "Mécène des arts",
+            "description": "Merci pour ta généreuse contribution à mes factures Vercel et Upstash."
+        },
+        "cost-7": {
+            "name": "Ruine du bienfaiteur",
+            "description": "Je vais t'envoyer une facture."
         },
         "qa-inspector": {
             "name": "Ça marche chez moi",

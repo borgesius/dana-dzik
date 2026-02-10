@@ -13,6 +13,8 @@ import {
     createEmptyPrestigeData,
     createEmptyProgressionData,
 } from "./progression/types"
+import type { CostSaveData } from "./sessionCost"
+import { createEmptyCostData } from "./sessionCost"
 import type { VeilSaveData } from "./veil/types"
 import { createEmptyVeilData } from "./veil/types"
 
@@ -54,6 +56,7 @@ export interface SaveData {
     autobattler: AutobattlerSaveData
     cosmetics?: CosmeticSaveData
     veil?: VeilSaveData
+    cost?: CostSaveData
 }
 
 type SaveCallback = () => SaveData
@@ -85,6 +88,7 @@ function createEmptySaveData(): SaveData {
         progression: createEmptyProgressionData(),
         autobattler: createEmptyAutobattlerData(),
         veil: createEmptyVeilData(),
+        cost: createEmptyCostData(),
     }
 }
 

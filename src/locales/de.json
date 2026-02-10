@@ -1071,17 +1071,33 @@
             "name": "Y2K-Überlebender",
             "description": "Habe eine Sitzung, die 30 Minuten läuft."
         },
-        "big-spender": {
-            "name": "Geldmacher",
-            "description": "Verursache normalisierte Sitzungskosten von $0,001."
+        "cost-1": {
+            "name": "Aufs Haus",
+            "description": "Hey hey, willkommen. Mi casa su casa."
         },
-        "whale": {
-            "name": "Großverdiener",
-            "description": "Verursache normalisierte Sitzungskosten von $0,002."
+        "cost-2": {
+            "name": "Bedien dich",
+            "description": "Mach es dir gemütlich. Ich bestehe darauf."
         },
-        "leviathan": {
-            "name": "Leviathan",
-            "description": "Verursache normalisierte Sitzungskosten von $0,003."
+        "cost-3": {
+            "name": "Auf Rechnung",
+            "description": "Dir ist schon klar, dass das nicht umsonst ist, oder?"
+        },
+        "cost-4": {
+            "name": "Schmarotzer",
+            "description": "Hey Champ, hast du schon mal über das nachgedacht, worüber wir gesprochen haben wegen eines Jobs?"
+        },
+        "cost-5": {
+            "name": "Hausbesetzerrecht",
+            "description": "Du hast 7 Marktticks, um zu räumen."
+        },
+        "cost-6": {
+            "name": "Mäzen der Künste",
+            "description": "Danke für deinen großzügigen Beitrag zu meinen Vercel- und Upstash-Rechnungen."
+        },
+        "cost-7": {
+            "name": "Ruin des Gönners",
+            "description": "Ich werde dir eine Rechnung schicken."
         },
         "qa-inspector": {
             "name": "Läuft bei mir",
