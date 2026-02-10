@@ -1,3 +1,9 @@
+## [2.14.0](https://github.com/borgesius/dana-dzik/compare/v2.13.0...v2.14.0) (2026-02-10)
+
+### Features
+
+* stats for achievs and lifetime cost view ([#68](https://github.com/borgesius/dana-dzik/issues/68)) ([0608f43](https://github.com/borgesius/dana-dzik/commit/0608f43203f64ac76abbf665589861faecd689bb))
+
 ## [2.13.0](https://github.com/borgesius/dana-dzik/compare/v2.12.0...v2.13.0) (2026-02-10)
 
 ### Features
