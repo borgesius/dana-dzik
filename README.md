@@ -85,7 +85,7 @@ Idle commodity trading simulator. Tick-based price simulation (trend/volatility/
 
 ### Pinball
 
-2D pinball with custom physics engine. Circle-line/circle-circle collision detection, 4 substeps per frame. Canvas renderer. Flippers, bumpers, targets, launcher with charge mechanic. 3-ball lives, high score persistence. Not very good.
+2D pinball with custom physics engine. Circle-line/circle-circle collision detection, 4 substeps per frame. Canvas renderer. Flippers, bumpers, targets, launcher with charge mechanic. 3-ball lives, high score persistence.
 
 - [`src/lib/pinball/PinballGame.ts`](src/lib/pinball/PinballGame.ts) — game loop
 - [`src/lib/pinball/physics.ts`](src/lib/pinball/physics.ts) — vector math, collision resolution
