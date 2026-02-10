@@ -1071,17 +1071,33 @@
             "name": "Y2Kサバイバー",
             "description": "セッションを30分間維持する。"
         },
-        "big-spender": {
-            "name": "金の動き",
-            "description": "正規化セッションコストを$0.001まで上げる。"
+        "cost-1": {
+            "name": "おごりだよ",
+            "description": "いらっしゃい。くつろいでね。"
         },
-        "whale": {
-            "name": "札束追い",
-            "description": "正規化セッションコストを$0.002まで上げる。"
+        "cost-2": {
+            "name": "ご自由にどうぞ",
+            "description": "楽にしてくれ。遠慮なく。"
         },
-        "leviathan": {
-            "name": "リヴァイアサン",
-            "description": "正規化セッションコストを$0.003まで上げる。"
+        "cost-3": {
+            "name": "ツケにしとく",
+            "description": "これ、タダじゃないって知ってる？"
+        },
+        "cost-4": {
+            "name": "居候",
+            "description": "ねえチャンプ、就職の話、考えてくれた？"
+        },
+        "cost-5": {
+            "name": "居座り権",
+            "description": "市場ティック7回以内に退去せよ。"
+        },
+        "cost-6": {
+            "name": "芸術のパトロン",
+            "description": "VercelとUpstashの請求書への寛大な貢献に感謝します。"
+        },
+        "cost-7": {
+            "name": "恩人の破滅",
+            "description": "請求書をお送りします。"
         },
         "qa-inspector": {
             "name": "俺の環境では動く",

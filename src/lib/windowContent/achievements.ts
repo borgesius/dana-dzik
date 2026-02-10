@@ -1,6 +1,10 @@
 import { getAchievementManager } from "../achievements/AchievementManager"
 import { ACHIEVEMENTS } from "../achievements/definitions"
-import type { AchievementDef, TieredGroup } from "../achievements/types"
+import type {
+    AchievementDef,
+    AchievementId,
+    TieredGroup,
+} from "../achievements/types"
 import {
     type AchievementCountsData,
     fetchAchievementCounts,
@@ -22,6 +26,7 @@ const TIERED_GROUP_LABELS: Record<TieredGroup, string> = {
     collector: "Collector",
     lunar: "Lunar Cycle",
     ascension: "Ascension",
+    cost: "Cost",
 }
 
 function renderTierStars(group: TieredGroup, defs: AchievementDef[]): string {
@@ -171,7 +176,7 @@ export function renderAchievementsWindow(): void {
                 }
 
                 html += `
-                    <div class="achievement-card ${isEarned ? "earned" : "unearned"}">
+                    <div class="achievement-card ${isEarned ? "earned" : "unearned"}" data-achievement-id="${def.id}">
                         <div class="achievement-card-icon ${isEarned ? "" : "unearned"}">${displayIcon}</div>
                         <div class="achievement-card-info">
                             <div class="achievement-card-name">${name}</div>
@@ -200,4 +205,25 @@ export function renderAchievementsWindow(): void {
     })
 
     getAchievementManager().onEarned(() => render())
+}
+
+// ── Scroll-to support (called from AchievementToast) ────────────────────
+
+const HIGHLIGHT_DURATION_MS = 1500
+
+/**
+ * Scroll the achievements window to a specific achievement card and
+ * briefly highlight it. Safe to call even if the window isn't open yet.
+ */
+export function scrollToAchievement(id: AchievementId): void {
+    const card = document.querySelector<HTMLElement>(
+        `.achievement-card[data-achievement-id="${id}"]`
+    )
+    if (!card) return
+
+    card.scrollIntoView({ behavior: "smooth", block: "center" })
+    card.classList.add("achievement-card-highlight")
+    setTimeout(() => {
+        card.classList.remove("achievement-card-highlight")
+    }, HIGHLIGHT_DURATION_MS)
 }

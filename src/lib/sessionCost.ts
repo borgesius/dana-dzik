@@ -6,9 +6,40 @@ const COST_PER_INVOCATION = 0.000006
 const COST_PER_REDIS_COMMAND = 0.000002
 const COST_PER_BYTE = 0.0004 / (1024 * 1024)
 
-export const BIG_SPENDER_THRESHOLD = 0.001
-export const WHALE_THRESHOLD = 0.002
-export const LEVIATHAN_THRESHOLD = 0.003
+// ─── Cost Achievement Tiers ─────────────────────────────────────────────────
+
+export interface CostTier {
+    threshold: number
+    slug: string
+}
+
+export const COST_TIERS: readonly CostTier[] = [
+    { threshold: 0.001, slug: "cost-1" },
+    { threshold: 0.005, slug: "cost-2" },
+    { threshold: 0.01, slug: "cost-3" },
+    { threshold: 0.025, slug: "cost-4" },
+    { threshold: 0.05, slug: "cost-5" },
+    { threshold: 0.1, slug: "cost-6" },
+    { threshold: 0.25, slug: "cost-7" },
+] as const
+
+// ─── Save Data ──────────────────────────────────────────────────────────────
+
+export interface CostSaveData {
+    lifetimeApiCalls: Record<string, number>
+    lifetimeSampledIntents: Record<string, number>
+    lifetimeBandwidthBytes: number
+}
+
+export function createEmptyCostData(): CostSaveData {
+    return {
+        lifetimeApiCalls: {},
+        lifetimeSampledIntents: {},
+        lifetimeBandwidthBytes: 0,
+    }
+}
+
+// ─── Types ──────────────────────────────────────────────────────────────────
 
 interface ApiCostEntry {
     redisCommands: number
@@ -44,11 +75,12 @@ interface CostLineItem {
     sampled: boolean
 }
 
-interface CostBreakdown {
+export interface CostBreakdown {
     items: CostLineItem[]
     bandwidthBytes: number
     bandwidthCost: number
     totalCost: number
+    lifetimeCost: number
     isSampled: boolean
     totalSampledIntents: number
 }
@@ -63,28 +95,27 @@ const SAMPLED_EVENT_LABELS: Record<string, string> = {
     perf: "Perf Metrics",
 }
 
+// ─── Tracker ────────────────────────────────────────────────────────────────
+
 export class SessionCostTracker {
-    private apiCalls: Map<string, number> = new Map()
-    private sampledIntents: Map<string, number> = new Map()
-    private bandwidthBytes = 0
+    // Session-only counters (reset each page load)
+    private sessionApiCalls: Map<string, number> = new Map()
+    private sessionSampledIntents: Map<string, number> = new Map()
+    private sessionBandwidthBytes = 0
+
+    // Lifetime counters (restored from save, accumulated across sessions)
+    private prevLifetimeApiCalls: Map<string, number> = new Map()
+    private prevLifetimeSampledIntents: Map<string, number> = new Map()
+    private prevLifetimeBandwidthBytes = 0
+
     private isSampled = false
     private listeners: CostUpdateCallback[] = []
-    private bigSpenderThreshold: number
-    private whaleThreshold: number
-    private leviathanThreshold: number
-    private bigSpenderFired = false
-    private whaleFired = false
-    private leviathanFired = false
+    private onDirty: (() => void) | null = null
 
-    constructor(
-        bigSpenderThreshold: number,
-        whaleThreshold: number,
-        leviathanThreshold: number
-    ) {
-        this.bigSpenderThreshold = bigSpenderThreshold
-        this.whaleThreshold = whaleThreshold
-        this.leviathanThreshold = leviathanThreshold
+    // Track which tiers have already fired events
+    private firedTiers: Set<string> = new Set()
 
+    constructor() {
         try {
             this.isSampled = isClientSampled(getVisitorId())
         } catch {
@@ -95,6 +126,63 @@ export class SessionCostTracker {
         this.measureBandwidth()
         this.listenForAnalyticsIntents()
     }
+
+    public setDirtyCallback(fn: () => void): void {
+        this.onDirty = fn
+    }
+
+    // ── Serialization ─────────────────────────────────────────────────────
+
+    public serialize(): CostSaveData {
+        const lifetimeApiCalls: Record<string, number> = {}
+        // Merge previous lifetime + current session
+        for (const [k, v] of this.prevLifetimeApiCalls) {
+            lifetimeApiCalls[k] = v
+        }
+        for (const [k, v] of this.sessionApiCalls) {
+            lifetimeApiCalls[k] = (lifetimeApiCalls[k] ?? 0) + v
+        }
+
+        const lifetimeSampledIntents: Record<string, number> = {}
+        for (const [k, v] of this.prevLifetimeSampledIntents) {
+            lifetimeSampledIntents[k] = v
+        }
+        for (const [k, v] of this.sessionSampledIntents) {
+            lifetimeSampledIntents[k] = (lifetimeSampledIntents[k] ?? 0) + v
+        }
+
+        return {
+            lifetimeApiCalls,
+            lifetimeSampledIntents,
+            lifetimeBandwidthBytes:
+                this.prevLifetimeBandwidthBytes + this.sessionBandwidthBytes,
+        }
+    }
+
+    public deserialize(data: CostSaveData | undefined): void {
+        if (!data) return
+
+        this.prevLifetimeApiCalls.clear()
+        if (data.lifetimeApiCalls) {
+            for (const [k, v] of Object.entries(data.lifetimeApiCalls)) {
+                this.prevLifetimeApiCalls.set(k, v)
+            }
+        }
+
+        this.prevLifetimeSampledIntents.clear()
+        if (data.lifetimeSampledIntents) {
+            for (const [k, v] of Object.entries(data.lifetimeSampledIntents)) {
+                this.prevLifetimeSampledIntents.set(k, v)
+            }
+        }
+
+        this.prevLifetimeBandwidthBytes = data.lifetimeBandwidthBytes ?? 0
+
+        // Re-emit so the widget and tier checks pick up restored data
+        this.emit()
+    }
+
+    // ── Fetch Interception ────────────────────────────────────────────────
 
     private interceptFetch(): void {
         const originalFetch = window.fetch
@@ -160,20 +248,22 @@ export class SessionCostTracker {
     }
 
     private recordSampledIntent(eventType: string): void {
-        const current = this.sampledIntents.get(eventType) ?? 0
-        this.sampledIntents.set(eventType, current + 1)
+        const current = this.sessionSampledIntents.get(eventType) ?? 0
+        this.sessionSampledIntents.set(eventType, current + 1)
         this.emit()
     }
 
     private recordApiCall(pathname: string): void {
-        const current = this.apiCalls.get(pathname) ?? 0
-        this.apiCalls.set(pathname, current + 1)
+        const current = this.sessionApiCalls.get(pathname) ?? 0
+        this.sessionApiCalls.set(pathname, current + 1)
         this.emit()
     }
 
     public recordNonCriticalAnalyticsIntent(eventType = "unknown"): void {
         this.recordSampledIntent(eventType)
     }
+
+    // ── Bandwidth ─────────────────────────────────────────────────────────
 
     private measureBandwidth(): void {
         if (typeof PerformanceObserver === "undefined") return
@@ -182,7 +272,7 @@ export class SessionCostTracker {
             for (const entry of entries) {
                 const resource = entry as PerformanceResourceTiming
                 if (resource.transferSize > 0) {
-                    this.bandwidthBytes += resource.transferSize
+                    this.sessionBandwidthBytes += resource.transferSize
                 }
             }
             this.emit()
@@ -193,7 +283,7 @@ export class SessionCostTracker {
             for (const entry of existing) {
                 const resource = entry as PerformanceResourceTiming
                 if (resource.transferSize > 0) {
-                    this.bandwidthBytes += resource.transferSize
+                    this.sessionBandwidthBytes += resource.transferSize
                 }
             }
         } catch {
@@ -212,11 +302,22 @@ export class SessionCostTracker {
         this.emit()
     }
 
-    public getBreakdown(): CostBreakdown {
+    // ── Cost Calculation ──────────────────────────────────────────────────
+
+    private computeCostForCounters(
+        apiCalls: Map<string, number>,
+        sampledIntents: Map<string, number>,
+        bandwidthBytes: number
+    ): {
+        items: CostLineItem[]
+        bandwidthCost: number
+        total: number
+        totalSampledIntents: number
+    } {
         const items: CostLineItem[] = []
 
         for (const [pathname, entry] of Object.entries(API_COST_MAP)) {
-            const count = this.apiCalls.get(pathname) ?? 0
+            const count = apiCalls.get(pathname) ?? 0
             if (count === 0) continue
 
             const cost =
@@ -238,7 +339,7 @@ export class SessionCostTracker {
                 COST_PER_REDIS_COMMAND
         let totalSampledIntents = 0
 
-        for (const [eventType, count] of this.sampledIntents.entries()) {
+        for (const [eventType, count] of sampledIntents.entries()) {
             totalSampledIntents += count
             const normalizedCount = count * sampleRate
             const cost = normalizedCount * costPerSampledCall
@@ -251,17 +352,47 @@ export class SessionCostTracker {
             })
         }
 
-        const bandwidthCost = this.bandwidthBytes * COST_PER_BYTE
-        const totalCost =
+        const bandwidthCost = bandwidthBytes * COST_PER_BYTE
+        const total =
             items.reduce((sum, item) => sum + item.cost, 0) + bandwidthCost
 
+        return { items, bandwidthCost, total, totalSampledIntents }
+    }
+
+    public getBreakdown(): CostBreakdown {
+        // Session cost (current page load only)
+        const session = this.computeCostForCounters(
+            this.sessionApiCalls,
+            this.sessionSampledIntents,
+            this.sessionBandwidthBytes
+        )
+
+        // Lifetime cost (previous sessions + current session)
+        const mergedApiCalls = new Map(this.prevLifetimeApiCalls)
+        for (const [k, v] of this.sessionApiCalls) {
+            mergedApiCalls.set(k, (mergedApiCalls.get(k) ?? 0) + v)
+        }
+        const mergedSampledIntents = new Map(this.prevLifetimeSampledIntents)
+        for (const [k, v] of this.sessionSampledIntents) {
+            mergedSampledIntents.set(k, (mergedSampledIntents.get(k) ?? 0) + v)
+        }
+        const mergedBandwidth =
+            this.prevLifetimeBandwidthBytes + this.sessionBandwidthBytes
+
+        const lifetime = this.computeCostForCounters(
+            mergedApiCalls,
+            mergedSampledIntents,
+            mergedBandwidth
+        )
+
         return {
-            items,
-            bandwidthBytes: this.bandwidthBytes,
-            bandwidthCost,
-            totalCost,
+            items: session.items,
+            bandwidthBytes: this.sessionBandwidthBytes,
+            bandwidthCost: session.bandwidthCost,
+            totalCost: session.total,
+            lifetimeCost: lifetime.total,
             isSampled: this.isSampled,
-            totalSampledIntents,
+            totalSampledIntents: session.totalSampledIntents,
         }
     }
 
@@ -269,48 +400,44 @@ export class SessionCostTracker {
         this.listeners.push(fn)
     }
 
+    // ── Emit & Tier Checks ────────────────────────────────────────────────
+
     private emit(): void {
         const breakdown = this.getBreakdown()
         for (const fn of this.listeners) {
             fn(breakdown)
         }
 
-        if (
-            !this.bigSpenderFired &&
-            breakdown.totalCost >= this.bigSpenderThreshold
-        ) {
-            this.bigSpenderFired = true
-            emitAppEvent("session-cost:big-spender")
+        // Check cost tiers against lifetime cost
+        for (const tier of COST_TIERS) {
+            if (
+                !this.firedTiers.has(tier.slug) &&
+                breakdown.lifetimeCost >= tier.threshold
+            ) {
+                this.firedTiers.add(tier.slug)
+                type CostEvent =
+                    | "session-cost:cost-1"
+                    | "session-cost:cost-2"
+                    | "session-cost:cost-3"
+                    | "session-cost:cost-4"
+                    | "session-cost:cost-5"
+                    | "session-cost:cost-6"
+                    | "session-cost:cost-7"
+                emitAppEvent(`session-cost:${tier.slug}` as CostEvent)
+            }
         }
 
-        if (!this.whaleFired && breakdown.totalCost >= this.whaleThreshold) {
-            this.whaleFired = true
-            emitAppEvent("session-cost:whale")
-        }
-
-        if (
-            !this.leviathanFired &&
-            breakdown.totalCost >= this.leviathanThreshold
-        ) {
-            this.leviathanFired = true
-            emitAppEvent("session-cost:leviathan")
-        }
+        this.onDirty?.()
     }
 }
 
+// ─── Singleton ──────────────────────────────────────────────────────────────
+
 let instance: SessionCostTracker | null = null
 
-export function initSessionCostTracker(
-    bigSpenderThreshold: number,
-    whaleThreshold: number,
-    leviathanThreshold: number
-): SessionCostTracker {
+export function initSessionCostTracker(): SessionCostTracker {
     if (!instance) {
-        instance = new SessionCostTracker(
-            bigSpenderThreshold,
-            whaleThreshold,
-            leviathanThreshold
-        )
+        instance = new SessionCostTracker()
     }
     return instance
 }

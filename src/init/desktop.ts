@@ -30,6 +30,7 @@ import { getProgressionManager } from "../lib/progression/ProgressionManager"
 import { wireProgression } from "../lib/progression/wiring"
 import { Router } from "../lib/router"
 import { type SaveData, saveManager } from "../lib/saveManager"
+import { getSessionCostTracker } from "../lib/sessionCost"
 import { SystemCrashHandler } from "../lib/systemCrash"
 import { getSharedFilesystem } from "../lib/terminal/filesystemBuilder"
 import { diffFilesystem } from "../lib/terminal/filesystemDiff"
@@ -89,6 +90,7 @@ export function initDesktop(app: HTMLElement): void {
             autobattler: getCollectionManager().serialize(),
             cosmetics: getCosmeticManager().serialize(),
             veil: getVeilManager().serialize(),
+            cost: getSessionCostTracker()?.serialize(),
         }
     })
 

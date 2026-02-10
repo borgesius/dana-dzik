@@ -3,6 +3,7 @@ import { ACHIEVEMENT_MAP } from "../lib/achievements/definitions"
 import type { AchievementId } from "../lib/achievements/types"
 import { emitAppEvent } from "../lib/events"
 import { getLocaleManager } from "../lib/localeManager"
+import { scrollToAchievement } from "../lib/windowContent/achievements"
 import { getToastManager } from "./ToastManager"
 
 const TOAST_DURATION_MS = 6000
@@ -46,6 +47,11 @@ export class AchievementToast {
         toast.addEventListener("click", () => {
             emitAppEvent("terminal:open-window", { windowId: "achievements" })
             tm.dismiss(toast)
+            // Window is now open and rendered (dispatchEvent is sync).
+            // Wait one frame for layout, then scroll to the card.
+            requestAnimationFrame(() => {
+                scrollToAchievement(id)
+            })
         })
 
         tm.push(toast)

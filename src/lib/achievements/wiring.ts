@@ -697,15 +697,13 @@ function wireSessionTimer(mgr: AchievementManager): void {
 }
 
 function wireSessionCost(mgr: AchievementManager): void {
-    onAppEvent("session-cost:big-spender", () => {
-        mgr.earn("big-spender")
-    })
-    onAppEvent("session-cost:whale", () => {
-        mgr.earn("whale")
-    })
-    onAppEvent("session-cost:leviathan", () => {
-        mgr.earn("leviathan")
-    })
+    onAppEvent("session-cost:cost-1", () => mgr.earn("cost-1"))
+    onAppEvent("session-cost:cost-2", () => mgr.earn("cost-2"))
+    onAppEvent("session-cost:cost-3", () => mgr.earn("cost-3"))
+    onAppEvent("session-cost:cost-4", () => mgr.earn("cost-4"))
+    onAppEvent("session-cost:cost-5", () => mgr.earn("cost-5"))
+    onAppEvent("session-cost:cost-6", () => mgr.earn("cost-6"))
+    onAppEvent("session-cost:cost-7", () => mgr.earn("cost-7"))
 }
 
 function wireQAReports(mgr: AchievementManager): void {
