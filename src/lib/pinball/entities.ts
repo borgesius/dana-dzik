@@ -23,13 +23,16 @@ export class Ball {
         this.active = false
     }
 
-    public update(): void {
+    public update(dt: number = 1): void {
         if (!this.active) return
 
-        this.velocity = new Vector2D(this.velocity.x, this.velocity.y + GRAVITY)
-        this.velocity = this.velocity.multiply(FRICTION)
+        this.velocity = new Vector2D(
+            this.velocity.x,
+            this.velocity.y + GRAVITY * dt
+        )
+        this.velocity = this.velocity.multiply(Math.pow(FRICTION, dt))
         this.velocity = clampVelocity(this.velocity)
-        this.position = this.position.add(this.velocity)
+        this.position = this.position.add(this.velocity.multiply(dt))
     }
 
     public reset(x: number, y: number): void {
@@ -82,9 +85,9 @@ export class Bumper {
         return { hit: false, points: 0 }
     }
 
-    public update(): void {
+    public update(dt: number = 1): void {
         if (this.hitAnimation > 0) {
-            this.hitAnimation = Math.max(0, this.hitAnimation - 0.08)
+            this.hitAnimation = Math.max(0, this.hitAnimation - 0.08 * dt)
         }
     }
 }
@@ -165,14 +168,14 @@ export class Flipper {
         )
     }
 
-    public update(): void {
+    public update(dt: number = 1): void {
         const targetAngle = this.isPressed ? this.activeAngle : this.restAngle
         const diff = targetAngle - this.angle
         const speed = 0.35
 
         if (Math.abs(diff) > 0.02) {
             this.angularVelocity = diff * speed
-            this.angle += this.angularVelocity
+            this.angle += this.angularVelocity * dt
         } else {
             this.angle = targetAngle
             this.angularVelocity = 0
@@ -275,15 +278,57 @@ export class Target {
         return { hit: false, points: 0 }
     }
 
-    public update(): void {
+    public update(dt: number = 1): void {
         if (this.hitAnimation > 0) {
-            this.hitAnimation = Math.max(0, this.hitAnimation - 0.04)
+            this.hitAnimation = Math.max(0, this.hitAnimation - 0.04 * dt)
         }
     }
 
     public reset(): void {
         this.isHit = false
         this.hitAnimation = 0
+    }
+}
+
+export class OneWayWall extends Wall {
+    public blockNormal: Vector2D
+
+    constructor(
+        x1: number,
+        y1: number,
+        x2: number,
+        y2: number,
+        blockNormalX: number,
+        blockNormalY: number,
+        damping: number = 0.65
+    ) {
+        super(x1, y1, x2, y2, damping)
+        this.blockNormal = new Vector2D(blockNormalX, blockNormalY).normalize()
+    }
+
+    public override checkCollision(ball: Ball): boolean {
+        const collision = circleLineCollision(
+            ball.position,
+            ball.radius,
+            this.start,
+            this.end
+        )
+
+        if (collision.collided) {
+            if (collision.normal.dot(this.blockNormal) > 0) {
+                ball.position = ball.position.add(
+                    collision.normal.multiply(collision.overlap + 0.5)
+                )
+                ball.velocity = reflectVelocity(
+                    ball.velocity,
+                    collision.normal,
+                    this.damping
+                )
+                return true
+            }
+        }
+
+        return false
     }
 }
 
@@ -309,9 +354,9 @@ export class Launcher {
         this.power = 6
     }
 
-    public update(): void {
+    public update(dt: number = 1): void {
         if (this.isCharging && this.power < this.maxPower) {
-            this.power += 0.12
+            this.power += 0.12 * dt
         }
     }
 

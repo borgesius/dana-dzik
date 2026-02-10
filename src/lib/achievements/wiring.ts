@@ -522,9 +522,11 @@ function wirePinballEvents(mgr: AchievementManager): void {
     onAppEvent("pinball:gameover", (detail) => {
         const { score, allTargetsHit } = detail
 
-        if (score >= 1000) mgr.earn("pinball-wizard")
-        if (score >= 5000) mgr.earn("high-roller")
-        if (score >= 10000) mgr.earn("bounty-hunter")
+        if (score >= 5000) mgr.earn("pinball-wizard")
+        if (score >= 15000) mgr.earn("high-roller")
+        if (score >= 50000) mgr.earn("bounty-hunter")
+        if (score >= 150000) mgr.earn("dead-eye")
+        if (score >= 500000) mgr.earn("most-wanted")
         if (allTargetsHit) mgr.earn("target-practice")
     })
 }

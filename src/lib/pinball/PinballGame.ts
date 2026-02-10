@@ -1,6 +1,15 @@
 import { emitAppEvent } from "../events"
-import { Ball, Bumper, Flipper, Launcher, Target, Wall } from "./entities"
-import { LOGICAL_HEIGHT, SUBSTEPS } from "./physics"
+import {
+    Ball,
+    Bumper,
+    Flipper,
+    Launcher,
+    OneWayWall,
+    Target,
+    Wall,
+} from "./entities"
+import { ParticleSystem } from "./particles"
+import { LOGICAL_HEIGHT, LOGICAL_WIDTH, SUBSTEPS } from "./physics"
 import { PinballRenderer } from "./renderer"
 
 export type GameState = "idle" | "launching" | "playing" | "gameOver"
@@ -15,8 +24,29 @@ const BALL_START_X = 300
 const BALL_START_Y = 420
 const BALL_RADIUS = 8
 
+const COWBOY_DAN_QUOTES = [
+    "COWBOY DAN: I WANT MORE!!!!!",
+    "COWBOY DAN: GONNA START A WAR!!!",
+    "COWBOY DAN: I'M A MAJOR PLAYER IN THE COWBOY SCENE!!!",
+    "COWBOY DAN: FIRING MY RIFLE IN THE SKY!!!",
+]
+const FEVER_QUOTE = "COWBOY DAN: GOD IF I HAVE TO DIE YOU WILL HAVE TO DIE!!!"
+
+const TICKER_SPEED = 1.2
+const TICKER_PAUSE_FRAMES = 120
+
 const DRAIN_Y = LOGICAL_HEIGHT + BALL_RADIUS + 5
 const BALL_SAVE_DURATION = 180
+
+// Game speed scales asymptotically: 0.5x at 0 pts → 1.0x at ~200k → 1.25x max
+const GAME_SPEED_MIN = 0.5
+const GAME_SPEED_MAX = 1.25
+const GAME_SPEED_K = Math.log(3) / 200_000
+
+const COMBO_TIMEOUT = 90
+const FEVER_DURATION = 600
+const FEVER_COMBO_THRESHOLD = 10
+const ALL_TARGETS_BONUS = 5000
 
 export class PinballGame {
     private canvas: HTMLCanvasElement
@@ -36,8 +66,37 @@ export class PinballGame {
     private _ballsRemaining: number = 3
     private _gameState: GameState = "idle"
     private ballSaveFrames: number = 0
+    private launcherSettleFrames: number = 0
 
     private audioManager: AudioManager | null = null
+
+    private tickerMessage: string = ""
+    private tickerX: number = 0
+    private tickerPauseFrames: number = 0
+    private tickerQuoteIndex: number = -1
+
+    // Screen shake
+    private shakeIntensity: number = 0
+    private shakeDuration: number = 0
+    private shakeX: number = 0
+    private shakeY: number = 0
+
+    // Combo system
+    private comboCount: number = 0
+    private comboTimer: number = 0
+    private _multiplier: number = 1
+
+    // Fever mode
+    private _feverActive: boolean = false
+    private _feverTimer: number = 0
+    private _feverMaxTimer: number = FEVER_DURATION
+
+    // Particles
+    private particleSystem: ParticleSystem = new ParticleSystem()
+    private ballTrailCounter: number = 0
+
+    // Flash effect (all-targets)
+    private flashAlpha: number = 0
 
     private handleKeyDown: ((e: KeyboardEvent) => void) | null = null
     private handleKeyUp: ((e: KeyboardEvent) => void) | null = null
@@ -78,6 +137,26 @@ export class PinballGame {
         return this.ballSaveFrames > 0
     }
 
+    public get multiplier(): number {
+        return this._multiplier
+    }
+
+    public get feverActive(): boolean {
+        return this._feverActive
+    }
+
+    public get feverProgress(): number {
+        return this._feverTimer / this._feverMaxTimer
+    }
+
+    private get gameSpeed(): number {
+        return (
+            GAME_SPEED_MAX -
+            (GAME_SPEED_MAX - GAME_SPEED_MIN) *
+                Math.exp(-GAME_SPEED_K * this._score)
+        )
+    }
+
     public getBall(): Ball {
         return this.ball
     }
@@ -96,6 +175,10 @@ export class PinballGame {
 
     public getWalls(): Wall[] {
         return this.walls
+    }
+
+    public getParticleSystem(): ParticleSystem {
+        return this.particleSystem
     }
 
     private loadHighScore(): void {
@@ -147,21 +230,22 @@ export class PinballGame {
 
         this.walls.push(new Wall(325, 445, 270, 80, 0.95))
         this.walls.push(new Wall(270, 80, 245, 55, 0.9))
+        this.walls.push(new OneWayWall(248, 100, 248, 430, -1, 0))
         this.walls.push(new Wall(248, 430, 325, 445, 0.7))
 
-        this.walls.push(new Wall(15, 410, 75, 452))
-        this.walls.push(new Wall(246, 385, 182, 446))
+        this.walls.push(new Wall(15, 410, 72, 452))
+        this.walls.push(new Wall(240, 400, 205, 448))
 
-        this.walls.push(new Wall(22, 330, 50, 398, 1.3))
-        this.walls.push(new Wall(50, 398, 22, 390, 1.3))
+        this.walls.push(new Wall(22, 330, 48, 395, 1.3))
+        this.walls.push(new Wall(48, 395, 22, 385, 1.3))
 
-        this.walls.push(new Wall(232, 330, 212, 398, 1.3))
-        this.walls.push(new Wall(212, 398, 232, 390, 1.3))
+        this.walls.push(new Wall(235, 330, 215, 395, 1.3))
+        this.walls.push(new Wall(215, 395, 235, 385, 1.3))
 
         const flipperY = 454
         this.flippers = [
-            new Flipper(85, flipperY, 58, "left"),
-            new Flipper(210, flipperY, 58, "right"),
+            new Flipper(80, flipperY, 68, "left"),
+            new Flipper(215, flipperY, 68, "right"),
         ]
 
         this.bumpers = [
@@ -265,6 +349,15 @@ export class PinballGame {
         this._gameState = "playing"
         this._score = 0
         this._ballsRemaining = 3
+        this.comboCount = 0
+        this.comboTimer = 0
+        this._multiplier = 1
+        this._feverActive = false
+        this._feverTimer = 0
+        this.shakeIntensity = 0
+        this.shakeDuration = 0
+        this.flashAlpha = 0
+        this.particleSystem.clear()
         this.targets.forEach((t) => t.reset())
         this.resetBallPosition()
         this.canvas.focus()
@@ -283,6 +376,165 @@ export class PinballGame {
         return this.ball.position.y > DRAIN_Y
     }
 
+    private triggerShake(intensity: number, duration: number): void {
+        if (intensity > this.shakeIntensity) {
+            this.shakeIntensity = intensity
+            this.shakeDuration = duration
+        }
+    }
+
+    private updateShake(dt: number): void {
+        if (this.shakeDuration > 0) {
+            const t = this.shakeDuration / 15 // normalized decay
+            this.shakeX = (Math.random() - 0.5) * 2 * this.shakeIntensity * t
+            this.shakeY = (Math.random() - 0.5) * 2 * this.shakeIntensity * t
+            this.shakeDuration -= dt
+        } else {
+            this.shakeX = 0
+            this.shakeY = 0
+            this.shakeIntensity = 0
+        }
+    }
+
+    private getComboMultiplier(): number {
+        if (this.comboCount >= 10) return 5
+        if (this.comboCount >= 6) return 3
+        if (this.comboCount >= 3) return 2
+        return 1
+    }
+
+    private registerHit(
+        basePoints: number,
+        x: number,
+        y: number,
+        color: string,
+        particleCount: number
+    ): void {
+        this.comboCount++
+        this.comboTimer = COMBO_TIMEOUT
+
+        const prevMultiplier = this._multiplier
+        this._multiplier = this.getComboMultiplier()
+
+        const feverBonus = this._feverActive ? 5 : 1
+        const totalMultiplier = this._multiplier * feverBonus
+        const points = basePoints * totalMultiplier
+        this._score += points
+
+        // Floating text
+        const label =
+            totalMultiplier > 1
+                ? `+${points} x${totalMultiplier}`
+                : `+${points}`
+        this.particleSystem.addFloatingText(x, y - 10, label, color)
+
+        // Particle burst
+        this.particleSystem.burst(x, y, particleCount, color, 2.5, 2.5, 25)
+
+        // Screen shake scales with multiplier
+        const shakeBase = particleCount > 8 ? 3 : 2
+        this.triggerShake(
+            Math.min(shakeBase + (this._multiplier - 1), 6),
+            8 + this._multiplier * 2
+        )
+
+        // Check fever activation
+        if (
+            !this._feverActive &&
+            this.comboCount >= FEVER_COMBO_THRESHOLD &&
+            prevMultiplier < 5
+        ) {
+            this.activateFever()
+        }
+    }
+
+    private activateFever(): void {
+        this._feverActive = true
+        this._feverTimer = FEVER_DURATION
+        this.triggerShake(5, 15)
+
+        // Force the fever quote onto the ticker
+        this.tickerMessage = FEVER_QUOTE
+        this.tickerX = LOGICAL_WIDTH + 10
+        this.tickerPauseFrames = 0
+
+        // Big celebratory burst from center
+        const cx = LOGICAL_WIDTH / 2
+        const cy = LOGICAL_HEIGHT / 2
+        this.particleSystem.burst(cx, cy, 20, "#FF4444", 3.5, 3, 35)
+        this.particleSystem.burst(cx, cy, 15, "#FF8800", 3, 2.5, 30)
+    }
+
+    private updateCombo(dt: number): void {
+        if (this.comboTimer > 0) {
+            this.comboTimer -= dt
+        } else if (this.comboCount > 0) {
+            this.comboCount = 0
+            this._multiplier = 1
+        }
+    }
+
+    private updateFever(dt: number): void {
+        if (!this._feverActive) return
+        this._feverTimer -= dt
+        if (this._feverTimer <= 0) {
+            this._feverActive = false
+            this._feverTimer = 0
+        }
+    }
+
+    private updateBallTrail(): void {
+        if (!this.ball.active) return
+        const speed = this.ball.velocity.magnitude()
+        const threshold = this._feverActive ? 3 : 6
+        if (speed > threshold) {
+            this.ballTrailCounter++
+            const interval = this._feverActive ? 1 : 2
+            if (this.ballTrailCounter % interval === 0) {
+                const color = this._feverActive ? "#FF6633" : "#AAAAAA"
+                const size = this._feverActive ? 2.5 : 1.5
+                this.particleSystem.trail(
+                    this.ball.position.x,
+                    this.ball.position.y,
+                    color,
+                    size,
+                    this._feverActive ? 20 : 12
+                )
+            }
+        } else {
+            this.ballTrailCounter = 0
+        }
+    }
+
+    private updateFlash(dt: number): void {
+        if (this.flashAlpha > 0) {
+            this.flashAlpha = Math.max(0, this.flashAlpha - 0.06 * dt)
+        }
+    }
+
+    private checkAllTargets(): void {
+        if (this.targets.every((t) => t.isHit)) {
+            // Big celebration
+            const cx = LOGICAL_WIDTH / 2
+            const cy = LOGICAL_HEIGHT / 2 - 30
+            this.particleSystem.burst(cx, cy, 20, "#FFD700", 4, 3, 40)
+            this.particleSystem.burst(cx, cy, 15, "#FFFFFF", 3, 2, 30)
+            this.flashAlpha = 0.3
+            this.triggerShake(4, 12)
+
+            const feverBonus = this._feverActive ? 5 : 1
+            const points = ALL_TARGETS_BONUS * this._multiplier * feverBonus
+            this._score += points
+            this.particleSystem.addFloatingText(
+                cx,
+                cy,
+                `+${points} ALL TARGETS`,
+                "#FFFFFF",
+                70
+            )
+        }
+    }
+
     public stepPhysics(): void {
         if (
             this.paused ||
@@ -292,13 +544,15 @@ export class PinballGame {
             return
         }
 
-        this.launcher.update()
-        this.flippers.forEach((f) => f.update())
-        this.bumpers.forEach((b) => b.update())
-        this.targets.forEach((t) => t.update())
+        const speed = this.gameSpeed
+
+        this.launcher.update(speed)
+        this.flippers.forEach((f) => f.update(speed))
+        this.bumpers.forEach((b) => b.update(speed))
+        this.targets.forEach((t) => t.update(speed))
 
         for (let step = 0; step < SUBSTEPS; step++) {
-            this.ball.update()
+            this.ball.update(speed)
 
             if (!this.ball.active) continue
 
@@ -313,7 +567,13 @@ export class PinballGame {
             this.bumpers.forEach((bumper) => {
                 const result = bumper.checkCollision(this.ball)
                 if (result.hit) {
-                    this._score += result.points
+                    this.registerHit(
+                        result.points,
+                        bumper.position.x,
+                        bumper.position.y,
+                        "#FF4444",
+                        8
+                    )
                     this.playSound("pinball_bumper")
                 }
             })
@@ -321,14 +581,45 @@ export class PinballGame {
             this.targets.forEach((target) => {
                 const result = target.checkCollision(this.ball)
                 if (result.hit) {
-                    this._score += result.points
+                    this.registerHit(
+                        result.points,
+                        target.position.x,
+                        target.position.y,
+                        "#FFD700",
+                        12
+                    )
                     this.playSound("pinball_target")
+                    this.checkAllTargets()
                 }
             })
         }
 
         if (this.ballSaveFrames > 0) {
-            this.ballSaveFrames--
+            this.ballSaveFrames -= speed
+        }
+
+        this.updateCombo(speed)
+        this.updateFever(speed)
+        this.updateShake(speed)
+        this.updateBallTrail()
+        this.updateFlash(speed)
+        this.particleSystem.update(speed)
+
+        this.updateTicker()
+
+        if (
+            this.ball.active &&
+            this.ball.position.x > 248 &&
+            this.ball.position.y > 350 &&
+            this.ball.velocity.magnitude() < 1.5
+        ) {
+            this.launcherSettleFrames += speed
+            if (this.launcherSettleFrames > 45) {
+                this.ball.reset(BALL_START_X, BALL_START_Y)
+                this.launcherSettleFrames = 0
+            }
+        } else {
+            this.launcherSettleFrames = 0
         }
 
         if (this.ball.active && this.checkBallLost()) {
@@ -336,6 +627,23 @@ export class PinballGame {
                 this.resetBallPosition()
                 this.ballSaveFrames = 0
             } else {
+                // Drain effects
+                this.particleSystem.burst(
+                    this.ball.position.x,
+                    LOGICAL_HEIGHT - 10,
+                    6,
+                    "#FF6633",
+                    1.5,
+                    2,
+                    20
+                )
+                this.triggerShake(3, 10)
+                this.comboCount = 0
+                this.comboTimer = 0
+                this._multiplier = 1
+                this._feverActive = false
+                this._feverTimer = 0
+
                 this._ballsRemaining--
                 this.playSound("pinball_drain")
 
@@ -358,23 +666,86 @@ export class PinballGame {
         }
     }
 
-    private render(): void {
-        this.renderer.beginFrame()
+    private pickNextQuote(): void {
+        let nextIndex = Math.floor(Math.random() * COWBOY_DAN_QUOTES.length)
+        if (
+            nextIndex === this.tickerQuoteIndex &&
+            COWBOY_DAN_QUOTES.length > 1
+        ) {
+            nextIndex = (nextIndex + 1) % COWBOY_DAN_QUOTES.length
+        }
+        this.tickerQuoteIndex = nextIndex
+        this.tickerMessage = COWBOY_DAN_QUOTES[nextIndex]
+        this.tickerX = LOGICAL_WIDTH + 10
+    }
 
-        this.renderer.drawBackground()
+    private updateTicker(): void {
+        if (this._gameState !== "playing") return
+
+        if (!this.tickerMessage) {
+            if (this.tickerPauseFrames > 0) {
+                this.tickerPauseFrames -= this.gameSpeed
+            } else {
+                // During fever, always show the fever quote
+                if (this._feverActive) {
+                    this.tickerMessage = FEVER_QUOTE
+                    this.tickerX = LOGICAL_WIDTH + 10
+                } else {
+                    this.pickNextQuote()
+                }
+            }
+            return
+        }
+
+        this.tickerX -= TICKER_SPEED * this.gameSpeed
+
+        // Estimate text width (~6px per char at 9px font)
+        const textWidth = this.tickerMessage.length * 6
+        if (this.tickerX < -textWidth) {
+            this.tickerMessage = ""
+            this.tickerPauseFrames = TICKER_PAUSE_FRAMES
+        }
+    }
+
+    private render(): void {
+        this.renderer.beginFrame(this.shakeX, this.shakeY)
+
+        this.renderer.drawBackground(this._feverActive)
         this.walls.forEach((wall) => this.renderer.drawWall(wall))
-        this.bumpers.forEach((bumper) => this.renderer.drawBumper(bumper))
+        this.bumpers.forEach((bumper) =>
+            this.renderer.drawBumper(bumper, this._feverActive)
+        )
         this.targets.forEach((target) => this.renderer.drawTarget(target))
         this.flippers.forEach((flipper) => this.renderer.drawFlipper(flipper))
         this.renderer.drawLauncher(this.launcher)
-        this.renderer.drawBall(this.ball)
+        this.renderer.drawBall(this.ball, this._feverActive)
+
+        // Particles on top of entities
+        this.renderer.drawParticles(this.particleSystem.particles)
+        this.renderer.drawFloatingTexts(this.particleSystem.floatingTexts)
+
+        // Flash overlay (all-targets)
+        if (this.flashAlpha > 0) {
+            this.renderer.drawFlash(this.flashAlpha)
+        }
 
         this.renderer.drawScorePanel(
             this._score,
             this._highScore,
             this._ballsRemaining,
-            this._gameState
+            this._gameState,
+            this._multiplier,
+            this._feverActive,
+            this.feverProgress
         )
+
+        if (this.tickerMessage && this._gameState === "playing") {
+            this.renderer.drawCowboyDanTicker(
+                this.tickerMessage,
+                this.tickerX,
+                this._feverActive
+            )
+        }
 
         if (this._gameState === "idle") {
             this.renderer.drawMessage("WANTED", "Press SPACE or click to start")
