@@ -42,7 +42,7 @@ export class PrestigeSection {
         section.className = "prestige-section"
 
         const heading = document.createElement("h3")
-        heading.textContent = "The Bubble Pop"
+        heading.textContent = "Popping the bubble"
 
         const infoBtn = document.createElement("button")
         infoBtn.className = "prestige-info-btn"
@@ -80,7 +80,7 @@ export class PrestigeSection {
 
         this.showTooltip(
             anchor,
-            `<div class="prestige-tooltip-title">What is The Bubble Pop?</div>
+            `<div class="prestige-tooltip-title">What is popping the bubble?</div>
             <p>Popping the bubble <strong>resets</strong> your current run — cash, inventory, factories, upgrades, and employees go back to zero.</p>
             <p>In return you earn <strong>Hindsight 💎</strong>, a permanent currency used to buy upgrades that persist across runs.</p>
             <div class="prestige-tooltip-section">
@@ -190,7 +190,7 @@ export class PrestigeSection {
         if (canPrestige) {
             html += `
                 <button class="prestige-trigger-btn">
-                    Pop the Bubble (+${preview} 💎)
+                    Sell it all. Today. (+${preview} 💎)
                 </button>
             `
         } else {
