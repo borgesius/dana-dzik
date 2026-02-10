@@ -1,3 +1,9 @@
+## [2.10.0](https://github.com/borgesius/dana-dzik/compare/v2.9.2...v2.10.0) (2026-02-10)
+
+### Features
+
+* add babylon project ([d4c5e43](https://github.com/borgesius/dana-dzik/commit/d4c5e433f16b519d813a7d9f9651c3a5e920c8a0))
+
 ## [2.9.2](https://github.com/borgesius/dana-dzik/compare/v2.9.1...v2.9.2) (2026-02-10)
 
 ### Bug Fixes
