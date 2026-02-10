@@ -961,11 +961,11 @@
         },
         "pinball-wizard": {
             "name": "Magicien du Flipper",
-            "description": "Marquez 1,000 points au flipper."
+            "description": "Marquez 5 000 points au flipper."
         },
         "high-roller": {
             "name": "Flambeur",
-            "description": "Marquez 5,000 points au flipper."
+            "description": "Marquez 15 000 points au flipper."
         },
         "target-practice": {
             "name": "Tir sur Cible",
@@ -973,7 +973,15 @@
         },
         "bounty-hunter": {
             "name": "Chasseur de Primes",
-            "description": "Marquez 10,000 points au flipper."
+            "description": "Marquez 50 000 points au flipper."
+        },
+        "dead-eye": {
+            "name": "Œil de Lynx",
+            "description": "Marquez 150 000 points au flipper."
+        },
+        "most-wanted": {
+            "name": "Recherché",
+            "description": "Marquez 500 000 points au flipper."
         },
         "welt-beginner": {
             "name": "Hello World",
