@@ -158,6 +158,8 @@ export class BusinessPanel {
             this.tradeControls.render()
             this.factories.render()
             this.upgrades.render()
+            this.prestige.updateVisibility()
+            this.prestige.render()
         })
         this.game.on("portfolioChanged", () => {
             if (!this.isExpanded) return
