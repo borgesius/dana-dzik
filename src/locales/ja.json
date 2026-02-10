@@ -959,11 +959,11 @@
         },
         "pinball-wizard": {
             "name": "ピンボールの魔術師",
-            "description": "ピンボールで1,000点を獲得する。"
+            "description": "ピンボールで5,000点を獲得する。"
         },
         "high-roller": {
             "name": "ハイローラー",
-            "description": "ピンボールで5,000点を獲得する。"
+            "description": "ピンボールで15,000点を獲得する。"
         },
         "target-practice": {
             "name": "射撃練習",
@@ -971,7 +971,15 @@
         },
         "bounty-hunter": {
             "name": "バウンティハンター",
-            "description": "ピンボールで10,000点を獲得する。"
+            "description": "ピンボールで50,000点を獲得する。"
+        },
+        "dead-eye": {
+            "name": "デッドアイ",
+            "description": "ピンボールで150,000点を獲得する。"
+        },
+        "most-wanted": {
+            "name": "モスト・ウォンテッド",
+            "description": "ピンボールで500,000点を獲得する。"
         },
         "welt-beginner": {
             "name": "Hello World",

@@ -947,11 +947,11 @@
         "meow": { "name": "Cat Whisperer", "description": "Meow at FelixGPT." },
         "pinball-wizard": {
             "name": "Pinball Wizard",
-            "description": "Score 1,000 points in pinball."
+            "description": "Score 5,000 points in pinball."
         },
         "high-roller": {
             "name": "High Roller",
-            "description": "Score 5,000 points in pinball."
+            "description": "Score 15,000 points in pinball."
         },
         "target-practice": {
             "name": "Target Practice",
@@ -959,7 +959,15 @@
         },
         "bounty-hunter": {
             "name": "Bounty Hunter",
-            "description": "Score 10,000 points in pinball."
+            "description": "Score 50,000 points in pinball."
+        },
+        "dead-eye": {
+            "name": "Dead Eye",
+            "description": "Score 150,000 points in pinball."
+        },
+        "most-wanted": {
+            "name": "Most Wanted",
+            "description": "Score 500,000 points in pinball."
         },
         "welt-beginner": {
             "name": "Hello World",

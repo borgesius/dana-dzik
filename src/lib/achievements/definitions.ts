@@ -577,6 +577,24 @@ export const ACHIEVEMENTS: AchievementDef[] = [
         tieredGroup: "arcade",
         tier: 3,
     },
+    {
+        id: "dead-eye",
+        category: "pinball",
+        icon: "🤠",
+        hidden: false,
+        desktopOnly: true,
+        tieredGroup: "arcade",
+        tier: 4,
+    },
+    {
+        id: "most-wanted",
+        category: "pinball",
+        icon: "🔫",
+        hidden: true,
+        desktopOnly: true,
+        tieredGroup: "arcade",
+        tier: 5,
+    },
 
     // ── Exploration (hidden) ─────────────────────────────────────────────────
     {

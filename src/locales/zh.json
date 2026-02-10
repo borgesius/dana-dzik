@@ -959,11 +959,11 @@
         },
         "pinball-wizard": {
             "name": "弹球巫师",
-            "description": "在弹球游戏中得到1,000分。"
+            "description": "在弹球游戏中得到5,000分。"
         },
         "high-roller": {
             "name": "豪赌客",
-            "description": "在弹球游戏中得到5,000分。"
+            "description": "在弹球游戏中得到15,000分。"
         },
         "target-practice": {
             "name": "打靶练习",
@@ -971,7 +971,15 @@
         },
         "bounty-hunter": {
             "name": "赏金猎人",
-            "description": "在弹球游戏中得到10,000分。"
+            "description": "在弹球游戏中得到50,000分。"
+        },
+        "dead-eye": {
+            "name": "神枪手",
+            "description": "在弹球游戏中得到150,000分。"
+        },
+        "most-wanted": {
+            "name": "头号通缉",
+            "description": "在弹球游戏中得到500,000分。"
         },
         "welt-beginner": {
             "name": "Hello World",
