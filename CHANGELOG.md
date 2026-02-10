@@ -1,3 +1,9 @@
+## [2.13.0](https://github.com/borgesius/dana-dzik/compare/v2.12.0...v2.13.0) (2026-02-10)
+
+### Features
+
+* **ui:** update resume flavor text ([2418e57](https://github.com/borgesius/dana-dzik/commit/2418e57e41998606acae0d20b93cf9a16c90132e))
+
 ## [2.12.0](https://github.com/borgesius/dana-dzik/compare/v2.11.0...v2.12.0) (2026-02-10)
 
 ### Features
