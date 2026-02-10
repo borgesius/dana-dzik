@@ -3,10 +3,10 @@ import { Redis } from "@upstash/redis"
 // ─── Configuration ──────────────────────────────────────────────────────────
 
 /** Fraction of clients in the "sampled" cohort that get full event tracking */
-const SAMPLE_RATE = 0.001
+const SAMPLE_RATE = 0.01
 
 /** Max non-critical events a sampled client can write per day */
-const SAMPLED_CLIENT_BUDGET = 20
+const SAMPLED_CLIENT_BUDGET = 50
 
 /** TTL for per-client rate-limit keys (24 hours) */
 const CLIENT_BUDGET_TTL_SECONDS = 86_400
@@ -37,6 +37,21 @@ export interface WriteResult {
 export interface ReadResult<T> {
     data: T | null
     fromCache: boolean
+}
+
+// ─── Key Prefixing ──────────────────────────────────────────────────────────
+//     All Redis keys are namespaced by environment so staging and production
+//     data are fully isolated within the same Upstash database.
+
+function getKeyPrefix(): string {
+    const env = process.env.VERCEL_ENV
+    if (env === "production") return "prod:"
+    if (env === "preview") return "staging:"
+    return "dev:"
+}
+
+export function prefixKey(key: string): string {
+    return `${getKeyPrefix()}${key}`
 }
 
 // ─── Redis Instance ─────────────────────────────────────────────────────────
@@ -87,18 +102,18 @@ export function isCriticalEvent(eventType: string): boolean {
 //     Flow per incoming event:
 //
 //     1. Critical event (e.g. pageview) → always write (0 extra Redis ops)
-//     2. Client NOT in 0.1% sample      → drop silently  (0 Redis ops)
+//     2. Client NOT in 1% sample         → drop silently  (0 Redis ops)
 //     3. Client IS sampled              → check daily budget via INCR
 //        3a. Budget remaining           → execute write
 //        3b. Budget exhausted           → drop
 //
-//     Net effect: 99.9% of non-critical traffic costs zero Redis commands.
+//     Net effect: 99% of non-critical traffic costs zero Redis commands.
 
 async function consumeWriteBudget(
     client: Redis,
     visitorId: string
 ): Promise<boolean> {
-    const key = `ratelimit:w:${visitorId}`
+    const key = prefixKey(`ratelimit:w:${visitorId}`)
     const count = await client.incr(key)
 
     if (count === 1) {
@@ -149,7 +164,7 @@ export async function throttledWrite(
 //     traffic volume.
 
 async function consumeReadBudget(client: Redis): Promise<boolean> {
-    const key = "ratelimit:r:hourly"
+    const key = prefixKey("ratelimit:r:hourly")
     const count = await client.incr(key)
 
     if (count === 1) {
@@ -169,7 +184,9 @@ export async function cachedRead<T>(
         return { data: null, fromCache: false }
     }
 
-    const cached = await client.get<T>(cacheKey)
+    const prefixed = prefixKey(cacheKey)
+
+    const cached = await client.get<T>(prefixed)
     if (cached !== null) {
         return { data: cached, fromCache: true }
     }
@@ -180,7 +197,7 @@ export async function cachedRead<T>(
     }
 
     const data = await fetcher(client)
-    await client.set(cacheKey, data, { ex: ttlSeconds })
+    await client.set(prefixed, data, { ex: ttlSeconds })
     return { data, fromCache: false }
 }
 

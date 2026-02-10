@@ -1,6 +1,14 @@
 import { getAchievementManager } from "../achievements/AchievementManager"
 import { ACHIEVEMENTS } from "../achievements/definitions"
-import type { AchievementDef, TieredGroup } from "../achievements/types"
+import type {
+    AchievementDef,
+    AchievementId,
+    TieredGroup,
+} from "../achievements/types"
+import {
+    type AchievementCountsData,
+    fetchAchievementCounts,
+} from "../analytics"
 import { isMobile } from "../isMobile"
 import { getLocaleManager } from "../localeManager"
 
@@ -18,6 +26,7 @@ const TIERED_GROUP_LABELS: Record<TieredGroup, string> = {
     collector: "Collector",
     lunar: "Lunar Cycle",
     ascension: "Ascension",
+    cost: "Cost",
 }
 
 function renderTierStars(group: TieredGroup, defs: AchievementDef[]): string {
@@ -49,6 +58,9 @@ export function renderAchievementsWindow(): void {
     const container = document.getElementById("achievements-content")
     if (!container) return
 
+    // Holds the global counts once fetched (shared across re-renders)
+    let globalCounts: AchievementCountsData | null = null
+
     function render(): void {
         const el = document.getElementById("achievements-content")
         if (!el) return
@@ -67,22 +79,27 @@ export function renderAchievementsWindow(): void {
         const total = visibleAchievements.length
 
         const categories = [
+            // Core gameplay
             { key: "trading", label: "Trading" },
             { key: "production", label: "Production" },
             { key: "milestones", label: "Milestones" },
             { key: "prestige", label: "Prestige" },
             { key: "career", label: "Career" },
+            // Technical
             { key: "terminal", label: "Terminal" },
             { key: "coding", label: "Coding" },
             { key: "exercises", label: "Exercises" },
-            { key: "exploration", label: "Exploration" },
-            { key: "social", label: "Social" },
+            // Mini-games
             { key: "pinball", label: "Pinball" },
             { key: "autobattler", label: "Symposia" },
+            // Discovery & social
+            { key: "exploration", label: "Exploration" },
+            { key: "customization", label: "Customization" },
+            { key: "social", label: "Social" },
+            // Endgame & hidden
             { key: "cross-system", label: "Cross-System" },
             { key: "veil", label: "Piercing the Veil" },
             { key: "arcana", label: "Major Arcana" },
-            { key: "customization", label: "Customization" },
         ]
 
         const tieredGroups = new Map<TieredGroup, AchievementDef[]>()
@@ -152,13 +169,20 @@ export function renderAchievementsWindow(): void {
 
                 const displayIcon = isHidden ? "❓" : def.icon
 
+                let rarityHtml = ""
+                if (globalCounts && globalCounts.totalUsers > 0) {
+                    const count = globalCounts.counts[def.id] ?? 0
+                    rarityHtml = `<div class="achievement-card-rarity">${count} / ${globalCounts.totalUsers} users</div>`
+                }
+
                 html += `
-                    <div class="achievement-card ${isEarned ? "earned" : "unearned"}">
+                    <div class="achievement-card ${isEarned ? "earned" : "unearned"}" data-achievement-id="${def.id}">
                         <div class="achievement-card-icon ${isEarned ? "" : "unearned"}">${displayIcon}</div>
                         <div class="achievement-card-info">
                             <div class="achievement-card-name">${name}</div>
                             <div class="achievement-card-desc">${description}</div>
                             ${dateStr ? `<div class="achievement-card-date">${dateStr}</div>` : ""}
+                            ${rarityHtml}
                         </div>
                     </div>
                 `
@@ -170,7 +194,36 @@ export function renderAchievementsWindow(): void {
         el.innerHTML = html
     }
 
+    // Render immediately with local data, then fetch global counts
     render()
 
+    void fetchAchievementCounts().then((data) => {
+        if (data.totalUsers > 0) {
+            globalCounts = data
+            render()
+        }
+    })
+
     getAchievementManager().onEarned(() => render())
+}
+
+// ── Scroll-to support (called from AchievementToast) ────────────────────
+
+const HIGHLIGHT_DURATION_MS = 1500
+
+/**
+ * Scroll the achievements window to a specific achievement card and
+ * briefly highlight it. Safe to call even if the window isn't open yet.
+ */
+export function scrollToAchievement(id: AchievementId): void {
+    const card = document.querySelector<HTMLElement>(
+        `.achievement-card[data-achievement-id="${id}"]`
+    )
+    if (!card) return
+
+    card.scrollIntoView({ behavior: "smooth", block: "center" })
+    card.classList.add("achievement-card-highlight")
+    setTimeout(() => {
+        card.classList.remove("achievement-card-highlight")
+    }, HIGHLIGHT_DURATION_MS)
 }

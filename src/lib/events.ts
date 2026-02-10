@@ -32,9 +32,13 @@ export interface AppEventMap {
     "popup:bonus-claimed": undefined
     "popup:x-dismissed": { headline: string }
     "felix:message": undefined
-    "session-cost:big-spender": undefined
-    "session-cost:whale": undefined
-    "session-cost:leviathan": undefined
+    "session-cost:cost-1": undefined
+    "session-cost:cost-2": undefined
+    "session-cost:cost-3": undefined
+    "session-cost:cost-4": undefined
+    "session-cost:cost-5": undefined
+    "session-cost:cost-6": undefined
+    "session-cost:cost-7": undefined
     "system-file-modified": {
         filename: string
         severity: string

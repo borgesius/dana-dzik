@@ -1071,17 +1071,33 @@
             "name": "Sopravvissuto al Y2K",
             "description": "Mantieni una sessione attiva per 30 minuti."
         },
-        "big-spender": {
-            "name": "Giro di Soldi",
-            "description": "Accumula un costo di sessione normalizzato di $0,001."
+        "cost-1": {
+            "name": "Offre la casa",
+            "description": "Ehi, benvenuto. Mi casa su casa."
         },
-        "whale": {
-            "name": "Cacciatore di Banconote",
-            "description": "Accumula un costo di sessione normalizzato di $0,002."
+        "cost-2": {
+            "name": "Fai come a casa tua",
+            "description": "Mettiti comodo. Insisto."
         },
-        "leviathan": {
-            "name": "Leviatano",
-            "description": "Accumula un costo di sessione normalizzato di $0,003."
+        "cost-3": {
+            "name": "Metti sul conto",
+            "description": "Lo sai che per me non è gratis, vero?"
+        },
+        "cost-4": {
+            "name": "Scroccone",
+            "description": "Ehi campione, ci hai pensato a quello di cui abbiamo parlato riguardo al trovare un lavoro?"
+        },
+        "cost-5": {
+            "name": "Diritto di occupazione",
+            "description": "Hai 7 tick di mercato per sgomberare."
+        },
+        "cost-6": {
+            "name": "Mecenate delle arti",
+            "description": "Grazie per il tuo generoso contributo alle mie bollette Vercel e Upstash."
+        },
+        "cost-7": {
+            "name": "Rovina del benefattore",
+            "description": "Ti manderò una fattura."
         },
         "qa-inspector": {
             "name": "Funziona sul mio PC",
@@ -1512,7 +1528,7 @@
             "description": "Naviga come nel 1996."
         },
         "640k-enough": {
-            "name": "640K Ought to Be Enough",
+            "name": "640K Away for a Rainy Day",
             "description": "Visualizza su uno schermo sufficientemente piccolo."
         },
         "lingua-franca": {
@@ -1532,7 +1548,7 @@
             "description": "Make the system clock E2E tests pass again."
         },
         "achievement-achievement": {
-            "name": "Achievement Achievement",
+            "name": "Achievement Unlocked!",
             "description": "Ottieni un traguardo mentre visualizzi i traguardi."
         },
         "arcana-fool": {

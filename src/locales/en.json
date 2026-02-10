@@ -1053,17 +1053,33 @@
             "name": "Y2K Survivor",
             "description": "Have a session running for 30 minutes."
         },
-        "big-spender": {
-            "name": "Money Moves",
-            "description": "Run up a $0.001 normalized session cost."
+        "cost-1": {
+            "name": "On the House",
+            "description": "Hey hey, welcome in. Mi casa su casa."
         },
-        "whale": {
-            "name": "Paper Chaser",
-            "description": "Run up a $0.002 normalized session cost."
+        "cost-2": {
+            "name": "Help Yourself",
+            "description": "Make yourself comfortable. I insist."
         },
-        "leviathan": {
-            "name": "Leviathan",
-            "description": "Run up a $0.003 normalized session cost."
+        "cost-3": {
+            "name": "Running a Tab",
+            "description": "You know this isn't free for me, right?"
+        },
+        "cost-4": {
+            "name": "Freeloader",
+            "description": "Hey champ, you given any thought to what we talked about about a job?"
+        },
+        "cost-5": {
+            "name": "Squatter's Rights",
+            "description": "You have 7 market ticks to vacate."
+        },
+        "cost-6": {
+            "name": "Patron of the Arts",
+            "description": "Thank you for your generous contribution to my Vercel and Upstash bills."
+        },
+        "cost-7": {
+            "name": "Benefactor's Ruin",
+            "description": "I will be sending you an invoice."
         },
         "qa-inspector": {
             "name": "Works on My Machine",
@@ -1485,7 +1501,7 @@
             "description": "Browse like it's 1996."
         },
         "640k-enough": {
-            "name": "640K Ought to Be Enough",
+            "name": "640K Away for a Rainy Day",
             "description": "View on a sufficiently small screen."
         },
         "lingua-franca": {
@@ -1505,7 +1521,7 @@
             "description": "Make the system clock E2E tests pass again."
         },
         "achievement-achievement": {
-            "name": "Achievement Achievement",
+            "name": "Achievement Unlocked!",
             "description": "Earn an achievement while viewing achievements."
         },
         "arcana-fool": {

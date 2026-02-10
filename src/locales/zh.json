@@ -1071,17 +1071,33 @@
             "name": "Y2K幸存者",
             "description": "保持一个会话运行30分钟。"
         },
-        "big-spender": {
-            "name": "财路亨通",
-            "description": "累计标准化会话成本达到 $0.001。"
+        "cost-1": {
+            "name": "请客",
+            "description": "嘿嘿，欢迎。宾至如归。"
         },
-        "whale": {
-            "name": "追钞达人",
-            "description": "累计标准化会话成本达到 $0.002。"
+        "cost-2": {
+            "name": "别客气",
+            "description": "随便坐。我坚持。"
         },
-        "leviathan": {
-            "name": "利维坦",
-            "description": "累计标准化会话成本达到 $0.003。"
+        "cost-3": {
+            "name": "记账",
+            "description": "你知道这对我来说不是免费的，对吧？"
+        },
+        "cost-4": {
+            "name": "白吃白住",
+            "description": "嘿冠军，我们之前说的找工作的事，你想过了吗？"
+        },
+        "cost-5": {
+            "name": "占用权",
+            "description": "你有7个市场刻度的时间搬走。"
+        },
+        "cost-6": {
+            "name": "艺术赞助人",
+            "description": "感谢你对我Vercel和Upstash账单的慷慨贡献。"
+        },
+        "cost-7": {
+            "name": "恩人之殇",
+            "description": "我会给你寄一张发票。"
         },
         "qa-inspector": {
             "name": "QA检查员",
@@ -1512,7 +1528,7 @@
             "description": "像1996年一样浏览。"
         },
         "640k-enough": {
-            "name": "640K Ought to Be Enough",
+            "name": "640K Away for a Rainy Day",
             "description": "在足够小的屏幕上查看。"
         },
         "lingua-franca": {
@@ -1532,7 +1548,7 @@
             "description": "Make the system clock E2E tests pass again."
         },
         "achievement-achievement": {
-            "name": "Achievement Achievement",
+            "name": "Achievement Unlocked!",
             "description": "在查看成就时获得成就。"
         },
         "arcana-fool": {

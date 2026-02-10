@@ -5,6 +5,7 @@ import type {
 import { getCosmeticDef } from "../lib/cosmetics/definitions"
 import { emitAppEvent, onAppEvent } from "../lib/events"
 import { getLocaleManager } from "../lib/localeManager"
+import { requestCustomizeTab } from "../lib/windowContent/customize"
 import { getToastManager } from "./ToastManager"
 
 const DURATION_BY_RARITY: Record<CosmeticRarity, number> = {
@@ -53,6 +54,7 @@ export class CosmeticToast {
         const tm = getToastManager()
 
         toast.addEventListener("click", () => {
+            requestCustomizeTab(type)
             emitAppEvent("terminal:open-window", { windowId: "customize" })
             tm.dismiss(toast)
         })

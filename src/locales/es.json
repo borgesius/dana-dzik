@@ -1071,17 +1071,33 @@
             "name": "Sobreviviente del Y2K",
             "description": "Ten una sesión activa durante 30 minutos."
         },
-        "big-spender": {
-            "name": "Movimientos de Dinero",
-            "description": "Acumula un costo de sesión normalizado de $0.001."
+        "cost-1": {
+            "name": "Invita la casa",
+            "description": "Ey, bienvenido. Mi casa es su casa."
         },
-        "whale": {
-            "name": "Cazapapeles",
-            "description": "Acumula un costo de sesión normalizado de $0.002."
+        "cost-2": {
+            "name": "Sírvete tú mismo",
+            "description": "Ponte cómodo. Insisto."
         },
-        "leviathan": {
-            "name": "Leviatán",
-            "description": "Acumula un costo de sesión normalizado de $0.003."
+        "cost-3": {
+            "name": "A cuenta",
+            "description": "¿Sabes que esto no es gratis para mí, verdad?"
+        },
+        "cost-4": {
+            "name": "Gorrón",
+            "description": "Oye campeón, ¿has pensado en lo que hablamos sobre conseguir un trabajo?"
+        },
+        "cost-5": {
+            "name": "Derecho de ocupante",
+            "description": "Tienes 7 ticks de mercado para desalojar."
+        },
+        "cost-6": {
+            "name": "Mecenas de las artes",
+            "description": "Gracias por tu generosa contribución a mis facturas de Vercel y Upstash."
+        },
+        "cost-7": {
+            "name": "Ruina del benefactor",
+            "description": "Te voy a enviar una factura."
         },
         "qa-inspector": {
             "name": "Inspector de QA",
@@ -1512,7 +1528,7 @@
             "description": "Navega como si fuera 1996."
         },
         "640k-enough": {
-            "name": "640K Ought to Be Enough",
+            "name": "640K Away for a Rainy Day",
             "description": "Visualiza en una pantalla suficientemente pequeña."
         },
         "lingua-franca": {
@@ -1532,7 +1548,7 @@
             "description": "Make the system clock E2E tests pass again."
         },
         "achievement-achievement": {
-            "name": "Achievement Achievement",
+            "name": "Achievement Unlocked!",
             "description": "Obtén un logro mientras ves los logros."
         },
         "arcana-fool": {

@@ -105,10 +105,15 @@ export type AchievementId =
     | "most-wanted"
     // Exploration (hidden)
     | "y2k-survivor"
-    | "big-spender"
-    | "whale"
-    | "leviathan"
     | "qa-inspector"
+    // Cost (tiered, hidden)
+    | "cost-1"
+    | "cost-2"
+    | "cost-3"
+    | "cost-4"
+    | "cost-5"
+    | "cost-6"
+    | "cost-7"
     // Autobattler
     | "first-draft"
     | "faction-recruit"
@@ -304,6 +309,7 @@ export type TieredGroup =
     | "collector"
     | "lunar"
     | "ascension"
+    | "cost"
 
 export interface AchievementDef {
     id: AchievementId

@@ -1,7 +1,7 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node"
 import type { Redis } from "@upstash/redis"
 
-import { cachedRead, isConfigured, throttledWrite } from "./lib/redisGateway"
+import { cachedRead, isConfigured, prefixKey, throttledWrite } from "./lib/redisGateway"
 
 const BOT_PATTERNS = [
     "bot",
@@ -174,39 +174,39 @@ async function recordEvent(
 
     switch (event.type) {
         case "pageview":
-            await client.incr("stats:views:total")
-            await client.incr(`stats:views:daily:${today}`)
+            await client.incr(prefixKey("stats:views:total"))
+            await client.incr(prefixKey(`stats:views:daily:${today}`))
             break
 
         case "window":
             if (event.windowId) {
-                await client.hincrby("stats:windows", event.windowId, 1)
+                await client.hincrby(prefixKey("stats:windows"), event.windowId, 1)
             }
             break
 
         case "funnel":
             if (event.funnelStep) {
-                await client.hincrby("stats:funnel", event.funnelStep, 1)
+                await client.hincrby(prefixKey("stats:funnel"), event.funnelStep, 1)
             }
             break
 
         case "ab_assign":
             if (event.variant) {
-                await client.hincrby("stats:ab:assigned", event.variant, 1)
+                await client.hincrby(prefixKey("stats:ab:assigned"), event.variant, 1)
             }
             break
 
         case "ab_convert":
             if (event.variant) {
-                await client.hincrby("stats:ab:converted", event.variant, 1)
+                await client.hincrby(prefixKey("stats:ab:converted"), event.variant, 1)
             }
             break
 
         case "perf":
             if (event.perf) {
-                await client.hincrby("stats:perf:counts", event.perf.type, 1)
+                await client.hincrby(prefixKey("stats:perf:counts"), event.perf.type, 1)
                 await client.hincrby(
-                    "stats:perf:totals",
+                    prefixKey("stats:perf:totals"),
                     event.perf.type,
                     event.perf.duration
                 )
@@ -214,10 +214,10 @@ async function recordEvent(
             break
 
         case "crash":
-            await client.incr("stats:crashes:total")
+            await client.incr(prefixKey("stats:crashes:total"))
             if (event.effectType) {
                 await client.hincrby(
-                    "stats:crashes:types",
+                    prefixKey("stats:crashes:types"),
                     event.effectType,
                     1
                 )
@@ -238,15 +238,15 @@ async function getStats(client: Redis): Promise<Stats> {
         crashTotal,
         crashTypes,
     ] = await Promise.all([
-        client.get<number>("stats:views:total"),
-        client.hgetall<Record<string, number>>("stats:windows"),
-        client.hgetall<Record<string, number>>("stats:funnel"),
-        client.hgetall<Record<string, number>>("stats:ab:assigned"),
-        client.hgetall<Record<string, number>>("stats:ab:converted"),
-        client.hgetall<Record<string, number>>("stats:perf:counts"),
-        client.hgetall<Record<string, number>>("stats:perf:totals"),
-        client.get<number>("stats:crashes:total"),
-        client.hgetall<Record<string, number>>("stats:crashes:types"),
+        client.get<number>(prefixKey("stats:views:total")),
+        client.hgetall<Record<string, number>>(prefixKey("stats:windows")),
+        client.hgetall<Record<string, number>>(prefixKey("stats:funnel")),
+        client.hgetall<Record<string, number>>(prefixKey("stats:ab:assigned")),
+        client.hgetall<Record<string, number>>(prefixKey("stats:ab:converted")),
+        client.hgetall<Record<string, number>>(prefixKey("stats:perf:counts")),
+        client.hgetall<Record<string, number>>(prefixKey("stats:perf:totals")),
+        client.get<number>(prefixKey("stats:crashes:total")),
+        client.hgetall<Record<string, number>>(prefixKey("stats:crashes:types")),
     ])
 
     const variants: Record<string, { assigned: number; converted: number }> = {}
