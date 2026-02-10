@@ -45,9 +45,9 @@ export const XP_REWARDS = {
     phaseUnlock: 25,
 
     // Pinball
-    pinballScore1k: 10,
-    pinballScore5k: 25,
-    pinballScore10k: 75,
+    pinballScore5k: 5,
+    pinballScore25k: 15,
+    pinballScore100k: 40,
 
     // WELT / Coding
     weltExercise: 20,

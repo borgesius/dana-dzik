@@ -61,17 +61,17 @@ function wirePinball(mgr: ProgressionManager): void {
     onAppEvent("pinball:gameover", (detail) => {
         const { score } = detail
 
-        if (score >= 1000 && !mgr.hasPinballThreshold(1000)) {
-            mgr.addXP(XP_REWARDS.pinballScore1k)
-            mgr.markPinballThreshold(1000)
-        }
         if (score >= 5000 && !mgr.hasPinballThreshold(5000)) {
             mgr.addXP(XP_REWARDS.pinballScore5k)
             mgr.markPinballThreshold(5000)
         }
-        if (score >= 10000 && !mgr.hasPinballThreshold(10000)) {
-            mgr.addXP(XP_REWARDS.pinballScore10k)
-            mgr.markPinballThreshold(10000)
+        if (score >= 25000 && !mgr.hasPinballThreshold(25000)) {
+            mgr.addXP(XP_REWARDS.pinballScore25k)
+            mgr.markPinballThreshold(25000)
+        }
+        if (score >= 100000 && !mgr.hasPinballThreshold(100000)) {
+            mgr.addXP(XP_REWARDS.pinballScore100k)
+            mgr.markPinballThreshold(100000)
         }
     })
 }
@@ -218,7 +218,7 @@ function wireCrossSystemHooks(): void {
         if (score >= 1000) {
             const pinballBonus = career.getBonus("pinballBonus")
             const cashBonus =
-                Math.floor(score / 500) * 0.01 * (1 + pinballBonus)
+                Math.floor(score / 2500) * 0.01 * (1 + pinballBonus)
             game.addBonus(cashBonus)
         }
     })
