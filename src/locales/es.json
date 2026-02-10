@@ -570,7 +570,9 @@
         "thisWebsite": "🌐 Este Sitio Web",
         "description": "¡Lo estás viendo!",
         "stack": "Stack:",
-        "viewSource": "📦 Ver Código en GitHub"
+        "viewSource": "📦 Ver Código en GitHub",
+        "babylonTitle": "📜 babylon-scriptorium",
+        "babylonDescription": "Un jardín de agentes bifurcados — orquestación LLM multi-agente para tareas de programación."
     },
     "resume": {
         "name": "Dana Dzik",

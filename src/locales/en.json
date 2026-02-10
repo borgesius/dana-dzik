@@ -570,7 +570,9 @@
         "thisWebsite": "🌐 This Website",
         "description": "Why don't you click, drag and use keyboard arrows on danadzik.com?",
         "stack": "Stack:",
-        "viewSource": "📦 View Source on GitHub"
+        "viewSource": "📦 View Source on GitHub",
+        "babylonTitle": "📜 babylon-scriptorium",
+        "babylonDescription": "Fun with multi-agent LLM orchestration."
     },
     "resume": {
         "name": "Dana Dzik",
