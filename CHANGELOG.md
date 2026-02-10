@@ -1,3 +1,9 @@
+## [2.12.0](https://github.com/borgesius/dana-dzik/compare/v2.11.0...v2.12.0) (2026-02-10)
+
+### Features
+
+* **pinball:** improve board layout and change scoring and copy ([80aa1de](https://github.com/borgesius/dana-dzik/commit/80aa1de96a2d1f2a35efd9397dfef8a7150468c6))
+
 ## [2.11.0](https://github.com/borgesius/dana-dzik/compare/v2.10.0...v2.11.0) (2026-02-10)
 
 ### Features
