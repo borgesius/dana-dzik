@@ -195,7 +195,7 @@ const ACHIEVEMENT_COSMETIC_MAP: CosmeticUnlockEntry[] = [
         cosmeticId: "neon",
     },
     {
-        achievementId: "leviathan",
+        achievementId: "cost-7",
         type: "window-chrome",
         cosmeticId: "dial-up",
     },
