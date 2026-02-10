@@ -570,7 +570,9 @@
         "thisWebsite": "🌐 このウェブサイト",
         "description": "今ご覧になっているものです！",
         "stack": "技術スタック:",
-        "viewSource": "📦 GitHubでソースを見る"
+        "viewSource": "📦 GitHubでソースを見る",
+        "babylonTitle": "📜 babylon-scriptorium",
+        "babylonDescription": "分岐するエージェントの庭 — コーディングタスクのためのマルチエージェントLLMオーケストレーション。"
     },
     "resume": {
         "name": "Dana Dzik",
