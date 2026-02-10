@@ -27,6 +27,14 @@ const API_COST_MAP: Record<string, ApiCostEntry> = {
     "/api/lastfm": { redisCommands: 0, label: "Last.fm" },
     "/api/visitor-count": { redisCommands: 2, label: "Visitor Count" },
     "/api/reports": { redisCommands: 0, label: "QA Reports" },
+    "/api/achievement-counts:POST": {
+        redisCommands: 4,
+        label: "Achievements",
+    },
+    "/api/achievement-counts:GET": {
+        redisCommands: 1,
+        label: "Achiev. Counts",
+    },
 }
 
 interface CostLineItem {

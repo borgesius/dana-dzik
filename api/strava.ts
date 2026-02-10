@@ -1,6 +1,6 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node"
 
-import { cachedRead, getRedis, writeThrough } from "./lib/redisGateway"
+import { cachedRead, getRedis, prefixKey, writeThrough } from "./lib/redisGateway"
 
 interface TokenResponse {
     access_token: string
@@ -31,14 +31,14 @@ interface CachedTokens {
 }
 
 const REDIS_KEY = "strava_tokens"
-const STATS_CACHE_KEY = "strava_stats"
+const STRAVA_STATS_CACHE_KEY = "strava_stats"
 const STATS_TTL_SECONDS = 6 * 60 * 60
 
 async function getAccessToken(): Promise<string> {
     const now = Math.floor(Date.now() / 1000)
     const redis = getRedis()
 
-    const cached = redis ? await redis.get<CachedTokens>(REDIS_KEY) : null
+    const cached = redis ? await redis.get<CachedTokens>(prefixKey(REDIS_KEY)) : null
     if (cached && cached.expiresAt > now + 60) {
         return cached.accessToken
     }
@@ -70,7 +70,7 @@ async function getAccessToken(): Promise<string> {
     const data = (await response.json()) as TokenResponse
 
     await writeThrough(async (client) => {
-        await client.set<CachedTokens>(REDIS_KEY, {
+        await client.set<CachedTokens>(prefixKey(REDIS_KEY), {
             accessToken: data.access_token,
             refreshToken: data.refresh_token,
             expiresAt: data.expires_at,
@@ -287,7 +287,7 @@ export default async function handler(
 
         if (!forceRefresh) {
             const result = await cachedRead<StravaStats>(
-                STATS_CACHE_KEY,
+                STRAVA_STATS_CACHE_KEY,
                 STATS_TTL_SECONDS,
                 async () => {
                     const token = await getAccessToken()
@@ -311,7 +311,7 @@ export default async function handler(
         const stats = computeStats(activities)
 
         await writeThrough(async (client) => {
-            await client.set(STATS_CACHE_KEY, stats, { ex: STATS_TTL_SECONDS })
+            await client.set(prefixKey(STRAVA_STATS_CACHE_KEY), stats, { ex: STATS_TTL_SECONDS })
         })
 
         res.status(200).json({ ok: true, data: stats, cached: false })
