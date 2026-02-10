@@ -570,7 +570,9 @@
         "thisWebsite": "🌐 Diese Website",
         "description": "Sie schauen sie gerade an!",
         "stack": "Stack:",
-        "viewSource": "📦 Quellcode auf GitHub ansehen"
+        "viewSource": "📦 Quellcode auf GitHub ansehen",
+        "babylonTitle": "📜 babylon-scriptorium",
+        "babylonDescription": "Ein Garten sich verzweigender Agenten — Multi-Agenten-LLM-Orchestrierung für Programmieraufgaben."
     },
     "resume": {
         "name": "Dana Dzik",
