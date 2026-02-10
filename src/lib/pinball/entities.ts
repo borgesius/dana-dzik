@@ -332,6 +332,133 @@ export class OneWayWall extends Wall {
     }
 }
 
+export class Post {
+    public position: Vector2D
+    public radius: number
+    public points: number
+    public hitAnimation: number
+    private damping: number
+
+    constructor(
+        x: number,
+        y: number,
+        radius: number = 4,
+        points: number = 25,
+        damping: number = 0.85
+    ) {
+        this.position = new Vector2D(x, y)
+        this.radius = radius
+        this.points = points
+        this.hitAnimation = 0
+        this.damping = damping
+    }
+
+    public checkCollision(ball: Ball): { hit: boolean; points: number } {
+        const collision = circleCircleCollision(
+            ball.position,
+            ball.radius,
+            this.position,
+            this.radius
+        )
+
+        if (collision.collided) {
+            ball.position = ball.position.add(
+                collision.normal.multiply(collision.overlap + 1)
+            )
+            ball.velocity = reflectVelocity(
+                ball.velocity,
+                collision.normal,
+                this.damping
+            )
+            this.hitAnimation = 1
+            return { hit: true, points: this.points }
+        }
+
+        return { hit: false, points: 0 }
+    }
+
+    public update(dt: number = 1): void {
+        if (this.hitAnimation > 0) {
+            this.hitAnimation = Math.max(0, this.hitAnimation - 0.12 * dt)
+        }
+    }
+}
+
+export class Slingshot {
+    public vertices: [Vector2D, Vector2D, Vector2D]
+    public points: number
+    public hitAnimation: number
+    public damping: number
+
+    private walls: { start: Vector2D; end: Vector2D }[]
+
+    constructor(
+        x1: number,
+        y1: number,
+        x2: number,
+        y2: number,
+        x3: number,
+        y3: number,
+        points: number = 50,
+        damping: number = 1.5
+    ) {
+        this.vertices = [
+            new Vector2D(x1, y1),
+            new Vector2D(x2, y2),
+            new Vector2D(x3, y3),
+        ]
+        this.points = points
+        this.hitAnimation = 0
+        this.damping = damping
+
+        // Build walls for each edge of the triangle
+        this.walls = [
+            { start: this.vertices[0], end: this.vertices[1] },
+            { start: this.vertices[1], end: this.vertices[2] },
+            { start: this.vertices[2], end: this.vertices[0] },
+        ]
+    }
+
+    public get center(): Vector2D {
+        return new Vector2D(
+            (this.vertices[0].x + this.vertices[1].x + this.vertices[2].x) / 3,
+            (this.vertices[0].y + this.vertices[1].y + this.vertices[2].y) / 3
+        )
+    }
+
+    public checkCollision(ball: Ball): { hit: boolean; points: number } {
+        for (const wall of this.walls) {
+            const collision = circleLineCollision(
+                ball.position,
+                ball.radius,
+                wall.start,
+                wall.end
+            )
+
+            if (collision.collided) {
+                ball.position = ball.position.add(
+                    collision.normal.multiply(collision.overlap + 1)
+                )
+                ball.velocity = reflectVelocity(
+                    ball.velocity,
+                    collision.normal,
+                    this.damping
+                )
+                this.hitAnimation = 1
+                return { hit: true, points: this.points }
+            }
+        }
+
+        return { hit: false, points: 0 }
+    }
+
+    public update(dt: number = 1): void {
+        if (this.hitAnimation > 0) {
+            this.hitAnimation = Math.max(0, this.hitAnimation - 0.1 * dt)
+        }
+    }
+}
+
 export class Launcher {
     public position: Vector2D
     public width: number
