@@ -1,4 +1,5 @@
 import type { Ball, Bumper, Flipper, Launcher, Target, Wall } from "./entities"
+import type { FloatingText, Particle } from "./particles"
 import { LOGICAL_HEIGHT, LOGICAL_WIDTH } from "./physics"
 
 const COLORS = {
@@ -28,6 +29,7 @@ export class PinballRenderer {
     private ctx: CanvasRenderingContext2D
     private canvasWidth: number
     private canvasHeight: number
+    private frameCount: number = 0
 
     constructor(
         ctx: CanvasRenderingContext2D,
@@ -50,17 +52,21 @@ export class PinballRenderer {
         this.ctx.scale(scaleX, scaleY)
     }
 
-    public beginFrame(): void {
+    public beginFrame(shakeX: number = 0, shakeY: number = 0): void {
+        this.frameCount++
         this.ctx.clearRect(0, 0, this.canvasWidth, this.canvasHeight)
         this.ctx.save()
         this.applyScale()
+        if (shakeX !== 0 || shakeY !== 0) {
+            this.ctx.translate(shakeX, shakeY)
+        }
     }
 
     public endFrame(): void {
         this.ctx.restore()
     }
 
-    public drawBackground(): void {
+    public drawBackground(feverActive: boolean = false): void {
         const gradient = this.ctx.createLinearGradient(0, 0, 0, LOGICAL_HEIGHT)
         gradient.addColorStop(0, COLORS.playfieldGradient1)
         gradient.addColorStop(0.5, COLORS.playfieldGradient2)
@@ -69,13 +75,19 @@ export class PinballRenderer {
         this.ctx.fillStyle = gradient
         this.ctx.fillRect(0, 0, LOGICAL_WIDTH, LOGICAL_HEIGHT)
 
+        if (feverActive) {
+            const pulse = 0.06 + Math.sin(this.frameCount * 0.08) * 0.04
+            this.ctx.fillStyle = `rgba(180, 40, 0, ${pulse})`
+            this.ctx.fillRect(0, 0, LOGICAL_WIDTH, LOGICAL_HEIGHT)
+        }
+
         this.ctx.fillStyle = COLORS.launcherChannel
         this.ctx.save()
         this.ctx.beginPath()
-        this.ctx.moveTo(250, 200)
-        this.ctx.lineTo(330, 420)
-        this.ctx.lineTo(335, 445)
-        this.ctx.lineTo(250, 445)
+        this.ctx.moveTo(248, 430)
+        this.ctx.lineTo(248, 100)
+        this.ctx.lineTo(270, 80)
+        this.ctx.lineTo(325, 445)
         this.ctx.closePath()
         this.ctx.fill()
         this.ctx.restore()
@@ -95,11 +107,30 @@ export class PinballRenderer {
         }
     }
 
-    public drawBall(ball: Ball): void {
+    public drawBall(ball: Ball, feverActive: boolean = false): void {
         if (!ball.active) return
 
         const { x, y } = ball.position
         const r = ball.radius
+
+        // Fever glow behind the ball
+        if (feverActive) {
+            const glowR = r * 2.5
+            const glow = this.ctx.createRadialGradient(
+                x,
+                y,
+                r * 0.5,
+                x,
+                y,
+                glowR
+            )
+            glow.addColorStop(0, "rgba(255, 100, 30, 0.35)")
+            glow.addColorStop(1, "rgba(255, 60, 0, 0)")
+            this.ctx.beginPath()
+            this.ctx.arc(x, y, glowR, 0, Math.PI * 2)
+            this.ctx.fillStyle = glow
+            this.ctx.fill()
+        }
 
         const gradient = this.ctx.createRadialGradient(
             x - r * 0.3,
@@ -109,16 +140,23 @@ export class PinballRenderer {
             y,
             r
         )
-        gradient.addColorStop(0, COLORS.ballHighlight)
-        gradient.addColorStop(0.5, COLORS.ball)
-        gradient.addColorStop(1, COLORS.ballShadow)
+
+        if (feverActive) {
+            gradient.addColorStop(0, "#FFD0A0")
+            gradient.addColorStop(0.5, "#FF8844")
+            gradient.addColorStop(1, "#993300")
+        } else {
+            gradient.addColorStop(0, COLORS.ballHighlight)
+            gradient.addColorStop(0.5, COLORS.ball)
+            gradient.addColorStop(1, COLORS.ballShadow)
+        }
 
         this.ctx.beginPath()
         this.ctx.arc(x, y, r, 0, Math.PI * 2)
         this.ctx.fillStyle = gradient
         this.ctx.fill()
 
-        this.ctx.strokeStyle = "#555555"
+        this.ctx.strokeStyle = feverActive ? "#FF6633" : "#555555"
         this.ctx.lineWidth = 0.5
         this.ctx.stroke()
     }
@@ -144,9 +182,24 @@ export class PinballRenderer {
         this.ctx.closePath()
     }
 
-    public drawBumper(bumper: Bumper): void {
+    public drawBumper(bumper: Bumper, feverActive: boolean = false): void {
         const { x, y } = bumper.position
-        const r = bumper.radius * (1 + bumper.hitAnimation * 0.15)
+        const animScale = feverActive
+            ? bumper.hitAnimation * 0.25
+            : bumper.hitAnimation * 0.15
+        const r = bumper.radius * (1 + animScale)
+
+        // Fever glow behind bumper
+        if (feverActive) {
+            const glowR = r + 6 + Math.sin(this.frameCount * 0.1) * 2
+            const glow = this.ctx.createRadialGradient(x, y, r, x, y, glowR)
+            glow.addColorStop(0, "rgba(255, 60, 0, 0.3)")
+            glow.addColorStop(1, "rgba(255, 60, 0, 0)")
+            this.ctx.beginPath()
+            this.ctx.arc(x, y, glowR, 0, Math.PI * 2)
+            this.ctx.fillStyle = glow
+            this.ctx.fill()
+        }
 
         this.ctx.beginPath()
         this.ctx.arc(x, y, r + 2, 0, Math.PI * 2)
@@ -341,6 +394,36 @@ export class PinballRenderer {
         this.ctx.fillText("PWR", x, y + height + 12)
     }
 
+    public drawParticles(particles: Particle[]): void {
+        for (const p of particles) {
+            const alpha = Math.max(0, p.life / p.maxLife)
+            this.ctx.globalAlpha = alpha
+            this.ctx.fillStyle = p.color
+            this.ctx.beginPath()
+            this.ctx.arc(p.x, p.y, p.size * alpha, 0, Math.PI * 2)
+            this.ctx.fill()
+        }
+        this.ctx.globalAlpha = 1
+    }
+
+    public drawFloatingTexts(texts: FloatingText[]): void {
+        for (const ft of texts) {
+            const alpha = Math.max(0, ft.life / ft.maxLife)
+            this.ctx.globalAlpha = alpha
+            this.ctx.fillStyle = ft.color
+            this.ctx.font = "bold 9px Tahoma, sans-serif"
+            this.ctx.textAlign = "center"
+            this.ctx.textBaseline = "middle"
+            this.ctx.fillText(ft.text, ft.x, ft.y)
+        }
+        this.ctx.globalAlpha = 1
+    }
+
+    public drawFlash(alpha: number): void {
+        this.ctx.fillStyle = `rgba(255, 255, 255, ${alpha})`
+        this.ctx.fillRect(0, 0, LOGICAL_WIDTH, LOGICAL_HEIGHT)
+    }
+
     public drawBeveledRect(
         x: number,
         y: number,
@@ -365,10 +448,26 @@ export class PinballRenderer {
         score: number,
         highScore: number,
         balls: number,
-        gameState: string
+        gameState: string,
+        multiplier: number = 1,
+        feverActive: boolean = false,
+        feverProgress: number = 0
     ): void {
         const panelHeight = 45
         const panelY = 5
+
+        // Fever: pulsing gold border around panel
+        if (feverActive) {
+            const pulse = 0.5 + Math.sin(this.frameCount * 0.12) * 0.3
+            this.ctx.strokeStyle = `rgba(255, 215, 0, ${pulse})`
+            this.ctx.lineWidth = 2
+            this.ctx.strokeRect(
+                4,
+                panelY - 1,
+                LOGICAL_WIDTH - 8,
+                panelHeight + 2
+            )
+        }
 
         this.drawBeveledRect(
             5,
@@ -427,6 +526,49 @@ export class PinballRenderer {
                 panelY + 36
             )
         }
+
+        // Multiplier display
+        if (multiplier > 1 && gameState === "playing") {
+            const totalMult = feverActive ? multiplier * 5 : multiplier
+            const flash = Math.sin(this.frameCount * 0.15) > 0
+            this.ctx.fillStyle = feverActive
+                ? flash
+                    ? "#FF4444"
+                    : "#FF8800"
+                : COLORS.text
+            this.ctx.font = "bold 12px Tahoma, sans-serif"
+            this.ctx.textAlign = "right"
+            this.ctx.fillText(`x${totalMult}`, LOGICAL_WIDTH - 60, panelY + 36)
+        } else if (feverActive && gameState === "playing") {
+            const flash = Math.sin(this.frameCount * 0.15) > 0
+            this.ctx.fillStyle = flash ? "#FF4444" : "#FF8800"
+            this.ctx.font = "bold 12px Tahoma, sans-serif"
+            this.ctx.textAlign = "right"
+            this.ctx.fillText("x5", LOGICAL_WIDTH - 60, panelY + 36)
+        }
+
+        // Fever timer bar
+        if (feverActive && feverProgress > 0) {
+            const barX = 5
+            const barY = panelY + panelHeight + 2
+            const barW = LOGICAL_WIDTH - 10
+            const barH = 3
+
+            this.ctx.fillStyle = "#1A0E08"
+            this.ctx.fillRect(barX, barY, barW, barH)
+
+            const gradient = this.ctx.createLinearGradient(
+                barX,
+                barY,
+                barX + barW * feverProgress,
+                barY
+            )
+            gradient.addColorStop(0, "#FF4444")
+            gradient.addColorStop(0.5, "#FF8800")
+            gradient.addColorStop(1, "#FFD700")
+            this.ctx.fillStyle = gradient
+            this.ctx.fillRect(barX, barY, barW * feverProgress, barH)
+        }
     }
 
     public drawMessage(message: string, subMessage?: string): void {
@@ -457,6 +599,38 @@ export class PinballRenderer {
             this.ctx.font = "11px Tahoma, sans-serif"
             this.ctx.fillText(subMessage, centerX, centerY + 20)
         }
+    }
+
+    public drawCowboyDanTicker(
+        message: string,
+        x: number,
+        feverActive: boolean = false
+    ): void {
+        const tickerY = 56
+
+        this.ctx.save()
+        this.ctx.beginPath()
+        this.ctx.rect(5, tickerY - 1, LOGICAL_WIDTH - 10, 14)
+        this.ctx.clip()
+
+        const bgAlpha = feverActive ? 0.85 : 0.75
+        this.ctx.fillStyle = feverActive
+            ? `rgba(80, 10, 0, ${bgAlpha})`
+            : `rgba(26, 14, 8, ${bgAlpha})`
+        this.ctx.fillRect(5, tickerY - 1, LOGICAL_WIDTH - 10, 14)
+
+        if (feverActive) {
+            const flash = Math.sin(this.frameCount * 0.2) > 0
+            this.ctx.fillStyle = flash ? "#FF4444" : "#FFD700"
+        } else {
+            this.ctx.fillStyle = "#FF6633"
+        }
+        this.ctx.font = "bold 9px 'Courier New', monospace"
+        this.ctx.textAlign = "left"
+        this.ctx.textBaseline = "top"
+        this.ctx.fillText(message, x, tickerY + 1)
+
+        this.ctx.restore()
     }
 
     public drawInstructions(): void {
