@@ -309,3 +309,23 @@
     margin-left: 4px;
     vertical-align: middle;
 }
+
+/* ── Scroll-to highlight pulse ─────────────────────────────────────────── */
+
+.achievement-card-highlight {
+    animation: achievement-highlight-pulse 1.5s ease-out;
+}
+
+@keyframes achievement-highlight-pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgb(212 160 23 / 60%);
+    }
+
+    30% {
+        box-shadow: 0 0 8px 3px rgb(212 160 23 / 50%);
+    }
+
+    100% {
+        box-shadow: none;
+    }
+}

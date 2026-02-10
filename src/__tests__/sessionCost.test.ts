@@ -37,23 +37,16 @@ describe("SessionCostTracker", () => {
         vi.resetModules()
     })
 
-    async function createTracker(
-        bigSpenderThreshold = 1,
-        whaleThreshold = 2,
-        leviathanThreshold = 3
-    ): Promise<SessionCostTracker> {
+    async function createTracker(): Promise<SessionCostTracker> {
         const mod = await import("../lib/sessionCost")
-        return new mod.SessionCostTracker(
-            bigSpenderThreshold,
-            whaleThreshold,
-            leviathanThreshold
-        )
+        return new mod.SessionCostTracker()
     }
 
     it("starts with zero cost", async () => {
         const tracker = await createTracker()
         const breakdown = tracker.getBreakdown()
         expect(breakdown.totalCost).toBe(0)
+        expect(breakdown.lifetimeCost).toBe(0)
         expect(breakdown.items).toHaveLength(0)
         expect(breakdown.bandwidthBytes).toBe(0)
     })
@@ -95,7 +88,7 @@ describe("SessionCostTracker", () => {
         expect(breakdown.totalSampledIntents).toBe(3)
 
         const costPerCall = COST_PER_INVOCATION + 2 * COST_PER_REDIS_COMMAND
-        expect(windowItem!.cost).toBeCloseTo(2 * 0.001 * costPerCall, 10)
+        expect(windowItem!.cost).toBeCloseTo(2 * 0.01 * costPerCall, 10)
     })
 
     it("tracks sampled intents via analytics:intent event", async () => {
@@ -127,55 +120,66 @@ describe("SessionCostTracker", () => {
         expect(abItem!.sampled).toBe(true)
     })
 
-    it("fires session-cost:big-spender when first threshold is crossed", async () => {
+    it("fires session-cost:cost-1 when first tier threshold is crossed", async () => {
         const handler = vi.fn()
-        document.addEventListener("session-cost:big-spender", handler)
+        document.addEventListener("session-cost:cost-1", handler)
 
-        await createTracker(0, 1)
-
-        void window.fetch("http://localhost/api/strava")
+        const tracker = await createTracker()
+        // Deserialize with enough lifetime cost to cross cost-1 ($0.001)
+        tracker.deserialize({
+            lifetimeApiCalls: {},
+            lifetimeSampledIntents: {},
+            lifetimeBandwidthBytes: 3 * 1024 * 1024, // ~3MB = ~$0.0012
+        })
 
         await vi.waitFor(() => {
             expect(handler).toHaveBeenCalledTimes(1)
         })
 
-        document.removeEventListener("session-cost:big-spender", handler)
+        document.removeEventListener("session-cost:cost-1", handler)
     })
 
-    it("fires session-cost:whale when second threshold is crossed", async () => {
-        const bigSpenderHandler = vi.fn()
-        const whaleHandler = vi.fn()
-        document.addEventListener("session-cost:big-spender", bigSpenderHandler)
-        document.addEventListener("session-cost:whale", whaleHandler)
+    it("fires multiple tier events when thresholds are crossed", async () => {
+        const cost1Handler = vi.fn()
+        const cost2Handler = vi.fn()
+        document.addEventListener("session-cost:cost-1", cost1Handler)
+        document.addEventListener("session-cost:cost-2", cost2Handler)
 
-        await createTracker(0, 0)
-
-        void window.fetch("http://localhost/api/strava")
-
-        await vi.waitFor(() => {
-            expect(bigSpenderHandler).toHaveBeenCalledTimes(1)
-            expect(whaleHandler).toHaveBeenCalledTimes(1)
+        const tracker = await createTracker()
+        // Deserialize with enough lifetime cost to cross cost-1 ($0.001) and cost-2 ($0.005)
+        tracker.deserialize({
+            lifetimeApiCalls: {},
+            lifetimeSampledIntents: {},
+            lifetimeBandwidthBytes: 15 * 1024 * 1024, // ~15MB = ~$0.006
         })
 
-        document.removeEventListener(
-            "session-cost:big-spender",
-            bigSpenderHandler
-        )
-        document.removeEventListener("session-cost:whale", whaleHandler)
+        await vi.waitFor(() => {
+            expect(cost1Handler).toHaveBeenCalledTimes(1)
+            expect(cost2Handler).toHaveBeenCalledTimes(1)
+        })
+
+        document.removeEventListener("session-cost:cost-1", cost1Handler)
+        document.removeEventListener("session-cost:cost-2", cost2Handler)
     })
 
-    it("only fires each threshold event once", async () => {
+    it("only fires each tier event once", async () => {
         const handler = vi.fn()
-        document.addEventListener("session-cost:big-spender", handler)
+        document.addEventListener("session-cost:cost-1", handler)
 
-        await createTracker(0, 1)
+        const tracker = await createTracker()
+        tracker.deserialize({
+            lifetimeApiCalls: {},
+            lifetimeSampledIntents: {},
+            lifetimeBandwidthBytes: 3 * 1024 * 1024,
+        })
 
+        // Trigger additional updates
         void window.fetch("http://localhost/api/strava")
         void window.fetch("http://localhost/api/lastfm")
 
         expect(handler).toHaveBeenCalledTimes(1)
 
-        document.removeEventListener("session-cost:big-spender", handler)
+        document.removeEventListener("session-cost:cost-1", handler)
     })
 
     it("calls update listeners on changes", async () => {
@@ -198,12 +202,47 @@ describe("SessionCostTracker", () => {
         expect(breakdown.isSampled).toBe(false)
     })
 
-    describe("cost constants", () => {
-        it("exports cost thresholds", async () => {
+    describe("serialization", () => {
+        it("serializes lifetime totals (previous + current session)", async () => {
+            const tracker = await createTracker()
+
+            // Restore some previous lifetime data
+            tracker.deserialize({
+                lifetimeApiCalls: { "/api/strava": 5 },
+                lifetimeSampledIntents: { window: 10 },
+                lifetimeBandwidthBytes: 1000,
+            })
+
+            // Trigger a session API call
+            void window.fetch("http://localhost/api/strava")
+
+            const saved = tracker.serialize()
+            expect(saved.lifetimeApiCalls["/api/strava"]).toBe(6) // 5 previous + 1 session
+            expect(saved.lifetimeSampledIntents["window"]).toBe(10)
+            expect(saved.lifetimeBandwidthBytes).toBe(1000) // no new bandwidth in test
+        })
+
+        it("computes lifetimeCost from merged counters", async () => {
+            const tracker = await createTracker()
+
+            tracker.deserialize({
+                lifetimeApiCalls: {},
+                lifetimeSampledIntents: {},
+                lifetimeBandwidthBytes: 1024 * 1024, // 1MB = $0.0004
+            })
+
+            const breakdown = tracker.getBreakdown()
+            expect(breakdown.lifetimeCost).toBeCloseTo(0.0004, 6)
+            expect(breakdown.totalCost).toBe(0) // session has no bandwidth
+        })
+
+        it("exports COST_TIERS array", async () => {
             const mod = await import("../lib/sessionCost")
-            expect(mod.BIG_SPENDER_THRESHOLD).toBe(0.001)
-            expect(mod.WHALE_THRESHOLD).toBe(0.002)
-            expect(mod.LEVIATHAN_THRESHOLD).toBe(0.003)
+            expect(mod.COST_TIERS).toHaveLength(7)
+            expect(mod.COST_TIERS[0].slug).toBe("cost-1")
+            expect(mod.COST_TIERS[0].threshold).toBe(0.001)
+            expect(mod.COST_TIERS[6].slug).toBe("cost-7")
+            expect(mod.COST_TIERS[6].threshold).toBe(0.25)
         })
 
         it("uses correct Vercel bandwidth pricing", () => {
