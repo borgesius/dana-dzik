@@ -1,3 +1,9 @@
+## [2.11.0](https://github.com/borgesius/dana-dzik/compare/v2.10.0...v2.11.0) (2026-02-10)
+
+### Features
+
+* **pinball:** make pinball decent ([9e8e453](https://github.com/borgesius/dana-dzik/commit/9e8e4533d437b6d2543ef2d855a763eebc7fb291))
+
 ## [2.10.0](https://github.com/borgesius/dana-dzik/compare/v2.9.2...v2.10.0) (2026-02-10)
 
 ### Features
