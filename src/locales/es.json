@@ -961,11 +961,11 @@
         },
         "pinball-wizard": {
             "name": "Mago del Pinball",
-            "description": "Consigue 1,000 puntos en pinball."
+            "description": "Consigue 5,000 puntos en pinball."
         },
         "high-roller": {
             "name": "Gran Apostador",
-            "description": "Consigue 5,000 puntos en pinball."
+            "description": "Consigue 15,000 puntos en pinball."
         },
         "target-practice": {
             "name": "Tiro al Blanco",
@@ -973,7 +973,15 @@
         },
         "bounty-hunter": {
             "name": "Cazarrecompensas",
-            "description": "Consigue 10,000 puntos en pinball."
+            "description": "Consigue 50,000 puntos en pinball."
+        },
+        "dead-eye": {
+            "name": "Ojo de Águila",
+            "description": "Consigue 150,000 puntos en pinball."
+        },
+        "most-wanted": {
+            "name": "El Más Buscado",
+            "description": "Consigue 500,000 puntos en pinball."
         },
         "welt-beginner": {
             "name": "Hello World",

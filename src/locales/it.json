@@ -961,11 +961,11 @@
         },
         "pinball-wizard": {
             "name": "Mago del Flipper",
-            "description": "Segna 1,000 punti a flipper."
+            "description": "Segna 5.000 punti a flipper."
         },
         "high-roller": {
             "name": "Grande Scommettitore",
-            "description": "Segna 5,000 punti a flipper."
+            "description": "Segna 15.000 punti a flipper."
         },
         "target-practice": {
             "name": "Tiro a Segno",
@@ -973,7 +973,15 @@
         },
         "bounty-hunter": {
             "name": "Cacciatore di Taglie",
-            "description": "Segna 10,000 punti a flipper."
+            "description": "Segna 50.000 punti a flipper."
+        },
+        "dead-eye": {
+            "name": "Occhio di Falco",
+            "description": "Segna 150.000 punti a flipper."
+        },
+        "most-wanted": {
+            "name": "Il Più Ricercato",
+            "description": "Segna 500.000 punti a flipper."
         },
         "welt-beginner": {
             "name": "Hello World",

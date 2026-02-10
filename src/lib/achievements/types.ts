@@ -101,6 +101,8 @@ export type AchievementId =
     | "high-roller"
     | "target-practice"
     | "bounty-hunter"
+    | "dead-eye"
+    | "most-wanted"
     // Exploration (hidden)
     | "y2k-survivor"
     | "big-spender"
