@@ -5,8 +5,6 @@ import {
     Flipper,
     Launcher,
     OneWayWall,
-    Post,
-    Slingshot,
     Target,
     Wall,
 } from "./entities"
@@ -48,7 +46,7 @@ const GAME_SPEED_K = Math.log(3) / 200_000
 const COMBO_TIMEOUT = 90
 const FEVER_DURATION = 600
 const FEVER_COMBO_THRESHOLD = 10
-const ALL_TARGETS_BONUS = 2500
+const ALL_TARGETS_BONUS = 5000
 
 export class PinballGame {
     private canvas: HTMLCanvasElement
@@ -61,9 +59,6 @@ export class PinballGame {
     private walls: Wall[] = []
     private flippers: Flipper[] = []
     private targets: Target[] = []
-    private slingshots: Slingshot[] = []
-    private posts: Post[] = []
-    private guideRails: Wall[] = []
     private launcher: Launcher
 
     private _score: number = 0
@@ -182,18 +177,6 @@ export class PinballGame {
         return this.walls
     }
 
-    public getSlingshots(): Slingshot[] {
-        return this.slingshots
-    }
-
-    public getPosts(): Post[] {
-        return this.posts
-    }
-
-    public getGuideRails(): Wall[] {
-        return this.guideRails
-    }
-
     public getParticleSystem(): ParticleSystem {
         return this.particleSystem
     }
@@ -242,23 +225,22 @@ export class PinballGame {
     private buildPlayfield(): void {
         this.walls = []
 
-        // Left outer wall
         this.walls.push(new Wall(15, 55, 15, 410))
-        // Top wall
         this.walls.push(new Wall(15, 55, 245, 55))
 
-        // Launcher channel
         this.walls.push(new Wall(325, 445, 270, 80, 0.95))
         this.walls.push(new Wall(270, 80, 245, 55, 0.9))
         this.walls.push(new OneWayWall(248, 100, 248, 430, -1, 0))
         this.walls.push(new Wall(248, 430, 325, 445, 0.7))
 
-        // Drain guides (angled walls leading to flippers)
         this.walls.push(new Wall(15, 410, 72, 452))
         this.walls.push(new Wall(240, 400, 205, 448))
 
-        // Top orbit kickback wall
-        this.walls.push(new Wall(15, 75, 60, 55, 1.2))
+        this.walls.push(new Wall(22, 330, 48, 395, 1.3))
+        this.walls.push(new Wall(48, 395, 22, 385, 1.3))
+
+        this.walls.push(new Wall(235, 330, 215, 395, 1.3))
+        this.walls.push(new Wall(215, 395, 235, 385, 1.3))
 
         const flipperY = 454
         this.flippers = [
@@ -266,47 +248,23 @@ export class PinballGame {
             new Flipper(215, flipperY, 68, "right"),
         ]
 
-        // Slingshots (triangular kickers flanking the flippers)
-        this.slingshots = [
-            // Left slingshot
-            new Slingshot(22, 330, 48, 395, 22, 385, 25, 1.5),
-            // Right slingshot
-            new Slingshot(235, 330, 215, 395, 235, 385, 25, 1.5),
-        ]
-
-        // Bumpers: tight triangle up top + two wide mid-field wings
         this.bumpers = [
-            new Bumper(132, 120, 20, 50), // top center
-            new Bumper(100, 170, 18, 50), // left
-            new Bumper(165, 170, 18, 50), // right
-            new Bumper(55, 270, 16, 75), // left wing
-            new Bumper(205, 270, 16, 75), // right wing
+            new Bumper(130, 155, 20, 100),
+            new Bumper(95, 215, 18, 100),
+            new Bumper(165, 215, 18, 100),
+            new Bumper(60, 290, 15, 150),
+            new Bumper(200, 290, 15, 150),
+            new Bumper(105, 345, 14, 150),
+            new Bumper(160, 345, 14, 150),
         ]
 
-        // Targets: left bank, right bank, and orbit target
         this.targets = [
-            new Target(30, 135, 10, 28, 250),
-            new Target(30, 170, 10, 28, 250),
-            new Target(30, 205, 10, 28, 250),
-            new Target(230, 135, 10, 28, 250),
-            new Target(230, 170, 10, 28, 250),
-            new Target(230, 205, 10, 28, 250),
-            new Target(40, 65, 12, 12, 375), // orbit lane target
-        ]
-
-        // Posts: small decorative posts in the lower playfield
-        this.posts = [
-            new Post(90, 320, 4, 10),
-            new Post(170, 320, 4, 10),
-            new Post(130, 365, 5, 10),
-            new Post(75, 390, 4, 10),
-            new Post(190, 390, 4, 10),
-        ]
-
-        // Guide rails: gentle funnel toward flippers
-        this.guideRails = [
-            new Wall(65, 345, 90, 370, 0.95),
-            new Wall(195, 345, 170, 370, 0.95),
+            new Target(35, 140, 10, 28, 500),
+            new Target(35, 175, 10, 28, 500),
+            new Target(35, 210, 10, 28, 500),
+            new Target(235, 140, 10, 28, 500),
+            new Target(235, 175, 10, 28, 500),
+            new Target(235, 210, 10, 28, 500),
         ]
 
         this.launcher = new Launcher(300, 370, 22, 60)
@@ -592,8 +550,6 @@ export class PinballGame {
         this.flippers.forEach((f) => f.update(speed))
         this.bumpers.forEach((b) => b.update(speed))
         this.targets.forEach((t) => t.update(speed))
-        this.slingshots.forEach((s) => s.update(speed))
-        this.posts.forEach((p) => p.update(speed))
 
         for (let step = 0; step < SUBSTEPS; step++) {
             this.ball.update(speed)
@@ -602,10 +558,6 @@ export class PinballGame {
 
             this.walls.forEach((wall) => {
                 wall.checkCollision(this.ball)
-            })
-
-            this.guideRails.forEach((rail) => {
-                rail.checkCollision(this.ball)
             })
 
             this.flippers.forEach((flipper) => {
@@ -638,29 +590,6 @@ export class PinballGame {
                     )
                     this.playSound("pinball_target")
                     this.checkAllTargets()
-                }
-            })
-
-            this.slingshots.forEach((slingshot) => {
-                const result = slingshot.checkCollision(this.ball)
-                if (result.hit) {
-                    const c = slingshot.center
-                    this.registerHit(result.points, c.x, c.y, "#C4A882", 6)
-                    this.playSound("pinball_bumper")
-                }
-            })
-
-            this.posts.forEach((post) => {
-                const result = post.checkCollision(this.ball)
-                if (result.hit) {
-                    this.registerHit(
-                        result.points,
-                        post.position.x,
-                        post.position.y,
-                        "#B8B8B8",
-                        4
-                    )
-                    this.playSound("pinball_bumper")
                 }
             })
         }
@@ -783,9 +712,6 @@ export class PinballGame {
 
         this.renderer.drawBackground(this._feverActive)
         this.walls.forEach((wall) => this.renderer.drawWall(wall))
-        this.guideRails.forEach((rail) => this.renderer.drawGuideRail(rail))
-        this.slingshots.forEach((s) => this.renderer.drawSlingshot(s))
-        this.posts.forEach((post) => this.renderer.drawPost(post))
         this.bumpers.forEach((bumper) =>
             this.renderer.drawBumper(bumper, this._feverActive)
         )

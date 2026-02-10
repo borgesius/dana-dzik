@@ -948,15 +948,15 @@
         },
         "meow": { "name": "Cat Whisperer", "description": "Meow at FelixGPT." },
         "pinball-wizard": {
-            "name": "Greenhorn",
+            "name": "Pinball Wizard",
             "description": "Score 5,000 points in pinball."
         },
         "high-roller": {
-            "name": "Quick Draw",
+            "name": "High Roller",
             "description": "Score 15,000 points in pinball."
         },
         "target-practice": {
-            "name": "Tin Can Alley",
+            "name": "Target Practice",
             "description": "Hit all 4 targets in a single game."
         },
         "bounty-hunter": {
