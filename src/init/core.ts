@@ -21,7 +21,10 @@ import { getPrestigeManager } from "../lib/prestige/PrestigeManager"
 import { getCareerManager } from "../lib/progression/CareerManager"
 import { getProgressionManager } from "../lib/progression/ProgressionManager"
 import { saveManager } from "../lib/saveManager"
-import { getSessionCostTracker, initSessionCostTracker } from "../lib/sessionCost"
+import {
+    getSessionCostTracker,
+    initSessionCostTracker,
+} from "../lib/sessionCost"
 import { getSharedFilesystem } from "../lib/terminal/filesystemBuilder"
 import { patchFilesystem } from "../lib/terminal/filesystemDiff"
 import { getThemeManager } from "../lib/themeManager"
