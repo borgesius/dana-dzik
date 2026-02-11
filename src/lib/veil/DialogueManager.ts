@@ -10,6 +10,10 @@ export class DialogueManager {
     private isTyping: boolean = false
     private displayedText: string = ""
     private fullText: string = ""
+    /** Incremented each time showNode is called; used to scope skip/complete to the correct node */
+    private nodeGeneration: number = 0
+    /** True while a choice click is being processed (prevents double-clicks) */
+    private isTransitioning: boolean = false
 
     /** Called when dialogue completes with effect "complete" */
     public onComplete: (() => void) | null = null
@@ -28,6 +32,7 @@ export class DialogueManager {
 
         this.container.innerHTML = ""
         this.container.className = "veil-dialogue"
+        this.isTransitioning = false
 
         const startNode = this.tree.nodes[this.tree.startNode]
         if (startNode) {
@@ -39,6 +44,7 @@ export class DialogueManager {
         this.stopTyping()
         this.container.innerHTML = ""
         this.tree = null
+        this.isTransitioning = false
     }
 
     private resolveText(key: string): string {
@@ -61,6 +67,9 @@ export class DialogueManager {
     private showNode(node: DialogueNode): void {
         this.stopTyping()
         this.clearTypingCursors()
+
+        // Bump generation so stale skip-handlers and interval callbacks become no-ops
+        const gen = ++this.nodeGeneration
 
         const nodeEl = document.createElement("div")
         nodeEl.className = "veil-dialogue-node veil-dialogue-entering"
@@ -92,10 +101,24 @@ export class DialogueManager {
         this.displayedText = ""
         this.isTyping = true
 
+        // Track whether onTypingComplete has already fired for THIS node
+        let typingCompleted = false
+
+        const completeOnce = (): void => {
+            if (typingCompleted || gen !== this.nodeGeneration) return
+            typingCompleted = true
+            this.onTypingComplete(node, choicesEl, gen)
+        }
+
         const speed = node.typingSpeed ?? DEFAULT_TYPING_SPEED
         let charIndex = 0
 
         this.typingInterval = window.setInterval(() => {
+            // Stale interval guard
+            if (gen !== this.nodeGeneration) {
+                clearInterval(this.typingInterval!)
+                return
+            }
             if (charIndex < this.fullText.length) {
                 this.displayedText += this.fullText[charIndex]
                 textEl.textContent = this.displayedText
@@ -103,16 +126,17 @@ export class DialogueManager {
                 this.scrollToBottom()
             } else {
                 this.stopTyping()
-                this.onTypingComplete(node, choicesEl)
+                completeOnce()
             }
         }, speed)
 
         const skipHandler = (): void => {
-            if (this.isTyping) {
+            // Only skip if this is still the active node and typing hasn't completed
+            if (this.isTyping && gen === this.nodeGeneration && !typingCompleted) {
                 this.stopTyping()
                 this.displayedText = this.fullText
                 textEl.textContent = this.fullText
-                this.onTypingComplete(node, choicesEl)
+                completeOnce()
             }
             nodeEl.removeEventListener("click", skipHandler)
         }
@@ -126,9 +150,12 @@ export class DialogueManager {
         }
     }
 
-    private onTypingComplete(node: DialogueNode, choicesEl: HTMLElement): void {
+    private onTypingComplete(node: DialogueNode, choicesEl: HTMLElement, gen: number): void {
         this.isTyping = false
         this.clearTypingCursors()
+
+        // If a newer node has started, bail out
+        if (gen !== this.nodeGeneration) return
 
         // Handle spooky effects (fire-and-continue)
         if (node.effect === "spooky_reveal") {
@@ -144,6 +171,9 @@ export class DialogueManager {
             btn.className = "veil-dialogue-choice-btn"
             btn.innerHTML = `<span class="veil-choice-prefix">&gt;</span> ${this.escapeHtml(this.resolveText("veil.ui.continue"))}`
             btn.addEventListener("click", () => {
+                if (this.isTransitioning) return
+                this.isTransitioning = true
+                btn.classList.add("veil-choice-selected")
                 this.onComplete?.()
             })
             choicesEl.appendChild(btn)
@@ -157,6 +187,9 @@ export class DialogueManager {
             btn.className = "veil-dialogue-choice-btn veil-choice-boss"
             btn.innerHTML = `<span class="veil-choice-prefix">&gt;</span> ${this.escapeHtml(this.resolveText("veil.ui.enter_facility"))}`
             btn.addEventListener("click", () => {
+                if (this.isTransitioning) return
+                this.isTransitioning = true
+                btn.classList.add("veil-choice-selected")
                 this.onTriggerBoss?.()
             })
             choicesEl.appendChild(btn)
@@ -171,6 +204,13 @@ export class DialogueManager {
                 btn.className = "veil-dialogue-choice-btn"
                 btn.innerHTML = `<span class="veil-choice-prefix">&gt;</span> ${this.escapeHtml(this.resolveText(choice.label))}`
                 btn.addEventListener("click", () => {
+                    if (this.isTransitioning) return
+                    this.isTransitioning = true
+                    // Visually mark the chosen option and disable all siblings
+                    btn.classList.add("veil-choice-selected")
+                    for (const sibling of choicesEl.querySelectorAll(".veil-dialogue-choice-btn")) {
+                        ;(sibling as HTMLButtonElement).disabled = true
+                    }
                     this.advanceTo(choice.next)
                 })
                 choicesEl.appendChild(btn)
@@ -184,6 +224,7 @@ export class DialogueManager {
             const nextId = node.next
             // Brief pause before auto-advancing
             setTimeout(() => {
+                if (gen !== this.nodeGeneration) return
                 this.advanceTo(nextId)
             }, 600)
         }
@@ -191,6 +232,7 @@ export class DialogueManager {
 
     private advanceTo(nodeId: string): void {
         if (!this.tree) return
+        this.isTransitioning = false
         const node = this.tree.nodes[nodeId]
         if (node) {
             this.showNode(node)
