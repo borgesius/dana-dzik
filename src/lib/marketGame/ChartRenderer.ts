@@ -1,3 +1,5 @@
+import { CanvasError } from "@/core/errors"
+
 import { formatMoney } from "../formatMoney"
 import type { CommodityId, TrendSegment } from "./types"
 
@@ -64,7 +66,10 @@ export class ChartRenderer {
         this.options = { ...DEFAULT_OPTIONS, ...options }
 
         const ctx = canvas.getContext("2d")
-        if (!ctx) throw new Error("Failed to get canvas 2d context")
+        if (!ctx)
+            throw new CanvasError("Failed to get canvas 2d context", {
+                component: "ChartRenderer",
+            })
         this.ctx = ctx
 
         this.resize(this.options.width, this.options.height)

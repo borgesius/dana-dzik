@@ -4,7 +4,7 @@ import { emitAppEvent } from "./events"
 import { getLocaleManager, type LocaleId } from "./localeManager"
 import { getThemeManager, type ThemeId } from "./themeManager"
 
-type GlitchType =
+export type GlitchType =
     | "shift"
     | "colorSplit"
     | "invert"
@@ -165,16 +165,25 @@ export class GlitchManager {
 
     private performFullThemeSwitch(targetTheme: string): void {
         const tm = getThemeManager()
-        const cm = getCosmeticManager()
 
         this.applyGlitch(this.generateGlitchEvent("corruption", 1.0, 300))
         this.applyGlitch(this.generateGlitchEvent("tear", 0.9, 300))
         this.applyGlitch(this.generateGlitchEvent("noise", 1.0, 300))
 
+        // Temporarily flash to the target theme, then restore (never persist)
         setTimeout(() => {
-            cm.setActive("theme", targetTheme)
-            tm.setTheme(
+            tm.setThemeTemporary(
                 targetTheme as "win95" | "mac-classic" | "apple2" | "c64"
+            )
+
+            setTimeout(
+                () => {
+                    this.applyGlitch(
+                        this.generateGlitchEvent("colorSplit", 0.6, 150)
+                    )
+                    tm.restoreTheme()
+                },
+                1500 + Math.random() * 2000
             )
         }, 300)
     }

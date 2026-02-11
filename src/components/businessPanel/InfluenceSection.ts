@@ -77,7 +77,6 @@ export class InfluenceSection {
 
         const lm = getLocaleManager()
 
-        // Update the target commodity label in the heading
         const targetEl = this.element.querySelector(".influence-target")
         if (targetEl) {
             targetEl.textContent = `[${this.getSelectedCommodity()}]`

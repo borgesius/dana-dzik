@@ -24,6 +24,10 @@ import { onAppEvent } from "../lib/events"
 import { GlitchManager } from "../lib/glitchEffects"
 import { getLocaleManager } from "../lib/localeManager"
 import { getMarketGame } from "../lib/marketGame/MarketEngine"
+import {
+    initPacketBridge,
+    wireMarketEngineToPacketBridge,
+} from "../lib/netmon/packetBridge"
 import { getPrestigeManager } from "../lib/prestige/PrestigeManager"
 import { getCareerManager } from "../lib/progression/CareerManager"
 import { getProgressionManager } from "../lib/progression/ProgressionManager"
@@ -35,6 +39,7 @@ import { SystemCrashHandler } from "../lib/systemCrash"
 import { getSharedFilesystem } from "../lib/terminal/filesystemBuilder"
 import { diffFilesystem } from "../lib/terminal/filesystemDiff"
 import { getThemeManager } from "../lib/themeManager"
+import { DesktopPet } from "../lib/divination/DesktopPet"
 import { getVeilManager } from "../lib/veil/VeilManager"
 import { requestResumeCareerTab } from "../lib/windowContent"
 import { isRoutableWindow } from "./core"
@@ -56,6 +61,10 @@ export function initDesktop(app: HTMLElement): void {
     wireProgression(getProgressionManager(), (cb) => {
         windowManager.onNewWindowOpen(cb)
     })
+
+    // ── Network monitor (M.D.) ───────────────────────────────────────────
+    initPacketBridge()
+    wireMarketEngineToPacketBridge(getMarketGame())
 
     wireCosmeticUnlocks()
 
@@ -165,6 +174,7 @@ export function initDesktop(app: HTMLElement): void {
     getCosmeticManager().onChange(() => applyCosmetics())
     new SystemCrashHandler()
     new Widgets(app)
+    new DesktopPet()
 
     recordBootEnd()
 

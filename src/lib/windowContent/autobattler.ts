@@ -1,12 +1,20 @@
 import { getCollectionManager } from "../autobattler/CollectionManager"
+import { getDataAttribute } from "../domUtils"
 import { createCombatUnit } from "../autobattler/combat"
 import { CombatAnimator } from "../autobattler/CombatAnimator"
-import { BOSS_MAP, getOpponentStatMultiplier } from "../autobattler/opponents"
+import {
+    BOSS_MAP,
+    BOSS_MODIFIER_MAP,
+    getOpponentStatMultiplier,
+} from "../autobattler/opponents"
+import { RELIC_DEFS, RELIC_MAP } from "../autobattler/relics"
+import { playSound } from "../audio"
 import { getBuffCost, RUN_BUFFS, type RunBuff } from "../autobattler/runBuffs"
 import { RunManager } from "../autobattler/RunManager"
 import { getMaxLineSlots, MAX_BENCH_SIZE } from "../autobattler/shop"
-import type { FactionId, RunSummary } from "../autobattler/types"
+import type { BossId, FactionId, RelicId, RelicInstance, RunSummary, UnitId } from "../autobattler/types"
 import {
+    factionColor,
     factionIcon,
     factionLabel,
     renderDefCard,
@@ -24,12 +32,13 @@ import { getCareerManager } from "../progression/CareerManager"
 import { getProgressionManager } from "../progression/ProgressionManager"
 import { saveManager } from "../saveManager"
 
-const MAX_LIVES = 3
+const DEFAULT_MAX_LIVES = 3
 
-function renderLives(losses: number): string {
-    const remaining = MAX_LIVES - losses
+function renderLives(losses: number, maxLives?: number): string {
+    const ml = maxLives ?? activeRun?.getMaxLives() ?? DEFAULT_MAX_LIVES
+    const remaining = ml - losses
     const filled = "&#9829;".repeat(Math.max(0, remaining))
-    const empty = "&#9825;".repeat(Math.min(MAX_LIVES, losses))
+    const empty = "&#9825;".repeat(Math.min(ml, losses))
     return `<span class="ab-lives">${filled}${empty}</span>`
 }
 
@@ -48,6 +57,25 @@ interface DragState {
 }
 
 let dragState: DragState | null = null
+
+// ── Phase transition helper ─────────────────────────────────────────────────
+
+function transitionContent(
+    container: HTMLElement,
+    html: string,
+    callback?: () => void
+): void {
+    container.classList.add("phase-exit")
+    setTimeout(() => {
+        container.innerHTML = html
+        container.classList.remove("phase-exit")
+        container.classList.add("phase-enter")
+        setTimeout(() => {
+            container.classList.remove("phase-enter")
+            callback?.()
+        }, 200)
+    }, 150)
+}
 
 // ── Entry points ────────────────────────────────────────────────────────────
 
@@ -88,13 +116,12 @@ function renderLobbyView(container: HTMLElement): void {
             <p class="ab-subtitle">${t("symposium.ui.subtitle")}</p>
 
             <div class="ab-stats">
-                <div class="ab-stat"><span class="ab-stat-label">${t("symposium.ui.runs")}</span><span class="ab-stat-value">${collection.getCompletedRuns()}</span></div>
-                <div class="ab-stat"><span class="ab-stat-label">${t("symposium.ui.highestRound")}</span><span class="ab-stat-value">${collection.getHighestRound()}</span></div>
-                <div class="ab-stat"><span class="ab-stat-label">${t("symposium.ui.collectionLabel")}</span><span class="ab-stat-value">${collection.getCollectionSize()}</span></div>
+                <div class="ab-stat"><span class="ab-stat-icon">🏆</span><span class="ab-stat-label">${t("symposium.ui.runs")}</span><span class="ab-stat-value">${collection.getCompletedRuns()}</span></div>
+                <div class="ab-stat"><span class="ab-stat-icon">⛰️</span><span class="ab-stat-label">${t("symposium.ui.highestRound")}</span><span class="ab-stat-value">${collection.getHighestRound()}</span></div>
+                <div class="ab-stat"><span class="ab-stat-icon">📚</span><span class="ab-stat-label">${t("symposium.ui.collectionLabel")}</span><span class="ab-stat-value">${collection.getCollectionSize()}</span></div>
             </div>
     `
 
-    // Personal bests section
     const totalBosses = collection.getTotalBossesDefeated()
     if (collection.getHighestRound() > 0 || totalBosses > 0) {
         html += `
@@ -139,27 +166,80 @@ function renderLobbyView(container: HTMLElement): void {
 
     html += `<button class="ab-start-btn">${t("symposium.ui.startRun")}</button>`
 
-    const factions: FactionId[] = [
-        "quickdraw",
-        "deputies",
-        "clockwork",
-        "prospectors",
-        "drifters",
-    ]
-    const unlockedIds = collection.getUnlockedUnitIds()
+    // ── Tabbed Bestiary ──────────────────────────────────────────────────
+    html += `
+        <div class="ab-bestiary-tabs">
+            <div class="ab-bestiary-tab-bar">
+                <button class="ab-bestiary-tab active" data-tab="thinkers">${t("symposium.bestiary.thinkers")}</button>
+                <button class="ab-bestiary-tab" data-tab="adversaries">${t("symposium.bestiary.adversaries")}</button>
+                <button class="ab-bestiary-tab" data-tab="relics">${t("symposium.bestiary.relicsTab")}</button>
+            </div>
+            <div id="ab-bestiary-thinkers" class="ab-bestiary-pane active">
+                ${renderBestiaryThinkers(collection, t)}
+            </div>
+            <div id="ab-bestiary-adversaries" class="ab-bestiary-pane">
+                ${renderBestiaryAdversaries(collection, t)}
+            </div>
+            <div id="ab-bestiary-relics" class="ab-bestiary-pane">
+                ${renderBestiaryRelics(collection, t)}
+            </div>
+        </div>
+    `
 
-    html += `<div class="ab-section-heading">${t("symposium.ui.collection")}</div>`
+    html += `</div>`
+    transitionContent(container, html, () => {
+        container
+            .querySelector(".ab-start-btn")
+            ?.addEventListener("click", () => {
+                renderPrepareRun(container)
+            })
+
+        wireBestiaryTabs(container)
+    })
+}
+
+// ── Bestiary tab helpers ─────────────────────────────────────────────────────
+
+function wireBestiaryTabs(container: HTMLElement): void {
+    const tabs = container.querySelectorAll<HTMLElement>(".ab-bestiary-tab")
+    const panes = container.querySelectorAll<HTMLElement>(".ab-bestiary-pane")
+
+    tabs.forEach((tab) => {
+        tab.addEventListener("click", () => {
+            const target = tab.dataset.tab
+            tabs.forEach((t) => t.classList.remove("active"))
+            tab.classList.add("active")
+            panes.forEach((p) => p.classList.remove("active"))
+            const targetPane = container.querySelector(`#ab-bestiary-${target}`)
+            targetPane?.classList.add("active")
+        })
+    })
+}
+
+function renderBestiaryThinkers(
+    collection: ReturnType<typeof getCollectionManager>,
+    t: (key: string, opts?: Record<string, unknown>) => string
+): string {
+    const factions: FactionId[] = ["quickdraw", "deputies", "clockwork", "prospectors", "drifters"]
+    const unlockedIds = collection.getUnlockedUnitIds()
+    let html = ""
 
     for (const faction of factions) {
         const factionUnits = getUnitsForFaction(faction)
         const unlocked = factionUnits.filter((u) => unlockedIds.has(u.id))
         if (factionUnits.length === 0) continue
 
+        const fc = factionColor(faction)
+        const progressPct = Math.round((unlocked.length / factionUnits.length) * 100)
+
         html += `
             <div class="ab-faction-group">
-                <div class="ab-faction-label">
+                <div class="ab-faction-label" style="--uc-faction-color: ${fc}">
                     ${factionLabel(faction)}
                     <span class="faction-progress">${unlocked.length}/${factionUnits.length}</span>
+                </div>
+                <div class="ab-faction-progress-bar">
+                    <div class="ab-faction-progress-fill" style="width: ${progressPct}%; --uc-faction-color: ${fc}"></div>
                 </div>
                 <div class="ab-collection-grid">
         `
@@ -168,7 +248,7 @@ function renderLobbyView(container: HTMLElement): void {
             if (unlockedIds.has(unit.id)) {
                 html += renderDefCard(unit, { variant: "collection" })
             } else {
-                html += `<div class="uc-card uc-collection" style="opacity: 0.3">
+                html += `<div class="uc-card uc-collection" style="opacity: 0.3; --uc-faction-color: ${fc}">
                     <div class="uc-header"><span class="uc-name">???</span></div>
                     <div class="uc-body"><span class="uc-stats">?/?</span><span class="uc-faction">${factionIcon(faction)}</span></div>
                 </div>`
@@ -182,12 +262,103 @@ function renderLobbyView(container: HTMLElement): void {
         html += `<div class="ab-empty">${t("symposium.ui.startCollecting")}</div>`
     }
 
-    html += `</div>`
-    container.innerHTML = html
+    return html
+}
 
-    container.querySelector(".ab-start-btn")?.addEventListener("click", () => {
-        renderPrepareRun(container)
-    })
+function renderBestiaryAdversaries(
+    collection: ReturnType<typeof getCollectionManager>,
+    t: (key: string, opts?: Record<string, unknown>) => string
+): string {
+    let html = `<div class="ab-section-heading">${t("symposium.bestiary.bosses")}</div>`
+    html += `<div class="ab-adversary-grid">`
+
+    for (const [bossId, boss] of BOSS_MAP) {
+        const defeated = collection.hasBossDefeated(bossId)
+        const bossName = t(`symposium.units.${bossId}`, { defaultValue: boss.name })
+        const fc = factionColor(boss.faction)
+        const badge = defeated
+            ? `<span class="ab-boss-badge defeated">${t("symposium.bestiary.defeated")}</span>`
+            : `<span class="ab-boss-badge undefeated">${t("symposium.bestiary.undefeated")}</span>`
+
+        html += `
+            <div class="ab-adversary-card ${defeated ? "defeated" : ""}" style="--uc-faction-color: ${fc}">
+                <div class="ab-adversary-header">
+                    <span class="ab-adversary-name">${bossName}</span>
+                    ${badge}
+                </div>
+                <div class="ab-adversary-faction">${factionIcon(boss.faction)} ${factionLabel(boss.faction)}</div>
+            </div>
+        `
+    }
+
+    html += `</div>`
+
+    html += `<div class="ab-section-heading">${t("symposium.bestiary.opponents")}</div>`
+    const oppFactions: FactionId[] = ["quickdraw", "deputies", "clockwork", "prospectors", "drifters"]
+    html += `<div class="ab-opponent-schools">`
+    for (const faction of oppFactions) {
+        const fc = factionColor(faction)
+        html += `<div class="ab-opponent-school" style="--uc-faction-color: ${fc}">
+            <span class="ab-opponent-icon">${factionIcon(faction)}</span>
+            <span class="ab-opponent-label">${factionLabel(faction)}</span>
+        </div>`
+    }
+    html += `</div>`
+
+    return html
+}
+
+function renderBestiaryRelics(
+    collection: ReturnType<typeof getCollectionManager>,
+    t: (key: string, opts?: Record<string, unknown>) => string
+): string {
+    const tiers = ["common", "rare", "legendary", "secret"] as const
+    let html = ""
+
+    for (const tier of tiers) {
+        const tierRelics = RELIC_DEFS.filter((r) => r.tier === tier)
+        // Secret relics only show if unlocked (fully hidden otherwise)
+        const visibleRelics = tier === "secret"
+            ? tierRelics.filter((r) => collection.hasRelicUnlocked(r.id))
+            : tierRelics
+
+        if (visibleRelics.length === 0 && tier === "secret") continue
+
+        const tierLabel = t(`symposium.bestiary.relicTiers.${tier}`, { defaultValue: tier })
+        const unlockedCount = visibleRelics.filter((r) => collection.hasRelicUnlocked(r.id)).length
+
+        html += `
+            <div class="ab-relic-tier-section">
+                <div class="ab-section-heading">${tierLabel} <span class="ab-relic-count">(${unlockedCount}/${visibleRelics.length})</span></div>
+                <div class="ab-relic-grid">
+        `
+
+        for (const relic of visibleRelics) {
+            const unlocked = collection.hasRelicUnlocked(relic.id)
+            if (unlocked) {
+                const name = t(`symposium.relics.${relic.id}.name`, { defaultValue: relic.id })
+                const desc = t(`symposium.relics.${relic.id}.description`, { defaultValue: "" })
+                html += `
+                    <div class="ab-relic-entry relic-${tier} unlocked">
+                        <div class="ab-relic-name">${name}</div>
+                        <div class="ab-relic-desc">${desc}</div>
+                    </div>
+                `
+            } else {
+                const unlockHint = t(`symposium.relics.${relic.id}.unlock`, { defaultValue: "???" })
+                html += `
+                    <div class="ab-relic-entry relic-${tier} locked">
+                        <div class="ab-relic-name">${t("symposium.bestiary.locked")}</div>
+                        <div class="ab-relic-desc">${t("symposium.bestiary.unlockHint", { hint: unlockHint })}</div>
+                    </div>
+                `
+            }
+        }
+
+        html += `</div></div>`
+    }
+
+    return html
 }
 
 // ── Pre-run buff selection ──────────────────────────────────────────────────
@@ -221,13 +392,14 @@ function renderPrepareRun(container: HTMLElement): void {
             })
             const dollarCost = (cost * price).toFixed(2)
 
+            const costCls = canAfford ? "affordable" : "too-expensive"
             html += `
                 <button class="ab-buff-card ${isSelected ? "selected" : ""} ${!canAfford && !isSelected ? "disabled" : ""}"
                     data-buff="${buff.id}" ${!canAfford && !isSelected ? "disabled" : ""}>
                     <div class="ab-buff-icon">${buff.icon}</div>
                     <div class="ab-buff-name">${buffName}</div>
                     <div class="ab-buff-desc">${buffDesc}</div>
-                    <div class="ab-buff-cost">${cost} ${buff.commodityId} ($${dollarCost}) · have: ${owned}</div>
+                    <div class="ab-buff-cost ${costCls}">${cost} ${buff.commodityId} ($${dollarCost}) · have: ${owned}</div>
                     ${isSelected ? '<div class="ab-buff-check">✓</div>' : ""}
                 </button>`
         }
@@ -285,8 +457,10 @@ function renderPrepareRun(container: HTMLElement): void {
 }
 
 function startNewRun(buffs: RunBuff[] = []): void {
-    const unlockedIds = getCollectionManager().getUnlockedUnitIds()
-    activeRun = new RunManager(unlockedIds, buffs)
+    const collection = getCollectionManager()
+    const unlockedIds = collection.getUnlockedUnitIds()
+    const unlockedRelicIds = collection.getUnlockedRelicIds()
+    activeRun = new RunManager(unlockedIds, buffs, unlockedRelicIds)
     lastProcessedRewardIndex = 0
 
     const career = getCareerManager()
@@ -317,24 +491,142 @@ function startNewRun(buffs: RunBuff[] = []): void {
     if (scrapBonus > 0) activeRun.addBonusScrap(scrapBonus)
 
     activeRun.on("runEnded", () => {
-        const summary = activeRun!.getRunSummary()
-        const state = activeRun!.getState()
+        if (!activeRun) return
+        const summary = activeRun.getRunSummary()
+        const state = activeRun.getState()
         const factions = [...new Set(state.lineup.map((u) => u.faction))]
-        const collection = getCollectionManager()
-        collection.recordRunComplete(
+        const coll = getCollectionManager()
+        coll.recordRunComplete(
             summary.majorityFaction,
             summary.losses,
             factions,
-            summary.highestRound
+            summary.highestRound,
+            summary.relicsCollected.length
         )
+        coll.addUnitsBought(summary.unitsBought)
+        checkRelicUnlocks(coll, summary, state, activeRun)
         saveManager.requestSave()
     })
-    activeRun.on("bossDefeated", (data: unknown) => {
-        const detail = data as { bossId: string; noUnitsLost: boolean }
-        getCollectionManager().recordBossDefeated(detail.bossId)
-        emitAppEvent("autobattler:boss-defeated", detail)
+    activeRun.on("bossDefeated", (data) => {
+        getCollectionManager().recordBossDefeated(data.bossId)
+        emitAppEvent("autobattler:boss-defeated", data)
         saveManager.requestSave()
     })
+    activeRun.on("combatEnded", () => {
+        if (activeRun) {
+            const coll = getCollectionManager()
+            const summary = activeRun.getRunSummary()
+            const state = activeRun.getState()
+            checkRelicUnlocks(coll, summary, state, activeRun)
+            saveManager.requestSave()
+        }
+    })
+}
+
+/** Check all relic unlock conditions and unlock any that are met */
+function checkRelicUnlocks(
+    coll: ReturnType<typeof getCollectionManager>,
+    summary: RunSummary,
+    state: ReturnType<RunManager["getState"]>,
+    run: RunManager
+): void {
+    const THEMED_FACTIONS = ["quickdraw", "deputies", "clockwork", "prospectors"] as const
+
+    for (const relic of RELIC_DEFS) {
+        if (coll.hasRelicUnlocked(relic.id)) continue
+        const cond = relic.unlockCondition
+
+        switch (cond.type) {
+            case "default":
+                coll.unlockRelic(relic.id)
+                break
+            case "reachRound":
+                if (coll.getHighestRound() >= (cond.round ?? 0)) {
+                    coll.unlockRelic(relic.id)
+                }
+                break
+            case "defeatAnyBoss":
+                if (coll.getTotalBossesDefeated() > 0) {
+                    coll.unlockRelic(relic.id)
+                }
+                break
+            case "defeatBoss":
+                if (cond.bossId && summary.bossesDefeated.includes(cond.bossId)) {
+                    coll.unlockRelic(relic.id)
+                }
+                break
+            case "completeFaction":
+                if (cond.faction && coll.isFactionComplete(cond.faction as FactionId)) {
+                    coll.unlockRelic(relic.id)
+                }
+                break
+            case "multiFactionWin": {
+                const factionCount = new Set(
+                    state.lineup
+                        .map((u) => u.faction)
+                        .filter((f) => f !== "drifters")
+                ).size
+                if (factionCount >= (cond.count ?? 3)) {
+                    coll.unlockRelic(relic.id)
+                }
+                break
+            }
+            case "completedRuns":
+                if (coll.getCompletedRuns() >= (cond.count ?? 0)) {
+                    coll.unlockRelic(relic.id)
+                }
+                break
+            case "totalUnitsBought":
+                if (coll.getTotalUnitsBought() >= (cond.count ?? 0)) {
+                    coll.unlockRelic(relic.id)
+                }
+                break
+            case "frontDiedAndWin":
+                if (
+                    run.didFrontDieInLastCombat() &&
+                    run.getLastCombatResult()?.winner === "player"
+                ) {
+                    coll.unlockRelic(relic.id)
+                }
+                break
+            case "allFactionsInLineup": {
+                const lineupFactions = new Set(
+                    state.lineup.map((u) => u.faction).filter((f) => f !== "drifters")
+                )
+                if (THEMED_FACTIONS.every((f) => lineupFactions.has(f))) {
+                    coll.unlockRelic(relic.id)
+                }
+                break
+            }
+            case "lowSpendRun":
+                if (summary.totalScrapSpent <= (cond.count ?? 20) && state.phase === "finished") {
+                    coll.unlockRelic(relic.id)
+                }
+                break
+            case "holdNRelics":
+                if (run.getHeldRelics().length >= (cond.count ?? 0)) {
+                    coll.unlockRelic(relic.id)
+                }
+                break
+            case "majorityDriftersRound":
+                if (
+                    coll.getHighestRound() >= (cond.round ?? 15) &&
+                    summary.majorityFaction === undefined
+                ) {
+                    // No majority faction means drifters or mixed
+                    coll.unlockRelic(relic.id)
+                }
+                break
+            case "allBossesSingleRun":
+                if (
+                    summary.bossesDefeated.length >= 4 &&
+                    new Set(summary.bossesDefeated).size >= 4
+                ) {
+                    coll.unlockRelic(relic.id)
+                }
+                break
+        }
+    }
 }
 
 // ── Run view router ─────────────────────────────────────────────────────────
@@ -350,7 +642,10 @@ function renderRunView(container: HTMLElement): void {
             renderShopPhase(container)
             break
         case "combat":
-            renderCombatPhase(container)
+            void renderCombatPhase(container)
+            break
+        case "event":
+            renderEventPhase(container)
             break
         case "reward":
         case "finished":
@@ -383,10 +678,14 @@ function renderShopPhase(container: HTMLElement): void {
     let html = `
         <div class="ab-run-header ${state.isBossRound ? "boss" : ""}">
             <span class="ab-header-cell">${roundLabel}</span>
-            <span class="ab-header-cell">${t("symposium.ui.thoughts", { amount: state.scrap })}</span>
+            <span class="ab-header-cell" id="ab-scrap-display">${t("symposium.ui.thoughts", { amount: state.scrap })}</span>
             <span class="ab-header-cell">${renderLives(state.losses)}</span>
         </div>
+    `
 
+    html += renderRelicBar(activeRun.getHeldRelics(), t)
+
+    html += `
         <div class="ab-shop-section">
             <div class="ab-section-heading">${t("symposium.ui.shop")}</div>
             <div class="ab-shop-offers">
@@ -412,7 +711,6 @@ function renderShopPhase(container: HTMLElement): void {
         </div>
     `
 
-    // Synergy bar
     html += renderSynergyBar(state.lineup)
 
     html += `
@@ -458,8 +756,10 @@ function renderShopPhase(container: HTMLElement): void {
 
     html += `</div>`
 
-    // Opponent preview
     if (opponent) {
+        const modifier = opponent.modifierId
+            ? BOSS_MODIFIER_MAP.get(opponent.modifierId)
+            : undefined
         html += `
             <div class="ab-opponent-preview">
                 <div class="ab-section-heading">${t("symposium.ui.opponentPreview")}</div>
@@ -467,6 +767,7 @@ function renderShopPhase(container: HTMLElement): void {
                     <span class="ab-preview-name">${opponent.name}</span>
                     <span class="ab-preview-faction">${factionIcon(opponent.faction)} ${factionLabel(opponent.faction)}</span>
                 </div>
+                ${modifier ? `<div class="ab-boss-modifier"><span class="ab-modifier-name">${modifier.name}</span> <span class="ab-modifier-desc">${modifier.description}</span></div>` : ""}
                 <div class="ab-preview-units">
         `
         for (const u of opponent.units) {
@@ -516,7 +817,8 @@ function renderSynergyBar(lineup: { faction: FactionId }[]): string {
 
     let html = `<div class="ab-synergy-bar">`
     for (const [faction, count] of entries) {
-        html += `<span class="ab-synergy-badge" style="--uc-faction-color: var(--faction-${faction})">${factionIcon(faction)} x${count}</span>`
+        const fc = factionColor(faction)
+        html += `<span class="ab-synergy-badge" style="--uc-faction-color: ${fc}" data-faction="${faction}">${factionIcon(faction)} ${factionLabel(faction)} x${count}</span>`
     }
     html += `</div>`
     return html
@@ -525,32 +827,146 @@ function renderSynergyBar(lineup: { faction: FactionId }[]): string {
 function wireShopEvents(container: HTMLElement): void {
     container.querySelectorAll(".uc-card.uc-shop:not(.sold)").forEach((btn) => {
         btn.addEventListener("click", () => {
+            if (!activeRun) return
             const idx = parseInt(btn.getAttribute("data-offer") ?? "0")
-            activeRun?.buyUnit(idx)
-            renderShopPhase(container)
+
+            // Snapshot lineup/bench levels before buy to detect merge
+            const prevLevels = new Map<string, number>()
+            const state = activeRun.getState()
+            for (const u of [...state.lineup, ...state.bench]) {
+                prevLevels.set(u.instanceId, u.level)
+            }
+            const prevScrap = state.scrap
+
+            const card = btn as HTMLElement
+            card.classList.add("uc-purchase-anim")
+
+            setTimeout(() => {
+                if (!activeRun) return
+                const bought = activeRun.buyUnit(idx)
+                if (bought) playSound("ab_buy")
+
+                const newState = activeRun.getState()
+                let mergedUnit: string | null = null
+                for (const u of [...newState.lineup, ...newState.bench]) {
+                    const prev = prevLevels.get(u.instanceId)
+                    if (prev !== undefined && u.level > prev) {
+                        mergedUnit = u.instanceId
+                    }
+                }
+
+                renderShopPhase(container)
+
+                if (newState.scrap < prevScrap) {
+                    showScrapFloat(container, prevScrap - newState.scrap, false)
+                }
+
+                if (mergedUnit) {
+                    requestAnimationFrame(() => {
+                        const mergedCard =
+                            container.querySelector(`.uc-card.uc-owned`)
+                        if (mergedCard) {
+                            const allOwned =
+                                container.querySelectorAll<HTMLElement>(
+                                    ".uc-card.uc-owned"
+                                )
+                            for (const c of allOwned) {
+                                const lvl = c.getAttribute("data-unit-level")
+                                if (lvl && parseInt(lvl) > 1) {
+                                    c.classList.add("uc-level-up-burst")
+                                    const floater =
+                                        document.createElement("div")
+                                    floater.className = "ab-level-up-float"
+                                    floater.textContent = "LEVEL UP!"
+                                    c.style.position = "relative"
+                                    c.appendChild(floater)
+                                    setTimeout(() => {
+                                        floater.remove()
+                                        c.classList.remove("uc-level-up-burst")
+                                    }, 800)
+                                    break
+                                }
+                            }
+                        }
+                    })
+                }
+            }, 200)
         })
     })
 
     container.querySelector(".ab-reroll-btn")?.addEventListener("click", () => {
-        activeRun?.reroll()
-        renderShopPhase(container)
+        if (!activeRun) return
+
+        const offersEl = container.querySelector(".ab-shop-offers")
+        if (offersEl) {
+            offersEl.classList.add("ab-reroll-anim")
+        }
+
+        const prevScrap = activeRun.getState().scrap
+        setTimeout(() => {
+            if (!activeRun) return
+            activeRun.reroll()
+            playSound("ab_reroll")
+            renderShopPhase(container)
+            const newScrap = activeRun.getState().scrap
+            if (newScrap < prevScrap) {
+                showScrapFloat(container, prevScrap - newScrap, false)
+            }
+        }, 250)
     })
 
     container.querySelectorAll(".uc-sell-btn").forEach((btn) => {
         btn.addEventListener("click", (e) => {
             e.stopPropagation()
+            if (!activeRun) return
             const source = btn.getAttribute("data-source") as "lineup" | "bench"
             const idx = parseInt(btn.getAttribute("data-idx") ?? "0")
-            activeRun?.sellUnit(source, idx)
-            renderShopPhase(container)
+
+            const prevScrap = activeRun.getState().scrap
+
+            const card = (btn as HTMLElement).closest(".uc-card") as HTMLElement
+            if (card) {
+                card.classList.add("uc-sell-anim")
+                setTimeout(() => {
+                    if (!activeRun) return
+                    activeRun.sellUnit(source, idx)
+                    playSound("ab_sell")
+                    const newScrap = activeRun.getState().scrap
+                    renderShopPhase(container)
+                    if (newScrap > prevScrap) {
+                        showScrapFloat(container, newScrap - prevScrap, true)
+                    }
+                }, 250)
+            } else {
+                activeRun.sellUnit(source, idx)
+                playSound("ab_sell")
+                renderShopPhase(container)
+            }
         })
     })
 
     container.querySelector(".ab-fight-btn")?.addEventListener("click", () => {
         if (!activeRun) return
         activeRun.readyForCombat()
-        renderCombatPhase(container)
+        void renderCombatPhase(container)
     })
+}
+
+/** Show floating scrap change number */
+function showScrapFloat(
+    container: HTMLElement,
+    amount: number,
+    positive: boolean
+): void {
+    const header = container.querySelector(".ab-header-cell:nth-child(2)")
+    if (!header) return
+
+    const floater = document.createElement("span")
+    floater.className = `ab-scrap-float ${positive ? "positive" : "negative"}`
+    floater.textContent = positive ? `+${amount} 💭` : `-${amount} 💭`
+    ;(header as HTMLElement).style.position = "relative"
+    header.appendChild(floater)
+    setTimeout(() => floater.remove(), 800)
 }
 
 /** Wire ability tooltips on owned cards */
@@ -770,7 +1186,7 @@ function executeDrop(
 
 // ── Combat phase ────────────────────────────────────────────────────────────
 
-function renderCombatPhase(container: HTMLElement): void {
+async function renderCombatPhase(container: HTMLElement): Promise<void> {
     if (!activeRun) return
     removeStaleTooltips()
 
@@ -788,10 +1204,10 @@ function renderCombatPhase(container: HTMLElement): void {
         createCombatUnit(u.unitId, u.level, opponentBonuses)
     )
     const playerUnits = state.lineup.map((u) =>
-        createCombatUnit(u.unitDefId, u.level, activeRun!.combatBonuses)
+        createCombatUnit(u.unitDefId, u.level, activeRun?.combatBonuses)
     )
 
-    const result = activeRun.executeCombat()
+    const result = await activeRun.executeCombat()
     if (!result) return
     const updatedState = activeRun.getState()
 
@@ -803,12 +1219,15 @@ function renderCombatPhase(container: HTMLElement): void {
             getProgressionManager().addXP(reward.value)
         }
         if (reward.type === "commodity" && typeof reward.value === "string") {
+            const baseQty =
+                typeof reward.quantity === "number" ? reward.quantity : 1
             const hasFrontier = getPrestigeManager().hasFrontierDispatch()
-            const qty = 1 + (hasFrontier && Math.random() < 0.25 ? 1 : 0)
+            const qty =
+                baseQty + (hasFrontier && Math.random() < 0.25 ? 1 : 0)
             getMarketGame().grantCommodity(reward.value as CommodityId, qty)
         }
         if (reward.type === "unit" && typeof reward.value === "string") {
-            getCollectionManager().addUnit(reward.value)
+            getCollectionManager().addUnit(reward.value as UnitId)
         }
     }
 
@@ -819,16 +1238,24 @@ function renderCombatPhase(container: HTMLElement): void {
         ? t("symposium.ui.bossRound", { current: state.round })
         : t("symposium.ui.round", { current: state.round })
 
+    const combatModifier = opponent.modifierId
+        ? BOSS_MODIFIER_MAP.get(opponent.modifierId)
+        : undefined
+    const modifierHtml = combatModifier
+        ? `<div class="ab-boss-modifier compact"><span class="ab-modifier-name">${combatModifier.name}</span></div>`
+        : ""
+
     const headerHtml = `
         <div class="ab-run-header ${state.isBossRound ? "boss" : ""}">
             <span class="ab-header-cell">${roundLabel}</span>
-            <span class="ab-header-cell">vs ${opponent.name}</span>
+            <span class="ab-header-cell">vs ${opponent.name}${modifierHtml}</span>
             <span class="ab-header-cell">${renderLives(updatedState.losses)}</span>
         </div>
     `
     container.innerHTML = headerHtml + `<div id="ab-combat-container"></div>`
 
-    const combatContainer = document.getElementById("ab-combat-container")!
+    const combatContainer = document.getElementById("ab-combat-container")
+    if (!combatContainer) return
 
     activeAnimator = new CombatAnimator(
         combatContainer,
@@ -838,7 +1265,8 @@ function renderCombatPhase(container: HTMLElement): void {
         () => {
             activeAnimator = null
             renderResultPhase(container)
-        }
+        },
+        state.isBossRound
     )
     activeAnimator.start()
 }
@@ -855,7 +1283,7 @@ function translateRewardValue(type: string, value: string | number): string {
         return t(`market.commodities.${value}.name`, { defaultValue: value })
     }
     if (type === "unit") {
-        const def = UNIT_MAP.get(value)
+        const def = UNIT_MAP.get(value as UnitId)
         if (def) return unitDisplayName(def)
         return t(`symposium.units.${value}`, { defaultValue: value })
     }
@@ -875,7 +1303,7 @@ function translateRewardDescription(type: string, description: string): string {
     }
     // For unit rewards, the description IS the unit ID
     if (type === "unit") {
-        const def = UNIT_MAP.get(description)
+        const def = UNIT_MAP.get(description as UnitId)
         if (def) return `Recruited ${unitDisplayName(def)}`
         return description
     }
@@ -883,6 +1311,28 @@ function translateRewardDescription(type: string, description: string): string {
 }
 
 // ── Result phase ────────────────────────────────────────────────────────────
+
+function generateConfettiHtml(): string {
+    const colors = [
+        "#cc3333",
+        "#336699",
+        "#996633",
+        "#669933",
+        "#d4a017",
+        "#6495ed",
+        "#44aa44",
+    ]
+    let html = `<div class="ab-confetti-container">`
+    for (let i = 0; i < 20; i++) {
+        const color = colors[i % colors.length]
+        const left = Math.random() * 100
+        const delay = Math.random() * 0.8
+        const size = 3 + Math.random() * 4
+        html += `<span class="ab-confetti" style="left:${left}%;animation-delay:${delay}s;width:${size}px;height:${size}px;background:${color}"></span>`
+    }
+    html += `</div>`
+    return html
+}
 
 function renderResultPhase(container: HTMLElement): void {
     if (!activeRun) return
@@ -911,15 +1361,34 @@ function renderResultPhase(container: HTMLElement): void {
         ? t("symposium.ui.bossRound", { current: state.round })
         : t("symposium.ui.round", { current: state.round })
 
+    const winStreak = result.winner === "player" ? state.wins : 0
+
     let html = `
         <div class="ab-run-header ${state.isBossRound ? "boss" : ""}">
             <span class="ab-header-cell">${roundLabel}</span>
             <span class="ab-header-cell">${renderLives(state.losses)}</span>
         </div>
         <div class="ab-combat-result ${resultClass}">
+            ${result.winner === "player" ? generateConfettiHtml() : ""}
             <h2>${resultText}</h2>
-            <div class="ab-combat-subtitle">${t("symposium.ui.combatLasted", { rounds: result.rounds })}</div>
     `
+
+    if (winStreak >= 2) {
+        html += `<div class="ab-win-streak">🔥 Win Streak: ${winStreak}</div>`
+    }
+
+    if (
+        state.isBossRound &&
+        result.winner === "player" &&
+        state.currentBossId
+    ) {
+        const boss = BOSS_MAP.get(state.currentBossId)
+        if (boss) {
+            html += `<div class="ab-boss-defeated-text">💀 ${boss.name} defeated!</div>`
+        }
+    }
+
+    html += `<div class="ab-combat-subtitle">${t("symposium.ui.combatLasted", { rounds: result.rounds })}</div>`
 
     if (result.playerSurvivors.length > 0) {
         html += `<div class="ab-survivors">
@@ -942,7 +1411,6 @@ function renderResultPhase(container: HTMLElement): void {
             : entry.description.includes("summons")
               ? "summon"
               : ""
-        // Translate unit IDs to display names in log
         let desc = entry.description
         for (const [id, def] of UNIT_MAP) {
             if (desc.includes(id)) {
@@ -953,11 +1421,11 @@ function renderResultPhase(container: HTMLElement): void {
     }
     html += `</div></details>`
 
-    // Rewards with translated names
     const recentRewards = state.runRewards.slice(-5)
     if (recentRewards.length > 0) {
         html += `<div class="ab-rewards"><div class="ab-section-heading">${t("symposium.ui.rewards")}</div>`
-        for (const reward of recentRewards) {
+        recentRewards.forEach((reward, idx) => {
+            if (reward.type === "relic") return // Relics shown separately
             const icon =
                 reward.type === "xp"
                     ? "✨"
@@ -973,22 +1441,59 @@ function renderResultPhase(container: HTMLElement): void {
             const val = translateRewardValue(reward.type, reward.value)
             // Don't show raw value for commodity/unit since desc already has the name
             const showVal = reward.type === "xp" || reward.type === "scrap"
-            html += `<div class="ab-reward">${icon} ${desc}${showVal ? `: ${val}` : ""}</div>`
-        }
+            const isUnitUnlock = reward.type === "unit"
+            const rewardCls = isUnitUnlock
+                ? "ab-reward ab-reward-enter ab-reward-unit-unlock"
+                : "ab-reward ab-reward-enter"
+            const delay = idx * 0.15
+            html += `<div class="${rewardCls}" style="animation-delay:${delay}s">${icon} ${desc}${showVal ? `: ${val}` : ""}</div>`
+        })
         html += `</div>`
     }
 
+    const pendingRelics = state.pendingRelicChoices
+    if (pendingRelics && pendingRelics.length > 0) {
+        html += `<div class="ab-relic-choice">
+            <div class="ab-section-heading">${t("symposium.ui.chooseRelic", { defaultValue: "Choose a Relic" })}</div>
+            <div class="ab-relic-choice-grid">`
+        for (const relicId of pendingRelics) {
+            const rDef = RELIC_MAP.get(relicId)
+            if (!rDef) continue
+            const name = t(`symposium.relics.${relicId}.name`, { defaultValue: relicId })
+            const desc = t(`symposium.relics.${relicId}.description`, { defaultValue: "" })
+            const tierClass = `relic-${rDef.tier}`
+            html += `<button class="ab-relic-card ${tierClass}" data-relic-id="${relicId}">
+                <div class="ab-relic-name">${name}</div>
+                <div class="ab-relic-tier">${rDef.tier}</div>
+                <div class="ab-relic-desc">${desc}</div>
+            </button>`
+        }
+        html += `</div></div>`
+    }
+
+    html += renderRelicBar(activeRun.getHeldRelics(), t)
+
     if (isFinished) {
-        // Full run summary
         const summary = activeRun.getRunSummary()
         html += renderRunSummary(summary, t)
         html += `<button class="ab-return-btn">${t("symposium.ui.returnToLobby")}</button>`
-    } else {
+    } else if (!pendingRelics || pendingRelics.length === 0) {
         html += `<button class="ab-next-btn">${t("symposium.ui.nextRound")}</button>`
     }
 
     html += `</div>`
     container.innerHTML = html
+
+    container.querySelectorAll(".ab-relic-card").forEach((btn) => {
+        btn.addEventListener("click", () => {
+            const relicId = getDataAttribute<RelicId>(btn, "relic-id")
+            if (relicId && activeRun) {
+                activeRun.pickPendingRelic(relicId)
+                playSound("ab_relic")
+                renderResultPhase(container)
+            }
+        })
+    })
 
     container.querySelector(".ab-next-btn")?.addEventListener("click", () => {
         activeRun?.nextRound()
@@ -998,7 +1503,91 @@ function renderResultPhase(container: HTMLElement): void {
     container.querySelector(".ab-return-btn")?.addEventListener("click", () => {
         activeRun = null
         lastProcessedRewardIndex = 0
-        renderLobbyView(container)
+        container.classList.add("phase-exit")
+        setTimeout(() => {
+            container.classList.remove("phase-exit")
+            renderLobbyView(container)
+        }, 150)
+    })
+}
+
+// ── Relic bar ────────────────────────────────────────────────────────────────
+
+function renderRelicBar(
+    relics: ReadonlyArray<RelicInstance>,
+    t: (key: string, opts?: Record<string, unknown>) => string
+): string {
+    if (relics.length === 0) return ""
+    let html = `<div class="ab-relic-bar"><span class="ab-relic-bar-label">${t("symposium.ui.relics", { defaultValue: "Relics" })}:</span>`
+    for (const r of relics) {
+        const def = RELIC_MAP.get(r.relicId)
+        if (!def) continue
+        const name = t(`symposium.relics.${r.relicId}.name`, { defaultValue: r.relicId })
+        const desc = t(`symposium.relics.${r.relicId}.description`, { defaultValue: "" })
+        const tierClass = `relic-${def.tier}`
+        html += `<span class="ab-relic-pip ${tierClass}" title="${name}: ${desc}">${name.charAt(0)}</span>`
+    }
+    html += `</div>`
+    return html
+}
+
+// ── Event phase ──────────────────────────────────────────────────────────────
+
+function renderEventPhase(container: HTMLElement): void {
+    if (!activeRun) return
+
+    const state = activeRun.getState()
+    const event = state.activeEvent
+
+    if (!event) {
+        // No event data — skip to shop
+        activeRun.continueToShop()
+        renderRunView(container)
+        return
+    }
+
+    playSound("ab_event")
+
+    const lm = getLocaleManager()
+    const t = lm.t.bind(lm)
+
+    const title = t(`symposium.events.${event.eventId}.title`, { defaultValue: event.eventId })
+    const description = t(`symposium.events.${event.eventId}.description`, { defaultValue: "" })
+
+    let html = `
+        <div class="ab-run-header">
+            <span class="ab-header-cell">${t("symposium.ui.round", { current: state.round })}</span>
+            <span class="ab-header-cell">${renderLives(state.losses)}</span>
+        </div>
+    `
+
+    html += renderRelicBar(activeRun.getHeldRelics(), t)
+
+    html += `
+        <div class="ab-event">
+            <div class="ab-event-title">${title}</div>
+            <div class="ab-event-description">${description}</div>
+            <div class="ab-event-choices">
+    `
+
+    for (let i = 0; i < event.choices.length; i++) {
+        const choice = event.choices[i]
+        const label = t(`symposium.events.${event.eventId}.choices.${i}`, { defaultValue: choice.label })
+        html += `<button class="ab-event-choice-btn" data-choice-index="${i}">${label}</button>`
+    }
+
+    html += `</div></div>`
+    container.innerHTML = html
+
+    container.querySelectorAll(".ab-event-choice-btn").forEach((btn) => {
+        btn.addEventListener("click", () => {
+            const idx = parseInt((btn as HTMLElement).dataset.choiceIndex ?? "0", 10)
+            if (activeRun) {
+                playSound("ab_boop")
+                activeRun.resolveEvent(idx)
+                renderRunView(container)
+            }
+        })
     })
 }
 
@@ -1027,13 +1616,15 @@ function renderRunSummary(
                   .join(", ")
             : t("symposium.ui.noBosses")
 
+    const wlRecord = `<span style="color:var(--theme-color-success)">${summary.highestRound - summary.losses}W</span> / <span style="color:var(--theme-color-danger)">${summary.losses}L</span>`
+
     return `
         <div class="ab-run-summary">
             <div class="ab-section-heading">${t("symposium.ui.runSummary")}</div>
             <div class="ab-summary-grid">
                 <div class="ab-summary-row">
                     <span class="ab-summary-label">${t("symposium.ui.highestRound")}</span>
-                    <span class="ab-summary-value">${summary.highestRound}</span>
+                    <span class="ab-summary-value">${summary.highestRound} <span class="ab-summary-detail">(${wlRecord})</span></span>
                 </div>
                 <div class="ab-summary-row">
                     <span class="ab-summary-label">${t("symposium.ui.majorityFaction")}</span>
@@ -1044,7 +1635,7 @@ function renderRunSummary(
                         ? `
                 <div class="ab-summary-row">
                     <span class="ab-summary-label">${t("symposium.ui.bestUnit")}</span>
-                    <span class="ab-summary-value">${bestUnitName} <span class="ab-summary-detail">(${t("symposium.ui.combatsSurvived", { count: summary.bestUnit!.combatsSurvived })})</span></span>
+                    <span class="ab-summary-value">${bestUnitName} <span class="ab-summary-detail">(${t("symposium.ui.combatsSurvived", { count: summary.bestUnit?.combatsSurvived ?? 0 })})</span></span>
                 </div>
                 `
                         : ""
@@ -1056,11 +1647,11 @@ function renderRunSummary(
                 <div class="ab-summary-divider"></div>
                 <div class="ab-summary-row">
                     <span class="ab-summary-label">${t("symposium.ui.scrapEarned")}</span>
-                    <span class="ab-summary-value">${summary.totalScrapEarned} 💭</span>
+                    <span class="ab-summary-value" data-count-target="${summary.totalScrapEarned}">💭 ${summary.totalScrapEarned}</span>
                 </div>
                 <div class="ab-summary-row">
                     <span class="ab-summary-label">${t("symposium.ui.scrapSpent")}</span>
-                    <span class="ab-summary-value">${summary.totalScrapSpent} 💭</span>
+                    <span class="ab-summary-value" data-count-target="${summary.totalScrapSpent}">💭 ${summary.totalScrapSpent}</span>
                 </div>
                 <div class="ab-summary-row">
                     <span class="ab-summary-label">${t("symposium.ui.unitsBought")}</span>

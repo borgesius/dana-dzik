@@ -166,8 +166,7 @@ export class BusinessPanel {
             this.portfolio.render()
         })
         this.game.on("newsEvent", (data) => {
-            const d = data as { text: string }
-            this.updateNewsTicker(d.text)
+            this.updateNewsTicker(data.text)
         })
         this.game.on("phaseUnlocked", () => {
             this.updatePhaseVisibility()

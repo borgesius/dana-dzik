@@ -27,6 +27,8 @@ const TIERED_GROUP_LABELS: Record<TieredGroup, string> = {
     lunar: "Lunar Cycle",
     ascension: "Ascension",
     cost: "Cost",
+    "prestige-count": "Prestige Count",
+    mastery: "Mastery",
 }
 
 function renderTierStars(group: TieredGroup, defs: AchievementDef[]): string {

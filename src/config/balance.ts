@@ -38,7 +38,10 @@ export { ALL_UNITS, UNIT_MAP } from "../lib/autobattler/units"
 
 export {
     calculateHindsight,
+    getPrestigeThreshold,
     HINDSIGHT_UPGRADES,
+    hindsightUpgradeCostAt,
+    hindsightUpgradeTotalCost,
     PRESTIGE_THRESHOLD,
 } from "../lib/prestige/constants"
 

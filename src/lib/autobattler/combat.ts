@@ -1,3 +1,5 @@
+import { GameStateError } from "@/core/errors"
+
 import type {
     AbilityEffect,
     AbilityTrigger,
@@ -6,6 +8,7 @@ import type {
     CombatUnit,
     FactionId,
     UnitDef,
+    UnitId,
 } from "./types"
 import { UNIT_MAP } from "./units"
 
@@ -21,12 +24,15 @@ export interface CombatBonuses {
 }
 
 export function createCombatUnit(
-    unitDefId: string,
+    unitDefId: UnitId,
     level: number = 1,
     bonuses?: CombatBonuses
 ): CombatUnit {
     const def = UNIT_MAP.get(unitDefId)
-    if (!def) throw new Error(`Unknown unit: ${unitDefId}`)
+    if (!def)
+        throw new GameStateError(`Unknown unit: ${unitDefId}`, "autobattler", {
+            unitDefId,
+        })
 
     const levelMult = 1 + (level - 1) * 0.5 // 1x at L1, 1.5x at L2, 2x at L3
     const factionAtkBonus = bonuses?.factionATK?.[def.faction] ?? 0

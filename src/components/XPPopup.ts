@@ -15,8 +15,7 @@ export class XPPopup {
         })
 
         getProgressionManager().on("xpGained", (data) => {
-            const { amount } = data as { amount: number }
-            this.spawn(amount)
+            this.spawn(data.amount)
         })
     }
 

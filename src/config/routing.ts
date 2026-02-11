@@ -14,6 +14,8 @@ export const ROUTABLE_WINDOWS = [
     "autobattler",
     "customize",
     "finder",
+    "md",
+    "divination",
 ] as const
 
 export type RoutableWindow = (typeof ROUTABLE_WINDOWS)[number]
@@ -33,4 +35,5 @@ export const ROUTE_MAP: Record<string, RoutableWindow> = {
     "/hacking": "autobattler",
     "/customize": "customize",
     "/career": "resume",
+    "/divination": "divination",
 }

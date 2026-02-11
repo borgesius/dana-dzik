@@ -53,9 +53,9 @@ export class SystemResourcesWidget {
         // Badge: show heap if available, otherwise DOM count
         if (mem) {
             const usedMB = mem.usedJSHeapSize / (1024 * 1024)
-            this.el.firstChild!.textContent = `\uD83D\uDDA5\uFE0F ${usedMB.toFixed(1)} MB`
+            if (this.el.firstChild) this.el.firstChild.textContent = `\uD83D\uDDA5\uFE0F ${usedMB.toFixed(1)} MB`
         } else {
-            this.el.firstChild!.textContent = `\uD83D\uDDA5\uFE0F ${domCount} nodes`
+            if (this.el.firstChild) this.el.firstChild.textContent = `\uD83D\uDDA5\uFE0F ${domCount} nodes`
         }
 
         this.tooltipEl.innerHTML = this.renderTooltip(mem, domCount)

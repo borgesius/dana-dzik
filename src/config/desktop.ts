@@ -110,4 +110,18 @@ export const DESKTOP_ITEMS: DesktopItemConfig[] = [
         windowId: "finder",
         fileType: "executable",
     },
+    {
+        id: "md",
+        filename: "M.D.",
+        icon: "🩺",
+        windowId: "md",
+        fileType: "executable",
+    },
+    {
+        id: "divination",
+        filename: "divination.exe",
+        icon: "🔮",
+        windowId: "divination",
+        fileType: "executable",
+    },
 ]

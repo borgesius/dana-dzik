@@ -1,3 +1,5 @@
+import { apiFetch } from "../../lib/api/client"
+
 function pick<T>(arr: T[]): T {
     return arr[Math.floor(Math.random() * arr.length)]
 }
@@ -45,31 +47,33 @@ export class WeatherWidget {
         const day = today.getDate()
         const historicalDate = `1997-${String(today.getMonth() + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`
 
-        try {
-            const url = `https://archive-api.open-meteo.com/v1/archive?latitude=${lat}&longitude=${lon}&start_date=${historicalDate}&end_date=${historicalDate}&daily=temperature_2m_max,temperature_2m_min,precipitation_sum&temperature_unit=fahrenheit&timezone=auto`
-            const response = await fetch(url)
-            // SAFETY: response shape per Open-Meteo Archive API contract
-            const data = (await response.json()) as {
-                daily: {
-                    temperature_2m_max: number[]
-                    temperature_2m_min: number[]
-                    precipitation_sum: number[]
-                }
+        interface WeatherResponse {
+            daily: {
+                temperature_2m_max: number[]
+                temperature_2m_min: number[]
+                precipitation_sum: number[]
             }
-
-            const maxTemp = Math.round(data.daily.temperature_2m_max[0])
-            const precip = data.daily.precipitation_sum[0]
-
-            let emoji = "☀️"
-            if (precip > 5) emoji = "🌧️"
-            else if (precip > 0) emoji = "🌤️"
-            else if (maxTemp < 40) emoji = "❄️"
-
-            const tempDisplay = this.formatTemperature(maxTemp)
-            this.el.innerHTML = `${tempDisplay} ${emoji} SF - ${month} ${day}, ${this.yearStr}`
-        } catch {
-            this.setFallbackWeather()
         }
+
+        const url = `https://archive-api.open-meteo.com/v1/archive?latitude=${lat}&longitude=${lon}&start_date=${historicalDate}&end_date=${historicalDate}&daily=temperature_2m_max,temperature_2m_min,precipitation_sum&temperature_unit=fahrenheit&timezone=auto`
+        const res = await apiFetch<WeatherResponse>(url)
+
+        if (!res.ok) {
+            this.setFallbackWeather()
+            return
+        }
+
+        const data = res.data
+        const maxTemp = Math.round(data.daily.temperature_2m_max[0])
+        const precip = data.daily.precipitation_sum[0]
+
+        let emoji = "☀️"
+        if (precip > 5) emoji = "🌧️"
+        else if (precip > 0) emoji = "🌤️"
+        else if (maxTemp < 40) emoji = "❄️"
+
+        const tempDisplay = this.formatTemperature(maxTemp)
+        this.el.innerHTML = `${tempDisplay} ${emoji} SF - ${month} ${day}, ${this.yearStr}`
     }
 
     private formatTemperature(temp: number): string {

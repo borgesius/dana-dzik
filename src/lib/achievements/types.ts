@@ -24,6 +24,9 @@ export type AchievementId =
     | "going-concern"
     | "dot-com-darling"
     | "irrational-exuberance"
+    | "corporate-raider"
+    | "market-mogul"
+    | "too-big-to-fail"
     | "fire-sale"
     | "first-out-the-door"
     | "who-are-we-selling-to"
@@ -123,6 +126,9 @@ export type AchievementId =
     // Prestige
     | "ive-been-wrong"
     | "doesnt-matter-what-floor"
+    | "serial-entrepreneur"
+    | "bubble-addict"
+    | "bubble-eternal"
     | "hindsight-shopper"
     | "tell-them-theyll-be-ok"
     // Career
@@ -130,6 +136,9 @@ export type AchievementId =
     | "career-switcher"
     | "skill-tree-novice"
     | "skill-tree-master"
+    | "apprentice"
+    | "journeyman"
+    | "grandmaster"
     // HR / Phase 5
     | "that-ones-a-person"
     | "we-make-nothing"
@@ -141,6 +150,10 @@ export type AchievementId =
     | "deputies-complete"
     | "collective-complete"
     | "prospectors-complete"
+    // Autobattler (relics)
+    | "relic-hunter"
+    | "curator"
+    | "full-collection"
     // Cross-system (hidden)
     | "vertical-integration"
     | "exit-interview"
@@ -171,6 +184,8 @@ export type AchievementId =
     | "music-stops"
     | "it-goes-quickly"
     | "rainy-day"
+    | "triple-a-streak"
+    | "diversified-portfolio"
     // Standalone new
     | "serial-pivoter"
     | "overqualified"
@@ -179,6 +194,7 @@ export type AchievementId =
     // Cross-system
     | "renaissance"
     | "full-stack"
+    | "self-sustaining"
     // Harvest (clicker)
     | "harvest-100"
     | "harvest-1000"
@@ -188,7 +204,9 @@ export type AchievementId =
     // Per-commodity harvest
     | "harvest-email-500"
     | "harvest-ads-500"
+    | "harvest-live-500"
     | "harvest-dom-500"
+    | "harvest-glue-500"
     | "harvest-bw-500"
     | "harvest-soft-500"
     | "harvest-vc-500"
@@ -294,6 +312,11 @@ export type AchievementId =
     | "fashionista"
     | "aesthete"
     | "pferd-couture"
+    // Network monitor (M.D.)
+    | "packet-sniffing"
+    | "deep-packet-inspection"
+    | "unknown-host"
+    | "port-scan"
 
 export type TieredGroup =
     | "mogul"
@@ -310,6 +333,8 @@ export type TieredGroup =
     | "lunar"
     | "ascension"
     | "cost"
+    | "prestige-count"
+    | "mastery"
 
 export interface AchievementDef {
     id: AchievementId
@@ -332,7 +357,9 @@ export type CounterKey =
     | "factions-won-with"
     | "harvest-EMAIL"
     | "harvest-ADS"
+    | "harvest-LIVE"
     | "harvest-DOM"
+    | "harvest-GLUE"
     | "harvest-BW"
     | "harvest-SOFT"
     | "harvest-VC"
@@ -340,6 +367,9 @@ export type CounterKey =
     | "grund-compiles"
     | "bosses-defeated"
     | "veil-attempts"
+    | "relics-unlocked"
+    | "mastery-levels-purchased"
+    | "packets-expanded"
 
 export interface AchievementSaveData {
     earned: Record<string, number>

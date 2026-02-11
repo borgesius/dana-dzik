@@ -1,12 +1,17 @@
+import { getDataAttribute } from "../../lib/domUtils"
 import { formatMoney } from "../../lib/formatMoney"
 import type { MarketEngine } from "../../lib/marketGame/MarketEngine"
 import {
     ASCENSION_PRESERVED_UPGRADES,
+    ASCENSION_SPEND_THRESHOLD,
     FORESIGHT_UPGRADES,
+    type ForesightUpgradeId,
 } from "../../lib/prestige/ascension"
 import {
     HINDSIGHT_UPGRADES,
-    PRESTIGE_THRESHOLD,
+    type HindsightUpgradeDef,
+    type HindsightUpgradeId,
+    hindsightUpgradeCostAt,
 } from "../../lib/prestige/constants"
 import {
     getPrestigeManager,
@@ -14,6 +19,26 @@ import {
 } from "../../lib/prestige/PrestigeManager"
 import { getCareerManager } from "../../lib/progression/CareerManager"
 import { saveManager } from "../../lib/saveManager"
+
+/** Group hindsight upgrades by tier (requiresPrestiges). */
+function groupByTier(
+    upgrades: readonly HindsightUpgradeDef[]
+): Map<number, HindsightUpgradeDef[]> {
+    const groups = new Map<number, HindsightUpgradeDef[]>()
+    for (const u of upgrades) {
+        const tier = u.requiresPrestiges
+        if (!groups.has(tier)) groups.set(tier, [])
+        groups.get(tier)?.push(u)
+    }
+    return groups
+}
+
+const TIER_LABELS: Record<number, string> = {
+    0: "Tier 1 — Foundations",
+    3: "Tier 2 — Acceleration",
+    6: "Tier 3 — Mastery",
+    10: "Tier 4 — Transcendence",
+}
 
 export class PrestigeSection {
     private element: HTMLElement
@@ -66,6 +91,7 @@ export class PrestigeSection {
         }
 
         const lifetime = this.game.getLifetimeEarnings()
+        const threshold = this.prestige.getCurrentPrestigeThreshold()
         const preview = this.prestige.getHindsightPreview(lifetime)
         const canPrestige = this.prestige.canPrestige(lifetime)
 
@@ -73,9 +99,9 @@ export class PrestigeSection {
         if (canPrestige) {
             previewLine = `<strong>+${preview} 💎</strong> Hindsight available now`
         } else if (preview > 0) {
-            previewLine = `Would earn <strong>${preview} 💎</strong> (need ${formatMoney(PRESTIGE_THRESHOLD - lifetime)} more)`
+            previewLine = `Would earn <strong>${preview} 💎</strong> (need ${formatMoney(threshold - lifetime)} more)`
         } else {
-            previewLine = `Earn at least ${formatMoney(PRESTIGE_THRESHOLD)} to pop`
+            previewLine = `Earn at least ${formatMoney(threshold)} to pop`
         }
 
         this.showTooltip(
@@ -102,13 +128,10 @@ export class PrestigeSection {
         }
 
         const foresightPreview = this.prestige.getForesightPreview()
+        const totalSpent = this.prestige.getTotalHindsightSpent()
 
         const preservedNames = HINDSIGHT_UPGRADES.filter((u) =>
             ASCENSION_PRESERVED_UPGRADES.has(u.id)
-        ).map((u) => u.name)
-
-        const resetNames = HINDSIGHT_UPGRADES.filter(
-            (u) => !ASCENSION_PRESERVED_UPGRADES.has(u.id)
         ).map((u) => u.name)
 
         this.showTooltip(
@@ -118,15 +141,15 @@ export class PrestigeSection {
             <p>In return you earn <strong>Foresight 🔮</strong>, used for powerful upgrades that survive all future ascensions.</p>
             <div class="prestige-tooltip-section">
                 <div class="prestige-tooltip-label">You lose:</div>
-                <div>Prestige count, Hindsight 💎, upgrades: ${resetNames.join(", ")}</div>
+                <div>Prestige count, Hindsight 💎, most hindsight shop upgrades</div>
             </div>
             <div class="prestige-tooltip-section">
                 <div class="prestige-tooltip-label">You keep:</div>
-                <div>Foresight 🔮, Foresight Shop purchases, upgrades: ${preservedNames.join(", ")}</div>
+                <div>Foresight 🔮, Foresight Shop purchases, preserved upgrades: ${preservedNames.join(", ")}</div>
             </div>
             <div class="prestige-tooltip-section">
                 <div class="prestige-tooltip-label">Requires:</div>
-                <div>All Hindsight Shop upgrades fully purchased</div>
+                <div>Spend ${ASCENSION_SPEND_THRESHOLD} total Hindsight (currently: ${totalSpent})</div>
             </div>
             <div class="prestige-tooltip-preview">Would earn <strong>+${foresightPreview} 🔮</strong> Foresight</div>`
         )
@@ -157,14 +180,16 @@ export class PrestigeSection {
     }
 
     public updateVisibility(): void {
+        const threshold = this.prestige.getCurrentPrestigeThreshold()
         const show =
             this.prestige.getCount() > 0 ||
-            this.game.getLifetimeEarnings() >= PRESTIGE_THRESHOLD * 0.5
+            this.game.getLifetimeEarnings() >= threshold * 0.5
         this.element.style.display = show ? "block" : "none"
     }
 
     public render(): void {
         const lifetime = this.game.getLifetimeEarnings()
+        const threshold = this.prestige.getCurrentPrestigeThreshold()
         const canPrestige = this.prestige.canPrestige(lifetime)
         const preview = this.prestige.getHindsightPreview(lifetime)
         const currentHindsight = this.prestige.getCurrency()
@@ -194,10 +219,14 @@ export class PrestigeSection {
                 </button>
             `
         } else {
-            const remaining = PRESTIGE_THRESHOLD - lifetime
+            const remaining = threshold - lifetime
+            const progress = Math.min(1, lifetime / threshold) * 100
             html += `
                 <div class="prestige-locked">
                     Earn ${formatMoney(Math.max(0, remaining))} more to pop
+                </div>
+                <div class="prestige-progress-bar">
+                    <div class="prestige-progress-fill" style="width: ${progress.toFixed(1)}%"></div>
                 </div>
             `
             if (preview > 0) {
@@ -209,30 +238,72 @@ export class PrestigeSection {
             }
         }
 
+        // ── Hindsight Shop (tiered) ──────────────────────────────────────
         if (prestigeCount > 0 || currentHindsight > 0) {
             html += `<div class="hindsight-shop"><h4>Hindsight Shop</h4>`
-            for (const upgrade of HINDSIGHT_UPGRADES) {
-                const count = this.prestige.getUpgradePurchaseCount(upgrade.id)
-                const maxed = count >= upgrade.maxPurchases
-                const canAfford = currentHindsight >= upgrade.cost
 
-                const cls = maxed
-                    ? "hindsight-item owned"
-                    : canAfford
-                      ? "hindsight-item"
-                      : "hindsight-item disabled"
-
-                html += `
-                    <button class="${cls}" data-upgrade="${upgrade.id}" ${maxed ? "disabled" : ""}>
-                        <div class="hindsight-item-header">
-                            <span class="hindsight-item-name">${upgrade.name}</span>
-                            ${maxed ? '<span class="hindsight-badge">Owned</span>' : `<span class="hindsight-cost">${upgrade.cost} 💎</span>`}
-                        </div>
-                        <div class="hindsight-item-desc">${upgrade.description}</div>
-                        ${upgrade.maxPurchases > 1 ? `<div class="hindsight-item-stacks">${count}/${upgrade.maxPurchases}</div>` : ""}
-                    </button>
-                `
+            const catSpend = this.getCategorySpend()
+            if (catSpend.size > 0) {
+                const topCat = [...catSpend.entries()].sort(
+                    (a, b) => b[1] - a[1]
+                )[0]
+                html += `<div class="specialization-indicator">Specialization: <strong>${topCat[0]}</strong></div>`
             }
+
+            const tiers = groupByTier(HINDSIGHT_UPGRADES)
+            const sortedTiers = [...tiers.keys()].sort((a, b) => a - b)
+
+            for (const tierReq of sortedTiers) {
+                const tierUpgrades = tiers.get(tierReq)
+                if (!tierUpgrades) continue
+                const isUnlocked = prestigeCount >= tierReq
+                const label = TIER_LABELS[tierReq] ?? `Tier (${tierReq}+ prestiges)`
+
+                html += `<div class="hindsight-tier ${isUnlocked ? "" : "locked"}">`
+                html += `<div class="tier-header">${label}</div>`
+
+                if (!isUnlocked) {
+                    const progress = Math.min(1, prestigeCount / tierReq) * 100
+                    html += `
+                        <div class="tier-locked-msg">Unlocks after ${tierReq} prestiges (${prestigeCount}/${tierReq})</div>
+                        <div class="prestige-progress-bar tier-progress">
+                            <div class="prestige-progress-fill" style="width: ${progress.toFixed(1)}%"></div>
+                        </div>
+                    `
+                    html += `</div>`
+                    continue
+                }
+
+                for (const upgrade of tierUpgrades) {
+                    const count = this.prestige.getUpgradePurchaseCount(
+                        upgrade.id
+                    )
+                    const maxed = count >= upgrade.maxPurchases
+                    const cost = maxed
+                        ? 0
+                        : hindsightUpgradeCostAt(upgrade, count)
+                    const canAfford = !maxed && currentHindsight >= cost
+
+                    const cls = maxed
+                        ? "hindsight-item owned"
+                        : canAfford
+                          ? "hindsight-item"
+                          : "hindsight-item disabled"
+
+                    html += `
+                        <button class="${cls}" data-upgrade="${upgrade.id}" ${maxed ? "disabled" : ""}>
+                            <div class="hindsight-item-header">
+                                <span class="hindsight-item-name">${upgrade.name}</span>
+                                ${maxed ? '<span class="hindsight-badge">Owned</span>' : `<span class="hindsight-cost">${cost} 💎</span>`}
+                            </div>
+                            <div class="hindsight-item-desc">${upgrade.description}</div>
+                            ${upgrade.maxPurchases > 1 ? `<div class="hindsight-item-stacks">${count}/${upgrade.maxPurchases}</div>` : ""}
+                        </button>
+                    `
+                }
+                html += `</div>`
+            }
+
             html += `</div>`
         }
 
@@ -240,14 +311,24 @@ export class PrestigeSection {
         const ascCount = this.prestige.getAscensionCount()
         const canAscend = this.prestige.canAscend()
         const foresightBalance = this.prestige.getForesight()
+        const totalSpent = this.prestige.getTotalHindsightSpent()
 
-        if (canAscend || ascCount > 0) {
+        if (totalSpent > 0 || ascCount > 0) {
             html += `<div class="ascension-section">`
             html += `<h4>Ascension${ascCount > 0 ? ` (x${ascCount})` : ""}<button class="prestige-info-btn ascension-info-btn">?</button></h4>`
 
             if (foresightBalance > 0 || ascCount > 0) {
                 html += `<div class="prestige-stat"><span>Foresight:</span><span class="prestige-currency">${foresightBalance} 🔮</span></div>`
             }
+
+            const ascProgress =
+                Math.min(1, totalSpent / ASCENSION_SPEND_THRESHOLD) * 100
+            html += `
+                <div class="prestige-stat"><span>Hindsight Spent:</span><span>${totalSpent}/${ASCENSION_SPEND_THRESHOLD}</span></div>
+                <div class="prestige-progress-bar ascension-progress">
+                    <div class="prestige-progress-fill" style="width: ${ascProgress.toFixed(1)}%"></div>
+                </div>
+            `
 
             if (canAscend) {
                 const preview = this.prestige.getForesightPreview()
@@ -301,7 +382,7 @@ export class PrestigeSection {
             .querySelectorAll(".hindsight-item:not(.owned)[data-upgrade]")
             .forEach((btn) => {
                 btn.addEventListener("click", () => {
-                    const upgradeId = btn.getAttribute("data-upgrade")
+                    const upgradeId = getDataAttribute<HindsightUpgradeId>(btn, "upgrade")
                     if (upgradeId && this.prestige.purchaseUpgrade(upgradeId)) {
                         this.playSound("notify")
                         this.render()
@@ -330,7 +411,7 @@ export class PrestigeSection {
             .querySelectorAll(".hindsight-item:not(.owned)[data-foresight]")
             .forEach((btn) => {
                 btn.addEventListener("click", () => {
-                    const upgradeId = btn.getAttribute("data-foresight")
+                    const upgradeId = getDataAttribute<ForesightUpgradeId>(btn, "foresight")
                     if (
                         upgradeId &&
                         this.prestige.purchaseForesightUpgrade(upgradeId)
@@ -340,6 +421,22 @@ export class PrestigeSection {
                     }
                 })
             })
+    }
+
+    /** Compute total hindsight invested per category. */
+    private getCategorySpend(): Map<string, number> {
+        const spend = new Map<string, number>()
+        for (const u of HINDSIGHT_UPGRADES) {
+            const count = this.prestige.getUpgradePurchaseCount(u.id)
+            if (count > 0) {
+                let total = 0
+                for (let i = 0; i < count; i++) {
+                    total += hindsightUpgradeCostAt(u, i)
+                }
+                spend.set(u.category, (spend.get(u.category) ?? 0) + total)
+            }
+        }
+        return spend
     }
 
     private doPrestige(): void {
@@ -355,8 +452,6 @@ export class PrestigeSection {
             baseCash + careerCashBonus,
             this.prestige.getStartingPhases()
         )
-
-        // XP for prestiging is now handled by wiring.ts via prestige:triggered event
 
         this.playSound("notify")
         saveManager.requestSave()

@@ -3,6 +3,7 @@ import { getPrestigeManager } from "../prestige/PrestigeManager"
 import {
     type BonusType,
     CAREER_NODE_MAP,
+    type CareerNodeId,
     CAREER_SWITCH_LEVEL_PENALTY,
     DORMANT_MULTIPLIER,
     ENGINEERING_STARTER_NODE,
@@ -20,8 +21,11 @@ import type {
     ProgressionSaveData,
 } from "./types"
 
-type CareerEventType = "careerSelected" | "nodeUnlocked" | "careerSwitched"
-type CareerCallback = (data?: unknown) => void
+interface CareerEventMap {
+    careerSelected: { branch: CareerBranch }
+    nodeUnlocked: { nodeId: CareerNodeId; branch: CareerBranch | "education" | "skills" }
+    careerSwitched: { from?: CareerBranch; to: CareerBranch }
+}
 
 let instance: CareerManager | null = null
 
@@ -35,24 +39,32 @@ export function getCareerManager(): CareerManager {
 export class CareerManager {
     private activeCareer: CareerBranch | null = null
     private careerHistory: CareerHistoryEntry[] = []
-    private unlockedNodes: Map<string, Set<string>> = new Map() // branch -> node IDs
-    private educationNodes: Set<string> = new Set()
-    private skillNodes: Set<string> = new Set()
+    private unlockedNodes: Map<string, Set<CareerNodeId>> = new Map() // branch -> node IDs
+    private educationNodes: Set<CareerNodeId> = new Set()
+    private skillNodes: Set<CareerNodeId> = new Set()
     private masteryRanks: Map<string, number> = new Map() // masteryId -> rank count
     private onDirty: (() => void) | null = null
-    private eventListeners: Map<CareerEventType, CareerCallback[]> = new Map()
+    private eventListeners = new Map<string, ((data: never) => void)[]>()
 
     // ── Events ───────────────────────────────────────────────────────────────
 
-    public on(event: CareerEventType, callback: CareerCallback): void {
+    public on<K extends keyof CareerEventMap>(
+        event: K,
+        callback: (data: CareerEventMap[K]) => void
+    ): void {
         if (!this.eventListeners.has(event)) {
             this.eventListeners.set(event, [])
         }
-        this.eventListeners.get(event)?.push(callback)
+        this.eventListeners.get(event)?.push(callback as (data: never) => void)
     }
 
-    private emit(event: CareerEventType, data?: unknown): void {
-        this.eventListeners.get(event)?.forEach((cb) => cb(data))
+    private emit<K extends keyof CareerEventMap>(
+        event: K,
+        data: CareerEventMap[K]
+    ): void {
+        this.eventListeners
+            .get(event)
+            ?.forEach((cb) => (cb as (data: CareerEventMap[K]) => void)(data))
     }
 
     // ── Dirty callback ───────────────────────────────────────────────────────
@@ -153,10 +165,12 @@ export class CareerManager {
             from: currentEntry?.branch,
             to: newBranch,
         })
-        emitAppEvent("career:switched", {
-            from: currentEntry?.branch ?? "",
-            to: newBranch,
-        })
+        if (currentEntry) {
+            emitAppEvent("career:switched", {
+                from: currentEntry.branch,
+                to: newBranch,
+            })
+        }
         this.onDirty?.()
         return true
     }
@@ -194,7 +208,7 @@ export class CareerManager {
 
     // ── Node unlocking ───────────────────────────────────────────────────────
 
-    public canUnlockNode(nodeId: string): boolean {
+    public canUnlockNode(nodeId: CareerNodeId): boolean {
         const def = CAREER_NODE_MAP.get(nodeId)
         if (!def) return false
 
@@ -218,10 +232,11 @@ export class CareerManager {
         return true
     }
 
-    public unlockNode(nodeId: string): boolean {
+    public unlockNode(nodeId: CareerNodeId): boolean {
         if (!this.canUnlockNode(nodeId)) return false
 
-        const def = CAREER_NODE_MAP.get(nodeId)!
+        const def = CAREER_NODE_MAP.get(nodeId)
+        if (!def) return false
 
         if (def.branch === "education") {
             this.educationNodes.add(nodeId)
@@ -239,7 +254,7 @@ export class CareerManager {
         return true
     }
 
-    public isNodeUnlocked(nodeId: string): boolean {
+    public isNodeUnlocked(nodeId: CareerNodeId): boolean {
         const def = CAREER_NODE_MAP.get(nodeId)
         if (!def) return false
 
@@ -431,11 +446,11 @@ export class CareerManager {
 
         if (data.skillPoints) {
             for (const [branch, spData] of Object.entries(data.skillPoints)) {
-                const nodes = new Set(spData.unlockedNodes ?? [])
+                const nodes = new Set<CareerNodeId>(spData.unlockedNodes ?? [])
                 // Migration: eng-senior was removed from the unlockable tree;
                 // its bonus is now applied passively. Drop it so it doesn't
                 // count as a spent skill point in old saves.
-                nodes.delete("eng-senior")
+                nodes.delete("eng-senior" as CareerNodeId)
                 this.unlockedNodes.set(branch, nodes)
             }
         }

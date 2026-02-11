@@ -1,22 +1,44 @@
+import type { HindsightUpgradeId } from "./constants"
+
 // ── Ascension layer (prestige-of-prestige) ──────────────────────────────────
 //
-// After buying all Hindsight upgrades, the player can "Ascend."
+// After spending enough total Hindsight (ASCENSION_SPEND_THRESHOLD),
+// the player can "Ascend."
 // Ascending resets: prestige count, Hindsight balance, selected Hindsight upgrades.
 // Grants Foresight currency for a deeper upgrade shop.
 
+export type ForesightUpgradeId =
+    | "scrap-reserves"
+    | "perpetual-factories"
+    | "veteran-recruits"
+    | "career-tenure"
+    | "compound-interest"
+    | "market-memory"
+    | "deep-hindsight"
+    | "spiral-momentum"
+    | "factory-dominion"
+    | "market-savant"
+    | "mastery-retention"
+    | "cross-pollination"
+    | "institutional-knowledge"
+    | "deep-hindsight-plus"
+
 export interface ForesightUpgradeDef {
-    id: string
+    id: ForesightUpgradeId
     name: string
     description: string
     cost: number
     maxPurchases: number
 }
 
+/** Total hindsight spent required to unlock ascension. */
+export const ASCENSION_SPEND_THRESHOLD = 200
+
 /**
  * Hindsight upgrades that survive ascension (comfort floor).
  * All others are reset.
  */
-export const ASCENSION_PRESERVED_UPGRADES: ReadonlySet<string> = new Set([
+export const ASCENSION_PRESERVED_UPGRADES: ReadonlySet<HindsightUpgradeId> = new Set<HindsightUpgradeId>([
     "starting-capital",
     "generous-capital",
     "lavish-capital",
@@ -25,13 +47,15 @@ export const ASCENSION_PRESERVED_UPGRADES: ReadonlySet<string> = new Set([
 ])
 
 /**
- * Foresight earned on ascension = floor(totalHindsightEverSpent / 20)
+ * Foresight earned on ascension = floor(totalHindsightEverSpent / 15)
+ * (was /20, raised to account for higher spend requirements)
  */
 export function calculateForesight(totalHindsightSpent: number): number {
-    return Math.floor(totalHindsightSpent / 20)
+    return Math.floor(totalHindsightSpent / 15)
 }
 
 export const FORESIGHT_UPGRADES: ForesightUpgradeDef[] = [
+    // ── Original foresight upgrades ──────────────────────────────────────
     {
         id: "scrap-reserves",
         name: "Thought Reserves",
@@ -77,9 +101,10 @@ export const FORESIGHT_UPGRADES: ForesightUpgradeDef[] = [
     {
         id: "deep-hindsight",
         name: "Deep Hindsight",
-        description: "Hindsight formula exponent increases (0.5 → 0.55 → 0.6)",
+        description:
+            "Hindsight formula exponent increases (0.5 → 0.55 → 0.6 → 0.65)",
         cost: 10,
-        maxPurchases: 2,
+        maxPurchases: 3,
     },
     {
         id: "spiral-momentum",
@@ -88,7 +113,53 @@ export const FORESIGHT_UPGRADES: ForesightUpgradeDef[] = [
         cost: 12,
         maxPurchases: 1,
     },
+
+    // ── New foresight upgrades ───────────────────────────────────────────
+    {
+        id: "factory-dominion",
+        name: "Factory Dominion",
+        description:
+            "Start prestige with 2 factories of each type (stacks with Perpetual)",
+        cost: 9,
+        maxPurchases: 1,
+    },
+    {
+        id: "market-savant",
+        name: "Market Savant",
+        description:
+            "Start prestige with 3 random upgrades (replaces Market Memory)",
+        cost: 12,
+        maxPurchases: 2,
+    },
+    {
+        id: "mastery-retention",
+        name: "Mastery Retention",
+        description: "Mastery upgrade levels retain 25% through prestige",
+        cost: 15,
+        maxPurchases: 1,
+    },
+    {
+        id: "cross-pollination",
+        name: "Cross-Pollination",
+        description: "Autobattler wins grant 2x commodity rewards",
+        cost: 10,
+        maxPurchases: 1,
+    },
+    {
+        id: "institutional-knowledge",
+        name: "Institutional Knowledge",
+        description: "Start with Phase 4 (Influence) unlocked after prestige",
+        cost: 14,
+        maxPurchases: 1,
+    },
+    {
+        id: "deep-hindsight-plus",
+        name: "Deep Hindsight+",
+        description: "Further increases hindsight exponent (0.65 → 0.70)",
+        cost: 18,
+        maxPurchases: 1,
+    },
 ]
 
-export const FORESIGHT_UPGRADE_MAP: ReadonlyMap<string, ForesightUpgradeDef> =
+export const FORESIGHT_UPGRADE_MAP: ReadonlyMap<ForesightUpgradeId, ForesightUpgradeDef> =
     new Map(FORESIGHT_UPGRADES.map((u) => [u.id, u]))

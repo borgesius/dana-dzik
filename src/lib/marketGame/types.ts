@@ -5,6 +5,8 @@ export {
     BATCH_ORDER_QUANTITY,
     BLOCK_ORDER_QUANTITY,
     BULK_ORDER_QUANTITY,
+    LARGE_BLOCK_ORDER_QUANTITY,
+    MEGA_BLOCK_ORDER_QUANTITY,
     CORNER_MARKET_FLOAT,
     CORNER_MARKET_PRICE_BOOST,
     CORNER_MARKET_THRESHOLD,
@@ -24,6 +26,7 @@ export {
     PRICE_HISTORY_LENGTH,
     STARTING_CASH,
     TICK_INTERVAL_MS,
+    CAPITAL_GAINS_BONUS,
     TREND_MAX_TICKS,
     TREND_MIN_TICKS,
 } from "./constants"
@@ -38,10 +41,11 @@ export type { UpgradeCategory, UpgradeDef, UpgradeId } from "./upgrades"
 export { UPGRADES } from "./upgrades"
 
 import type { CommodityId } from "./commodities"
+import type { Employee } from "./employees"
 import type { MarketEventDef } from "./events"
 import type { FactoryId } from "./factories"
 import type { InfluenceId } from "./influences"
-import type { OrgChartSaveData } from "./orgChart"
+import type { MoraleEvent, OrgChartSaveData } from "./orgChart"
 import type { UpgradeId } from "./upgrades"
 
 export type TrendDirection = "bull" | "bear" | "flat"
@@ -68,37 +72,48 @@ export interface MarketState {
 export interface Holding {
     quantity: number
     totalCost: number
+    /** Units acquired via buy() — used for capital-gains bonus on sell. */
+    purchasedQuantity: number
 }
 
-export type GameEventType =
-    | "moneyChanged"
-    | "portfolioChanged"
-    | "marketTick"
-    | "phaseUnlocked"
-    | "commodityUnlocked"
-    | "upgradeAcquired"
-    | "factoryDeployed"
-    | "influenceExecuted"
-    | "newsEvent"
-    | "popupsActivate"
-    | "tradeExecuted"
-    | "limitOrderFilled"
-    | "stateChanged"
-    | "employeeHired"
-    | "employeeFired"
-    | "orgChartChanged"
-    | "moraleEvent"
+export interface GameEventMap {
+    moneyChanged: number
+    portfolioChanged: undefined
+    marketTick: undefined
+    phaseUnlocked: number
+    commodityUnlocked: CommodityId
+    upgradeAcquired: string
+    factoryDeployed: { factoryId: FactoryId }
+    influenceExecuted: {
+        influenceId: InfluenceId
+        targetCommodity: CommodityId
+    }
+    newsEvent: { text: string; upcoming: boolean }
+    popupsActivate: number
+    tradeExecuted: TradeResult
+    limitOrderFilled: {
+        commodityId: CommodityId
+        quantity: number
+        price: number
+    }
+    stateChanged: undefined
+    employeeHired: Employee
+    employeeFired: Employee
+    orgChartChanged: undefined
+    moraleEvent: MoraleEvent
     // Clicker
-    | "harvestExecuted"
+    harvestExecuted: { commodityId: CommodityId; quantity: number }
     // Phase 6: Structured Products Desk
-    | "dasCreated"
-    | "dasDefaulted"
-    | "dasUnwound"
-    | "marginEvent"
-    | "ratingChanged"
-    | "debtChanged"
+    dasCreated: { dasId: string; commodityId: CommodityId; quantity: number }
+    dasDefaulted: { dasId: string; commodityId: CommodityId }
+    dasUnwound: { dasId: string; commodityId: CommodityId }
+    marginEvent: { debt: number; rating: CreditRating }
+    ratingChanged: { rating: CreditRating; direction: "upgrade" | "downgrade" }
+    debtChanged: { debt: number; borrowed?: number; repaid?: number }
+    automatedIncome: { amount: number }
+}
 
-export type GameEventCallback = (data?: unknown) => void
+export type GameEventType = keyof GameEventMap
 
 export interface GameSnapshot {
     cash: number
@@ -246,8 +261,8 @@ export interface TrendScheduleSaveData {
 export interface MarketSaveData {
     cash: number
     lifetimeEarnings: number
-    holdings: Record<string, Holding>
-    factories: Record<string, number>
+    holdings: Partial<Record<CommodityId, Holding>>
+    factories: Partial<Record<FactoryId, number>>
     ownedUpgrades: UpgradeId[]
     unlockedCommodities: CommodityId[]
     unlockedPhases: number[]
@@ -260,7 +275,9 @@ export interface MarketSaveData {
     /** Phase 6: Structured Products Desk */
     desk?: DeskSaveData
     /** Pre-generated trend schedules per commodity (deterministic across save/load). */
-    trendSchedules?: Record<string, TrendScheduleSaveData>
+    trendSchedules?: Partial<Record<CommodityId, TrendScheduleSaveData>>
+    /** Mastery upgrade levels (infinite repeatable upgrades). */
+    masteryLevels?: Record<string, number>
     // Legacy Phase 6 fields (ignored on load, kept for migration safety)
     ipoHistory?: unknown[]
     indexFunds?: unknown[]

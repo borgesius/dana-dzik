@@ -1,3 +1,5 @@
+import { AppError } from "@/core/errors"
+
 export enum TokenType {
     ERWACHE = "ERWACHE",
     VERNEINUNG = "VERNEINUNG",
@@ -112,11 +114,11 @@ export interface WeltCallbacks {
     onInput: () => Promise<string>
 }
 
-export class WeltError extends Error {
+export class WeltError extends AppError {
     public readonly line: number
 
     constructor(message: string, line: number) {
-        super(message)
+        super(message, "WELT_ERROR", { line })
         this.name = "WeltError"
         this.line = line
     }

@@ -116,7 +116,7 @@ export class DialogueManager {
         this.typingInterval = window.setInterval(() => {
             // Stale interval guard
             if (gen !== this.nodeGeneration) {
-                clearInterval(this.typingInterval!)
+                if (this.typingInterval != null) clearInterval(this.typingInterval)
                 return
             }
             if (charIndex < this.fullText.length) {
@@ -229,7 +229,6 @@ export class DialogueManager {
             return
         }
 
-        // Auto-advance
         if (node.next) {
             const nextId = node.next
             // Brief pause before auto-advancing
@@ -270,17 +269,14 @@ export class DialogueManager {
         const overlay = this.container.closest(".veil-overlay")
         if (!overlay) return
 
-        // Red flicker
         overlay.classList.add("veil-spooky-reveal")
         setTimeout(() => overlay.classList.remove("veil-spooky-reveal"), 2500)
 
-        // Static burst
         const burst = document.createElement("div")
         burst.className = "veil-static-burst"
         overlay.appendChild(burst)
         setTimeout(() => burst.remove(), 800)
 
-        // Briefly corrupt the dialogue text
         this.container.classList.add("veil-text-corrupt")
         setTimeout(
             () => this.container.classList.remove("veil-text-corrupt"),
@@ -296,7 +292,6 @@ export class DialogueManager {
         overlay.classList.add("veil-spooky-dread")
         setTimeout(() => overlay.classList.remove("veil-spooky-dread"), 4000)
 
-        // Screen shake
         overlay.classList.add("veil-shake")
         setTimeout(() => overlay.classList.remove("veil-shake"), 600)
     }

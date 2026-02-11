@@ -1,4 +1,5 @@
 import { getDeployEnv } from "../../config/environment"
+import { apiFetch } from "../../lib/api/client"
 import { emitAppEvent } from "../../lib/events"
 import { getLocaleManager } from "../../lib/localeManager"
 
@@ -216,16 +217,20 @@ export class QAReportsWidget {
         const lm = getLocaleManager()
 
         try {
-            const controller = new AbortController()
-            const timeoutId = setTimeout(() => controller.abort(), 3000)
-
-            const response = await fetch("/api/reports", {
-                signal: controller.signal,
+            const res = await apiFetch<ReportsResponse>("/api/reports", {
+                timeout: 3000,
             })
-            clearTimeout(timeoutId)
 
-            // SAFETY: response shape controlled by our /api/reports endpoint
-            const result = (await response.json()) as ReportsResponse
+            if (!res.ok) {
+                this.el.innerHTML = pick([
+                    lm.t("toolbar.qaFallback1"),
+                    lm.t("toolbar.qaFallback2"),
+                    lm.t("toolbar.qaFallback3"),
+                ])
+                return
+            }
+
+            const result = res.data
 
             if (!result.ok || !result.data) {
                 this.el.innerHTML = pick([

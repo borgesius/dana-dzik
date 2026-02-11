@@ -21,6 +21,21 @@ const SOUND_URLS: Record<string, string> = {
     "startup-modem": "/assets/sounds/startup/modem.ogg",
     "startup-whinny": "/assets/sounds/startup/whinny.ogg",
     "startup-orchestral": "/assets/sounds/startup/orchestral.ogg",
+    // Autobattler / Symposium sounds
+    ab_hit: "/assets/sounds/autobattler/406457__kretopi__punching-004.ogg",
+    ab_bighit: "/assets/sounds/autobattler/bighit.ogg",
+    ab_death: "/assets/sounds/autobattler/493743__crimsonimaging__oof.ogg",
+    ab_victory: "/assets/sounds/autobattler/150224__pumodi__victory-1.ogg",
+    ab_defeat:
+        "/assets/sounds/autobattler/148073__sandyrb__lightbulb-smash-003.ogg",
+    ab_buy: "/assets/sounds/autobattler/75235__creek23__cha-ching.ogg",
+    ab_reroll:
+        "/assets/sounds/autobattler/630498__jimbo555__shuffling-cards.ogg",
+    ab_relic: "/assets/sounds/autobattler/474179__dwoboyle__teleport-01b.ogg",
+    ab_event: "/assets/sounds/autobattler/150212__pumodi__gong.ogg",
+    ab_ding: "/assets/sounds/autobattler/515643__mashedtatoes2__ding2.ogg",
+    ab_boop: "/assets/sounds/autobattler/643139__joelleohworld__boop.ogg",
+    ab_sell: "/assets/sounds/autobattler/150221__pumodi__reload-2.ogg",
 }
 
 export interface Track {
@@ -367,4 +382,10 @@ export function createAudioManager(): AudioManager {
     ;(window as unknown as { audioManager: AudioManager }).audioManager =
         manager
     return manager
+}
+
+/** Convenience: play a sound via the global AudioManager (safe if not initialised) */
+export function playSound(name: string): void {
+    const win = window as unknown as { audioManager?: AudioManager }
+    win.audioManager?.playSound(name)
 }

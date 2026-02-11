@@ -1725,3 +1725,208 @@
     background: var(--theme-surface-secondary);
     font-weight: 700;
 }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   Upgrade Category Tabs
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.upgrade-tabs {
+    display: flex;
+    gap: 2px;
+    margin-bottom: 8px;
+    border-bottom: 1px solid var(--theme-border);
+    padding-bottom: 4px;
+    flex-wrap: wrap;
+}
+
+.upgrade-tab {
+    padding: 3px 8px;
+    font-size: 10px;
+    background: var(--theme-surface-secondary);
+    border: 1px solid var(--theme-border);
+    color: var(--theme-text);
+    cursor: pointer;
+    font-family: inherit;
+}
+
+.upgrade-tab.active {
+    background: var(--theme-surface-active, var(--theme-surface-secondary));
+    border-bottom-color: var(--theme-bg);
+    font-weight: 700;
+}
+
+.upgrade-tab:hover:not(.active) {
+    background: var(--theme-surface-hover, var(--theme-surface-secondary));
+}
+
+.tab-progress {
+    font-size: 9px;
+    opacity: 0.6;
+    margin-left: 2px;
+}
+
+.tab-badge {
+    font-size: 9px;
+    background: var(--theme-color-accent, #666666);
+    color: var(--theme-bg);
+    padding: 0 4px;
+    border-radius: 2px;
+    margin-left: 3px;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   Owned Upgrades Collapse
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.owned-upgrades-header {
+    font-size: 10px;
+    color: var(--theme-text-secondary);
+    cursor: pointer;
+    padding: 4px 0;
+    margin-top: 8px;
+    border-top: 1px solid var(--theme-border);
+}
+
+.owned-upgrades-header::before {
+    content: "▸ ";
+}
+
+.owned-upgrades-header.expanded::before {
+    content: "▾ ";
+}
+
+.owned-upgrades-list.collapsed {
+    display: none;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   Next Affordable Indicator
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.upgrade-btn.next-affordable {
+    border-left: 3px solid var(--theme-color-success, #4caf50);
+}
+
+.next-indicator {
+    color: var(--theme-color-success, #4caf50);
+    font-weight: 700;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   Mastery Upgrades
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.mastery-summary {
+    font-size: 11px;
+    font-weight: 600;
+    margin-bottom: 6px;
+    padding: 3px 6px;
+    background: var(--theme-surface-secondary);
+    border: 1px solid var(--theme-border);
+}
+
+.mastery-btn .upgrade-name {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.mastery-level {
+    font-size: 9px;
+    font-weight: 700;
+    padding: 1px 5px;
+    border-radius: 2px;
+}
+
+.mastery-bronze {
+    background: #8d6e32;
+    color: #ffffff;
+}
+
+.mastery-silver {
+    background: #757575;
+    color: #ffffff;
+}
+
+.mastery-gold {
+    background: #c6a600;
+    color: #ffffff;
+}
+
+.mastery-diamond {
+    background: #00bcd4;
+    color: #ffffff;
+}
+
+.mastery-bonus {
+    font-size: 9px;
+    color: var(--theme-color-success, #4caf50);
+    margin-left: 4px;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   Progress Bars
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.prestige-progress-bar {
+    height: 6px;
+    background: var(--theme-surface-secondary);
+    border: 1px solid var(--theme-border);
+    margin: 4px 0;
+    overflow: hidden;
+}
+
+.prestige-progress-fill {
+    height: 100%;
+    background: var(--theme-color-accent, #666666);
+    transition: width 0.3s ease;
+}
+
+.ascension-progress .prestige-progress-fill {
+    background: var(--theme-color-warning, #ff9800);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   Hindsight Tier Headers
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.hindsight-tier {
+    margin-bottom: 8px;
+}
+
+.tier-header {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 3px 6px;
+    background: var(--theme-surface-secondary);
+    border: 1px solid var(--theme-border);
+    margin-bottom: 4px;
+}
+
+.hindsight-tier.locked .tier-header {
+    opacity: 0.5;
+}
+
+.tier-locked-msg {
+    font-size: 9px;
+    color: var(--theme-text-secondary);
+    padding: 2px 6px;
+}
+
+.tier-progress {
+    margin: 2px 6px 4px;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   Specialization Indicator
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.specialization-indicator {
+    font-size: 10px;
+    padding: 3px 6px;
+    margin-bottom: 6px;
+    border-left: 3px solid var(--theme-color-accent, #666666);
+    background: var(--theme-surface-secondary);
+}

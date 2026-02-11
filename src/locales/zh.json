@@ -354,7 +354,9 @@
             "harvest": "HARVEST",
             "harvest_EMAIL": "SCRAPE",
             "harvest_ADS": "CLICK",
+            "harvest_LIVE": "牧畜",
             "harvest_DOM": "SQUAT",
+            "harvest_GLUE": "熬制",
             "harvest_BW": "LEECH",
             "harvest_SOFT": "PIRATE",
             "harvest_VC": "PITCH",
@@ -372,7 +374,7 @@
             "unlockAt": "累计收益达${{threshold}}解锁",
             "phaseLocked": "🔒 {{name}}",
             "phaseEarningsHint": "累计收益达到{{threshold}}解锁",
-            "phase5Hint": "需要：首次重置 · 等级8 · 3次研讨会胜利"
+            "phase5Hint": "需要：首次重置 · 等级8 · 击败研讨会首个Boss"
         },
         "commodities": {
             "EMAIL": {
@@ -383,9 +385,17 @@
                 "name": "横幅展示",
                 "description": "优质468x60广告位。"
             },
+            "LIVE": {
+                "name": "牲畜",
+                "description": "A级牛期货。不含配送。"
+            },
             "DOM": {
                 "name": ".com域名",
                 "description": "预注册优质域名。"
+            },
+            "GLUE": {
+                "name": "胶水",
+                "description": "工业强力胶。小心处理。"
             },
             "BW": {
                 "name": "带宽",
@@ -409,9 +419,17 @@
                 "name": "横幅广告交换",
                 "description": "轮换广告网络。展示自动生成。"
             },
+            "cattle-ranch": {
+                "name": "牧场",
+                "description": "散养畜牧经营。产量随季节变化。"
+            },
             "colocation-rack": {
                 "name": "托管机架",
                 "description": "专用服务器托管。不保证正常运行时间。"
+            },
+            "rendering-plant": {
+                "name": "炼制工厂",
+                "description": "将牲畜转化为工业胶水。气味难闻。"
             },
             "offshore-dev": {
                 "name": "离岸开发团队",
@@ -495,9 +513,17 @@
                 "name": "ADS Generator",
                 "description": "Impression bot. +1 ADS per harvest click."
             },
+            "harvest-live": {
+                "name": "LIVE牧人",
+                "description": "自动牧人。每次采集点击+1 LIVE。"
+            },
             "harvest-dom": {
                 "name": "DOM Registrar",
                 "description": "Bulk registration script. +1 DOM per harvest click."
+            },
+            "harvest-glue": {
+                "name": "GLUE炼制器",
+                "description": "工业锅炉。每次采集点击+1 GLUE。"
             },
             "harvest-bw": {
                 "name": "BW Allocator",
@@ -522,6 +548,78 @@
             "autoscript-iii": {
                 "name": "Autoscript III",
                 "description": "完整自动化套件。所有商品收获量+75%。"
+            },
+            "algorithmic-trading": {
+                "name": "Algorithmic Trading",
+                "description": "Auto-execute limit orders when trends reverse. Requires Limit Orders."
+            },
+            "dark-pool": {
+                "name": "Dark Pool Access",
+                "description": "Execute trades off-exchange. Your orders don't move the market price."
+            },
+            "market-maker": {
+                "name": "Market Maker License",
+                "description": "Earn passive spread income: 0.1% of portfolio value per tick."
+            },
+            "sovereign-fund": {
+                "name": "Sovereign Fund Charter",
+                "description": "Nation-state-size lots. Execute trades in quantities of 100 and 500."
+            },
+            "parallel-processing": {
+                "name": "Parallel Processing",
+                "description": "Multi-threaded production. Factories produce 2x output every 5th cycle."
+            },
+            "lean-manufacturing": {
+                "name": "Lean Manufacturing",
+                "description": "Optimised supply lines. Factory conversion inputs reduced by 25%."
+            },
+            "vertical-integration": {
+                "name": "Vertical Integration",
+                "description": "Factory chains auto-feed: output commodities route to higher-tier inputs."
+            },
+            "quantum-forecast": {
+                "name": "Quantum Forecast",
+                "description": "Probabilistic modelling. See 2 trend segments ahead instead of 1."
+            },
+            "sentiment-engine": {
+                "name": "Sentiment Engine",
+                "description": "NLP analysis of market chatter. Event probability indicator and type prediction."
+            },
+            "full-spectrum": {
+                "name": "Full Spectrum Intelligence",
+                "description": "Total information awareness. Market events always arrive at optimal timing."
+            },
+            "autoscript-iv": {
+                "name": "Autoscript IV",
+                "description": "Machine learning harvester. +100% harvest yield for all commodities."
+            },
+            "autoscript-v": {
+                "name": "Autoscript V",
+                "description": "Autonomous harvest agent. +125% harvest yield for all commodities."
+            },
+            "neural-harvester": {
+                "name": "Neural Harvester",
+                "description": "Self-optimising harvest AI. Triggers harvests automatically at optimal prices."
+            },
+            "harvest-mastery": {
+                "name": "Harvest Mastery",
+                "description": "+2% harvest yield per level."
+            },
+            "factory-mastery": {
+                "name": "Factory Mastery",
+                "description": "+3% factory output per level."
+            },
+            "trade-mastery": {
+                "name": "Trade Mastery",
+                "description": "+1% trade profit bonus per level."
+            },
+            "das-yield-mastery": {
+                "name": "DAS Yield Mastery",
+                "description": "+2% DAS yield per level."
+            },
+            "cost-mastery": {
+                "name": "Cost Mastery",
+                "description": "-1% all purchase costs per level (max -50%)."
             }
         },
         "influence": {
@@ -778,6 +876,18 @@
         "irrational-exuberance": {
             "name": "科技大亨",
             "description": "累计收益达到$10,000。"
+        },
+        "corporate-raider": {
+            "name": "企业掠夺者",
+            "description": "累计收益达到$50,000。"
+        },
+        "market-mogul": {
+            "name": "市场大亨",
+            "description": "累计收益达到$100,000。"
+        },
+        "too-big-to-fail": {
+            "name": "太大不能倒",
+            "description": "累计收益达到$1,000,000。"
         },
         "fire-sale": {
             "name": "逢低买入",
@@ -1135,6 +1245,18 @@
             "name": "Serial Popper",
             "description": "Prestige 5 times."
         },
+        "serial-entrepreneur": {
+            "name": "连续创业者",
+            "description": "转生5次。"
+        },
+        "bubble-addict": {
+            "name": "泡沫成瘾",
+            "description": "转生10次。"
+        },
+        "bubble-eternal": {
+            "name": "永恒回归",
+            "description": "转生25次。"
+        },
         "hindsight-shopper": {
             "name": "Hindsight Shopper",
             "description": "Purchase your first Hindsight upgrade."
@@ -1155,6 +1277,18 @@
             "name": "Budding Professional",
             "description": "Unlock 5 skill tree nodes."
         },
+        "apprentice": {
+            "name": "学徒",
+            "description": "累计购买10个精通等级。"
+        },
+        "journeyman": {
+            "name": "工匠",
+            "description": "累计购买50个精通等级。"
+        },
+        "grandmaster": {
+            "name": "宗师",
+            "description": "累计购买100个精通等级。"
+        },
         "skill-tree-master": {
             "name": "Career Completionist",
             "description": "Unlock 15 skill tree nodes."
@@ -1166,6 +1300,10 @@
         "full-stack": {
             "name": "Full Stack",
             "description": "Prestige, win a symposium, and choose a career."
+        },
+        "self-sustaining": {
+            "name": "自给自足",
+            "description": "单局仅凭工厂收入赚取$1,000（无手动交易）。"
         },
         "that-ones-a-person": {
             "name": "First Hire",
@@ -1287,6 +1425,18 @@
             "name": "Post-Structural Reader",
             "description": "Collect all Post-Structuralist units."
         },
+        "relic-hunter": {
+            "name": "Relic Hunter",
+            "description": "Collect 5 relics in a single run."
+        },
+        "curator": {
+            "name": "Curator",
+            "description": "Unlock all common relics."
+        },
+        "full-collection": {
+            "name": "Full Collection",
+            "description": "Unlock every relic in the game."
+        },
         "tenure-track": {
             "name": "Tenure Track",
             "description": "Reach round 10 in a single run."
@@ -1363,6 +1513,14 @@
             "name": "Someone Is Going to Have to Pay for This",
             "description": "Trigger a margin event."
         },
+        "triple-a-streak": {
+            "name": "AAA连胜",
+            "description": "保持AAA信用评级500个tick。"
+        },
+        "diversified-portfolio": {
+            "name": "多元化投资组合",
+            "description": "同时持有6种商品的DAS。"
+        },
         "harvest-100": {
             "name": "Cookie Clicker",
             "description": "Harvest 100 times."
@@ -1391,9 +1549,17 @@
             "name": "展示量农夫",
             "description": "收获ADS 500次。"
         },
+        "harvest-live-500": {
+            "name": "牧场大亨",
+            "description": "牧畜LIVE 500次。"
+        },
         "harvest-dom-500": {
             "name": "域名抢注者",
             "description": "收获DOM 500次。"
+        },
+        "harvest-glue-500": {
+            "name": "胶水达人",
+            "description": "熬制GLUE 500次。"
         },
         "harvest-bw-500": {
             "name": "带宽大户",
@@ -1710,190 +1876,22 @@
         "pferd-couture": {
             "name": "Pferd高定",
             "description": "同时装备3个Pferd主题装饰品。"
-        }
-    },
-    "symposium": {
-        "factions": {
-            "quickdraw": "存在主义者",
-            "deputies": "唯心主义者",
-            "clockwork": "理性主义者",
-            "prospectors": "后结构主义者",
-            "drifters": "兼职讲师"
         },
-        "ui": {
-            "title": "研讨会",
-            "subtitle": "大陆自走棋",
-            "startRun": "开始对局",
-            "prepareRun": "准备对局",
-            "prepareHint": "消耗商品获取一次性增益（可选）",
-            "shop": "商店",
-            "fight": "战斗！",
-            "victory": "胜利！",
-            "defeat": "失败",
-            "draw": "平局",
-            "reroll": "刷新 (1 💭)",
-            "lineup": "阵容",
-            "lineupHint": "← 前排 | 后排 → 拖拽排列",
-            "bench": "候补席",
-            "empty": "空",
-            "back": "返回",
-            "nextRound": "下一轮 →",
-            "returnToLobby": "返回大厅",
-            "combatLog": "战斗日志 ({{count}} 个动作)",
-            "combatLasted": "战斗持续了 {{rounds}} 轮",
-            "rewards": "奖励",
-            "survivors": "幸存者",
-            "collection": "收藏",
-            "sell": "出售 {{amount}}💭",
-            "sold": "已售",
-            "runs": "对局：",
-            "wins": "胜利：",
-            "bestStreak": "最佳连胜：",
-            "collectionLabel": "收藏：",
-            "startCollecting": "开始对局来收集单位！",
-            "runComplete": "对局完成！{{wins}}胜 / {{losses}}负",
-            "runOver": "对局结束 — {{wins}}胜 / {{losses}}负",
-            "careerBonuses": "职业加成：",
-            "roundOf": "第 {{current}}/{{total}} 轮",
-            "thoughts": "💭 {{amount}} 思想",
-            "wl": "{{wins}}胜 / {{losses}}负",
-            "benchOf": "Bench ({{count}}/{{max}})",
-            "opponentPreview": "Next Opponent",
-            "bossFight": "BOSS FIGHT",
-            "runSummary": "Run Summary",
-            "personalBests": "Personal Bests",
-            "highestRound": "Highest Round:",
-            "bossesDefeated": "Bosses Defeated:",
-            "bestUnit": "Best Unit:",
-            "scrapEarned": "Thoughts Earned:",
-            "scrapSpent": "Thoughts Spent:",
-            "unitsBought": "Units Recruited:",
-            "unitsSold": "Units Released:",
-            "majorityFaction": "Primary School:",
-            "noBosses": "None yet",
-            "combatsSurvived": "{{count}} combats survived",
-            "round": "Round {{current}}",
-            "bossRound": "BOSS ROUND {{current}}"
+        "packet-sniffing": {
+            "name": "Packet Sniffing",
+            "description": "Open M.D. for the first time."
         },
-        "units": {
-            "drifter-brawler": "评分员",
-            "drifter-scout": "候选人",
-            "drifter-medic": "导师",
-            "drifter-heavy": "官僚",
-            "qd-sharpshooter": "偶像破坏者",
-            "qd-deadeye": "The Übermensch",
-            "qd-dynamiter": "炸药手",
-            "qd-outlaw": "虚无主义者",
-            "qd-kingpin": "Zarathustra",
-            "qd-rifler": "透视主义者",
-            "qd-ambusher": "权力意志",
-            "qd-executioner": "价值转换者",
-            "dep-barricader": "范畴论者",
-            "dep-marshal": "先验自我",
-            "dep-trapper": "辩证法家",
-            "dep-warden": "体系家",
-            "dep-judge": "世界精神",
-            "dep-sentinel": "A Priori",
-            "dep-field-medic": "综合者",
-            "dep-fortress": "绝对者",
-            "cw-accumulator": "单子",
-            "cw-gearsmith": "Conatus",
-            "cw-tesla-coil": "Causa Sui",
-            "cw-overcharger": "和谐论者",
-            "cw-architect": "实体",
-            "cw-amplifier": "充分观念",
-            "cw-disruptor": "Natura Naturans",
-            "cw-detonator": "Deus sive Natura",
-            "bp-tunneler": "Différance",
-            "bp-foreman": "欲望机器",
-            "bp-rattler": "补充",
-            "bp-necrominer": "根茎",
-            "bp-patriarch": "无器官的身体",
-            "bp-revenant": "Pharmakon",
-            "bp-leech": "精神分裂分析家",
-            "bp-sovereign": "多样体",
-            "bp-shade": "踪迹",
-            "boss-gadfly": "The Gadfly",
-            "boss-noumenon": "The Noumenon",
-            "boss-automaton": "The Automaton",
-            "boss-simulacrum": "The Simulacrum"
+        "deep-packet-inspection": {
+            "name": "Deep Packet Inspection",
+            "description": "Expand 10 packet details in the network monitor."
         },
-        "opponents": {
-            "adjectives": [
-                "终身制",
-                "荣誉退休",
-                "激进的",
-                "教条的",
-                "异端的",
-                "辩证的",
-                "必然的",
-                "不安的",
-                "臭名昭著的",
-                "不可救药的"
-            ],
-            "nouns": {
-                "quickdraw": [
-                    "虚无主义者",
-                    "荒诞主义者",
-                    "超人",
-                    "深渊凝视者",
-                    "狂人"
-                ],
-                "deputies": [
-                    "体系家",
-                    "范畴论者",
-                    "学院派",
-                    "辩证法家",
-                    "学者"
-                ],
-                "clockwork": [
-                    "几何学家",
-                    "决定论者",
-                    "逻辑学家",
-                    "公理学家",
-                    "单子"
-                ],
-                "prospectors": [
-                    "解构者",
-                    "游牧者",
-                    "装配体",
-                    "根茎",
-                    "符号游牧者"
-                ],
-                "drifters": [
-                    "兼职讲师",
-                    "旁听生",
-                    "临时讲师",
-                    "讲师",
-                    "助理"
-                ]
-            }
+        "unknown-host": {
+            "name": "Unknown Host",
+            "description": "Notice traffic from an unregistered address."
         },
-        "buffs": {
-            "email-rush": {
-                "name": "邮件冲击",
-                "description": "第1轮所有单位+2 ATK"
-            },
-            "ad-revenue": {
-                "name": "广告收入",
-                "description": "每轮+2额外思想"
-            },
-            "soft-reroll": {
-                "name": "软件辅助",
-                "description": "每个商店阶段+1免费刷新"
-            },
-            "bandwidth-armor": {
-                "name": "带宽护甲",
-                "description": "所有单位+5 HP"
-            },
-            "dom-expansion": {
-                "name": "DOM扩展",
-                "description": "商店额外提供+1单位"
-            },
-            "vc-funding": {
-                "name": "风投资金",
-                "description": "开始时+3额外思想"
-            }
+        "port-scan": {
+            "name": "Port Scan",
+            "description": "Run nmap in the terminal."
         }
     },
     "veil": {
@@ -1999,6 +1997,536 @@
             "subtitle": "A signal pushes through the wire.",
             "pierce_now": "Pierce Now",
             "not_yet": "Not Yet"
+        }
+    },
+    "symposium": {
+        "factions": {
+            "quickdraw": "存在主义者",
+            "deputies": "唯心主义者",
+            "clockwork": "理性主义者",
+            "prospectors": "后结构主义者",
+            "drifters": "兼职讲师"
+        },
+        "ui": {
+            "title": "研讨会",
+            "subtitle": "大陆自走棋",
+            "startRun": "开始对局",
+            "prepareRun": "准备对局",
+            "prepareHint": "消耗商品获取一次性增益（可选）",
+            "shop": "商店",
+            "fight": "战斗！",
+            "victory": "胜利！",
+            "defeat": "失败",
+            "draw": "平局",
+            "reroll": "刷新 (1 💭)",
+            "lineup": "阵容",
+            "lineupHint": "← 前排 | 后排 → 拖拽排列",
+            "bench": "候补席",
+            "empty": "空",
+            "back": "返回",
+            "nextRound": "下一轮 →",
+            "returnToLobby": "返回大厅",
+            "combatLog": "战斗日志 ({{count}} 个动作)",
+            "combatLasted": "战斗持续了 {{rounds}} 轮",
+            "rewards": "奖励",
+            "survivors": "幸存者",
+            "collection": "收藏",
+            "sell": "出售 {{amount}}💭",
+            "sold": "已售",
+            "runs": "对局：",
+            "wins": "胜利：",
+            "bestStreak": "最佳连胜：",
+            "collectionLabel": "收藏：",
+            "startCollecting": "开始对局来收集单位！",
+            "runComplete": "对局完成！{{wins}}胜 / {{losses}}负",
+            "runOver": "对局结束 — {{wins}}胜 / {{losses}}负",
+            "careerBonuses": "职业加成：",
+            "roundOf": "第 {{current}}/{{total}} 轮",
+            "round": "Round {{current}}",
+            "bossRound": "BOSS ROUND {{current}}",
+            "thoughts": "💭 {{amount}} 思想",
+            "wl": "{{wins}}胜 / {{losses}}负",
+            "benchOf": "Bench ({{count}}/{{max}})",
+            "opponentPreview": "Next Opponent",
+            "bossFight": "BOSS FIGHT",
+            "runSummary": "Run Summary",
+            "personalBests": "Personal Bests",
+            "highestRound": "Highest Round:",
+            "bossesDefeated": "Bosses Defeated:",
+            "bestUnit": "Best Unit:",
+            "scrapEarned": "Thoughts Earned:",
+            "scrapSpent": "Thoughts Spent:",
+            "unitsBought": "Units Recruited:",
+            "unitsSold": "Units Released:",
+            "majorityFaction": "Primary School:",
+            "noBosses": "None yet",
+            "combatsSurvived": "{{count}} combats survived",
+            "chooseRelic": "Choose a Relic",
+            "relics": "Relics",
+            "relicsCollected": "Relics Collected:",
+            "event": "Event"
+        },
+        "units": {
+            "drifter-brawler": "评分员",
+            "drifter-scout": "候选人",
+            "drifter-medic": "导师",
+            "drifter-heavy": "官僚",
+            "qd-sharpshooter": "偶像破坏者",
+            "qd-deadeye": "The Übermensch",
+            "qd-dynamiter": "炸药手",
+            "qd-outlaw": "虚无主义者",
+            "qd-kingpin": "Zarathustra",
+            "qd-rifler": "透视主义者",
+            "qd-ambusher": "权力意志",
+            "qd-executioner": "价值转换者",
+            "dep-barricader": "范畴论者",
+            "dep-marshal": "先验自我",
+            "dep-trapper": "辩证法家",
+            "dep-warden": "体系家",
+            "dep-judge": "世界精神",
+            "dep-sentinel": "A Priori",
+            "dep-field-medic": "综合者",
+            "dep-fortress": "绝对者",
+            "cw-accumulator": "单子",
+            "cw-gearsmith": "Conatus",
+            "cw-tesla-coil": "Causa Sui",
+            "cw-overcharger": "和谐论者",
+            "cw-architect": "实体",
+            "cw-amplifier": "充分观念",
+            "cw-disruptor": "Natura Naturans",
+            "cw-detonator": "Deus sive Natura",
+            "bp-tunneler": "Différance",
+            "bp-foreman": "欲望机器",
+            "bp-rattler": "补充",
+            "bp-necrominer": "根茎",
+            "bp-patriarch": "无器官的身体",
+            "bp-revenant": "Pharmakon",
+            "bp-leech": "精神分裂分析家",
+            "bp-sovereign": "多样体",
+            "bp-shade": "踪迹",
+            "boss-gadfly": "The Gadfly",
+            "boss-noumenon": "The Noumenon",
+            "boss-automaton": "The Automaton",
+            "boss-simulacrum": "The Simulacrum",
+            "boss-absurdist": "The Absurdist",
+            "boss-phenomenologist": "The Phenomenologist",
+            "boss-theodicist": "The Theodicist",
+            "boss-archivist": "The Archivist",
+            "boss-sophist": "The Sophist",
+            "boss-dean": "The Dean",
+            "boss-pedagogue": "The Pedagogue",
+            "boss-empiricist": "The Empiricist"
+        },
+        "opponents": {
+            "adjectives": [
+                "终身制",
+                "荣誉退休",
+                "激进的",
+                "教条的",
+                "异端的",
+                "辩证的",
+                "必然的",
+                "不安的",
+                "臭名昭著的",
+                "不可救药的"
+            ],
+            "nouns": {
+                "quickdraw": [
+                    "虚无主义者",
+                    "荒诞主义者",
+                    "超人",
+                    "深渊凝视者",
+                    "狂人"
+                ],
+                "deputies": [
+                    "体系家",
+                    "范畴论者",
+                    "学院派",
+                    "辩证法家",
+                    "学者"
+                ],
+                "clockwork": [
+                    "几何学家",
+                    "决定论者",
+                    "逻辑学家",
+                    "公理学家",
+                    "单子"
+                ],
+                "prospectors": [
+                    "解构者",
+                    "游牧者",
+                    "装配体",
+                    "根茎",
+                    "符号游牧者"
+                ],
+                "drifters": [
+                    "兼职讲师",
+                    "旁听生",
+                    "临时讲师",
+                    "讲师",
+                    "助理"
+                ]
+            }
+        },
+        "buffs": {
+            "email-rush": {
+                "name": "邮件冲击",
+                "description": "第1轮所有单位+2 ATK"
+            },
+            "ad-revenue": {
+                "name": "广告收入",
+                "description": "每轮+2额外思想"
+            },
+            "soft-reroll": {
+                "name": "软件辅助",
+                "description": "每个商店阶段+1免费刷新"
+            },
+            "bandwidth-armor": {
+                "name": "带宽护甲",
+                "description": "所有单位+5 HP"
+            },
+            "dom-expansion": {
+                "name": "DOM扩展",
+                "description": "商店额外提供+1单位"
+            },
+            "vc-funding": {
+                "name": "风投资金",
+                "description": "开始时+3额外思想"
+            }
+        },
+        "bossMods": {
+            "mod-enraged": {
+                "name": "狂怒",
+                "description": "Boss获得+4 ATK"
+            },
+            "mod-fortified": {
+                "name": "坚固",
+                "description": "Boss获得+10 HP"
+            },
+            "mod-inspiring": {
+                "name": "鼓舞",
+                "description": "所有护卫单位获得+2 ATK"
+            },
+            "mod-armored": {
+                "name": "装甲",
+                "description": "Boss以最大HP 30%的护盾开始"
+            },
+            "mod-first-blood": {
+                "name": "先手",
+                "description": "战斗开始时Boss对前排敌人造成4点伤害"
+            },
+            "mod-aegis": {
+                "name": "神盾",
+                "description": "所有友军以+3护盾开始"
+            },
+            "mod-overclocked": {
+                "name": "超频",
+                "description": "Boss获得+3 ATK和+3 HP"
+            },
+            "mod-swarm-spawn": {
+                "name": "虫群孵化",
+                "description": "战斗开始时两个2/2痕迹加入战斗"
+            }
+        },
+        "relics": {
+            "aletheia": {
+                "name": "Aletheia",
+                "description": "+2 ATK to front-line unit at combat start",
+                "unlock": "Available by default"
+            },
+            "wuji": {
+                "name": "Wuji (無極)",
+                "description": "+1 Thought per round",
+                "unlock": "Available by default"
+            },
+            "shoshin": {
+                "name": "Shoshin (初心)",
+                "description": "+1 free reroll per shop phase",
+                "unlock": "Available by default"
+            },
+            "golden-mean": {
+                "name": "The Golden Mean",
+                "description": "+4 HP to all units at combat start",
+                "unlock": "Available by default"
+            },
+            "ubuntu": {
+                "name": "Ubuntu",
+                "description": "When an ally dies, all remaining allies gain +1 ATK",
+                "unlock": "Reach round 4"
+            },
+            "amor-fati": {
+                "name": "Amor Fati",
+                "description": "After losing combat, gain +3 bonus Thoughts next round",
+                "unlock": "Reach round 6"
+            },
+            "uncarved-block": {
+                "name": "The Uncarved Block (朴)",
+                "description": "All units start combat with 3 Shield",
+                "unlock": "Defeat any boss"
+            },
+            "ibn-rushds-mirror": {
+                "name": "Ibn Rushd's Mirror",
+                "description": "Heal 3 HP to all surviving units after combat",
+                "unlock": "Reach round 10"
+            },
+            "pratityasamutpada": {
+                "name": "Pratītyasamutpāda",
+                "description": "When a unit triggers an ability, a random ally gains +1 ATK",
+                "unlock": "Defeat The Automaton"
+            },
+            "maat": {
+                "name": "Maat",
+                "description": "+2 ATK and +2 HP when lineup has 2+ factions",
+                "unlock": "Win with 3+ factions in lineup"
+            },
+            "tabula-rasa": {
+                "name": "Tabula Rasa",
+                "description": "Shop offers +1 extra unit",
+                "unlock": "Defeat The Noumenon"
+            },
+            "tetrapharmakos": {
+                "name": "Tetrapharmakos",
+                "description": "Heal all units for 2 HP at combat start",
+                "unlock": "Complete Idealist faction"
+            },
+            "yi-jing-trigram": {
+                "name": "Yi Jing Trigram (易經)",
+                "description": "After each victory, a random unit gains +1/+1 permanently",
+                "unlock": "Complete Rationalist faction"
+            },
+            "eternal-return": {
+                "name": "Eternal Return",
+                "description": "+1 extra life (4 losses to end run)",
+                "unlock": "Reach round 20"
+            },
+            "metempsychosis": {
+                "name": "Metempsychosis",
+                "description": "On unit death, 25% chance to resummon at 50% HP",
+                "unlock": "Complete Post-Structuralist faction"
+            },
+            "wu-wei": {
+                "name": "Wu Wei (無為)",
+                "description": "Deal 1 passive damage to all enemies each combat round",
+                "unlock": "Complete Existentialist faction"
+            },
+            "philosophers-stone": {
+                "name": "The Philosopher's Stone",
+                "description": "All tier 1 units gain +3 ATK and +3 HP",
+                "unlock": "Reach round 15 with a majority-Adjuncts lineup"
+            },
+            "indras-net": {
+                "name": "Indra's Net",
+                "description": "Faction bonuses trigger as if you have +1 extra ally",
+                "unlock": "Defeat all 4 bosses in a single run"
+            },
+            "rubber-duck": {
+                "name": "Rubber Duck",
+                "description": "Before combat, a random ally gains +3 ATK",
+                "unlock": "Complete 20 runs"
+            },
+            "loaded-dice": {
+                "name": "Loaded Dice",
+                "description": "Rerolls always include a unit matching your majority faction",
+                "unlock": "Buy 50 total units across all runs"
+            },
+            "newtons-cradle": {
+                "name": "Newton's Cradle",
+                "description": "When front unit dies, next unit inherits +50% of its ATK",
+                "unlock": "Win a combat where your front unit died first"
+            },
+            "rosetta-stone": {
+                "name": "The Rosetta Stone",
+                "description": "Cross-faction bridge bonuses need 1 fewer ally",
+                "unlock": "Win with all 4 factions in lineup"
+            },
+            "maxwells-demon": {
+                "name": "Maxwell's Demon",
+                "description": "Gain +2 Thoughts when you buy nothing in a shop phase",
+                "unlock": "Win a run spending under 20 Thoughts"
+            },
+            "pandoras-box": {
+                "name": "Pandora's Box",
+                "description": "Start runs with 2 random relics, but only 2 lives",
+                "unlock": "Hold 6+ relics in a single run"
+            }
+        },
+        "events": {
+            "allegory-of-the-cave": {
+                "title": "The Allegory of the Cave",
+                "description": "Shadows flicker on the wall before you. Will you turn toward the light?",
+                "choices": {
+                    "0": "Turn toward the light (sacrifice weakest unit, gain a relic)",
+                    "1": "Remain in darkness (+4 Thoughts)"
+                }
+            },
+            "trolley-problem": {
+                "title": "The Trolley Problem",
+                "description": "The tracks diverge before you. There is no right answer.",
+                "choices": {
+                    "0": "Pull the lever (all units lose 2 HP, gain a relic)",
+                    "1": "Do nothing (front unit loses 5 HP, +6 Thoughts)"
+                }
+            },
+            "nirvana": {
+                "title": "Nirvana",
+                "description": "Release all attachment. Let go of what you hold dear.",
+                "choices": {
+                    "0": "Release attachment (sell all bench at 2x, gain a rare relic)",
+                    "1": "Cling to the material (+2 Thoughts)"
+                }
+            },
+            "zhuangzis-butterfly": {
+                "title": "Zhuangzi's Butterfly",
+                "description": "Am I a philosopher dreaming I am a butterfly, or a butterfly dreaming I am a philosopher?",
+                "choices": {
+                    "0": "Embrace the dream (swap ATK and HP of all units)",
+                    "1": "Wake up (+2 Thoughts)"
+                }
+            },
+            "pascals-wager": {
+                "title": "Pascal's Wager",
+                "description": "Bet everything on the unknown. Faith or reason?",
+                "choices": {
+                    "0": "Wager it all (50% double Thoughts, 50% lose half)",
+                    "1": "Decline the wager (+1 Thought)"
+                }
+            },
+            "burning-library": {
+                "title": "The Burning Library",
+                "description": "The flames of Alexandria rise. What will you save from the ashes?",
+                "choices": {
+                    "0": "Rush in (lose 5 Thoughts, gain 2 relics)",
+                    "1": "Let it burn (+8 Thoughts)"
+                }
+            },
+            "garden-of-forking-paths": {
+                "title": "The Garden of Forking Paths",
+                "description": "Every path is taken, every path abandoned. Choose wisely.",
+                "choices": {
+                    "0": "Take the left path (gain a relic)",
+                    "1": "Take the right path (+5 Thoughts)",
+                    "2": "Take the center path (+2 ATK to all units)"
+                }
+            },
+            "karma": {
+                "title": "Karma",
+                "description": "What you give returns threefold. What you hoard turns to dust.",
+                "choices": {
+                    "0": "Give freely (lose 3 Thoughts, all units +2 ATK & +2 HP)",
+                    "1": "Keep your fortune (+1 ATK to a random unit)"
+                }
+            },
+            "memento-mori": {
+                "title": "Memento Mori",
+                "description": "Remember: you too shall pass. Use your time wisely.",
+                "choices": {
+                    "0": "Embrace mortality (strongest +4 ATK, loses 3 HP)",
+                    "1": "Seek longevity (all units +1 HP)"
+                }
+            },
+            "the-agora": {
+                "title": "The Agora",
+                "description": "Scholars peddle their wares in the marketplace of ideas.",
+                "choices": {
+                    "0": "Browse the common stall (buy common relic for 3 Thoughts)",
+                    "1": "Examine the rare collection (buy rare relic for 5 Thoughts)",
+                    "2": "Approach the legendary dealer (buy legendary relic for 8 Thoughts)"
+                }
+            },
+            "diogenes-lantern": {
+                "title": "Diogenes' Lantern",
+                "description": "He wanders with his lantern, searching for an honest thinker.",
+                "choices": {
+                    "0": "Follow his light (3 free rerolls next shop)",
+                    "1": "Ignore him (+2 Thoughts)"
+                }
+            },
+            "socratic-method": {
+                "title": "The Socratic Method",
+                "description": "I know that I know nothing. But perhaps I can know better.",
+                "choices": {
+                    "0": "Question everything (lose a relic, gain 2 new relics)",
+                    "1": "Accept what you know (+2 Thoughts)"
+                }
+            }
+        },
+        "bestiary": {
+            "thinkers": "Thinkers",
+            "adversaries": "Adversaries",
+            "relicsTab": "Relics",
+            "bosses": "Bosses",
+            "opponents": "Opponent Schools",
+            "defeated": "Defeated",
+            "undefeated": "Undefeated",
+            "locked": "???",
+            "unlockHint": "Unlock: {{hint}}",
+            "relicTiers": {
+                "common": "Common",
+                "rare": "Rare",
+                "legendary": "Legendary",
+                "secret": "Secret"
+            }
+        }
+    },
+    "divination": {
+        "title": "🔮 Deployment Divination",
+        "loading": "Consulting the aether...",
+        "noReading": "No divination reading available yet.",
+        "noReadingHint": "A reading is cast with each deployment.",
+        "starsNotAligned": "The stars were not aligned for this reading.",
+        "spiritsSilent": "The spirits could not be reached.",
+        "sections": {
+            "numerology": "🔢 Numerology",
+            "tarot": "🃏 Tarot Spread",
+            "iching": "☯️ I Ching",
+            "biorhythm": "📊 Biorhythm",
+            "horoscope": "Horoscope",
+            "natalChart": "🌌 Natal Chart"
+        },
+        "numerology": {
+            "lifePath": "Life Path",
+            "destiny": "Destiny",
+            "soulUrge": "Soul Urge",
+            "personality": "Personality",
+            "master": "Master"
+        },
+        "tarot": {
+            "past": "Past",
+            "present": "Present",
+            "future": "Future",
+            "reversed": "Reversed"
+        },
+        "biorhythm": {
+            "physical": "Physical",
+            "emotional": "Emotional",
+            "intellectual": "Intellectual",
+            "overall": "Overall"
+        },
+        "horoscope": {
+            "mood": "Mood",
+            "luckyNumber": "Lucky #",
+            "luckyTime": "Lucky Time",
+            "color": "Color",
+            "compatibility": "Compat"
+        },
+        "natalChart": {
+            "sun": "Sun",
+            "moon": "Moon",
+            "rising": "Rising",
+            "planet": "Planet",
+            "sign": "Sign",
+            "degree": "Degree",
+            "house": "House"
+        },
+        "familiar": {
+            "name": "Familiar"
+        },
+        "widget": {
+            "title": "🔮 Divination",
+            "expand": "Expand to consult the oracle",
+            "loading": "Consulting the aether...",
+            "unavailable": "Oracle unavailable",
+            "noReading": "No reading yet — awaiting next deployment"
         }
     }
 }

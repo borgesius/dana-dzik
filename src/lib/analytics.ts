@@ -1,5 +1,6 @@
 import { ANALYTICS_CONFIG } from "../config/analytics"
 import type { RoutableWindow } from "../config/routing"
+import { apiFetch, apiPost } from "./api/client"
 import { emitAppEvent, onAppEvent } from "./events"
 
 function isBot(): boolean {
@@ -165,19 +166,10 @@ async function sendEvent(event: AnalyticsEvent): Promise<void> {
         if (!consumeSessionBudget()) return
     }
 
-    try {
-        await fetch("/api/analytics", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "X-Analytics-Token": ANALYTICS_TOKEN,
-                "X-Visitor-Id": visitorId,
-            },
-            body: JSON.stringify(event),
-        })
-    } catch {
-        // Silently fail - analytics shouldn't break the site
-    }
+    await apiPost("/api/analytics", event, {
+        "X-Analytics-Token": ANALYTICS_TOKEN,
+        "X-Visitor-Id": visitorId,
+    })
 }
 
 export function trackPageview(): void {
@@ -346,19 +338,14 @@ async function reportAchievements(): Promise<void> {
     const visitorId = getVisitorId()
 
     try {
-        const res = await fetch("/api/achievement-counts", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "X-Visitor-Id": visitorId,
-            },
-            body: JSON.stringify({ achievements: unreported }),
-        })
+        await apiPost(
+            "/api/achievement-counts",
+            { achievements: unreported },
+            { "X-Visitor-Id": visitorId }
+        )
 
-        if (res.ok) {
-            for (const id of unreported) {
-                mgr.markReported(id)
-            }
+        for (const id of unreported) {
+            mgr.markReported(id)
         }
     } catch {
         // Silently fail — will retry on next earn
@@ -377,20 +364,13 @@ let cachedCounts: AchievementCountsData | null = null
 export async function fetchAchievementCounts(): Promise<AchievementCountsData> {
     if (cachedCounts) return cachedCounts
 
-    try {
-        const res = await fetch("/api/achievement-counts")
-        if (!res.ok) return { counts: {}, totalUsers: 0 }
+    const result = await apiFetch<{ ok: boolean; data?: AchievementCountsData }>(
+        "/api/achievement-counts"
+    )
 
-        const json = (await res.json()) as {
-            ok: boolean
-            data?: AchievementCountsData
-        }
-        if (json.ok && json.data) {
-            cachedCounts = json.data
-            return cachedCounts
-        }
-    } catch {
-        // Silently fail
+    if (result.ok && result.data.ok && result.data.data) {
+        cachedCounts = result.data.data
+        return cachedCounts
     }
 
     return { counts: {}, totalUsers: 0 }

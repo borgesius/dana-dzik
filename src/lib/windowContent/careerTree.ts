@@ -1,3 +1,4 @@
+import { getDataAttribute } from "../domUtils"
 import {
     type CareerManager,
     getCareerManager,
@@ -5,6 +6,7 @@ import {
 import {
     CAREER_BRANCHES,
     type CareerNodeDef,
+    type CareerNodeId,
     getNodesForBranch,
     MASTERY_DEFS,
     masteryCost,
@@ -252,10 +254,9 @@ function wireCareerTreeButtons(
     career: CareerManager,
     containerId: string
 ): void {
-    // Node unlock buttons
     container.querySelectorAll<HTMLElement>(".ct-unlock-btn").forEach((btn) => {
         btn.addEventListener("click", () => {
-            const nodeId = btn.getAttribute("data-node")
+            const nodeId = getDataAttribute<CareerNodeId>(btn, "node")
             if (nodeId) {
                 career.unlockNode(nodeId)
                 renderCareerTreeWindow(containerId)
@@ -263,7 +264,6 @@ function wireCareerTreeButtons(
         })
     })
 
-    // Mastery buttons
     container
         .querySelectorAll<HTMLElement>(".ct-mastery-btn")
         .forEach((btn) => {
@@ -276,7 +276,6 @@ function wireCareerTreeButtons(
             })
         })
 
-    // Career switch buttons
     container.querySelectorAll<HTMLElement>(".ct-switch-btn").forEach((btn) => {
         btn.addEventListener("click", () => {
             const branch = btn.getAttribute("data-branch") as CareerBranch

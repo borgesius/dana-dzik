@@ -1,6 +1,11 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node"
 
-import { cachedRead, getRedis, prefixKey, writeThrough } from "./lib/redisGateway"
+import {
+    cachedRead,
+    getRedis,
+    prefixKey,
+    writeThrough,
+} from "./lib/redisGateway"
 
 interface TokenResponse {
     access_token: string
@@ -38,14 +43,17 @@ async function getAccessToken(): Promise<string> {
     const now = Math.floor(Date.now() / 1000)
     const redis = getRedis()
 
-    const cached = redis ? await redis.get<CachedTokens>(prefixKey(REDIS_KEY)) : null
+    const cached = redis
+        ? await redis.get<CachedTokens>(prefixKey(REDIS_KEY))
+        : null
     if (cached && cached.expiresAt > now + 60) {
         return cached.accessToken
     }
 
     const clientId = process.env.STRAVA_CLIENT_ID
     const clientSecret = process.env.STRAVA_CLIENT_SECRET
-    const refreshToken = cached?.refreshToken || process.env.STRAVA_REFRESH_TOKEN
+    const refreshToken =
+        cached?.refreshToken || process.env.STRAVA_REFRESH_TOKEN
 
     if (!clientId || !clientSecret || !refreshToken) {
         throw new Error("Strava credentials not configured")
@@ -152,14 +160,20 @@ function filterRecent(activities: StravaActivity[]): StravaActivity[] {
 }
 
 function findBestRun(activities: StravaActivity[]): ActivitySummary | null {
-    const runs = activities.filter((a) => a.type === "Run" && a.distance >= 1000)
+    const runs = activities.filter(
+        (a) => a.type === "Run" && a.distance >= 1000
+    )
     if (runs.length === 0) return null
 
     let best: StravaActivity | null = null
     let bestScore = Infinity
 
     for (const run of runs) {
-        const eq5k = calculateEquivalentTime(run.moving_time, run.distance, 5000)
+        const eq5k = calculateEquivalentTime(
+            run.moving_time,
+            run.distance,
+            5000
+        )
         if (eq5k < bestScore) {
             bestScore = eq5k
             best = run
@@ -311,7 +325,9 @@ export default async function handler(
         const stats = computeStats(activities)
 
         await writeThrough(async (client) => {
-            await client.set(prefixKey(STRAVA_STATS_CACHE_KEY), stats, { ex: STATS_TTL_SECONDS })
+            await client.set(prefixKey(STRAVA_STATS_CACHE_KEY), stats, {
+                ex: STATS_TTL_SECONDS,
+            })
         })
 
         res.status(200).json({ ok: true, data: stats, cached: false })

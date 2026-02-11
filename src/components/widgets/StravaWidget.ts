@@ -1,5 +1,6 @@
 import { log } from "@/core/Logger"
 
+import { apiFetch } from "../../lib/api/client"
 import { createWidgetFrame } from "./WidgetFrame"
 
 interface ActivitySummary {
@@ -45,38 +46,28 @@ export class StravaWidget {
     }
 
     private async fetchStrava(content: HTMLElement): Promise<void> {
-        try {
-            const response = await fetch("/api/strava")
+        const res = await apiFetch<StravaApiResponse>("/api/strava")
 
-            const contentType = response.headers.get("content-type")
-            if (!contentType?.includes("application/json")) {
-                content.innerHTML = `<div class="strava-empty">Strava unavailable</div>`
-                return
-            }
-
-            if (!response.ok) {
-                throw new Error(`API error: ${response.status}`)
-            }
-
-            // SAFETY: response shape controlled by our /api/strava endpoint
-            const result = (await response.json()) as StravaApiResponse
-
-            if (!result.ok || !result.data) {
-                content.innerHTML = `<div class="strava-empty">No recent activities</div>`
-                return
-            }
-
-            const { bestRun, bestRide, longestRide } = result.data
-
-            content.innerHTML = `
-                ${this.renderStat("🏃 Best Run (3mo)", bestRun)}
-                ${this.renderStat("🚴 Best Ride (3mo)", bestRide)}
-                ${this.renderStat("🚴 Longest Ride (3mo)", longestRide)}
-            `
-        } catch (error) {
-            log.widgets("Strava error: %O", error)
+        if (!res.ok) {
+            log.widgets("Strava error: %s", res.error)
             content.innerHTML = `<div class="strava-error">Could not load</div>`
+            return
         }
+
+        const result = res.data
+
+        if (!result.ok || !result.data) {
+            content.innerHTML = `<div class="strava-empty">No recent activities</div>`
+            return
+        }
+
+        const { bestRun, bestRide, longestRide } = result.data
+
+        content.innerHTML = `
+            ${this.renderStat("🏃 Best Run (3mo)", bestRun)}
+            ${this.renderStat("🚴 Best Ride (3mo)", bestRide)}
+            ${this.renderStat("🚴 Longest Ride (3mo)", longestRide)}
+        `
     }
 
     private renderStat(label: string, stat: ActivitySummary | null): string {

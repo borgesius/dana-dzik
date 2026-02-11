@@ -59,6 +59,7 @@ export function wireAchievements(
     wireSessionCost(mgr)
     wireQAReports(mgr)
     wireProgressionEvents(mgr)
+    wireNetmonEvents(mgr)
     wireAchievementReporting(mgr)
 }
 
@@ -294,6 +295,15 @@ function wireLocaleManager(mgr: AchievementManager): void {
 function wireMarketGame(mgr: AchievementManager): void {
     const game = getMarketGame()
 
+    // "self-sustaining" run tracking: earn $1000 from automated income with no manual trades
+    let runHasManualTrade = false
+    let runAutomatedEarnings = 0
+    const checkSelfSustaining = (): void => {
+        if (runAutomatedEarnings >= 1000 && !runHasManualTrade) {
+            mgr.earn("self-sustaining")
+        }
+    }
+
     // "Three Ways" session tracking
     let hasTraded = false
     let hasHarvested = false
@@ -305,22 +315,22 @@ function wireMarketGame(mgr: AchievementManager): void {
     }
 
     game.on("tradeExecuted", (data) => {
+        runHasManualTrade = true
         hasTraded = true
         checkThreeWays()
-        const trade = data as TradeResult
         mgr.incrementCounter("trades")
         mgr.earn("first-trade")
 
-        if (trade.action === "buy") {
-            const market = game.getMarketState(trade.commodityId)
+        if (data.action === "buy") {
+            const market = game.getMarketState(data.commodityId)
             if (market && market.trend === "bear") {
                 mgr.earn("fire-sale")
             }
         }
 
-        if (trade.action === "sell") {
-            const def = COMMODITIES.find((c) => c.id === trade.commodityId)
-            if (def && trade.pricePerUnit >= def.basePrice * 5) {
+        if (data.action === "sell") {
+            const def = COMMODITIES.find((c) => c.id === data.commodityId)
+            if (def && data.pricePerUnit >= def.basePrice * 5) {
                 mgr.earn("first-out-the-door")
             }
         }
@@ -333,8 +343,8 @@ function wireMarketGame(mgr: AchievementManager): void {
             mgr.earn("who-are-we-selling-to")
         }
 
-        if (trade.action === "buy") {
-            const holding = game.getHolding(trade.commodityId)
+        if (data.action === "buy") {
+            const holding = game.getHolding(data.commodityId)
             if (
                 holding &&
                 holding.quantity > CORNER_MARKET_FLOAT * CORNER_MARKET_THRESHOLD
@@ -349,6 +359,9 @@ function wireMarketGame(mgr: AchievementManager): void {
         if (earnings >= 100) mgr.earn("going-concern")
         if (earnings >= 1000) mgr.earn("dot-com-darling")
         if (earnings >= 10000) mgr.earn("irrational-exuberance")
+        if (earnings >= 50000) mgr.earn("corporate-raider")
+        if (earnings >= 100000) mgr.earn("market-mogul")
+        if (earnings >= 1000000) mgr.earn("too-big-to-fail")
 
         // X - Wheel of Fortune: 500+ lifetime trades
         if (mgr.getCounter("trades") >= 500) mgr.earn("arcana-fortune")
@@ -357,7 +370,7 @@ function wireMarketGame(mgr: AchievementManager): void {
         const holdings = COMMODITIES.map((c) => game.getHolding(c.id))
         const allHaveQty = holdings.every((h) => h !== null && h.quantity > 0)
         if (allHaveQty) {
-            const qtys = holdings.map((h) => h!.quantity)
+            const qtys = holdings.map((h) => h?.quantity ?? 0)
             const avg = qtys.reduce((a, b) => a + b, 0) / qtys.length
             if (avg > 0 && qtys.every((q) => Math.abs(q - avg) <= avg * 0.2)) {
                 mgr.earn("arcana-justice")
@@ -365,8 +378,7 @@ function wireMarketGame(mgr: AchievementManager): void {
         }
     })
 
-    game.on("phaseUnlocked", (data) => {
-        const phase = data as number
+    game.on("phaseUnlocked", (phase) => {
         if (phase >= 2) mgr.earn("phase-2")
         if (phase >= 3) mgr.earn("phase-3")
         if (phase >= 4) mgr.earn("phase-4")
@@ -378,10 +390,18 @@ function wireMarketGame(mgr: AchievementManager): void {
         }
     })
 
-    game.on("upgradeAcquired", () => {
+    game.on("upgradeAcquired", (upgradeId) => {
         const owned = game.getOwnedUpgrades().length
         if (owned === 1) mgr.earn("arcana-magician")
         if (owned >= UPGRADES.length) mgr.earn("wasnt-brains")
+
+        // Mastery milestones (upgradeId has "mastery:" prefix)
+        if (typeof upgradeId === "string" && upgradeId.startsWith("mastery:")) {
+            const total = game.getTotalMasteryLevels()
+            if (total >= 10) mgr.earn("apprentice")
+            if (total >= 50) mgr.earn("journeyman")
+            if (total >= 100) mgr.earn("grandmaster")
+        }
     })
 
     game.on("factoryDeployed", () => {
@@ -405,8 +425,7 @@ function wireMarketGame(mgr: AchievementManager): void {
     })
 
     game.on("influenceExecuted", (data) => {
-        const { influenceId } = data as { influenceId: string }
-        const count = mgr.addToSet("influences-used", influenceId)
+        const count = mgr.addToSet("influences-used", data.influenceId)
         if (count >= 3) {
             mgr.earn("speak-to-a-retriever")
         }
@@ -422,6 +441,7 @@ function wireMarketGame(mgr: AchievementManager): void {
     const AUTOCLICKER_THRESHOLD = 20
 
     game.on("harvestExecuted", (data) => {
+        runHasManualTrade = true
         hasHarvested = true
         checkThreeWays()
 
@@ -435,16 +455,17 @@ function wireMarketGame(mgr: AchievementManager): void {
         if (harvests >= 100000) mgr.earn("harvest-100000")
 
         // Per-commodity tracking
-        const { commodityId } = data as { commodityId: CommodityId }
-        const counterKey = `harvest-${commodityId}` as CounterKey
+        const counterKey = `harvest-${data.commodityId}` as CounterKey
         const count = mgr.incrementCounter(counterKey)
         if (count >= 500) {
-            if (commodityId === "EMAIL") mgr.earn("harvest-email-500")
-            if (commodityId === "ADS") mgr.earn("harvest-ads-500")
-            if (commodityId === "DOM") mgr.earn("harvest-dom-500")
-            if (commodityId === "BW") mgr.earn("harvest-bw-500")
-            if (commodityId === "SOFT") mgr.earn("harvest-soft-500")
-            if (commodityId === "VC") mgr.earn("harvest-vc-500")
+            if (data.commodityId === "EMAIL") mgr.earn("harvest-email-500")
+            if (data.commodityId === "ADS") mgr.earn("harvest-ads-500")
+            if (data.commodityId === "LIVE") mgr.earn("harvest-live-500")
+            if (data.commodityId === "DOM") mgr.earn("harvest-dom-500")
+            if (data.commodityId === "GLUE") mgr.earn("harvest-glue-500")
+            if (data.commodityId === "BW") mgr.earn("harvest-bw-500")
+            if (data.commodityId === "SOFT") mgr.earn("harvest-soft-500")
+            if (data.commodityId === "VC") mgr.earn("harvest-vc-500")
         }
 
         // Autoclicker detection: 20+ clicks in 2 seconds
@@ -460,6 +481,17 @@ function wireMarketGame(mgr: AchievementManager): void {
         if (recentClicks.length >= AUTOCLICKER_THRESHOLD) {
             mgr.earn("definitely-not-a-bot")
         }
+    })
+
+    game.on("automatedIncome", (data) => {
+        runAutomatedEarnings += data.amount
+        checkSelfSustaining()
+    })
+
+    // Reset run tracking on prestige
+    onAppEvent("prestige:triggered", () => {
+        runHasManualTrade = false
+        runAutomatedEarnings = 0
     })
 }
 
@@ -723,6 +755,11 @@ function wireProgressionEvents(mgr: AchievementManager): void {
             mgr.earn("tell-them-theyll-be-ok")
         }
 
+        // Prestige count milestones (serial-entrepreneur, bubble-addict, bubble-eternal)
+        if (detail.count >= 5) mgr.earn("serial-entrepreneur")
+        if (detail.count >= 10) mgr.earn("bubble-addict")
+        if (detail.count >= 25) mgr.earn("bubble-eternal")
+
         // 0 - The Fool: prestige with 0 hindsight upgrades purchased
         const prestige = getPrestigeManager()
         const noUpgrades = HINDSIGHT_UPGRADES.every(
@@ -864,6 +901,22 @@ function wireProgressionEvents(mgr: AchievementManager): void {
         mgr.earn("full-spiral")
     })
 
+    // ── Relic achievements ───────────────────────────────────────────────
+    onAppEvent("autobattler:run-complete", (detail) => {
+        // Relic Hunter: collect 5 relics in a single run
+        if (detail.relicsCollected >= 5) {
+            mgr.earn("relic-hunter")
+        }
+    })
+    onAppEvent("autobattler:relic-unlocked", () => {
+        // Track unique relics unlocked across all runs
+        const count = mgr.incrementCounter("relics-unlocked" as CounterKey)
+        // Curator: unlock all common relics (6 total)
+        if (count >= 6) mgr.earn("curator")
+        // Full Collection: unlock all relics (24 total)
+        if (count >= 24) mgr.earn("full-collection")
+    })
+
     // ── Level / Rank achievements ────────────────────────────────────────
     onAppEvent("progression:level-up", (detail) => {
         if (detail.level >= 5) mgr.earn("level-5")
@@ -877,8 +930,7 @@ function wireProgressionEvents(mgr: AchievementManager): void {
     })
 
     // ── Phase 5 / 6 achievement ─────────────────────────────────────────
-    getMarketGame().on("phaseUnlocked", (data) => {
-        const phase = data as number
+    getMarketGame().on("phaseUnlocked", (phase) => {
         if (phase >= 5) mgr.earn("phase-5")
         if (phase >= 6) mgr.earn("phase-6")
     })
@@ -1029,10 +1081,34 @@ function wireProgressionEvents(mgr: AchievementManager): void {
 function wirePhase6Achievements(mgr: AchievementManager): void {
     const game = getMarketGame()
 
+    // "triple-a-streak" -- Maintain AAA rating for 500 ticks
+    let aaaTickCount = 0
+    game.on("marketTick", () => {
+        if (game.getCreditRating() === "AAA") {
+            aaaTickCount++
+            if (aaaTickCount >= 500) mgr.earn("triple-a-streak")
+        } else {
+            aaaTickCount = 0
+        }
+        checkDiversifiedPortfolio()
+    })
+
+    // "diversified-portfolio" -- Hold DAS in all 6 commodity types simultaneously
+    const checkDiversifiedPortfolio = (): void => {
+        const securities = game
+            .getSecurities()
+            .filter((s) => s.status === "performing")
+        const types = new Set(securities.map((s) => s.commodityId))
+        if (COMMODITIES.every((c) => types.has(c.id))) {
+            mgr.earn("diversified-portfolio")
+        }
+    }
+
     // "its-just-money" -- Mint your first DAS
     // "It's just money; it's made up."
     game.on("dasCreated", () => {
         mgr.earn("its-just-money")
+        checkDiversifiedPortfolio()
 
         // "music-stops" -- 6+ active DAS simultaneously
         // "The music is about to stop..."
@@ -1051,20 +1127,16 @@ function wirePhase6Achievements(mgr: AchievementManager): void {
     // "be-first" -- Reach AAA credit rating
     // "Be first. Be smarter. Or cheat."
     game.on("ratingChanged", (data) => {
-        const { rating, direction } = data as {
-            rating: string
-            direction: string
-        }
-        if (rating === "AAA") mgr.earn("be-first")
+        if (data.rating === "AAA") mgr.earn("be-first")
 
         // "killed-this-firm" -- Hit F credit rating
-        if (rating === "F") mgr.earn("killed-this-firm")
+        if (data.rating === "F") mgr.earn("killed-this-firm")
 
         // XVI - The Tower: experience a credit rating downgrade
-        if (direction === "downgrade") mgr.earn("arcana-tower")
+        if (data.direction === "downgrade") mgr.earn("arcana-tower")
 
         // VIII - Strength: survive 100+ ticks after a margin event (on upgrade)
-        if (direction === "upgrade" && game.getTicksSinceMarginEvent() >= 100) {
+        if (data.direction === "upgrade" && game.getTicksSinceMarginEvent() >= 100) {
             mgr.earn("arcana-strength")
         }
     })
@@ -1072,13 +1144,9 @@ function wirePhase6Achievements(mgr: AchievementManager): void {
     // "just-silence" -- Survive margin event and recover to A+ within 100 ticks
     // "I don't hear a thing. Just... silence."
     game.on("ratingChanged", (data) => {
-        const { rating, direction } = data as {
-            rating: string
-            direction: string
-        }
-        if (direction === "upgrade") {
+        if (data.direction === "upgrade") {
             const ratingIdx = ["F", "D", "C", "B", "A", "AA", "AAA"].indexOf(
-                rating
+                data.rating
             )
             if (ratingIdx >= 4 && game.getTicksSinceMarginEvent() <= 100) {
                 mgr.earn("just-silence")
@@ -1104,6 +1172,29 @@ function wirePhase6Achievements(mgr: AchievementManager): void {
         if (game.getDebt() <= 0 && game.getSecurities().length >= 3) {
             mgr.earn("rainy-day")
         }
+    })
+}
+
+// ── Network monitor (M.D.) achievements ─────────────────────────────────
+
+function wireNetmonEvents(mgr: AchievementManager): void {
+    onAppEvent("netmon:opened", () => {
+        mgr.earn("packet-sniffing")
+    })
+
+    onAppEvent("netmon:packet-expanded", () => {
+        const count = mgr.incrementCounter("packets-expanded" as CounterKey)
+        if (count >= 10) {
+            mgr.earn("deep-packet-inspection")
+        }
+    })
+
+    onAppEvent("netmon:unknown-host-filtered", () => {
+        mgr.earn("unknown-host")
+    })
+
+    onAppEvent("netmon:nmap-run", () => {
+        mgr.earn("port-scan")
     })
 }
 

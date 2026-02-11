@@ -1,3 +1,4 @@
+import { getCosmeticManager } from "../../lib/cosmetics/CosmeticManager"
 import { getThemeManager, type ThemeId } from "../../lib/themeManager"
 
 const THEME_ICONS: Record<ThemeId, string> = {
@@ -70,6 +71,7 @@ export function createThemeToggle(): HTMLElement {
 
         option.addEventListener("click", (e) => {
             e.stopPropagation()
+            getCosmeticManager().setActive("theme", themeId)
             tm.setTheme(themeId)
             dropdown.style.display = "none"
         })

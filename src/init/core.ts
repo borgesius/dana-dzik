@@ -79,6 +79,14 @@ export function initCore(): void {
     cosmetics.deserialize(savedData.cosmetics)
     cosmetics.setDirtyCallback(() => saveManager.requestSave())
 
+    // Reconcile: if the cosmetic active theme differs from ThemeManager,
+    // apply the cosmetic choice (it's the user-facing source of truth).
+    const cosmeticTheme = cosmetics.getActive("theme")
+    const tm = getThemeManager()
+    if (cosmeticTheme && cosmeticTheme !== tm.getCurrentTheme()) {
+        tm.setTheme(cosmeticTheme as Parameters<typeof tm.setTheme>[0])
+    }
+
     const veil = getVeilManager()
     if (savedData.veil) {
         veil.deserialize(savedData.veil)
@@ -197,7 +205,6 @@ function showOfflineSummary(summary: OfflineSummary): void {
 
     html += `</div>`
 
-    // Use a simple notification popup (displayed briefly then auto-dismissed)
     const overlay = document.createElement("div")
     overlay.style.cssText =
         "position:fixed;top:0;left:0;right:0;bottom:0;display:flex;align-items:center;justify-content:center;z-index:99999;background:rgba(0,0,0,0.3)"

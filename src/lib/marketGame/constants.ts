@@ -30,14 +30,19 @@ export const STARTING_CASH = 0.1
 export const BATCH_ORDER_QUANTITY = 5
 export const BULK_ORDER_QUANTITY = 10
 export const BLOCK_ORDER_QUANTITY = 50
+export const LARGE_BLOCK_ORDER_QUANTITY = 100
+export const MEGA_BLOCK_ORDER_QUANTITY = 500
 
 /** Fraction of harvestQuantity produced per click at each upgrade tier. */
 export const HARVEST_BASE_FRACTION = 0.05
-export const HARVEST_UPGRADE_BONUS = 0.45
-/** Autoscript bonus per tier: I = 0.25, II = 0.50, III = 0.75 */
-export const AUTOSCRIPT_TIER_BONUS = [0.25, 0.5, 0.75] as const
+export const HARVEST_UPGRADE_BONUS = 0.2
+/** Autoscript bonus per tier: I = 0.12, II = 0.22, III = 0.32, IV = 0.42, V = 0.52 */
+export const AUTOSCRIPT_TIER_BONUS = [0.12, 0.22, 0.32, 0.42, 0.52] as const
 
 /** How much of the price movement feeds through to $/click (0 = fully normalised, 1 = raw). */
-export const HARVEST_PRICE_SENSITIVITY = 0.25
+export const HARVEST_PRICE_SENSITIVITY = 0.15
 export const HARVEST_DOLLAR_FLOOR = 0.75
-export const HARVEST_DOLLAR_CEILING = 1.25
+export const HARVEST_DOLLAR_CEILING = 1.1
+
+/** Bonus multiplier on profit portion when selling purchased stock at a gain. */
+export const CAPITAL_GAINS_BONUS = 0.2

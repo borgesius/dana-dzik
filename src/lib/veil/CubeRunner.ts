@@ -1,3 +1,5 @@
+import { CanvasError } from "@/core/errors"
+
 import { BOSS_TAUNTS } from "./levels"
 import type { LevelConfig, LevelTheme, ObstacleType } from "./types"
 
@@ -244,26 +246,28 @@ class VeilAudio {
 
     public playWin(): void {
         if (!this.ctx || !this.masterGain) return
+        const ctx = this.ctx
+        const masterGain = this.masterGain
         const notes = [440, 554, 659]
         notes.forEach((freq, i) => {
-            const osc = this.ctx!.createOscillator()
+            const osc = ctx.createOscillator()
             osc.type = "sine"
             osc.frequency.value = freq
-            const gain = this.ctx!.createGain()
+            const gain = ctx.createGain()
             gain.gain.value = 0
-            gain.gain.setValueAtTime(0, this.ctx!.currentTime + i * 0.15)
+            gain.gain.setValueAtTime(0, ctx.currentTime + i * 0.15)
             gain.gain.linearRampToValueAtTime(
                 0.12,
-                this.ctx!.currentTime + i * 0.15 + 0.02
+                ctx.currentTime + i * 0.15 + 0.02
             )
             gain.gain.exponentialRampToValueAtTime(
                 0.001,
-                this.ctx!.currentTime + i * 0.15 + 0.3
+                ctx.currentTime + i * 0.15 + 0.3
             )
             osc.connect(gain)
-            gain.connect(this.masterGain!)
-            osc.start(this.ctx!.currentTime + i * 0.15)
-            osc.stop(this.ctx!.currentTime + i * 0.15 + 0.35)
+            gain.connect(masterGain)
+            osc.start(ctx.currentTime + i * 0.15)
+            osc.stop(ctx.currentTime + i * 0.15 + 0.35)
         })
     }
 
@@ -410,7 +414,10 @@ export class CubeRunner {
     ) {
         this.canvas = canvas
         const ctx = canvas.getContext("2d")
-        if (!ctx) throw new Error("Could not get canvas context")
+        if (!ctx)
+            throw new CanvasError("Could not get canvas context", {
+                component: "CubeRunner",
+            })
         this.ctx = ctx
         this.config = config
         this.theme = config.theme
@@ -435,7 +442,6 @@ export class CubeRunner {
             }
         }
 
-        // Initialize starfield
         for (let i = 0; i < 80; i++) {
             this.stars.push({
                 x: Math.random() * LOGICAL_W,
@@ -445,7 +451,6 @@ export class CubeRunner {
             })
         }
 
-        // Initialize persistent speed lines
         for (let i = 0; i < 15; i++) {
             this.speedLines.push({
                 x: ROAD_LEFT + Math.random() * (ROAD_RIGHT - ROAD_LEFT),
@@ -660,7 +665,6 @@ export class CubeRunner {
     // ── Update ──────────────────────────────────────────────────────────────
 
     private update(dt: number): void {
-        // Update particles always (even during countdown/death)
         this.updateParticles(dt)
         this.updateStars(dt)
 
@@ -701,7 +705,6 @@ export class CubeRunner {
 
         this.elapsed += dt
 
-        // Grace timer countdown
         if (this.graceTimer > 0) {
             this.graceTimer -= dt
         }
@@ -716,7 +719,6 @@ export class CubeRunner {
             return
         }
 
-        // Speed curve with optional pulse
         const t = this.elapsed / this.config.survivalSeconds
         let speedMul = 1 + (this.config.maxSpeedMultiplier - 1) * t
         if (this.config.pulseSpeed) {
@@ -724,10 +726,8 @@ export class CubeRunner {
         }
         const speed = this.config.baseSpeed * speedMul
 
-        // Audio intensity
         this.audio.updateIntensity(t)
 
-        // Boss heartbeat acceleration
         if (this.isBossMode) {
             const newBpm = 60 + t * 80
             if (Math.abs(newBpm - this.bossHeartbeatBpm) > 5) {
@@ -743,7 +743,6 @@ export class CubeRunner {
             }
         }
 
-        // Lane shift (with optional inversion)
         if (this.config.laneShift) {
             let shiftPhase = (this.elapsed / LANE_SHIFT_PERIOD) * Math.PI * 2
             if (this.config.laneInversion && this.laneInverted) {
@@ -782,7 +781,6 @@ export class CubeRunner {
         const tiltTarget = Math.abs(diff) > 2 ? Math.sign(diff) * 0.6 : 0
         this.playerTilt += (tiltTarget - this.playerTilt) * Math.min(1, dt * 15)
 
-        // Player trail particles
         if (Math.random() < 0.4) {
             this.particles.push({
                 x:
@@ -799,12 +797,10 @@ export class CubeRunner {
             })
         }
 
-        // Spawn obstacles (pattern or random)
         const spawnInterval =
             this.config.baseSpawnInterval -
             (this.config.baseSpawnInterval - this.config.minSpawnInterval) * t
 
-        // Process pattern queue
         this.patternCooldown = Math.max(0, this.patternCooldown - dt)
         if (this.patternQueue.length > 0) {
             const next = this.patternQueue[0]
@@ -841,7 +837,6 @@ export class CubeRunner {
             }
         }
 
-        // Move obstacles
         const depthSpeed = speed / 800
         for (const obs of this.obstacles) {
             if (obs.reverse) {
@@ -904,7 +899,6 @@ export class CubeRunner {
             return o.depth > -0.2 && o.depth < 1.5
         })
 
-        // Glue walls
         if (this.glueWalls && this.elapsed >= this.glueWalls.nextNarrowTime) {
             const activeLanes = this.getActiveLanes()
             if (activeLanes > 2) {
@@ -923,7 +917,6 @@ export class CubeRunner {
             this.glueWalls.nextNarrowTime += 8 + Math.random() * 4
         }
 
-        // Animate glue wall drips
         if (this.glueWalls) {
             for (let i = 0; i < this.glueWalls.drips.length; i++) {
                 this.glueWalls.drips[i] += (40 + i * 5) * dt
@@ -933,7 +926,6 @@ export class CubeRunner {
             }
         }
 
-        // Taunts (boss: subliminal flash)
         if (this.config.taunts && this.elapsed >= this.nextTauntTime) {
             const text = BOSS_TAUNTS[this.tauntIndex % BOSS_TAUNTS.length]
             this.taunts.push({
@@ -956,7 +948,6 @@ export class CubeRunner {
         }
         this.taunts = this.taunts.filter((t) => t.life < t.maxLife)
 
-        // Blackout hazard
         if (this.config.blackout) {
             if (!this.blackoutActive && this.elapsed >= this.nextBlackoutTime) {
                 this.blackoutActive = true
@@ -971,7 +962,6 @@ export class CubeRunner {
             }
         }
 
-        // Boss ember particles
         if (this.isBossMode && Math.random() < 0.3) {
             this.particles.push({
                 x: Math.random() * LOGICAL_W,
@@ -988,7 +978,6 @@ export class CubeRunner {
         // Fix #10: Update persistent speed lines
         this.updateSpeedLines(dt, speed)
 
-        // Decay screen shake, flashes
         this.screenShake = Math.max(0, this.screenShake - dt * 2.5)
         this.nearMissFlash = Math.max(0, this.nearMissFlash - dt)
         this.laneChangeFlash = Math.max(0, this.laneChangeFlash - dt)
@@ -1060,7 +1049,8 @@ export class CubeRunner {
             if (!usedSlots.has(delayKey)) {
                 usedSlots.set(delayKey, new Set())
             }
-            const slotLanes = usedSlots.get(delayKey)!
+            const slotLanes = usedSlots.get(delayKey)
+            if (!slotLanes) continue
             let blocked = false
             if (wave.type !== "wall") {
                 for (let l = lane; l < lane + width; l++) {
@@ -1289,7 +1279,6 @@ export class CubeRunner {
         const h = LOGICAL_H
         const theme = this.theme
 
-        // Screen shake offset
         const shakeMultiplier = this.finalCrescendo ? 2.5 : 1
         const shakeX =
             this.screenShake > 0
@@ -1631,7 +1620,6 @@ export class CubeRunner {
         const laneX = this.getLaneX(this.targetLane)
         const lw = this.getLaneWidth()
 
-        // Subtle glow column on starting lane
         const grad = ctx.createLinearGradient(0, HORIZON_Y, 0, PLAYER_Y)
         grad.addColorStop(0, "transparent")
         grad.addColorStop(0.5, this.alphaColor(theme.playerColor, 0.06))

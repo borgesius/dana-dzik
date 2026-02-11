@@ -354,7 +354,9 @@
             "harvest": "HARVEST",
             "harvest_EMAIL": "SCRAPE",
             "harvest_ADS": "CLICK",
+            "harvest_LIVE": "ÉLEVER",
             "harvest_DOM": "SQUAT",
+            "harvest_GLUE": "BOUILLIR",
             "harvest_BW": "LEECH",
             "harvest_SOFT": "PIRATE",
             "harvest_VC": "PITCH",
@@ -372,7 +374,7 @@
             "unlockAt": "Débloquer à ${{threshold}} de gains cumulés",
             "phaseLocked": "🔒 {{name}}",
             "phaseEarningsHint": "Gagnez {{threshold}} en revenus totaux pour débloquer",
-            "phase5Hint": "Nécessite : 1er Prestige · Niveau 8 · 3 victoires de symposium"
+            "phase5Hint": "Nécessite : 1er Prestige · Niveau 8 · 1er boss du symposium vaincu"
         },
         "commodities": {
             "EMAIL": {
@@ -383,9 +385,17 @@
                 "name": "Impressions de Bannières",
                 "description": "Emplacements publicitaires premium 468x60."
             },
+            "LIVE": {
+                "name": "Bétail",
+                "description": "Contrats à terme bovins de catégorie A. Livraison non incluse."
+            },
             "DOM": {
                 "name": "Noms de Domaine .com",
                 "description": "Noms de domaine premium pré-enregistrés."
+            },
+            "GLUE": {
+                "name": "Colle",
+                "description": "Adhésif industriel. Manipuler avec précaution."
             },
             "BW": {
                 "name": "Bande Passante",
@@ -409,9 +419,17 @@
                 "name": "Échange de Bannières",
                 "description": "Réseau publicitaire rotatif. Impressions générées automatiquement."
             },
+            "cattle-ranch": {
+                "name": "Ranch",
+                "description": "Élevage en plein air. La production varie selon la saison."
+            },
             "colocation-rack": {
                 "name": "Rack de Co-Location",
                 "description": "Hébergement serveur dédié. Disponibilité non garantie."
+            },
+            "rendering-plant": {
+                "name": "Usine d'Équarrissage",
+                "description": "Transforme le bétail en adhésif industriel. Sent terrible."
             },
             "offshore-dev": {
                 "name": "Équipe de Développement Offshore",
@@ -495,9 +513,17 @@
                 "name": "ADS Generator",
                 "description": "Impression bot. +1 ADS per harvest click."
             },
+            "harvest-live": {
+                "name": "Éleveur de LIVE",
+                "description": "Berger automatisé. +1 LIVE par clic de récolte."
+            },
             "harvest-dom": {
                 "name": "DOM Registrar",
                 "description": "Bulk registration script. +1 DOM per harvest click."
+            },
+            "harvest-glue": {
+                "name": "Fondeur de GLUE",
+                "description": "Chaudière industrielle. +1 GLUE par clic de récolte."
             },
             "harvest-bw": {
                 "name": "BW Allocator",
@@ -522,6 +548,78 @@
             "autoscript-iii": {
                 "name": "Autoscript III",
                 "description": "Suite d'automatisation complète. +75% de rendement de récolte pour toutes les commodités."
+            },
+            "algorithmic-trading": {
+                "name": "Algorithmic Trading",
+                "description": "Auto-execute limit orders when trends reverse. Requires Limit Orders."
+            },
+            "dark-pool": {
+                "name": "Dark Pool Access",
+                "description": "Execute trades off-exchange. Your orders don't move the market price."
+            },
+            "market-maker": {
+                "name": "Market Maker License",
+                "description": "Earn passive spread income: 0.1% of portfolio value per tick."
+            },
+            "sovereign-fund": {
+                "name": "Sovereign Fund Charter",
+                "description": "Nation-state-size lots. Execute trades in quantities of 100 and 500."
+            },
+            "parallel-processing": {
+                "name": "Parallel Processing",
+                "description": "Multi-threaded production. Factories produce 2x output every 5th cycle."
+            },
+            "lean-manufacturing": {
+                "name": "Lean Manufacturing",
+                "description": "Optimised supply lines. Factory conversion inputs reduced by 25%."
+            },
+            "vertical-integration": {
+                "name": "Vertical Integration",
+                "description": "Factory chains auto-feed: output commodities route to higher-tier inputs."
+            },
+            "quantum-forecast": {
+                "name": "Quantum Forecast",
+                "description": "Probabilistic modelling. See 2 trend segments ahead instead of 1."
+            },
+            "sentiment-engine": {
+                "name": "Sentiment Engine",
+                "description": "NLP analysis of market chatter. Event probability indicator and type prediction."
+            },
+            "full-spectrum": {
+                "name": "Full Spectrum Intelligence",
+                "description": "Total information awareness. Market events always arrive at optimal timing."
+            },
+            "autoscript-iv": {
+                "name": "Autoscript IV",
+                "description": "Machine learning harvester. +100% harvest yield for all commodities."
+            },
+            "autoscript-v": {
+                "name": "Autoscript V",
+                "description": "Autonomous harvest agent. +125% harvest yield for all commodities."
+            },
+            "neural-harvester": {
+                "name": "Neural Harvester",
+                "description": "Self-optimising harvest AI. Triggers harvests automatically at optimal prices."
+            },
+            "harvest-mastery": {
+                "name": "Harvest Mastery",
+                "description": "+2% harvest yield per level."
+            },
+            "factory-mastery": {
+                "name": "Factory Mastery",
+                "description": "+3% factory output per level."
+            },
+            "trade-mastery": {
+                "name": "Trade Mastery",
+                "description": "+1% trade profit bonus per level."
+            },
+            "das-yield-mastery": {
+                "name": "DAS Yield Mastery",
+                "description": "+2% DAS yield per level."
+            },
+            "cost-mastery": {
+                "name": "Cost Mastery",
+                "description": "-1% all purchase costs per level (max -50%)."
             }
         },
         "influence": {
@@ -778,6 +876,18 @@
         "irrational-exuberance": {
             "name": "Magnat Technologique",
             "description": "Gagnez $10,000 en revenus cumulés."
+        },
+        "corporate-raider": {
+            "name": "Corporate Raider",
+            "description": "Gagnez $50,000 en revenus cumulés."
+        },
+        "market-mogul": {
+            "name": "Magnat du Marché",
+            "description": "Gagnez $100,000 en revenus cumulés."
+        },
+        "too-big-to-fail": {
+            "name": "Too Big to Fail",
+            "description": "Gagnez $1,000,000 en revenus cumulés."
         },
         "fire-sale": {
             "name": "Acheter la Baisse",
@@ -1135,6 +1245,18 @@
             "name": "Serial Popper",
             "description": "Prestige 5 times."
         },
+        "serial-entrepreneur": {
+            "name": "Entrepreneur Série",
+            "description": "Prestige 5 fois."
+        },
+        "bubble-addict": {
+            "name": "Accro à la Bulle",
+            "description": "Prestige 10 fois."
+        },
+        "bubble-eternal": {
+            "name": "Retour Éternel",
+            "description": "Prestige 25 fois."
+        },
         "hindsight-shopper": {
             "name": "Hindsight Shopper",
             "description": "Purchase your first Hindsight upgrade."
@@ -1155,6 +1277,18 @@
             "name": "Budding Professional",
             "description": "Unlock 5 skill tree nodes."
         },
+        "apprentice": {
+            "name": "Apprenti",
+            "description": "Achetez 10 niveaux de maîtrise au total."
+        },
+        "journeyman": {
+            "name": "Compagnon",
+            "description": "Achetez 50 niveaux de maîtrise au total."
+        },
+        "grandmaster": {
+            "name": "Grand Maître",
+            "description": "Achetez 100 niveaux de maîtrise au total."
+        },
         "skill-tree-master": {
             "name": "Career Completionist",
             "description": "Unlock 15 skill tree nodes."
@@ -1166,6 +1300,10 @@
         "full-stack": {
             "name": "Full Stack",
             "description": "Prestige, win a symposium, and choose a career."
+        },
+        "self-sustaining": {
+            "name": "Auto-suffisant",
+            "description": "Gagnez $1,000 en une partie en n'utilisant que les revenus d'usine (pas de trades manuels)."
         },
         "that-ones-a-person": {
             "name": "First Hire",
@@ -1287,6 +1425,18 @@
             "name": "Post-Structural Reader",
             "description": "Collect all Post-Structuralist units."
         },
+        "relic-hunter": {
+            "name": "Relic Hunter",
+            "description": "Collect 5 relics in a single run."
+        },
+        "curator": {
+            "name": "Curator",
+            "description": "Unlock all common relics."
+        },
+        "full-collection": {
+            "name": "Full Collection",
+            "description": "Unlock every relic in the game."
+        },
         "tenure-track": {
             "name": "Tenure Track",
             "description": "Reach round 10 in a single run."
@@ -1363,6 +1513,14 @@
             "name": "Someone Is Going to Have to Pay for This",
             "description": "Trigger a margin event."
         },
+        "triple-a-streak": {
+            "name": "Série Triple-A",
+            "description": "Maintenez la notation AAA pendant 500 ticks."
+        },
+        "diversified-portfolio": {
+            "name": "Portefeuille Diversifié",
+            "description": "Détenez des DAS dans les 6 types de matières premières simultanément."
+        },
         "harvest-100": {
             "name": "Cookie Clicker",
             "description": "Harvest 100 times."
@@ -1391,9 +1549,17 @@
             "name": "Fermier d'Impressions",
             "description": "Récolter ADS 500 fois."
         },
+        "harvest-live-500": {
+            "name": "Baron du Bétail",
+            "description": "Élever LIVE 500 fois."
+        },
         "harvest-dom-500": {
             "name": "Cybersquatteur",
             "description": "Récolter DOM 500 fois."
+        },
+        "harvest-glue-500": {
+            "name": "Renifleur de Colle",
+            "description": "Bouillir GLUE 500 fois."
         },
         "harvest-bw-500": {
             "name": "Goinfre de Bande Passante",
@@ -1710,190 +1876,22 @@
         "pferd-couture": {
             "name": "Pferd Couture",
             "description": "Équiper 3 cosmétiques thème Pferd simultanément."
-        }
-    },
-    "symposium": {
-        "factions": {
-            "quickdraw": "Existentialistes",
-            "deputies": "Idéalistes",
-            "clockwork": "Rationalistes",
-            "prospectors": "Post-Structuralistes",
-            "drifters": "Vacataires"
         },
-        "ui": {
-            "title": "SYMPOSIUM",
-            "subtitle": "Auto-Échecs Continental",
-            "startRun": "Commencer la partie",
-            "prepareRun": "Préparer la partie",
-            "prepareHint": "Dépensez des matières premières pour des bonus uniques (optionnel)",
-            "shop": "Boutique",
-            "fight": "Combat !",
-            "victory": "Victoire !",
-            "defeat": "Défaite",
-            "draw": "Égalité",
-            "reroll": "Relancer (1 💭)",
-            "lineup": "Formation",
-            "lineupHint": "← avant | arrière → glissez pour réorganiser",
-            "bench": "Banc",
-            "empty": "Vide",
-            "back": "Retour",
-            "nextRound": "Prochain Round →",
-            "returnToLobby": "Retour au Lobby",
-            "combatLog": "Journal de Combat ({{count}} actions)",
-            "combatLasted": "Le combat a duré {{rounds}} rounds",
-            "rewards": "Récompenses",
-            "survivors": "Survivants",
-            "collection": "Collection",
-            "sell": "Vendre {{amount}}💭",
-            "sold": "VENDU",
-            "runs": "Parties :",
-            "wins": "Victoires :",
-            "bestStreak": "Meilleure série :",
-            "collectionLabel": "Collection :",
-            "startCollecting": "Commencez une partie pour collectionner des unités !",
-            "runComplete": "Partie terminée ! {{wins}}V / {{losses}}D",
-            "runOver": "Partie finie — {{wins}}V / {{losses}}D",
-            "careerBonuses": "Bonus de carrière :",
-            "roundOf": "Round {{current}}/{{total}}",
-            "thoughts": "💭 {{amount}} Pensées",
-            "wl": "V{{wins}} / D{{losses}}",
-            "benchOf": "Bench ({{count}}/{{max}})",
-            "opponentPreview": "Next Opponent",
-            "bossFight": "BOSS FIGHT",
-            "runSummary": "Run Summary",
-            "personalBests": "Personal Bests",
-            "highestRound": "Highest Round:",
-            "bossesDefeated": "Bosses Defeated:",
-            "bestUnit": "Best Unit:",
-            "scrapEarned": "Thoughts Earned:",
-            "scrapSpent": "Thoughts Spent:",
-            "unitsBought": "Units Recruited:",
-            "unitsSold": "Units Released:",
-            "majorityFaction": "Primary School:",
-            "noBosses": "None yet",
-            "combatsSurvived": "{{count}} combats survived",
-            "round": "Round {{current}}",
-            "bossRound": "BOSS ROUND {{current}}"
+        "packet-sniffing": {
+            "name": "Packet Sniffing",
+            "description": "Open M.D. for the first time."
         },
-        "units": {
-            "drifter-brawler": "Le Correcteur",
-            "drifter-scout": "Le Candidat",
-            "drifter-medic": "Le Directeur",
-            "drifter-heavy": "Le Bureaucrate",
-            "qd-sharpshooter": "Iconoclaste",
-            "qd-deadeye": "The Übermensch",
-            "qd-dynamiter": "Le Dynamitard",
-            "qd-outlaw": "Le Nihiliste",
-            "qd-kingpin": "Zarathoustra",
-            "qd-rifler": "Perspectiviste",
-            "qd-ambusher": "Volonté de Puissance",
-            "qd-executioner": "Le Transvaluateur",
-            "dep-barricader": "Le Catégoriste",
-            "dep-marshal": "Ego Transcendantal",
-            "dep-trapper": "Dialecticien",
-            "dep-warden": "Le Systématicien",
-            "dep-judge": "Esprit du Monde",
-            "dep-sentinel": "A Priori",
-            "dep-field-medic": "Le Synthétiste",
-            "dep-fortress": "L'Absolu",
-            "cw-accumulator": "La Monade",
-            "cw-gearsmith": "Conatus",
-            "cw-tesla-coil": "Causa Sui",
-            "cw-overcharger": "L'Harmoniste",
-            "cw-architect": "Substance",
-            "cw-amplifier": "Idée Adéquate",
-            "cw-disruptor": "Natura Naturans",
-            "cw-detonator": "Deus sive Natura",
-            "bp-tunneler": "Différance",
-            "bp-foreman": "Machine Désirante",
-            "bp-rattler": "Le Supplément",
-            "bp-necrominer": "Le Rhizome",
-            "bp-patriarch": "Corps sans Organes",
-            "bp-revenant": "Pharmakon",
-            "bp-leech": "Schizoanalyste",
-            "bp-sovereign": "Multiplicité",
-            "bp-shade": "Trace",
-            "boss-gadfly": "The Gadfly",
-            "boss-noumenon": "The Noumenon",
-            "boss-automaton": "The Automaton",
-            "boss-simulacrum": "The Simulacrum"
+        "deep-packet-inspection": {
+            "name": "Deep Packet Inspection",
+            "description": "Expand 10 packet details in the network monitor."
         },
-        "opponents": {
-            "adjectives": [
-                "Titulaire",
-                "Émérite",
-                "Radical",
-                "Dogmatique",
-                "Hérétique",
-                "Dialectique",
-                "Apodictique",
-                "Agité",
-                "Notoire",
-                "Incorrigible"
-            ],
-            "nouns": {
-                "quickdraw": [
-                    "Nihilistes",
-                    "Absurdistes",
-                    "Surhommes",
-                    "Scrutateurs d'Abîme",
-                    "Fous"
-                ],
-                "deputies": [
-                    "Systématiciens",
-                    "Catégoristes",
-                    "Faculté",
-                    "Dialecticiens",
-                    "Académiciens"
-                ],
-                "clockwork": [
-                    "Géomètres",
-                    "Déterministes",
-                    "Logiciens",
-                    "Axiomaticiens",
-                    "Monades"
-                ],
-                "prospectors": [
-                    "Déconstructeurs",
-                    "Nomades",
-                    "Assemblages",
-                    "Rhizomes",
-                    "Sémionautes"
-                ],
-                "drifters": [
-                    "Vacataires",
-                    "Auditeurs",
-                    "Chargés de cours",
-                    "Maîtres de conférences",
-                    "Moniteurs"
-                ]
-            }
+        "unknown-host": {
+            "name": "Unknown Host",
+            "description": "Notice traffic from an unregistered address."
         },
-        "buffs": {
-            "email-rush": {
-                "name": "Ruée d'E-mails",
-                "description": "+2 ATK pour toutes les unités au round 1"
-            },
-            "ad-revenue": {
-                "name": "Revenus Publicitaires",
-                "description": "+2 Pensées bonus par round"
-            },
-            "soft-reroll": {
-                "name": "Assistance Logicielle",
-                "description": "+1 relance gratuite par phase de boutique"
-            },
-            "bandwidth-armor": {
-                "name": "Armure de Bande Passante",
-                "description": "+5 HP pour toutes les unités"
-            },
-            "dom-expansion": {
-                "name": "Extension DOM",
-                "description": "La boutique offre +1 unité supplémentaire"
-            },
-            "vc-funding": {
-                "name": "Financement VC",
-                "description": "Commencez avec +3 Pensées bonus"
-            }
+        "port-scan": {
+            "name": "Port Scan",
+            "description": "Run nmap in the terminal."
         }
     },
     "veil": {
@@ -1999,6 +1997,536 @@
             "subtitle": "A signal pushes through the wire.",
             "pierce_now": "Pierce Now",
             "not_yet": "Not Yet"
+        }
+    },
+    "symposium": {
+        "factions": {
+            "quickdraw": "Existentialistes",
+            "deputies": "Idéalistes",
+            "clockwork": "Rationalistes",
+            "prospectors": "Post-Structuralistes",
+            "drifters": "Vacataires"
+        },
+        "ui": {
+            "title": "SYMPOSIUM",
+            "subtitle": "Auto-Échecs Continental",
+            "startRun": "Commencer la partie",
+            "prepareRun": "Préparer la partie",
+            "prepareHint": "Dépensez des matières premières pour des bonus uniques (optionnel)",
+            "shop": "Boutique",
+            "fight": "Combat !",
+            "victory": "Victoire !",
+            "defeat": "Défaite",
+            "draw": "Égalité",
+            "reroll": "Relancer (1 💭)",
+            "lineup": "Formation",
+            "lineupHint": "← avant | arrière → glissez pour réorganiser",
+            "bench": "Banc",
+            "empty": "Vide",
+            "back": "Retour",
+            "nextRound": "Prochain Round →",
+            "returnToLobby": "Retour au Lobby",
+            "combatLog": "Journal de Combat ({{count}} actions)",
+            "combatLasted": "Le combat a duré {{rounds}} rounds",
+            "rewards": "Récompenses",
+            "survivors": "Survivants",
+            "collection": "Collection",
+            "sell": "Vendre {{amount}}💭",
+            "sold": "VENDU",
+            "runs": "Parties :",
+            "wins": "Victoires :",
+            "bestStreak": "Meilleure série :",
+            "collectionLabel": "Collection :",
+            "startCollecting": "Commencez une partie pour collectionner des unités !",
+            "runComplete": "Partie terminée ! {{wins}}V / {{losses}}D",
+            "runOver": "Partie finie — {{wins}}V / {{losses}}D",
+            "careerBonuses": "Bonus de carrière :",
+            "roundOf": "Round {{current}}/{{total}}",
+            "round": "Round {{current}}",
+            "bossRound": "BOSS ROUND {{current}}",
+            "thoughts": "💭 {{amount}} Pensées",
+            "wl": "V{{wins}} / D{{losses}}",
+            "benchOf": "Bench ({{count}}/{{max}})",
+            "opponentPreview": "Next Opponent",
+            "bossFight": "BOSS FIGHT",
+            "runSummary": "Run Summary",
+            "personalBests": "Personal Bests",
+            "highestRound": "Highest Round:",
+            "bossesDefeated": "Bosses Defeated:",
+            "bestUnit": "Best Unit:",
+            "scrapEarned": "Thoughts Earned:",
+            "scrapSpent": "Thoughts Spent:",
+            "unitsBought": "Units Recruited:",
+            "unitsSold": "Units Released:",
+            "majorityFaction": "Primary School:",
+            "noBosses": "None yet",
+            "combatsSurvived": "{{count}} combats survived",
+            "chooseRelic": "Choose a Relic",
+            "relics": "Relics",
+            "relicsCollected": "Relics Collected:",
+            "event": "Event"
+        },
+        "units": {
+            "drifter-brawler": "Le Correcteur",
+            "drifter-scout": "Le Candidat",
+            "drifter-medic": "Le Directeur",
+            "drifter-heavy": "Le Bureaucrate",
+            "qd-sharpshooter": "Iconoclaste",
+            "qd-deadeye": "The Übermensch",
+            "qd-dynamiter": "Le Dynamitard",
+            "qd-outlaw": "Le Nihiliste",
+            "qd-kingpin": "Zarathoustra",
+            "qd-rifler": "Perspectiviste",
+            "qd-ambusher": "Volonté de Puissance",
+            "qd-executioner": "Le Transvaluateur",
+            "dep-barricader": "Le Catégoriste",
+            "dep-marshal": "Ego Transcendantal",
+            "dep-trapper": "Dialecticien",
+            "dep-warden": "Le Systématicien",
+            "dep-judge": "Esprit du Monde",
+            "dep-sentinel": "A Priori",
+            "dep-field-medic": "Le Synthétiste",
+            "dep-fortress": "L'Absolu",
+            "cw-accumulator": "La Monade",
+            "cw-gearsmith": "Conatus",
+            "cw-tesla-coil": "Causa Sui",
+            "cw-overcharger": "L'Harmoniste",
+            "cw-architect": "Substance",
+            "cw-amplifier": "Idée Adéquate",
+            "cw-disruptor": "Natura Naturans",
+            "cw-detonator": "Deus sive Natura",
+            "bp-tunneler": "Différance",
+            "bp-foreman": "Machine Désirante",
+            "bp-rattler": "Le Supplément",
+            "bp-necrominer": "Le Rhizome",
+            "bp-patriarch": "Corps sans Organes",
+            "bp-revenant": "Pharmakon",
+            "bp-leech": "Schizoanalyste",
+            "bp-sovereign": "Multiplicité",
+            "bp-shade": "Trace",
+            "boss-gadfly": "The Gadfly",
+            "boss-noumenon": "The Noumenon",
+            "boss-automaton": "The Automaton",
+            "boss-simulacrum": "The Simulacrum",
+            "boss-absurdist": "The Absurdist",
+            "boss-phenomenologist": "The Phenomenologist",
+            "boss-theodicist": "The Theodicist",
+            "boss-archivist": "The Archivist",
+            "boss-sophist": "The Sophist",
+            "boss-dean": "The Dean",
+            "boss-pedagogue": "The Pedagogue",
+            "boss-empiricist": "The Empiricist"
+        },
+        "opponents": {
+            "adjectives": [
+                "Titulaire",
+                "Émérite",
+                "Radical",
+                "Dogmatique",
+                "Hérétique",
+                "Dialectique",
+                "Apodictique",
+                "Agité",
+                "Notoire",
+                "Incorrigible"
+            ],
+            "nouns": {
+                "quickdraw": [
+                    "Nihilistes",
+                    "Absurdistes",
+                    "Surhommes",
+                    "Scrutateurs d'Abîme",
+                    "Fous"
+                ],
+                "deputies": [
+                    "Systématiciens",
+                    "Catégoristes",
+                    "Faculté",
+                    "Dialecticiens",
+                    "Académiciens"
+                ],
+                "clockwork": [
+                    "Géomètres",
+                    "Déterministes",
+                    "Logiciens",
+                    "Axiomaticiens",
+                    "Monades"
+                ],
+                "prospectors": [
+                    "Déconstructeurs",
+                    "Nomades",
+                    "Assemblages",
+                    "Rhizomes",
+                    "Sémionautes"
+                ],
+                "drifters": [
+                    "Vacataires",
+                    "Auditeurs",
+                    "Chargés de cours",
+                    "Maîtres de conférences",
+                    "Moniteurs"
+                ]
+            }
+        },
+        "buffs": {
+            "email-rush": {
+                "name": "Ruée d'E-mails",
+                "description": "+2 ATK pour toutes les unités au round 1"
+            },
+            "ad-revenue": {
+                "name": "Revenus Publicitaires",
+                "description": "+2 Pensées bonus par round"
+            },
+            "soft-reroll": {
+                "name": "Assistance Logicielle",
+                "description": "+1 relance gratuite par phase de boutique"
+            },
+            "bandwidth-armor": {
+                "name": "Armure de Bande Passante",
+                "description": "+5 HP pour toutes les unités"
+            },
+            "dom-expansion": {
+                "name": "Extension DOM",
+                "description": "La boutique offre +1 unité supplémentaire"
+            },
+            "vc-funding": {
+                "name": "Financement VC",
+                "description": "Commencez avec +3 Pensées bonus"
+            }
+        },
+        "bossMods": {
+            "mod-enraged": {
+                "name": "Enragé",
+                "description": "Le boss gagne +4 ATK"
+            },
+            "mod-fortified": {
+                "name": "Fortifié",
+                "description": "Le boss gagne +10 HP"
+            },
+            "mod-inspiring": {
+                "name": "Inspirant",
+                "description": "Toutes les unités d'escorte gagnent +2 ATK"
+            },
+            "mod-armored": {
+                "name": "Blindé",
+                "description": "Le boss commence avec un bouclier égal à 30% des HP max"
+            },
+            "mod-first-blood": {
+                "name": "Premier Sang",
+                "description": "Le boss inflige 4 dégâts à l'ennemi de front au début du combat"
+            },
+            "mod-aegis": {
+                "name": "Égide",
+                "description": "Tous les alliés commencent avec +3 Bouclier"
+            },
+            "mod-overclocked": {
+                "name": "Surcadencé",
+                "description": "Le boss gagne +3 ATK et +3 HP"
+            },
+            "mod-swarm-spawn": {
+                "name": "Essaim",
+                "description": "Deux Traces 2/2 rejoignent le combat au début"
+            }
+        },
+        "relics": {
+            "aletheia": {
+                "name": "Aletheia",
+                "description": "+2 ATK to front-line unit at combat start",
+                "unlock": "Available by default"
+            },
+            "wuji": {
+                "name": "Wuji (無極)",
+                "description": "+1 Thought per round",
+                "unlock": "Available by default"
+            },
+            "shoshin": {
+                "name": "Shoshin (初心)",
+                "description": "+1 free reroll per shop phase",
+                "unlock": "Available by default"
+            },
+            "golden-mean": {
+                "name": "The Golden Mean",
+                "description": "+4 HP to all units at combat start",
+                "unlock": "Available by default"
+            },
+            "ubuntu": {
+                "name": "Ubuntu",
+                "description": "When an ally dies, all remaining allies gain +1 ATK",
+                "unlock": "Reach round 4"
+            },
+            "amor-fati": {
+                "name": "Amor Fati",
+                "description": "After losing combat, gain +3 bonus Thoughts next round",
+                "unlock": "Reach round 6"
+            },
+            "uncarved-block": {
+                "name": "The Uncarved Block (朴)",
+                "description": "All units start combat with 3 Shield",
+                "unlock": "Defeat any boss"
+            },
+            "ibn-rushds-mirror": {
+                "name": "Ibn Rushd's Mirror",
+                "description": "Heal 3 HP to all surviving units after combat",
+                "unlock": "Reach round 10"
+            },
+            "pratityasamutpada": {
+                "name": "Pratītyasamutpāda",
+                "description": "When a unit triggers an ability, a random ally gains +1 ATK",
+                "unlock": "Defeat The Automaton"
+            },
+            "maat": {
+                "name": "Maat",
+                "description": "+2 ATK and +2 HP when lineup has 2+ factions",
+                "unlock": "Win with 3+ factions in lineup"
+            },
+            "tabula-rasa": {
+                "name": "Tabula Rasa",
+                "description": "Shop offers +1 extra unit",
+                "unlock": "Defeat The Noumenon"
+            },
+            "tetrapharmakos": {
+                "name": "Tetrapharmakos",
+                "description": "Heal all units for 2 HP at combat start",
+                "unlock": "Complete Idealist faction"
+            },
+            "yi-jing-trigram": {
+                "name": "Yi Jing Trigram (易經)",
+                "description": "After each victory, a random unit gains +1/+1 permanently",
+                "unlock": "Complete Rationalist faction"
+            },
+            "eternal-return": {
+                "name": "Eternal Return",
+                "description": "+1 extra life (4 losses to end run)",
+                "unlock": "Reach round 20"
+            },
+            "metempsychosis": {
+                "name": "Metempsychosis",
+                "description": "On unit death, 25% chance to resummon at 50% HP",
+                "unlock": "Complete Post-Structuralist faction"
+            },
+            "wu-wei": {
+                "name": "Wu Wei (無為)",
+                "description": "Deal 1 passive damage to all enemies each combat round",
+                "unlock": "Complete Existentialist faction"
+            },
+            "philosophers-stone": {
+                "name": "The Philosopher's Stone",
+                "description": "All tier 1 units gain +3 ATK and +3 HP",
+                "unlock": "Reach round 15 with a majority-Adjuncts lineup"
+            },
+            "indras-net": {
+                "name": "Indra's Net",
+                "description": "Faction bonuses trigger as if you have +1 extra ally",
+                "unlock": "Defeat all 4 bosses in a single run"
+            },
+            "rubber-duck": {
+                "name": "Rubber Duck",
+                "description": "Before combat, a random ally gains +3 ATK",
+                "unlock": "Complete 20 runs"
+            },
+            "loaded-dice": {
+                "name": "Loaded Dice",
+                "description": "Rerolls always include a unit matching your majority faction",
+                "unlock": "Buy 50 total units across all runs"
+            },
+            "newtons-cradle": {
+                "name": "Newton's Cradle",
+                "description": "When front unit dies, next unit inherits +50% of its ATK",
+                "unlock": "Win a combat where your front unit died first"
+            },
+            "rosetta-stone": {
+                "name": "The Rosetta Stone",
+                "description": "Cross-faction bridge bonuses need 1 fewer ally",
+                "unlock": "Win with all 4 factions in lineup"
+            },
+            "maxwells-demon": {
+                "name": "Maxwell's Demon",
+                "description": "Gain +2 Thoughts when you buy nothing in a shop phase",
+                "unlock": "Win a run spending under 20 Thoughts"
+            },
+            "pandoras-box": {
+                "name": "Pandora's Box",
+                "description": "Start runs with 2 random relics, but only 2 lives",
+                "unlock": "Hold 6+ relics in a single run"
+            }
+        },
+        "events": {
+            "allegory-of-the-cave": {
+                "title": "The Allegory of the Cave",
+                "description": "Shadows flicker on the wall before you. Will you turn toward the light?",
+                "choices": {
+                    "0": "Turn toward the light (sacrifice weakest unit, gain a relic)",
+                    "1": "Remain in darkness (+4 Thoughts)"
+                }
+            },
+            "trolley-problem": {
+                "title": "The Trolley Problem",
+                "description": "The tracks diverge before you. There is no right answer.",
+                "choices": {
+                    "0": "Pull the lever (all units lose 2 HP, gain a relic)",
+                    "1": "Do nothing (front unit loses 5 HP, +6 Thoughts)"
+                }
+            },
+            "nirvana": {
+                "title": "Nirvana",
+                "description": "Release all attachment. Let go of what you hold dear.",
+                "choices": {
+                    "0": "Release attachment (sell all bench at 2x, gain a rare relic)",
+                    "1": "Cling to the material (+2 Thoughts)"
+                }
+            },
+            "zhuangzis-butterfly": {
+                "title": "Zhuangzi's Butterfly",
+                "description": "Am I a philosopher dreaming I am a butterfly, or a butterfly dreaming I am a philosopher?",
+                "choices": {
+                    "0": "Embrace the dream (swap ATK and HP of all units)",
+                    "1": "Wake up (+2 Thoughts)"
+                }
+            },
+            "pascals-wager": {
+                "title": "Pascal's Wager",
+                "description": "Bet everything on the unknown. Faith or reason?",
+                "choices": {
+                    "0": "Wager it all (50% double Thoughts, 50% lose half)",
+                    "1": "Decline the wager (+1 Thought)"
+                }
+            },
+            "burning-library": {
+                "title": "The Burning Library",
+                "description": "The flames of Alexandria rise. What will you save from the ashes?",
+                "choices": {
+                    "0": "Rush in (lose 5 Thoughts, gain 2 relics)",
+                    "1": "Let it burn (+8 Thoughts)"
+                }
+            },
+            "garden-of-forking-paths": {
+                "title": "The Garden of Forking Paths",
+                "description": "Every path is taken, every path abandoned. Choose wisely.",
+                "choices": {
+                    "0": "Take the left path (gain a relic)",
+                    "1": "Take the right path (+5 Thoughts)",
+                    "2": "Take the center path (+2 ATK to all units)"
+                }
+            },
+            "karma": {
+                "title": "Karma",
+                "description": "What you give returns threefold. What you hoard turns to dust.",
+                "choices": {
+                    "0": "Give freely (lose 3 Thoughts, all units +2 ATK & +2 HP)",
+                    "1": "Keep your fortune (+1 ATK to a random unit)"
+                }
+            },
+            "memento-mori": {
+                "title": "Memento Mori",
+                "description": "Remember: you too shall pass. Use your time wisely.",
+                "choices": {
+                    "0": "Embrace mortality (strongest +4 ATK, loses 3 HP)",
+                    "1": "Seek longevity (all units +1 HP)"
+                }
+            },
+            "the-agora": {
+                "title": "The Agora",
+                "description": "Scholars peddle their wares in the marketplace of ideas.",
+                "choices": {
+                    "0": "Browse the common stall (buy common relic for 3 Thoughts)",
+                    "1": "Examine the rare collection (buy rare relic for 5 Thoughts)",
+                    "2": "Approach the legendary dealer (buy legendary relic for 8 Thoughts)"
+                }
+            },
+            "diogenes-lantern": {
+                "title": "Diogenes' Lantern",
+                "description": "He wanders with his lantern, searching for an honest thinker.",
+                "choices": {
+                    "0": "Follow his light (3 free rerolls next shop)",
+                    "1": "Ignore him (+2 Thoughts)"
+                }
+            },
+            "socratic-method": {
+                "title": "The Socratic Method",
+                "description": "I know that I know nothing. But perhaps I can know better.",
+                "choices": {
+                    "0": "Question everything (lose a relic, gain 2 new relics)",
+                    "1": "Accept what you know (+2 Thoughts)"
+                }
+            }
+        },
+        "bestiary": {
+            "thinkers": "Thinkers",
+            "adversaries": "Adversaries",
+            "relicsTab": "Relics",
+            "bosses": "Bosses",
+            "opponents": "Opponent Schools",
+            "defeated": "Defeated",
+            "undefeated": "Undefeated",
+            "locked": "???",
+            "unlockHint": "Unlock: {{hint}}",
+            "relicTiers": {
+                "common": "Common",
+                "rare": "Rare",
+                "legendary": "Legendary",
+                "secret": "Secret"
+            }
+        }
+    },
+    "divination": {
+        "title": "🔮 Deployment Divination",
+        "loading": "Consulting the aether...",
+        "noReading": "No divination reading available yet.",
+        "noReadingHint": "A reading is cast with each deployment.",
+        "starsNotAligned": "The stars were not aligned for this reading.",
+        "spiritsSilent": "The spirits could not be reached.",
+        "sections": {
+            "numerology": "🔢 Numerology",
+            "tarot": "🃏 Tarot Spread",
+            "iching": "☯️ I Ching",
+            "biorhythm": "📊 Biorhythm",
+            "horoscope": "Horoscope",
+            "natalChart": "🌌 Natal Chart"
+        },
+        "numerology": {
+            "lifePath": "Life Path",
+            "destiny": "Destiny",
+            "soulUrge": "Soul Urge",
+            "personality": "Personality",
+            "master": "Master"
+        },
+        "tarot": {
+            "past": "Past",
+            "present": "Present",
+            "future": "Future",
+            "reversed": "Reversed"
+        },
+        "biorhythm": {
+            "physical": "Physical",
+            "emotional": "Emotional",
+            "intellectual": "Intellectual",
+            "overall": "Overall"
+        },
+        "horoscope": {
+            "mood": "Mood",
+            "luckyNumber": "Lucky #",
+            "luckyTime": "Lucky Time",
+            "color": "Color",
+            "compatibility": "Compat"
+        },
+        "natalChart": {
+            "sun": "Sun",
+            "moon": "Moon",
+            "rising": "Rising",
+            "planet": "Planet",
+            "sign": "Sign",
+            "degree": "Degree",
+            "house": "House"
+        },
+        "familiar": {
+            "name": "Familiar"
+        },
+        "widget": {
+            "title": "🔮 Divination",
+            "expand": "Expand to consult the oracle",
+            "loading": "Consulting the aether...",
+            "unavailable": "Oracle unavailable",
+            "noReading": "No reading yet — awaiting next deployment"
         }
     }
 }

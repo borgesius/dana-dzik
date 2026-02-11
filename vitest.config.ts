@@ -19,6 +19,49 @@ export default defineConfig({
                 "src/main.ts",
                 "src/vite-env.d.ts",
             ],
+            thresholds: {
+                // Per-module thresholds for well-tested areas
+                "src/lib/autobattler/combat.ts": {
+                    statements: 80,
+                    branches: 60,
+                    functions: 80,
+                },
+                "src/lib/autobattler/shop.ts": {
+                    statements: 75,
+                    branches: 60,
+                    functions: 75,
+                },
+                "src/lib/autobattler/opponents.ts": {
+                    statements: 60,
+                    branches: 50,
+                    functions: 60,
+                },
+                "src/lib/autobattler/relics.ts": {
+                    statements: 80,
+                    branches: 70,
+                    functions: 80,
+                },
+                "src/lib/autobattler/units.ts": {
+                    statements: 80,
+                    branches: 60,
+                    functions: 60,
+                },
+                "src/lib/progression/careers.ts": {
+                    statements: 90,
+                    branches: 90,
+                    functions: 90,
+                },
+                "src/lib/progression/constants.ts": {
+                    statements: 90,
+                    branches: 70,
+                    functions: 90,
+                },
+                "src/lib/veil/levels.ts": {
+                    statements: 90,
+                    branches: 90,
+                    functions: 90,
+                },
+            },
         },
     },
     resolve: {

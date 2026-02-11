@@ -33,6 +33,7 @@ export class Desktop {
 
         this.desktopArea = document.createElement("div")
         this.desktopArea.className = "desktop-area corrupt"
+        this.desktopArea.tabIndex = -1 // Programmatically focusable for a11y
         this.container.appendChild(this.desktopArea)
 
         this.desktopArea.appendChild(this.toolbars.getBusinessPanelElement())

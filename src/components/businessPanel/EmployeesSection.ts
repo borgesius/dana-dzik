@@ -48,7 +48,6 @@ export class EmployeesSection {
         this.element = this.createElement()
         this.updateVisibility()
 
-        // Listen for morale events
         this.game.on("moraleEvent", (data) => {
             const evt = data as MoraleEvent
             this.showMoraleNotification(evt.message)
@@ -181,7 +180,6 @@ export class EmployeesSection {
             html += `<div class="hr-vp-column">`
             html += `<div class="hr-vp-connector"></div>`
 
-            // VP card or empty slot
             if (slot.vp) {
                 html += this.renderEmployeeCard(slot.vp, v, -1, true)
             } else {
@@ -195,9 +193,9 @@ export class EmployeesSection {
                     // No VP = locked IC slots
                     html += `<div class="hr-slot-empty locked">—</div>`
                 } else if (slot.ics[i]) {
-                    html += this.renderEmployeeCard(slot.ics[i]!, v, i, false)
+                    const emp = slot.ics[i]
+                    if (emp) html += this.renderEmployeeCard(emp, v, i, false)
                 } else {
-                    // Show chemistry hint when candidate is selected
                     const chemHint = this.getChemistryHint(
                         slot.vp,
                         pool[this.selectedCandidate]
@@ -228,7 +226,6 @@ export class EmployeesSection {
             <span class="value ${totalSalary > 0 ? "negative" : ""}">${totalSalary > 0 ? "-" : ""}${formatMoney(totalSalary)}</span>
         </div>`
 
-        // Active bonuses
         const bonusEntries = [...bonuses.entries()].filter(([, v]) => v > 0)
         if (bonusEntries.length > 0) {
             for (const [type, value] of bonusEntries) {
@@ -365,7 +362,6 @@ export class EmployeesSection {
                         icIdx
                     )
                     if (hired) {
-                        // Deduct hire cost via addBonus (negative)
                         this.game.addBonus(-hireCost)
                         this.playSound("notify")
                         this.game.emitEvent("employeeHired", hired)
@@ -423,7 +419,6 @@ export class EmployeesSection {
                 })
             })
 
-        // Deny raise
         this.contentEl
             .querySelectorAll<HTMLElement>(".hr-raise-deny")
             .forEach((btn) => {
@@ -494,7 +489,6 @@ export class EmployeesSection {
                     this.dragState.ghost.style.left = `${me.clientX - card.offsetWidth / 2}px`
                     this.dragState.ghost.style.top = `${me.clientY - 15}px`
 
-                    // Highlight drop targets
                     this.contentEl
                         .querySelectorAll(".drag-over")
                         .forEach((el) => el.classList.remove("drag-over"))
@@ -573,7 +567,6 @@ export class EmployeesSection {
             }
         }
 
-        // Check existing employee cards (for swap)
         const cards = this.contentEl.querySelectorAll<HTMLElement>(
             ".hr-emp-card[data-org-vp]"
         )

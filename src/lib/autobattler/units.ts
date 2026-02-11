@@ -1,4 +1,4 @@
-import type { UnitDef } from "./types"
+import type { FactionId, UnitDef, UnitId } from "./types"
 
 // ── Adjuncts (neutral, starting units) ────────────────────────────────────────
 
@@ -847,6 +847,144 @@ const BOSS_UNITS: UnitDef[] = [
         },
         shopCost: 0,
     },
+    // ── New faction bosses ──────────────────────────────────────────────────
+    {
+        id: "boss-absurdist",
+        name: "The Absurdist",
+        faction: "quickdraw",
+        tier: 3,
+        baseATK: 7,
+        baseHP: 14,
+        ability: {
+            trigger: "onTakeDamage",
+            effect: { type: "damage", target: "allEnemies", amount: 2 },
+            description: "Sisyphean: deals 2 damage to all enemies when hit",
+        },
+        shopCost: 0,
+    },
+    {
+        id: "boss-phenomenologist",
+        name: "The Phenomenologist",
+        faction: "deputies",
+        tier: 3,
+        baseATK: 5,
+        baseHP: 18,
+        ability: {
+            trigger: "onTakeDamage",
+            effect: { type: "heal", target: "allAllies", amount: 2 },
+            description: "Epoché: heals all allies for 2 when taking damage",
+        },
+        shopCost: 0,
+    },
+    {
+        id: "boss-theodicist",
+        name: "The Theodicist",
+        faction: "clockwork",
+        tier: 3,
+        baseATK: 6,
+        baseHP: 13,
+        ability: {
+            trigger: "onAllyAbility",
+            effect: {
+                type: "buff",
+                target: "allAllies",
+                stat: "atk",
+                amount: 1,
+            },
+            description:
+                "Pre-Established Harmony: all allies gain +1 ATK when any ally uses an ability",
+        },
+        shopCost: 0,
+    },
+    {
+        id: "boss-archivist",
+        name: "The Archivist",
+        faction: "prospectors",
+        tier: 3,
+        baseATK: 7,
+        baseHP: 12,
+        ability: {
+            trigger: "onAllyDeath",
+            effect: {
+                type: "summon",
+                unitId: "bp-shade",
+                position: "back",
+                atkBonus: 1,
+                hpBonus: 1,
+            },
+            description: "Palimpsest: summons a 2/2 Trace on any ally death",
+        },
+        shopCost: 0,
+    },
+    // ── Neutral / academic bosses ───────────────────────────────────────────
+    {
+        id: "boss-sophist",
+        name: "The Sophist",
+        faction: "drifters",
+        tier: 3,
+        baseATK: 9,
+        baseHP: 10,
+        ability: {
+            trigger: "onDealDamage",
+            effect: { type: "buff", target: "self", stat: "atk", amount: 2 },
+            description: "Eristic: gains +2 ATK each time it deals damage",
+        },
+        shopCost: 0,
+    },
+    {
+        id: "boss-dean",
+        name: "The Dean",
+        faction: "drifters",
+        tier: 3,
+        baseATK: 5,
+        baseHP: 18,
+        ability: {
+            trigger: "roundStart",
+            effect: {
+                type: "buff",
+                target: "allAllies",
+                stat: "shield",
+                amount: 2,
+            },
+            description: "Tenure: all allies gain +2 Shield each round",
+        },
+        shopCost: 0,
+    },
+    {
+        id: "boss-pedagogue",
+        name: "The Pedagogue",
+        faction: "drifters",
+        tier: 3,
+        baseATK: 6,
+        baseHP: 14,
+        ability: {
+            trigger: "onTakeDamage",
+            effect: {
+                type: "buff",
+                target: "randomAlly",
+                stat: "atk",
+                amount: 2,
+            },
+            description:
+                "Socratic Method: when hit, a random ally gains +2 ATK",
+        },
+        shopCost: 0,
+    },
+    {
+        id: "boss-empiricist",
+        name: "The Empiricist",
+        faction: "drifters",
+        tier: 3,
+        baseATK: 8,
+        baseHP: 12,
+        ability: {
+            trigger: "combatStart",
+            effect: { type: "damage", target: "allEnemies", amount: 3 },
+            description:
+                "Tabula Rasa: deals 3 damage to all enemies at combat start",
+        },
+        shopCost: 0,
+    },
 ]
 
 // ── Exports ──────────────────────────────────────────────────────────────────
@@ -861,10 +999,10 @@ export const ALL_UNITS: UnitDef[] = [
     ...BOSS_UNITS,
 ]
 
-export const UNIT_MAP: ReadonlyMap<string, UnitDef> = new Map(
+export const UNIT_MAP: ReadonlyMap<UnitId, UnitDef> = new Map(
     ALL_UNITS.map((u) => [u.id, u])
 )
 
-export function getUnitsForFaction(faction: string): UnitDef[] {
+export function getUnitsForFaction(faction: FactionId): UnitDef[] {
     return ALL_UNITS.filter((u) => u.faction === faction && u.shopCost > 0)
 }

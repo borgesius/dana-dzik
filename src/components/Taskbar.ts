@@ -1,4 +1,5 @@
 import type { RoutableWindow } from "../config/routing"
+import { getCosmeticManager } from "../lib/cosmetics/CosmeticManager"
 import { getLocaleManager } from "../lib/localeManager"
 import { saveManager } from "../lib/saveManager"
 import { getThemeManager } from "../lib/themeManager"
@@ -209,13 +210,22 @@ export class Taskbar {
         leftItems.forEach(({ icon, textKey, windowId, onOpen }) => {
             const item = document.createElement("div")
             item.className = "start-menu-item"
+            item.tabIndex = 0
+            item.setAttribute("role", "menuitem")
             const text = lm.t(textKey)
 
             item.innerHTML = `<span style="font-size: 20px">${icon}</span><span>${text}</span>`
-            item.addEventListener("click", () => {
+            const activate = (): void => {
                 this.windowManager.openWindow(windowId)
                 onOpen?.()
                 this.closeStartMenu()
+            }
+            item.addEventListener("click", activate)
+            item.addEventListener("keydown", (e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault()
+                    activate()
+                }
             })
             left.appendChild(item)
         })
@@ -234,10 +244,19 @@ export class Taskbar {
         rightItems.forEach(({ textKey, windowId }) => {
             const item = document.createElement("div")
             item.className = "start-menu-item"
+            item.tabIndex = 0
+            item.setAttribute("role", "menuitem")
             item.innerHTML = `<span>${lm.t(textKey)}</span>`
-            item.addEventListener("click", () => {
+            const activate = (): void => {
                 this.windowManager.openWindow(windowId)
                 this.closeStartMenu()
+            }
+            item.addEventListener("click", activate)
+            item.addEventListener("keydown", (e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault()
+                    activate()
+                }
             })
             right.appendChild(item)
         })
@@ -351,6 +370,7 @@ export class Taskbar {
             const themes = tm.getThemeIds()
             const current = themes.indexOf(tm.getCurrentTheme())
             const next = themes[(current + 1) % themes.length]
+            getCosmeticManager().setActive("theme", next)
             tm.setTheme(next)
         })
 
@@ -417,12 +437,35 @@ export class Taskbar {
         windows.forEach((win) => {
             const btn = document.createElement("button")
             btn.className = "taskbar-window-button"
+            btn.tabIndex = 0
             if (win.isActive) {
                 btn.classList.add("active")
             }
             btn.innerHTML = `<span>${win.icon}</span><span>${win.title}</span>`
             btn.addEventListener("click", () => {
                 this.windowManager.focusWindow(win.id)
+            })
+            btn.addEventListener("keydown", (e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault()
+                    this.windowManager.focusWindow(win.id)
+                } else if (
+                    e.key === "ArrowRight" ||
+                    e.key === "ArrowDown"
+                ) {
+                    e.preventDefault()
+                    const next =
+                        btn.nextElementSibling as HTMLElement | null
+                    next?.focus()
+                } else if (
+                    e.key === "ArrowLeft" ||
+                    e.key === "ArrowUp"
+                ) {
+                    e.preventDefault()
+                    const prev =
+                        btn.previousElementSibling as HTMLElement | null
+                    prev?.focus()
+                }
             })
             this.windowsContainer.appendChild(btn)
         })

@@ -7,6 +7,7 @@ import {
     BATCH_ORDER_QUANTITY,
     BLOCK_ORDER_QUANTITY,
     BULK_ORDER_QUANTITY,
+    CAPITAL_GAINS_BONUS,
     COMMODITIES,
     type CommodityDef,
     type CommodityId,
@@ -28,8 +29,7 @@ import {
     FACTORY_COST_SCALING,
     type FactoryDef,
     type FactoryId,
-    type GameEventCallback,
-    type GameEventType,
+    type GameEventMap,
     type GameSnapshot,
     HARVEST_BASE_FRACTION,
     HARVEST_DOLLAR_CEILING,
@@ -92,7 +92,7 @@ export class MarketEngine {
     private factoryTickCounters: Map<FactoryId, number> = new Map()
     private totalHarvests: number = 0
 
-    private eventListeners: Map<GameEventType, GameEventCallback[]> = new Map()
+    private eventListeners = new Map<string, ((data: never) => void)[]>()
     private tickInterval: ReturnType<typeof setInterval> | null = null
     private pumpDumpTimeout: ReturnType<typeof setTimeout> | null = null
     private ticksSinceEvent: number = 0
@@ -157,20 +157,38 @@ export class MarketEngine {
     // Event system
     // -----------------------------------------------------------------------
 
-    public on(event: GameEventType, callback: GameEventCallback): void {
+    public on<K extends keyof GameEventMap>(
+        event: K,
+        callback: GameEventMap[K] extends undefined
+            ? () => void
+            : (data: GameEventMap[K]) => void
+    ): void {
         if (!this.eventListeners.has(event)) {
             this.eventListeners.set(event, [])
         }
-        this.eventListeners.get(event)?.push(callback)
+        this.eventListeners.get(event)?.push(callback as (data: never) => void)
     }
 
-    private emit(event: GameEventType, data?: unknown): void {
-        this.eventListeners.get(event)?.forEach((cb) => cb(data))
+    private emit<K extends keyof GameEventMap>(
+        event: K,
+        ...args: GameEventMap[K] extends undefined
+            ? []
+            : [data: GameEventMap[K]]
+    ): void {
+        const data = args[0]
+        this.eventListeners
+            .get(event)
+            ?.forEach((cb) => (cb as (data: unknown) => void)(data))
     }
 
     /** Public emit for Phase 5 UI integration (employee events). */
-    public emitEvent(event: GameEventType, data?: unknown): void {
-        this.emit(event, data)
+    public emitEvent<K extends keyof GameEventMap>(
+        event: K,
+        ...args: GameEventMap[K] extends undefined
+            ? []
+            : [data: GameEventMap[K]]
+    ): void {
+        this.emit(event, ...args)
     }
 
     // -----------------------------------------------------------------------
@@ -193,10 +211,8 @@ export class MarketEngine {
             }
             this.markets.set(c.id, state)
 
-            // Pre-fill the trend queue with ~1 year of segments
             this.fillTrendQueue(c.id, c)
 
-            // Pop the first segment as the initial active trend
             this.advanceTrendFromQueue(state, c)
         }
     }
@@ -250,7 +266,6 @@ export class MarketEngine {
      * state. Pushes the completed segment to history (trimmed to ~1 year).
      */
     private advanceTrendFromQueue(state: MarketState, def: CommodityDef): void {
-        // Push completed segment to history (if there was one active)
         if (this.trendOriginalDuration.has(state.commodityId)) {
             const origDuration =
                 this.trendOriginalDuration.get(state.commodityId) ?? 0
@@ -260,7 +275,6 @@ export class MarketEngine {
                 duration: origDuration,
             })
 
-            // Trim history to ~1 year of ticks
             let historyTicks = 0
             for (let i = state.trendHistory.length - 1; i >= 0; i--) {
                 historyTicks += state.trendHistory[i].duration
@@ -271,7 +285,6 @@ export class MarketEngine {
             }
         }
 
-        // Pop the next segment from the queue
         const next = state.trendQueue.shift()
         if (!next) {
             // Fallback: generate on-the-fly if queue is empty
@@ -295,7 +308,6 @@ export class MarketEngine {
             state.trend = "bull"
         }
 
-        // Refill the queue
         this.fillTrendQueue(state.commodityId, def)
     }
 
@@ -447,8 +459,13 @@ export class MarketEngine {
                 const { commodity, quantity } = fDef.conversionInput
                 const holding = this.holdings.get(commodity)
                 if (holding && holding.quantity >= quantity) {
-                    holding.totalCost -=
-                        (holding.totalCost / holding.quantity) * quantity
+                    const frac = quantity / holding.quantity
+                    holding.totalCost -= holding.totalCost * frac
+                    holding.purchasedQuantity = Math.max(
+                        0,
+                        holding.purchasedQuantity -
+                            holding.purchasedQuantity * frac
+                    )
                     holding.quantity -= quantity
                     totalProduced += 1
                     if (holding.quantity <= 0) {
@@ -495,6 +512,11 @@ export class MarketEngine {
                 this.cash += revenue
                 this.lifetimeEarnings += revenue
 
+                const frac = order.quantity / holding.quantity
+                holding.purchasedQuantity = Math.max(
+                    0,
+                    holding.purchasedQuantity - holding.purchasedQuantity * frac
+                )
                 holding.quantity -= order.quantity
                 holding.totalCost -=
                     (holding.totalCost / (holding.quantity + order.quantity)) *
@@ -526,7 +548,7 @@ export class MarketEngine {
         if (this.upcomingEventCountdown > 0) {
             this.upcomingEventCountdown--
             if (this.upcomingEventCountdown === 0) {
-                this.fireEvent(this.upcomingEvent!)
+                if (this.upcomingEvent) this.fireEvent(this.upcomingEvent)
                 this.upcomingEvent = null
             }
             return
@@ -627,13 +649,11 @@ export class MarketEngine {
 
         if (this.orgChart.getEmployeeCount() === 0) return
 
-        // Tenure ticking (raise demands)
         const tenureEvents = this.orgChart.tickTenure()
         for (const evt of tenureEvents) {
             this.emit("moraleEvent", evt)
         }
 
-        // Morale ticking (burnout, chemistry, quit detection)
         const moraleEvents = this.orgChart.tickMorale()
         for (const evt of moraleEvents) {
             this.emit("moraleEvent", evt)
@@ -727,14 +747,29 @@ export class MarketEngine {
             holding.quantity
         )
         const tradeBonus = this.bonusProvider?.("tradeProfit") ?? 0
-        const revenue = market.price * qty * (1 + tradeBonus)
+        let revenue = market.price * qty * (1 + tradeBonus)
+
+        // Capital-gains bonus: applies only to the purchased portion
+        // of units being sold that are at a profit above cost basis.
+        const purchasedFraction = holding.purchasedQuantity / holding.quantity
+        const purchasedQtySold = qty * purchasedFraction
+        if (purchasedQtySold > 0 && holding.totalCost > 0) {
+            const avgCostBasis = holding.totalCost / holding.purchasedQuantity
+            const profitPerUnit = Math.max(0, market.price - avgCostBasis)
+            revenue += profitPerUnit * purchasedQtySold * CAPITAL_GAINS_BONUS
+        }
 
         this.cash += revenue
         this.lifetimeEarnings += revenue
 
         const avgCost = holding.totalCost / holding.quantity
+        const purchasedSold = qty * purchasedFraction
         holding.quantity -= qty
         holding.totalCost = holding.quantity * avgCost
+        holding.purchasedQuantity = Math.max(
+            0,
+            holding.purchasedQuantity - purchasedSold
+        )
 
         if (holding.quantity <= 0) {
             this.holdings.delete(commodityId)
@@ -772,7 +807,9 @@ export class MarketEngine {
     > = {
         EMAIL: "harvest-email",
         ADS: "harvest-ads",
+        LIVE: "harvest-live",
         DOM: "harvest-dom",
+        GLUE: "harvest-glue",
         BW: "harvest-bw",
         SOFT: "harvest-soft",
         VC: "harvest-vc",
@@ -781,11 +818,11 @@ export class MarketEngine {
     /**
      * Compute how many units a single harvest click produces for a commodity.
      * Starts tiny (5% of harvestQuantity ≈ $0.10/click), scales up with
-     * per-commodity upgrade (+45%) and autoscript tiers (+25/50/75%).
+     * per-commodity upgrade (+20%) and autoscript tiers (+12/22/32%).
      *
      * Harvest quantity is also adjusted inversely with price so that $/click
      * stays roughly stable, but still rewards harvesting when a commodity is
-     * up (≈75–125% of baseline $/click).
+     * up (≈75–110% of baseline $/click).
      */
     public getHarvestOutput(commodityId: CommodityId): number {
         let fraction = HARVEST_BASE_FRACTION
@@ -871,14 +908,17 @@ export class MarketEngine {
         quantity: number,
         cost: number
     ): void {
+        const isPurchased = cost > 0
         const existing = this.holdings.get(commodityId)
         if (existing) {
             existing.quantity += quantity
             existing.totalCost += cost
+            if (isPurchased) existing.purchasedQuantity += quantity
         } else {
             this.holdings.set(commodityId, {
                 quantity,
                 totalCost: cost,
+                purchasedQuantity: isPurchased ? quantity : 0,
             })
         }
     }
@@ -995,8 +1035,14 @@ export class MarketEngine {
 
         this.cash -= def.cashCost
         for (const [cId, qty] of Object.entries(def.commodityCosts)) {
-            const holding = this.holdings.get(cId as CommodityId)!
+            const holding = this.holdings.get(cId as CommodityId)
+            if (!holding) continue
+            const frac = qty / holding.quantity
             const avgCost = holding.totalCost / holding.quantity
+            holding.purchasedQuantity = Math.max(
+                0,
+                holding.purchasedQuantity - holding.purchasedQuantity * frac
+            )
             holding.quantity -= qty
             holding.totalCost = holding.quantity * avgCost
             if (holding.quantity <= 0) {
@@ -1172,6 +1218,11 @@ export class MarketEngine {
 
     public getOwnedUpgrades(): UpgradeId[] {
         return [...this.ownedUpgrades]
+    }
+
+    /** Sum of all mastery upgrade levels (placeholder — mastery system TBD). */
+    public getTotalMasteryLevels(): number {
+        return 0
     }
 
     public getUnlockedCommodities(): CommodityId[] {
@@ -1392,7 +1443,6 @@ export class MarketEngine {
 
             const currentPrice = this.markets.get(das.commodityId)?.price ?? 0
 
-            // Default check
             if (
                 currentPrice <
                 das.securitizationPrice * DAS_DEFAULT_THRESHOLD
@@ -1426,12 +1476,10 @@ export class MarketEngine {
             this.lifetimeEarnings += yieldAmount
         }
 
-        // Remove defaulted DAS (collateral lost)
         if (anyDefaulted) {
             this.securities = this.securities.filter(
                 (s) => s.status !== "defaulted"
             )
-            // Default immediately drops rating
             this.adjustRating(-1)
             this.emit("portfolioChanged")
             this.emit("moneyChanged", this.cash)
@@ -1464,18 +1512,15 @@ export class MarketEngine {
             this.reviewCreditRating()
         }
 
-        // Emit money change from yield/interest
         if (this.securities.some((s) => s.status === "performing")) {
             this.emit("moneyChanged", this.cash)
         }
     }
 
     private fireMarginEvent(): void {
-        // Record for achievement tracking
         this.marginEventTick = this.totalTickCount
         this.ratingAtMarginEvent = this.creditRating
 
-        // Force-liquidate lowest-value DAS
         const performing = this.securities.filter(
             (s) => s.status === "performing"
         )
@@ -1598,7 +1643,12 @@ export class MarketEngine {
         const currentPrice = this.markets.get(commodityId)?.price ?? 0
         if (currentPrice <= 0) return null
 
+        const frac = quantity / holding.quantity
         const avgCost = holding.totalCost / holding.quantity
+        holding.purchasedQuantity = Math.max(
+            0,
+            holding.purchasedQuantity - holding.purchasedQuantity * frac
+        )
         holding.quantity -= quantity
         holding.totalCost = holding.quantity * avgCost
         if (holding.quantity <= 0) {
@@ -1805,7 +1855,11 @@ export class MarketEngine {
 
         this.holdings.clear()
         for (const [k, v] of Object.entries(data.holdings)) {
-            this.holdings.set(k as CommodityId, { ...v })
+            this.holdings.set(k as CommodityId, {
+                ...v,
+                // Legacy saves lack purchasedQuantity — default to 0.
+                purchasedQuantity: v.purchasedQuantity ?? 0,
+            })
         }
 
         this.factories.clear()
@@ -1820,7 +1874,6 @@ export class MarketEngine {
         this.popupLevel = data.popupLevel
         this.totalHarvests = data.totalHarvests ?? 0
 
-        // Restore org chart if present
         if (data.orgChart) {
             this.orgChart.deserialize(data.orgChart)
         }
@@ -1834,7 +1887,6 @@ export class MarketEngine {
             this.ticksAboveDegradeRatio = data.desk.ticksAboveDegradeRatio ?? 0
             this.marginEventTick = data.desk.marginEventTick ?? -999
             this.ratingAtMarginEvent = data.desk.ratingAtMarginEvent ?? "C"
-            // Restore DAS ID counter
             this.dasIdCounter = this.securities.length
         } else {
             // Clean slate (legacy save or first load)
@@ -1948,7 +2000,6 @@ export class MarketEngine {
             this.orgChart.hireToFirstAvailable(0)
         }
 
-        // Reset Phase 6: Structured Products Desk
         this.securities = []
         this.creditRating = "C"
         this.facility = { outstandingDebt: 0, totalInterestPaid: 0 }

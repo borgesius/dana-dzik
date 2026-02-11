@@ -1,12 +1,16 @@
 import type { CommodityId } from "./commodities"
 
-export type EventEffect = "bullish" | "bearish" | "flavor"
+export type EventEffect = "bullish" | "bearish" | "flavor" | "mega-bullish" | "mega-bearish"
 
 export interface MarketEventDef {
     text: string
     effect: EventEffect
     targetCommodity?: CommodityId
+    /** Additional commodities affected (for mega events). */
+    secondaryCommodity?: CommodityId
     magnitude?: number
+    /** Duration multiplier (events last longer/shorter). Default 1. */
+    durationMultiplier?: number
 }
 
 export const MARKET_EVENTS: MarketEventDef[] = [
@@ -167,6 +171,210 @@ export const MARKET_EVENTS: MarketEventDef[] = [
     },
     {
         text: "NOTICE: Adhesive futures trading volume up 15% quarter-over-quarter.",
+        effect: "flavor",
+    },
+
+    // ── Livestock & Glue events ─────────────────────────────────────────────
+    {
+        text: "ADVISORY: Livestock futures surge on record export deal with Pacific Rim",
+        effect: "bullish",
+        targetCommodity: "LIVE",
+        magnitude: 0.25,
+    },
+    {
+        text: "REPORT: Cattle ranching subsidies expanded. Livestock supply costs drop.",
+        effect: "bullish",
+        targetCommodity: "LIVE",
+        magnitude: 0.2,
+    },
+    {
+        text: "BREAKING: Industrial adhesive demand booms amid construction surge",
+        effect: "bullish",
+        targetCommodity: "GLUE",
+        magnitude: 0.25,
+    },
+    {
+        text: "MARKET UPDATE: Glue stockpiles at historic lows. Buyers scramble.",
+        effect: "bullish",
+        targetCommodity: "GLUE",
+        magnitude: 0.3,
+    },
+    {
+        text: "WARNING: Mad cow scare tanks livestock markets across all exchanges",
+        effect: "bearish",
+        targetCommodity: "LIVE",
+        magnitude: 0.3,
+    },
+    {
+        text: "ALERT: Livestock feed costs spike. Ranchers report negative margins.",
+        effect: "bearish",
+        targetCommodity: "LIVE",
+        magnitude: 0.2,
+    },
+    {
+        text: "NOTICE: Synthetic alternatives threaten traditional glue market share",
+        effect: "bearish",
+        targetCommodity: "GLUE",
+        magnitude: 0.25,
+    },
+    {
+        text: "UPDATE: EPA regulations target rendering plant emissions. GLUE output falls.",
+        effect: "bearish",
+        targetCommodity: "GLUE",
+        magnitude: 0.2,
+    },
+
+    // ── New bullish events ──────────────────────────────────────────────────
+    {
+        text: "BREAKING: Bandwidth infrastructure bill passes. ISP capacity doubled.",
+        effect: "bullish",
+        targetCommodity: "BW",
+        magnitude: 0.35,
+    },
+    {
+        text: "REPORT: VC-backed startups achieve record profitability ratios",
+        effect: "bullish",
+        targetCommodity: "VC",
+        magnitude: 0.25,
+    },
+    {
+        text: "ADVISORY: Enterprise software migration wave creates supply crunch",
+        effect: "bullish",
+        targetCommodity: "SOFT",
+        magnitude: 0.3,
+    },
+    {
+        text: "MARKET UPDATE: Premium .com domains appreciate 40% year-over-year",
+        effect: "bullish",
+        targetCommodity: "DOM",
+        magnitude: 0.3,
+    },
+    {
+        text: "BULLETIN: Programmatic ad exchanges report record CPM rates",
+        effect: "bullish",
+        targetCommodity: "ADS",
+        magnitude: 0.2,
+    },
+    {
+        text: "NOTICE: Email marketing ROI outpaces all digital channels",
+        effect: "bullish",
+        targetCommodity: "EMAIL",
+        magnitude: 0.3,
+    },
+    {
+        text: "REPORT: Bandwidth futures contract trading volume hits all-time high",
+        effect: "bullish",
+        targetCommodity: "BW",
+        magnitude: 0.2,
+    },
+
+    // ── New bearish events ──────────────────────────────────────────────────
+    {
+        text: "ALERT: VC funding winter deepens. Series A deal volume plummets.",
+        effect: "bearish",
+        targetCommodity: "VC",
+        magnitude: 0.3,
+    },
+    {
+        text: "WARNING: Open-source alternatives eroding Software License demand",
+        effect: "bearish",
+        targetCommodity: "SOFT",
+        magnitude: 0.25,
+    },
+    {
+        text: "NOTICE: Bandwidth oversupply as fiber rollout accelerates globally",
+        effect: "bearish",
+        targetCommodity: "BW",
+        magnitude: 0.25,
+    },
+    {
+        text: "UPDATE: Ad blockers reach 60% market penetration. ADS inventory questioned.",
+        effect: "bearish",
+        targetCommodity: "ADS",
+        magnitude: 0.3,
+    },
+    {
+        text: "ADVISORY: ICANN policy changes flood market with new domain TLDs",
+        effect: "bearish",
+        targetCommodity: "DOM",
+        magnitude: 0.2,
+    },
+    {
+        text: "REPORT: CAN-SPAM enforcement action targets bulk email operators",
+        effect: "bearish",
+        targetCommodity: "EMAIL",
+        magnitude: 0.3,
+    },
+    {
+        text: "WARNING: Venture capital exits hit decade low. LP confidence shaken.",
+        effect: "bearish",
+        targetCommodity: "VC",
+        magnitude: 0.25,
+    },
+    {
+        text: "ALERT: Enterprise software budget freeze announced by Fortune 500 consortium",
+        effect: "bearish",
+        targetCommodity: "SOFT",
+        magnitude: 0.2,
+    },
+
+    // ── Mega events (affect 2+ commodities) ─────────────────────────────────
+    {
+        text: "BREAKING: Dot-com boom declared. Tech sector rallies across all commodities.",
+        effect: "mega-bullish",
+        targetCommodity: "DOM",
+        secondaryCommodity: "VC",
+        magnitude: 0.4,
+        durationMultiplier: 1.5,
+    },
+    {
+        text: "CRISIS: Market-wide liquidity crunch. All trading desks report losses.",
+        effect: "mega-bearish",
+        targetCommodity: "VC",
+        secondaryCommodity: "SOFT",
+        magnitude: 0.35,
+        durationMultiplier: 1.5,
+    },
+    {
+        text: "BREAKING: Digital infrastructure spending surge. Bandwidth and Software soar.",
+        effect: "mega-bullish",
+        targetCommodity: "BW",
+        secondaryCommodity: "SOFT",
+        magnitude: 0.35,
+        durationMultiplier: 1.3,
+    },
+    {
+        text: "ALERT: Digital advertising recession. Ad and Email markets collapse together.",
+        effect: "mega-bearish",
+        targetCommodity: "ADS",
+        secondaryCommodity: "EMAIL",
+        magnitude: 0.3,
+        durationMultiplier: 1.3,
+    },
+    {
+        text: "BREAKING: Agricultural-industrial complex booms. Livestock and Glue markets rally.",
+        effect: "mega-bullish",
+        targetCommodity: "LIVE",
+        secondaryCommodity: "GLUE",
+        magnitude: 0.35,
+        durationMultiplier: 1.3,
+    },
+
+    // ── More flavor events ──────────────────────────────────────────────────
+    {
+        text: "SYSTEM: Upgrading to 56k modem. Connection quality improving.",
+        effect: "flavor",
+    },
+    {
+        text: "TIP: The best time to invest was yesterday. The second best time is now.",
+        effect: "flavor",
+    },
+    {
+        text: "NOTICE: Market maker spread tightening initiative in effect.",
+        effect: "flavor",
+    },
+    {
+        text: "REMINDER: Always read the prospectus before investing.",
         effect: "flavor",
     },
 ]

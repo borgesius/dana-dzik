@@ -1,4 +1,5 @@
 import { AudioWidget } from "./widgets/AudioWidget"
+import { DivinationWidget } from "./widgets/DivinationWidget"
 import { NowPlayingWidget } from "./widgets/NowPlayingWidget"
 import { StravaWidget } from "./widgets/StravaWidget"
 import { VeilWidget } from "./widgets/VeilWidget"
@@ -22,5 +23,8 @@ export class Widgets {
 
         const veil = new VeilWidget()
         this.container.appendChild(veil.getElement())
+
+        const divination = new DivinationWidget()
+        this.container.appendChild(divination.getElement())
     }
 }

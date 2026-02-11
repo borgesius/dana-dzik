@@ -1,5 +1,5 @@
 import { type CombatBonuses, createCombatUnit } from "./combat"
-import type { CombatUnit, FactionId, ShopOffer } from "./types"
+import type { CombatUnit, FactionId, ShopOffer, UnitId } from "./types"
 import { ALL_UNITS, UNIT_MAP } from "./units"
 
 export const INITIAL_SCRAP = 5
@@ -23,7 +23,7 @@ export function getMaxLineSlots(): number {
 }
 
 /** Determine which units can appear in the shop, based on the player's collection */
-function getShopPool(unlockedUnitIds: Set<string>): string[] {
+function getShopPool(unlockedUnitIds: Set<UnitId>): UnitId[] {
     return ALL_UNITS.filter(
         (u) =>
             u.shopCost > 0 &&
@@ -36,7 +36,7 @@ function getShopPool(unlockedUnitIds: Set<string>): string[] {
  * @param preferredFaction If provided, 30% chance each slot offers a unit from this faction.
  */
 export function generateShopOffers(
-    unlockedUnitIds: Set<string>,
+    unlockedUnitIds: Set<UnitId>,
     count: number = SHOP_SIZE,
     preferredFaction?: FactionId
 ): ShopOffer[] {
@@ -75,7 +75,7 @@ export interface ShopState {
 }
 
 export function createInitialShopState(
-    unlockedUnitIds: Set<string>
+    unlockedUnitIds: Set<UnitId>
 ): ShopState {
     return {
         scrap: INITIAL_SCRAP,
@@ -142,7 +142,7 @@ export function sellUnit(
 
 export function rerollShop(
     state: ShopState,
-    unlockedUnitIds: Set<string>,
+    unlockedUnitIds: Set<UnitId>,
     preferredFaction?: FactionId
 ): boolean {
     if (state.scrap < REROLL_COST) return false

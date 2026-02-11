@@ -10,6 +10,11 @@ export interface CareerHistoryEntry {
 
 // ── Progression save data ────────────────────────────────────────────────────
 
+import type { CareerNodeId } from "./careers"
+import type { ForesightUpgradeId } from "../prestige/ascension"
+import type { HindsightUpgradeId } from "../prestige/constants"
+import type { BossId, FactionId, RelicId, UnitId } from "../autobattler/types"
+
 export interface ExplorationSaveData {
     seenWindows: string[]
     seenThemes: string[]
@@ -28,11 +33,11 @@ export interface ProgressionSaveData {
         {
             invested: number
             dormant: boolean
-            unlockedNodes: string[]
+            unlockedNodes: CareerNodeId[]
         }
     >
-    educationNodes: string[]
-    skillNodes?: string[]
+    educationNodes: CareerNodeId[]
+    skillNodes?: CareerNodeId[]
     /** Mastery ranks: masteryId -> count */
     masteryRanks?: Record<string, number>
     /** Persistent exploration XP guards */
@@ -55,12 +60,12 @@ export function createEmptyProgressionData(): ProgressionSaveData {
 export interface PrestigeSaveData {
     count: number
     currency: number // Hindsight
-    purchasedUpgrades: string[]
+    purchasedUpgrades: HindsightUpgradeId[]
     lifetimeAcrossPrestiges: number
     /** Ascension layer */
     ascensionCount?: number
     foresight?: number
-    purchasedForesightUpgrades?: string[]
+    purchasedForesightUpgrades?: ForesightUpgradeId[]
     totalHindsightSpent?: number
 }
 
@@ -80,20 +85,24 @@ export function createEmptyPrestigeData(): PrestigeSaveData {
 // ── Autobattler save data ───────────────────────────────────────────────────
 
 export interface AutobattlerUnitEntry {
-    unitId: string
+    unitId: UnitId
     count: number
 }
 
 export interface AutobattlerSaveData {
     collection: AutobattlerUnitEntry[]
     completedRuns: number
-    unlockedFactions: string[]
-    spiralProgress: Record<string, boolean>
+    unlockedFactions: FactionId[]
+    spiralProgress: Partial<Record<FactionId, boolean>>
     /** Personal bests */
     highestRound?: number
     totalBossesDefeated?: number
     /** Set of defeated boss IDs for Comprehensive Exams achievement */
-    bossesDefeatedSet?: string[]
+    bossesDefeatedSet?: BossId[]
+    /** Permanently unlocked relic IDs */
+    unlockedRelics?: RelicId[]
+    /** Total units bought across all runs */
+    totalUnitsBought?: number
 }
 
 export function createEmptyAutobattlerData(): AutobattlerSaveData {
@@ -105,5 +114,7 @@ export function createEmptyAutobattlerData(): AutobattlerSaveData {
         highestRound: 0,
         totalBossesDefeated: 0,
         bossesDefeatedSet: [],
+        unlockedRelics: [],
+        totalUnitsBought: 0,
     }
 }

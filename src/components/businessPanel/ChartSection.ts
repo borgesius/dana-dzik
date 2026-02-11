@@ -1,3 +1,4 @@
+import { getDataAttribute } from "../../lib/domUtils"
 import { formatMoney } from "../../lib/formatMoney"
 import { getLocaleManager } from "../../lib/localeManager"
 import { ChartRenderer } from "../../lib/marketGame/ChartRenderer"
@@ -147,13 +148,13 @@ export class ChartSection {
         const unlocked = this.game.getUnlockedCommodities()
         const lm = getLocaleManager()
         tabs.forEach((tab) => {
-            const id = (tab as HTMLElement).dataset.commodityId as CommodityId
+            const id = getDataAttribute<CommodityId>(tab, "commodity-id")
+            if (!id) return
             const isUnlocked = unlocked.includes(id)
             tab.classList.toggle("active", id === this.selectedCommodity)
             tab.classList.toggle("locked", !isUnlocked)
             ;(tab as HTMLButtonElement).disabled = !isUnlocked
 
-            // Update tooltip for locked tabs
             const def = COMMODITIES.find((c) => c.id === id)
             if (!isUnlocked && def && def.unlockThreshold > 0) {
                 ;(tab as HTMLElement).title = lm.t(

@@ -32,12 +32,10 @@ export class VeilWidget {
         // Start hidden — only show when player has encountered a veil
         this.widget.style.display = "none"
 
-        // Check initial visibility
         if (getVeilManager().isWidgetVisible()) {
             this.show()
         }
 
-        // Listen for events that affect visibility and content
         onAppEvent("veil:triggered", () => {
             this.show()
             this.render()
@@ -117,7 +115,6 @@ export class VeilWidget {
         html += "</div>"
         this.content.innerHTML = html
 
-        // Attach event listeners
         this.content.querySelectorAll("[data-veil-replay]").forEach((btn) => {
             btn.addEventListener("click", (e) => {
                 e.stopPropagation()

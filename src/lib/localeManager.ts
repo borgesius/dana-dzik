@@ -115,7 +115,7 @@ class LocaleManager {
         if (!this.listeners.has(event)) {
             this.listeners.set(event, new Set())
         }
-        this.listeners.get(event)!.add(callback)
+        this.listeners.get(event)?.add(callback)
     }
 
     public off(event: LocaleEvent, callback: LocaleEventCallback): void {

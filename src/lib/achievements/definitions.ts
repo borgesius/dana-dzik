@@ -49,6 +49,30 @@ export const ACHIEVEMENTS: AchievementDef[] = [
         tier: 5,
     },
     {
+        id: "corporate-raider",
+        category: "trading",
+        icon: "🦈",
+        hidden: false,
+        tieredGroup: "mogul",
+        tier: 6,
+    },
+    {
+        id: "market-mogul",
+        category: "trading",
+        icon: "👑",
+        hidden: false,
+        tieredGroup: "mogul",
+        tier: 7,
+    },
+    {
+        id: "too-big-to-fail",
+        category: "trading",
+        icon: "🏛️",
+        hidden: false,
+        tieredGroup: "mogul",
+        tier: 8,
+    },
+    {
         id: "fire-sale",
         category: "trading",
         icon: "📉",
@@ -739,6 +763,29 @@ export const ACHIEVEMENTS: AchievementDef[] = [
         desktopOnly: true,
     },
 
+    // ── Autobattler (relics) ────────────────────────────────────────────────
+    {
+        id: "relic-hunter",
+        category: "autobattler",
+        icon: "🏺",
+        hidden: false,
+        desktopOnly: true,
+    },
+    {
+        id: "curator",
+        category: "autobattler",
+        icon: "🗃️",
+        hidden: false,
+        desktopOnly: true,
+    },
+    {
+        id: "full-collection",
+        category: "autobattler",
+        icon: "🏛️",
+        hidden: true,
+        desktopOnly: true,
+    },
+
     // ── Cross-system (hidden) ────────────────────────────────────────────
     {
         id: "vertical-integration",
@@ -765,6 +812,30 @@ export const ACHIEVEMENTS: AchievementDef[] = [
         category: "prestige",
         icon: "🫧",
         hidden: false,
+    },
+    {
+        id: "serial-entrepreneur",
+        category: "prestige",
+        icon: "🔄",
+        hidden: false,
+        tieredGroup: "prestige-count",
+        tier: 1,
+    },
+    {
+        id: "bubble-addict",
+        category: "prestige",
+        icon: "🫧",
+        hidden: false,
+        tieredGroup: "prestige-count",
+        tier: 2,
+    },
+    {
+        id: "bubble-eternal",
+        category: "prestige",
+        icon: "♾️",
+        hidden: true,
+        tieredGroup: "prestige-count",
+        tier: 3,
     },
     {
         id: "hindsight-shopper",
@@ -803,6 +874,30 @@ export const ACHIEVEMENTS: AchievementDef[] = [
         category: "career",
         icon: "🌳",
         hidden: false,
+    },
+    {
+        id: "apprentice",
+        category: "career",
+        icon: "📚",
+        hidden: false,
+        tieredGroup: "mastery",
+        tier: 1,
+    },
+    {
+        id: "journeyman",
+        category: "career",
+        icon: "🔨",
+        hidden: false,
+        tieredGroup: "mastery",
+        tier: 2,
+    },
+    {
+        id: "grandmaster",
+        category: "career",
+        icon: "🏆",
+        hidden: true,
+        tieredGroup: "mastery",
+        tier: 3,
     },
 
     // ── HR / Phase 5 ────────────────────────────────────────────────────────
@@ -1022,6 +1117,18 @@ export const ACHIEVEMENTS: AchievementDef[] = [
         icon: "📉",
         hidden: false,
     },
+    {
+        id: "triple-a-streak",
+        category: "production",
+        icon: "⭐",
+        hidden: false,
+    },
+    {
+        id: "diversified-portfolio",
+        category: "production",
+        icon: "📊",
+        hidden: false,
+    },
 
     // ── Standalone new achievements ──────────────────────────────────────
     {
@@ -1105,6 +1212,12 @@ export const ACHIEVEMENTS: AchievementDef[] = [
         category: "cross-system",
         icon: "🏗️",
         hidden: true,
+    },
+    {
+        id: "self-sustaining",
+        category: "cross-system",
+        icon: "🏭",
+        hidden: false,
     },
 
     // ── Autobattler (concept / hidden) ──────────────────────────────────
@@ -1225,12 +1338,28 @@ export const ACHIEVEMENTS: AchievementDef[] = [
         tier: 2,
     },
     {
+        id: "harvest-live-500",
+        category: "trading",
+        icon: "🐄",
+        hidden: false,
+        tieredGroup: "commodity-harvester",
+        tier: 3,
+    },
+    {
         id: "harvest-dom-500",
         category: "trading",
         icon: "🌐",
         hidden: false,
         tieredGroup: "commodity-harvester",
-        tier: 3,
+        tier: 4,
+    },
+    {
+        id: "harvest-glue-500",
+        category: "trading",
+        icon: "🧴",
+        hidden: false,
+        tieredGroup: "commodity-harvester",
+        tier: 5,
     },
     {
         id: "harvest-bw-500",
@@ -1238,7 +1367,7 @@ export const ACHIEVEMENTS: AchievementDef[] = [
         icon: "📡",
         hidden: false,
         tieredGroup: "commodity-harvester",
-        tier: 4,
+        tier: 6,
     },
     {
         id: "harvest-soft-500",
@@ -1246,7 +1375,7 @@ export const ACHIEVEMENTS: AchievementDef[] = [
         icon: "💿",
         hidden: false,
         tieredGroup: "commodity-harvester",
-        tier: 5,
+        tier: 7,
     },
     {
         id: "harvest-vc-500",
@@ -1254,7 +1383,7 @@ export const ACHIEVEMENTS: AchievementDef[] = [
         icon: "💼",
         hidden: false,
         tieredGroup: "commodity-harvester",
-        tier: 6,
+        tier: 8,
     },
 
     // ── Autoclicker detection ─────────────────────────────────────────────
@@ -1688,6 +1817,36 @@ export const ACHIEVEMENTS: AchievementDef[] = [
         category: "customization",
         icon: "🐴",
         hidden: true,
+    },
+
+    // ── Network Monitor (M.D.) ───────────────────────────────────────────
+    {
+        id: "packet-sniffing",
+        category: "exploration",
+        icon: "🩺",
+        hidden: false,
+        desktopOnly: true,
+    },
+    {
+        id: "deep-packet-inspection",
+        category: "exploration",
+        icon: "🔬",
+        hidden: false,
+        desktopOnly: true,
+    },
+    {
+        id: "unknown-host",
+        category: "exploration",
+        icon: "❓",
+        hidden: true,
+        desktopOnly: true,
+    },
+    {
+        id: "port-scan",
+        category: "terminal",
+        icon: "📡",
+        hidden: false,
+        desktopOnly: true,
     },
 ]
 

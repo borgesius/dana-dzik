@@ -1,0 +1,212 @@
+[
+  {
+    "id": "cat",
+    "name": "Black Cat",
+    "emoji": "🐈‍⬛",
+    "traits": ["independent", "mysterious", "aloof"],
+    "behavior": { "speed": 2, "sleepiness": 8, "curiosity": 6, "fleesCursor": false }
+  },
+  {
+    "id": "owl",
+    "name": "Barn Owl",
+    "emoji": "🦉",
+    "traits": ["wise", "nocturnal", "silent"],
+    "behavior": { "speed": 1, "sleepiness": 5, "curiosity": 9, "fleesCursor": true }
+  },
+  {
+    "id": "raven",
+    "name": "Raven",
+    "emoji": "🐦‍⬛",
+    "traits": ["clever", "trickster", "prophetic"],
+    "behavior": { "speed": 5, "sleepiness": 3, "curiosity": 10, "fleesCursor": true }
+  },
+  {
+    "id": "toad",
+    "name": "Toad",
+    "emoji": "🐸",
+    "traits": ["patient", "earthy", "transformative"],
+    "behavior": { "speed": 1, "sleepiness": 7, "curiosity": 4, "fleesCursor": false }
+  },
+  {
+    "id": "snake",
+    "name": "Serpent",
+    "emoji": "🐍",
+    "traits": ["cunning", "renewal", "hypnotic"],
+    "behavior": { "speed": 4, "sleepiness": 6, "curiosity": 5, "fleesCursor": true }
+  },
+  {
+    "id": "spider",
+    "name": "Spider",
+    "emoji": "🕷️",
+    "traits": ["patient", "creative", "weaver"],
+    "behavior": { "speed": 3, "sleepiness": 4, "curiosity": 7, "fleesCursor": true }
+  },
+  {
+    "id": "bat",
+    "name": "Bat",
+    "emoji": "🦇",
+    "traits": ["intuitive", "liminal", "rebirth"],
+    "behavior": { "speed": 7, "sleepiness": 9, "curiosity": 5, "fleesCursor": true }
+  },
+  {
+    "id": "fox",
+    "name": "Fox",
+    "emoji": "🦊",
+    "traits": ["clever", "adaptable", "shapeshifter"],
+    "behavior": { "speed": 6, "sleepiness": 4, "curiosity": 8, "fleesCursor": true }
+  },
+  {
+    "id": "moth",
+    "name": "Moth",
+    "emoji": "🦋",
+    "traits": ["drawn to light", "transformative", "fragile"],
+    "behavior": { "speed": 5, "sleepiness": 2, "curiosity": 10, "fleesCursor": false }
+  },
+  {
+    "id": "hare",
+    "name": "Hare",
+    "emoji": "🐇",
+    "traits": ["quick", "lunar", "fertile"],
+    "behavior": { "speed": 9, "sleepiness": 3, "curiosity": 6, "fleesCursor": true }
+  },
+  {
+    "id": "crow",
+    "name": "Crow",
+    "emoji": "🐦",
+    "traits": ["resourceful", "watchful", "messenger"],
+    "behavior": { "speed": 4, "sleepiness": 3, "curiosity": 9, "fleesCursor": false }
+  },
+  {
+    "id": "wolf",
+    "name": "Wolf",
+    "emoji": "🐺",
+    "traits": ["loyal", "instinctive", "guardian"],
+    "behavior": { "speed": 5, "sleepiness": 5, "curiosity": 7, "fleesCursor": false }
+  },
+  {
+    "id": "rat",
+    "name": "Rat",
+    "emoji": "🐀",
+    "traits": ["resourceful", "survivor", "clever"],
+    "behavior": { "speed": 8, "sleepiness": 3, "curiosity": 10, "fleesCursor": true }
+  },
+  {
+    "id": "beetle",
+    "name": "Scarab Beetle",
+    "emoji": "🪲",
+    "traits": ["eternal", "transformative", "industrious"],
+    "behavior": { "speed": 2, "sleepiness": 2, "curiosity": 4, "fleesCursor": false }
+  },
+  {
+    "id": "salamander",
+    "name": "Salamander",
+    "emoji": "🦎",
+    "traits": ["fire-aligned", "regenerative", "elusive"],
+    "behavior": { "speed": 3, "sleepiness": 6, "curiosity": 5, "fleesCursor": true }
+  },
+  {
+    "id": "hawk",
+    "name": "Hawk",
+    "emoji": "🦅",
+    "traits": ["visionary", "focused", "messenger"],
+    "behavior": { "speed": 8, "sleepiness": 4, "curiosity": 7, "fleesCursor": true }
+  },
+  {
+    "id": "hedgehog",
+    "name": "Hedgehog",
+    "emoji": "🦔",
+    "traits": ["protective", "gentle", "grounded"],
+    "behavior": { "speed": 1, "sleepiness": 8, "curiosity": 3, "fleesCursor": false }
+  },
+  {
+    "id": "octopus",
+    "name": "Octopus",
+    "emoji": "🐙",
+    "traits": ["intelligent", "adaptable", "mysterious"],
+    "behavior": { "speed": 3, "sleepiness": 5, "curiosity": 10, "fleesCursor": true }
+  },
+  {
+    "id": "weasel",
+    "name": "Weasel",
+    "emoji": "🐾",
+    "traits": ["cunning", "quick", "stealthy"],
+    "behavior": { "speed": 7, "sleepiness": 3, "curiosity": 8, "fleesCursor": true }
+  },
+  {
+    "id": "crane",
+    "name": "Crane",
+    "emoji": "🦩",
+    "traits": ["graceful", "patient", "longevity"],
+    "behavior": { "speed": 2, "sleepiness": 5, "curiosity": 6, "fleesCursor": false }
+  },
+  {
+    "id": "firefly",
+    "name": "Firefly",
+    "emoji": "✨",
+    "traits": ["illuminating", "fleeting", "enchanting"],
+    "behavior": { "speed": 6, "sleepiness": 2, "curiosity": 9, "fleesCursor": false }
+  },
+  {
+    "id": "tortoise",
+    "name": "Tortoise",
+    "emoji": "🐢",
+    "traits": ["ancient", "steady", "wise"],
+    "behavior": { "speed": 1, "sleepiness": 7, "curiosity": 3, "fleesCursor": false }
+  },
+  {
+    "id": "scorpion",
+    "name": "Scorpion",
+    "emoji": "🦂",
+    "traits": ["intense", "transformative", "protective"],
+    "behavior": { "speed": 3, "sleepiness": 6, "curiosity": 5, "fleesCursor": false }
+  },
+  {
+    "id": "dragonfly",
+    "name": "Dragonfly",
+    "emoji": "🪰",
+    "traits": ["change", "adaptable", "self-realization"],
+    "behavior": { "speed": 9, "sleepiness": 1, "curiosity": 8, "fleesCursor": true }
+  },
+  {
+    "id": "coyote",
+    "name": "Coyote",
+    "emoji": "🐕",
+    "traits": ["trickster", "adaptable", "playful"],
+    "behavior": { "speed": 6, "sleepiness": 4, "curiosity": 9, "fleesCursor": false }
+  },
+  {
+    "id": "ferret",
+    "name": "Ferret",
+    "emoji": "🐿️",
+    "traits": ["curious", "playful", "persistent"],
+    "behavior": { "speed": 7, "sleepiness": 5, "curiosity": 10, "fleesCursor": false }
+  },
+  {
+    "id": "chameleon",
+    "name": "Chameleon",
+    "emoji": "🦎",
+    "traits": ["adaptive", "patient", "perceptive"],
+    "behavior": { "speed": 1, "sleepiness": 6, "curiosity": 7, "fleesCursor": true }
+  },
+  {
+    "id": "phoenix_moth",
+    "name": "Phoenix Moth",
+    "emoji": "🔥",
+    "traits": ["rebirth", "transformation", "luminous"],
+    "behavior": { "speed": 5, "sleepiness": 2, "curiosity": 8, "fleesCursor": false }
+  },
+  {
+    "id": "jackdaw",
+    "name": "Jackdaw",
+    "emoji": "🐦‍⬛",
+    "traits": ["collector", "social", "clever"],
+    "behavior": { "speed": 5, "sleepiness": 3, "curiosity": 10, "fleesCursor": false }
+  },
+  {
+    "id": "mantis",
+    "name": "Praying Mantis",
+    "emoji": "🪳",
+    "traits": ["stillness", "precision", "patience"],
+    "behavior": { "speed": 2, "sleepiness": 7, "curiosity": 5, "fleesCursor": true }
+  }
+]

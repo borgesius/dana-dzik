@@ -1,4 +1,12 @@
-export type CommodityId = "EMAIL" | "ADS" | "DOM" | "BW" | "SOFT" | "VC"
+export type CommodityId =
+    | "EMAIL"
+    | "ADS"
+    | "LIVE"
+    | "DOM"
+    | "GLUE"
+    | "BW"
+    | "SOFT"
+    | "VC"
 
 export interface CommodityDef {
     id: CommodityId
@@ -39,6 +47,17 @@ export const COMMODITIES: CommodityDef[] = [
         harvestQuantity: 8, // 8 × $0.25 = $2.00
     },
     {
+        id: "LIVE",
+        name: "Livestock",
+        description: "Grade-A cattle futures. Delivery not included.",
+        basePrice: 0.5,
+        volatility: 0.065,
+        unlockThreshold: 15,
+        trendMinTicks: 9,
+        trendMaxTicks: 24,
+        harvestQuantity: 4, // 4 × $0.50 = $2.00
+    },
+    {
         id: "DOM",
         name: ".com Domains",
         description: "Pre-registered premium domain names.",
@@ -48,6 +67,17 @@ export const COMMODITIES: CommodityDef[] = [
         trendMinTicks: 10,
         trendMaxTicks: 28,
         harvestQuantity: 1, // 1 × $2.00 = $2.00
+    },
+    {
+        id: "GLUE",
+        name: "Glue",
+        description: "Industrial-strength adhesive. Handle with care.",
+        basePrice: 5.0,
+        volatility: 0.045,
+        unlockThreshold: 100,
+        trendMinTicks: 11,
+        trendMaxTicks: 32,
+        harvestQuantity: 0.4, // 0.4 × $5.00 = $2.00
     },
     {
         id: "BW",

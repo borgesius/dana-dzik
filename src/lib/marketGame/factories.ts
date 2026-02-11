@@ -2,7 +2,9 @@ import type { CommodityId } from "./commodities"
 
 export type FactoryId =
     | "list-builder"
+    | "cattle-ranch"
     | "banner-exchange"
+    | "rendering-plant"
     | "colocation-rack"
     | "offshore-dev"
 
@@ -33,6 +35,17 @@ export const FACTORIES: FactoryDef[] = [
         ticksPerCycle: 2,
     },
     {
+        id: "cattle-ranch",
+        name: "Cattle Ranch",
+        description:
+            "Free-range livestock operation. Output varies with season.",
+        produces: "LIVE",
+        cost: 10,
+        minOutput: 0,
+        maxOutput: 2,
+        ticksPerCycle: 2,
+    },
+    {
         id: "banner-exchange",
         name: "Banner Exchange",
         description:
@@ -43,6 +56,18 @@ export const FACTORIES: FactoryDef[] = [
         maxOutput: 2,
         ticksPerCycle: 3,
         conversionInput: { commodity: "EMAIL", quantity: 6 },
+    },
+    {
+        id: "rendering-plant",
+        name: "Rendering Plant",
+        description:
+            "Converts livestock into industrial adhesive. Smells terrible.",
+        produces: "GLUE",
+        cost: 80,
+        minOutput: 0,
+        maxOutput: 1,
+        ticksPerCycle: 4,
+        conversionInput: { commodity: "LIVE", quantity: 8 },
     },
     {
         id: "colocation-rack",
