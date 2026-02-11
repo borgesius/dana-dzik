@@ -132,7 +132,11 @@ export class DialogueManager {
 
         const skipHandler = (): void => {
             // Only skip if this is still the active node and typing hasn't completed
-            if (this.isTyping && gen === this.nodeGeneration && !typingCompleted) {
+            if (
+                this.isTyping &&
+                gen === this.nodeGeneration &&
+                !typingCompleted
+            ) {
                 this.stopTyping()
                 this.displayedText = this.fullText
                 textEl.textContent = this.fullText
@@ -150,7 +154,11 @@ export class DialogueManager {
         }
     }
 
-    private onTypingComplete(node: DialogueNode, choicesEl: HTMLElement, gen: number): void {
+    private onTypingComplete(
+        node: DialogueNode,
+        choicesEl: HTMLElement,
+        gen: number
+    ): void {
         this.isTyping = false
         this.clearTypingCursors()
 
@@ -208,7 +216,9 @@ export class DialogueManager {
                     this.isTransitioning = true
                     // Visually mark the chosen option and disable all siblings
                     btn.classList.add("veil-choice-selected")
-                    for (const sibling of choicesEl.querySelectorAll(".veil-dialogue-choice-btn")) {
+                    for (const sibling of choicesEl.querySelectorAll(
+                        ".veil-dialogue-choice-btn"
+                    )) {
                         ;(sibling as HTMLButtonElement).disabled = true
                     }
                     this.advanceTo(choice.next)
