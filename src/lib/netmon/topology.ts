@@ -1,4 +1,5 @@
 import { CanvasError } from "@/core/errors"
+
 import { SERVICES } from "./services"
 import type { Packet, Protocol, Service } from "./types"
 
@@ -137,7 +138,7 @@ export class TopologyRenderer {
         this.setupInteraction()
     }
 
-    resize(): void {
+    public resize(): void {
         const rect = this.canvas.parentElement?.getBoundingClientRect()
         if (!rect) return
         const w = rect.width
@@ -195,12 +196,12 @@ export class TopologyRenderer {
         return -1
     }
 
-    setOnNodeClick(fn: (addr: string) => void): void {
+    public setOnNodeClick(fn: (addr: string) => void): void {
         this.onNodeClick = fn
     }
 
     /** Called when a new packet arrives. Spawn a particle and update traffic heat. */
-    ingestPacket(packet: Packet): void {
+    public ingestPacket(packet: Packet): void {
         const srcIdx = NODES.findIndex(
             (n) => n.service.addr === packet.src.addr
         )
@@ -239,7 +240,7 @@ export class TopologyRenderer {
         }
     }
 
-    start(): void {
+    public start(): void {
         const loop = (): void => {
             this.draw()
             this.animFrameId = requestAnimationFrame(loop)
@@ -247,7 +248,7 @@ export class TopologyRenderer {
         this.animFrameId = requestAnimationFrame(loop)
     }
 
-    stop(): void {
+    public stop(): void {
         if (this.animFrameId) {
             cancelAnimationFrame(this.animFrameId)
             this.animFrameId = 0

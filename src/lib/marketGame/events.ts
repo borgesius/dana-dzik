@@ -1,6 +1,11 @@
 import type { CommodityId } from "./commodities"
 
-export type EventEffect = "bullish" | "bearish" | "flavor" | "mega-bullish" | "mega-bearish"
+export type EventEffect =
+    | "bullish"
+    | "bearish"
+    | "flavor"
+    | "mega-bullish"
+    | "mega-bearish"
 
 export interface MarketEventDef {
     text: string

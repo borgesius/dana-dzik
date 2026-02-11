@@ -1,6 +1,5 @@
 import {
     CHEMISTRY,
-
     deserializeEmployee,
     type Employee,
     EMPLOYEE_DEFS,
@@ -253,7 +252,6 @@ export class OrgChart {
 
         emp.morale = Math.max(0, Math.min(100, emp.morale))
     }
-
 
     // ── Tenure / salary escalation ──────────────────────────────────────
 
@@ -595,7 +593,9 @@ export class OrgChart {
                 typeCounts.set(ic.type, (typeCounts.get(ic.type) ?? 0) + 1)
 
                 const icBonus = getEmployeeBonus(ic) * icEff
-                const icDiminish = diminishingFactor(typeCounts.get(ic.type) ?? 0)
+                const icDiminish = diminishingFactor(
+                    typeCounts.get(ic.type) ?? 0
+                )
 
                 if (icDef.bonusType !== "_internFlat") {
                     addBonus(bonuses, icDef.bonusType, icBonus * icDiminish)

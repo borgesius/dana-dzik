@@ -13,10 +13,10 @@ vi.mock("../lib/calmMode", () => ({
 
 import { CollectionManager } from "../lib/autobattler/CollectionManager"
 import { ALL_UNITS } from "../lib/autobattler/units"
-import { ProgressionManager } from "../lib/progression/ProgressionManager"
-import { xpForLevel } from "../lib/progression/constants"
-import { VeilManager } from "../lib/veil/VeilManager"
 import { CosmeticManager } from "../lib/cosmetics/CosmeticManager"
+import { xpForLevel } from "../lib/progression/constants"
+import { ProgressionManager } from "../lib/progression/ProgressionManager"
+import { VeilManager } from "../lib/veil/VeilManager"
 
 // ═════════════════════════════════════════════════════════════════════════════
 // CollectionManager

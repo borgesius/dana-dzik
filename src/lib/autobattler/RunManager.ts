@@ -1,6 +1,13 @@
 import { getPrestigeManager } from "../../lib/prestige/PrestigeManager"
-
 import { type CombatBonuses, createCombatUnit, resolveCombat } from "./combat"
+import {
+    EVENT_CHANCE,
+    EVENT_MAP,
+    type EventDef,
+    type EventOutcome,
+    getRelicBuyCost,
+    pickRandomEvent,
+} from "./events"
 import {
     BOSS_MODIFIER_MAP,
     getOpponentStatMultiplier,
@@ -8,14 +15,6 @@ import {
     pickBossOpponent,
     pickOpponent,
 } from "./opponents"
-import {
-    EVENT_CHANCE,
-    EVENT_MAP,
-    getRelicBuyCost,
-    pickRandomEvent,
-    type EventDef,
-    type EventOutcome,
-} from "./events"
 import {
     getUnlockedRelicDefs,
     RELIC_MAP,
@@ -201,8 +200,7 @@ export class RunManager {
 
     private emit<K extends keyof RunEventMap>(
         event: K,
-        ...args: RunEventMap[K] extends undefined ? []
-            : [data: RunEventMap[K]]
+        ...args: RunEventMap[K] extends undefined ? [] : [data: RunEventMap[K]]
     ): void {
         const data = args[0]
         this.eventListeners

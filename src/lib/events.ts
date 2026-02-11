@@ -1,14 +1,14 @@
+import type { RoutableWindow } from "../config/routing"
 import type { BossId, FactionId, RelicId, UnitId } from "./autobattler/types"
 import type { CosmeticType } from "./cosmetics/CosmeticManager"
 import type { GlitchType } from "./glitchEffects"
 import type { EmployeeType } from "./marketGame/employees"
-import type { HindsightUpgradeId } from "./prestige/constants"
 import type { ForesightUpgradeId } from "./prestige/ascension"
+import type { HindsightUpgradeId } from "./prestige/constants"
 import type { CareerNodeId } from "./progression/careers"
 import type { CareerBranch } from "./progression/types"
-import type { RoutableWindow } from "../config/routing"
-import type { Severity } from "./systemFileValidator"
 import type { SystemEffect } from "./systemCrash/constants"
+import type { Severity } from "./systemFileValidator"
 import type { VeilId } from "./veil/types"
 
 export interface AppEventMap {

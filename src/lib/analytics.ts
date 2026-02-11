@@ -364,9 +364,10 @@ let cachedCounts: AchievementCountsData | null = null
 export async function fetchAchievementCounts(): Promise<AchievementCountsData> {
     if (cachedCounts) return cachedCounts
 
-    const result = await apiFetch<{ ok: boolean; data?: AchievementCountsData }>(
-        "/api/achievement-counts"
-    )
+    const result = await apiFetch<{
+        ok: boolean
+        data?: AchievementCountsData
+    }>("/api/achievement-counts")
 
     if (result.ok && result.data.ok && result.data.data) {
         cachedCounts = result.data.data

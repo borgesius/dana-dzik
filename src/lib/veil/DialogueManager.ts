@@ -116,7 +116,8 @@ export class DialogueManager {
         this.typingInterval = window.setInterval(() => {
             // Stale interval guard
             if (gen !== this.nodeGeneration) {
-                if (this.typingInterval != null) clearInterval(this.typingInterval)
+                if (this.typingInterval != null)
+                    clearInterval(this.typingInterval)
                 return
             }
             if (charIndex < this.fullText.length) {

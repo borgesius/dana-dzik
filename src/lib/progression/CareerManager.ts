@@ -3,8 +3,8 @@ import { getPrestigeManager } from "../prestige/PrestigeManager"
 import {
     type BonusType,
     CAREER_NODE_MAP,
-    type CareerNodeId,
     CAREER_SWITCH_LEVEL_PENALTY,
+    type CareerNodeId,
     DORMANT_MULTIPLIER,
     ENGINEERING_STARTER_NODE,
     MASTERY_MAP,
@@ -23,7 +23,10 @@ import type {
 
 interface CareerEventMap {
     careerSelected: { branch: CareerBranch }
-    nodeUnlocked: { nodeId: CareerNodeId; branch: CareerBranch | "education" | "skills" }
+    nodeUnlocked: {
+        nodeId: CareerNodeId
+        branch: CareerBranch | "education" | "skills"
+    }
     careerSwitched: { from?: CareerBranch; to: CareerBranch }
 }
 

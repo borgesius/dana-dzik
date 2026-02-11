@@ -6,7 +6,12 @@
  */
 
 import { interpret } from "./interpreter"
-import { WeltError, type Program, type WeltCallbacks, type WeltValue } from "./types"
+import {
+    type Program,
+    type WeltCallbacks,
+    WeltError,
+    type WeltValue,
+} from "./types"
 
 let worker: Worker | null = null
 let workerFailed = false

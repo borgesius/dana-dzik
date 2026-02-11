@@ -91,7 +91,7 @@ export const RELIC_DEFS: RelicDef[] = [
     {
         id: "golden-mean",
         tier: "common",
-        effect: { type: "hpAll", amount: 4 },
+        effect: { type: "hpAll", amount: 2 },
         unlockCondition: { type: "default" },
     },
     {
@@ -103,7 +103,7 @@ export const RELIC_DEFS: RelicDef[] = [
     {
         id: "amor-fati",
         tier: "common",
-        effect: { type: "scrapOnLoss", amount: 3 },
+        effect: { type: "scrapOnLoss", amount: 2 },
         unlockCondition: { type: "reachRound", round: 6 },
     },
 
@@ -111,13 +111,13 @@ export const RELIC_DEFS: RelicDef[] = [
     {
         id: "uncarved-block",
         tier: "rare",
-        effect: { type: "shieldAll", amount: 3 },
+        effect: { type: "shieldAll", amount: 2 },
         unlockCondition: { type: "defeatAnyBoss" },
     },
     {
         id: "ibn-rushds-mirror",
         tier: "rare",
-        effect: { type: "healAfterCombat", amount: 3 },
+        effect: { type: "healAfterCombat", amount: 2 },
         unlockCondition: { type: "reachRound", round: 10 },
     },
     {
@@ -129,7 +129,7 @@ export const RELIC_DEFS: RelicDef[] = [
     {
         id: "maat",
         tier: "rare",
-        effect: { type: "multiFactionBonus", amount: 2 },
+        effect: { type: "multiFactionBonus", amount: 1 },
         unlockCondition: { type: "multiFactionWin", count: 3 },
     },
     {
@@ -141,7 +141,7 @@ export const RELIC_DEFS: RelicDef[] = [
     {
         id: "tetrapharmakos",
         tier: "rare",
-        effect: { type: "healCombatStart", amount: 2 },
+        effect: { type: "healCombatStart", amount: 1 },
         unlockCondition: { type: "completeFaction", faction: "deputies" },
     },
     {
@@ -173,7 +173,7 @@ export const RELIC_DEFS: RelicDef[] = [
     {
         id: "philosophers-stone",
         tier: "legendary",
-        effect: { type: "tier1Boost", amount: 3 },
+        effect: { type: "tier1Boost", amount: 2 },
         unlockCondition: { type: "majorityDriftersRound", round: 15 },
     },
     {
@@ -187,7 +187,7 @@ export const RELIC_DEFS: RelicDef[] = [
     {
         id: "rubber-duck",
         tier: "secret",
-        effect: { type: "randomAllyAtkCombatStart", amount: 3 },
+        effect: { type: "randomAllyAtkCombatStart", amount: 2 },
         unlockCondition: { type: "completedRuns", count: 20 },
     },
     {
@@ -229,7 +229,9 @@ export const RELIC_MAP: ReadonlyMap<RelicId, RelicDef> = new Map(
 // ── Helper functions ─────────────────────────────────────────────────────────
 
 /** Filter the catalog to only relics the player has permanently unlocked */
-export function getUnlockedRelicDefs(unlockedRelicIds: Set<RelicId>): RelicDef[] {
+export function getUnlockedRelicDefs(
+    unlockedRelicIds: Set<RelicId>
+): RelicDef[] {
     return RELIC_DEFS.filter((r) => unlockedRelicIds.has(r.id))
 }
 

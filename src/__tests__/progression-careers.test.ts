@@ -20,9 +20,9 @@ import {
 import {
     getAchievementXP,
     levelFromXP,
+    XP_REWARDS,
     xpForLevel,
     xpToNextLevel,
-    XP_REWARDS,
 } from "../lib/progression/constants"
 
 // ── skillPointsForLevel ──────────────────────────────────────────────────────

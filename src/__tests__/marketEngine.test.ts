@@ -543,10 +543,7 @@ describe("MarketEngine", () => {
                 // Revenue should be at least baseRevenue + some bonus
                 expect(revenue).toBeGreaterThanOrEqual(baseRevenue)
                 if (profit > 0) {
-                    expect(revenue).toBeCloseTo(
-                        baseRevenue + expectedBonus,
-                        2
-                    )
+                    expect(revenue).toBeCloseTo(baseRevenue + expectedBonus, 2)
                 }
             }
         })

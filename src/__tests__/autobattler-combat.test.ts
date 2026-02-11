@@ -1,9 +1,9 @@
 import { beforeEach, describe, expect, it, vi } from "vitest"
 
 import {
+    type CombatBonuses,
     createCombatUnit,
     resolveCombat,
-    type CombatBonuses,
 } from "../lib/autobattler/combat"
 import type { CombatUnit, UnitId } from "../lib/autobattler/types"
 import { UNIT_MAP } from "../lib/autobattler/units"
@@ -277,7 +277,9 @@ describe("resolveCombat", () => {
         const result = resolveCombat(player, opponent)
         // dynamiter should die and deal death damage
         const deathLog = result.log.find(
-            (e) => e.description.includes("qd-dynamiter") && e.description.includes("dies")
+            (e) =>
+                e.description.includes("qd-dynamiter") &&
+                e.description.includes("dies")
         )
         expect(deathLog).toBeDefined()
     })
@@ -298,9 +300,7 @@ describe("resolveCombat", () => {
         const result = resolveCombat(player, opponent)
         // First attack log should show double ATK (base * 2)
         const attackLog = result.log.find(
-            (e) =>
-                e.description.includes("qd-deadeye attacks") &&
-                e.round === 1
+            (e) => e.description.includes("qd-deadeye attacks") && e.round === 1
         )
         expect(attackLog).toBeDefined()
         // The attack should deal double the base ATK

@@ -449,18 +449,11 @@ export class Taskbar {
                 if (e.key === "Enter" || e.key === " ") {
                     e.preventDefault()
                     this.windowManager.focusWindow(win.id)
-                } else if (
-                    e.key === "ArrowRight" ||
-                    e.key === "ArrowDown"
-                ) {
+                } else if (e.key === "ArrowRight" || e.key === "ArrowDown") {
                     e.preventDefault()
-                    const next =
-                        btn.nextElementSibling as HTMLElement | null
+                    const next = btn.nextElementSibling as HTMLElement | null
                     next?.focus()
-                } else if (
-                    e.key === "ArrowLeft" ||
-                    e.key === "ArrowUp"
-                ) {
+                } else if (e.key === "ArrowLeft" || e.key === "ArrowUp") {
                     e.preventDefault()
                     const prev =
                         btn.previousElementSibling as HTMLElement | null

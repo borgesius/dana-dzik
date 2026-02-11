@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-explicit-any */
 import { beforeEach, describe, expect, it, vi } from "vitest"
 
 // ── Mock redis gateway ───────────────────────────────────────────────────────
@@ -33,7 +34,6 @@ vi.mock("../../api/lib/redisGateway", () => ({
     throttledWrite: vi.fn(),
 }))
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 type MockRes = Record<string, any>
 
 function createMockRes(): MockRes {
@@ -62,7 +62,6 @@ function createMockRes(): MockRes {
     return res
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function createMockReq(
     overrides: Record<string, any> = {}
 ): Record<string, any> {
@@ -80,7 +79,6 @@ function createMockReq(
 // ═════════════════════════════════════════════════════════════════════════════
 
 describe("achievement-counts handler", () => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let handler: any
 
     beforeEach(async () => {
@@ -177,7 +175,6 @@ describe("achievement-counts handler", () => {
 // ═════════════════════════════════════════════════════════════════════════════
 
 describe("visitor-count handler", () => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let handler: any
 
     beforeEach(async () => {

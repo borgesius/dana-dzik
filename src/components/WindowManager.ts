@@ -387,14 +387,10 @@ export class WindowManager {
         let nextIndex: number
         if (direction === "forward") {
             nextIndex =
-                currentIndex < 0
-                    ? 0
-                    : (currentIndex + 1) % windowIds.length
+                currentIndex < 0 ? 0 : (currentIndex + 1) % windowIds.length
         } else {
             nextIndex =
-                currentIndex <= 0
-                    ? windowIds.length - 1
-                    : currentIndex - 1
+                currentIndex <= 0 ? windowIds.length - 1 : currentIndex - 1
         }
 
         this.focusWindow(windowIds[nextIndex])

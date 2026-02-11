@@ -13,6 +13,7 @@ export default typescriptEslint.config(
             "coverage",
             "e2e",
             "api",
+            "scripts",
             "playwright-report",
             "test-results",
             "*.config.js",

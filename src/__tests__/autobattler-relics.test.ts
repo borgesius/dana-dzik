@@ -6,8 +6,8 @@ import {
     getUnlockedRelicDefs,
     RELIC_DEFS,
     RELIC_MAP,
-    rollRelicChoices,
     type RelicTier,
+    rollRelicChoices,
 } from "../lib/autobattler/relics"
 import type { RelicId } from "../lib/autobattler/types"
 
@@ -20,7 +20,12 @@ describe("RELIC_DEFS integrity", () => {
     })
 
     it("all relics have a valid tier", () => {
-        const validTiers: RelicTier[] = ["common", "rare", "legendary", "secret"]
+        const validTiers: RelicTier[] = [
+            "common",
+            "rare",
+            "legendary",
+            "secret",
+        ]
         for (const r of RELIC_DEFS) {
             expect(validTiers).toContain(r.tier)
         }
@@ -87,7 +92,9 @@ describe("getUnlockedRelicDefs", () => {
     })
 
     it("ignores non-existent IDs in the unlock set", () => {
-        const result = getUnlockedRelicDefs(new Set<RelicId>(["nonexistent" as RelicId]))
+        const result = getUnlockedRelicDefs(
+            new Set<RelicId>(["nonexistent" as RelicId])
+        )
         expect(result.length).toBe(0)
     })
 })

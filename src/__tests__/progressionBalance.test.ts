@@ -48,7 +48,6 @@ import {
     XP_REWARDS,
     xpForLevel,
 } from "../config/balance"
-
 import {
     AUTOSCRIPT_TIER_BONUS,
     COMMODITIES,

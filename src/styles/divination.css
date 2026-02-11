@@ -33,6 +33,7 @@
         opacity: 0.4;
         transform: scale(1);
     }
+
     50% {
         opacity: 1;
         transform: scale(1.1);
@@ -67,8 +68,8 @@
     align-items: center;
     padding: 10px 12px;
     margin-bottom: 12px;
-    border: 1px solid var(--window-border, #888);
-    background: var(--input-bg, rgba(0, 0, 0, 0.05));
+    border: 1px solid var(--window-border, #888888);
+    background: var(--input-bg, rgb(0 0 0 / 5%));
 }
 
 .divination-familiar-badge {
@@ -108,8 +109,8 @@
     font-family: monospace;
     font-size: 11px;
     padding: 1px 6px;
-    background: var(--input-bg, rgba(0, 0, 0, 0.1));
-    border: 1px solid var(--window-border, #888);
+    background: var(--input-bg, rgb(0 0 0 / 10%));
+    border: 1px solid var(--window-border, #888888);
 }
 
 .deploy-date {
@@ -122,14 +123,14 @@
 .divination-section {
     margin-bottom: 16px;
     padding: 10px 12px;
-    border: 1px solid var(--window-border, #888);
+    border: 1px solid var(--window-border, #888888);
 }
 
 .section-title {
     margin: 0 0 10px;
     font-size: 13px;
     font-weight: bold;
-    border-bottom: 1px solid var(--window-border, #888);
+    border-bottom: 1px solid var(--window-border, #888888);
     padding-bottom: 4px;
 }
 
@@ -147,8 +148,8 @@
     flex-direction: column;
     align-items: center;
     padding: 8px 4px;
-    border: 1px solid var(--window-border, #888);
-    background: var(--input-bg, rgba(0, 0, 0, 0.03));
+    border: 1px solid var(--window-border, #888888);
+    background: var(--input-bg, rgb(0 0 0 / 3%));
 }
 
 .num-value {
@@ -156,7 +157,7 @@
     font-weight: bold;
     font-family: monospace;
     line-height: 1;
-    text-shadow: 0 0 8px currentColor;
+    text-shadow: 0 0 8px currentcolor;
 }
 
 .num-label {
@@ -175,7 +176,7 @@
     margin-bottom: 6px;
     border: 1px solid gold;
     color: gold;
-    background: rgba(255, 215, 0, 0.1);
+    background: rgb(255 215 0 / 10%);
 }
 
 .numerology-interp {
@@ -197,7 +198,7 @@
 .tarot-card {
     flex: 1;
     max-width: 130px;
-    border: 2px solid var(--window-border, #888);
+    border: 2px solid var(--window-border, #888888);
     padding: 8px;
     text-align: center;
     transition: transform 0.3s ease;
@@ -221,9 +222,9 @@
 
 .tarot-face {
     padding: 10px 4px;
-    border: 1px solid var(--window-border, #888);
+    border: 1px solid var(--window-border, #888888);
     margin-bottom: 8px;
-    background: var(--input-bg, rgba(0, 0, 0, 0.03));
+    background: var(--input-bg, rgb(0 0 0 / 3%));
     min-height: 70px;
     display: flex;
     flex-direction: column;
@@ -293,7 +294,7 @@
 .iching-line.yang .line-solid {
     width: 100%;
     height: 4px;
-    background: currentColor;
+    background: currentcolor;
 }
 
 .iching-line.yin {
@@ -304,7 +305,7 @@
 .iching-line.yin .line-broken-r {
     flex: 1;
     height: 4px;
-    background: currentColor;
+    background: currentcolor;
 }
 
 .iching-line.yin .line-gap {
@@ -365,7 +366,7 @@
     max-width: 100%;
     height: auto;
     margin-bottom: 8px;
-    color: var(--text-color, #333);
+    color: var(--text-color, #333333);
 }
 
 .bio-bars {
@@ -390,8 +391,8 @@
 .bio-track {
     flex: 1;
     height: 8px;
-    background: var(--input-bg, rgba(0, 0, 0, 0.1));
-    border: 1px solid var(--window-border, #888);
+    background: var(--input-bg, rgb(0 0 0 / 10%));
+    border: 1px solid var(--window-border, #888888);
     position: relative;
     overflow: hidden;
 }
@@ -407,7 +408,7 @@
     top: -1px;
     width: 2px;
     height: calc(100% + 2px);
-    background: currentColor;
+    background: currentcolor;
     transform: translateX(-1px);
 }
 
@@ -467,8 +468,8 @@
     flex-direction: column;
     align-items: center;
     padding: 8px;
-    border: 1px solid var(--window-border, #888);
-    background: var(--input-bg, rgba(0, 0, 0, 0.03));
+    border: 1px solid var(--window-border, #888888);
+    background: var(--input-bg, rgb(0 0 0 / 3%));
 }
 
 .natal-label {
@@ -490,7 +491,7 @@
 .natal-planets th {
     text-align: left;
     padding: 3px 6px;
-    border-bottom: 1px solid var(--window-border, #888);
+    border-bottom: 1px solid var(--window-border, #888888);
     font-size: 9px;
     text-transform: uppercase;
     letter-spacing: 0.5px;
@@ -499,7 +500,7 @@
 
 .natal-planets td {
     padding: 2px 6px;
-    border-bottom: 1px solid var(--input-bg, rgba(0, 0, 0, 0.05));
+    border-bottom: 1px solid var(--input-bg, rgb(0 0 0 / 5%));
 }
 
 .natal-unavailable {
@@ -519,7 +520,7 @@
     font-size: 24px;
     transition: left 0.8s linear;
     user-select: none;
-    filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3));
+    filter: drop-shadow(0 1px 2px rgb(0 0 0 / 30%));
 }
 
 .desktop-pet:hover {
@@ -545,7 +546,7 @@
 
 .desktop-pet.state-sad {
     opacity: 0.7;
-    filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3)) saturate(0.5);
+    filter: drop-shadow(0 1px 2px rgb(0 0 0 / 30%)) saturate(0.5);
 }
 
 .desktop-pet.facing-left {
@@ -561,6 +562,7 @@
     100% {
         transform: translateY(0);
     }
+
     50% {
         transform: translateY(-3px);
     }
@@ -571,9 +573,11 @@
     100% {
         transform: translateY(0) rotate(0deg);
     }
+
     25% {
         transform: translateY(1px) rotate(-2deg);
     }
+
     75% {
         transform: translateY(1px) rotate(2deg);
     }
@@ -584,6 +588,7 @@
     100% {
         transform: translateY(0);
     }
+
     50% {
         transform: translateY(-1px);
     }
@@ -594,6 +599,7 @@
     100% {
         transform: translateY(0);
     }
+
     50% {
         transform: translateY(-8px);
     }
@@ -614,9 +620,11 @@
         opacity: 0;
         transform: translateY(0);
     }
+
     30% {
         opacity: 0.7;
     }
+
     100% {
         opacity: 0;
         transform: translateY(-12px) translateX(4px);
@@ -637,11 +645,10 @@
     bottom: 100%;
     left: 50%;
     transform: translateX(-50%);
-    background: var(--window-bg, #fff);
-    border: 1px solid var(--window-border, #888);
+    background: var(--window-bg, #ffffff);
+    border: 1px solid var(--window-border, #888888);
     padding: 4px 8px;
     font-size: 10px;
-    white-space: nowrap;
     pointer-events: none;
     opacity: 0;
     transition: opacity 0.2s;
@@ -686,8 +693,8 @@
 .widget-bio-bar {
     flex: 1;
     height: 4px;
-    background: var(--input-bg, rgba(0, 0, 0, 0.1));
-    border: 1px solid var(--window-border, #888);
+    background: var(--input-bg, rgb(0 0 0 / 10%));
+    border: 1px solid var(--window-border, #888888);
     overflow: hidden;
 }
 

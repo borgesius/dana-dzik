@@ -30,7 +30,9 @@ export class AudioVisualizer {
         this.canvas = canvas
         const ctx = canvas.getContext("2d")
         if (!ctx) {
-            throw new CanvasError("Failed to get canvas 2d context", { component: "AudioVisualizer" })
+            throw new CanvasError("Failed to get canvas 2d context", {
+                component: "AudioVisualizer",
+            })
         }
         this.ctx = ctx
         this.getAnalyser = getAnalyser

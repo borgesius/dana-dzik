@@ -124,7 +124,9 @@ export class CombatAnimator {
             .querySelectorAll<HTMLElement>(".ab-speed-btn")
             .forEach((btn) => {
                 btn.addEventListener("click", () => {
-                    const speed = parseInt(btn.getAttribute("data-speed") ?? "1")
+                    const speed = parseInt(
+                        btn.getAttribute("data-speed") ?? "1"
+                    )
                     this.speedMultiplier = speed
                     // Update active state
                     this.container
@@ -296,10 +298,7 @@ export class CombatAnimator {
         arena.classList.remove("ab-screen-shake")
         void arena.offsetWidth
         arena.classList.add("ab-screen-shake")
-        setTimeout(
-            () => arena.classList.remove("ab-screen-shake"),
-            300
-        )
+        setTimeout(() => arena.classList.remove("ab-screen-shake"), 300)
     }
 
     // ── Ability callout ───────────────────────────────────────────────────

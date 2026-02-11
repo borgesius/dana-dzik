@@ -36,7 +36,8 @@ export class BootTimeWidget {
         const check = (): void => {
             const ms = getBootTimeMs()
             if (ms !== null) {
-                if (this.el.firstChild) this.el.firstChild.textContent = `\u26A1 ${ms}ms`
+                if (this.el.firstChild)
+                    this.el.firstChild.textContent = `\u26A1 ${ms}ms`
                 this.renderTooltip()
             } else {
                 requestAnimationFrame(check)

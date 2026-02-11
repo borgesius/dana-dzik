@@ -1,5 +1,5 @@
+import { playSound } from "../audio"
 import { getCollectionManager } from "../autobattler/CollectionManager"
-import { getDataAttribute } from "../domUtils"
 import { createCombatUnit } from "../autobattler/combat"
 import { CombatAnimator } from "../autobattler/CombatAnimator"
 import {
@@ -8,11 +8,16 @@ import {
     getOpponentStatMultiplier,
 } from "../autobattler/opponents"
 import { RELIC_DEFS, RELIC_MAP } from "../autobattler/relics"
-import { playSound } from "../audio"
 import { getBuffCost, RUN_BUFFS, type RunBuff } from "../autobattler/runBuffs"
 import { RunManager } from "../autobattler/RunManager"
 import { getMaxLineSlots, MAX_BENCH_SIZE } from "../autobattler/shop"
-import type { BossId, FactionId, RelicId, RelicInstance, RunSummary, UnitId } from "../autobattler/types"
+import type {
+    FactionId,
+    RelicId,
+    RelicInstance,
+    RunSummary,
+    UnitId,
+} from "../autobattler/types"
 import {
     factionColor,
     factionIcon,
@@ -23,6 +28,7 @@ import {
     unitDisplayName,
 } from "../autobattler/UnitCard"
 import { getUnitsForFaction, UNIT_MAP } from "../autobattler/units"
+import { getDataAttribute } from "../domUtils"
 import { emitAppEvent } from "../events"
 import { getLocaleManager } from "../localeManager"
 import { getMarketGame } from "../marketGame/MarketEngine"
@@ -174,13 +180,13 @@ function renderLobbyView(container: HTMLElement): void {
                 <button class="ab-bestiary-tab" data-tab="adversaries">${t("symposium.bestiary.adversaries")}</button>
                 <button class="ab-bestiary-tab" data-tab="relics">${t("symposium.bestiary.relicsTab")}</button>
             </div>
-            <div id="ab-bestiary-thinkers" class="ab-bestiary-pane active">
+            <div data-pane="thinkers" class="ab-bestiary-pane" style="display:block">
                 ${renderBestiaryThinkers(collection, t)}
             </div>
-            <div id="ab-bestiary-adversaries" class="ab-bestiary-pane">
+            <div data-pane="adversaries" class="ab-bestiary-pane" style="display:none">
                 ${renderBestiaryAdversaries(collection, t)}
             </div>
-            <div id="ab-bestiary-relics" class="ab-bestiary-pane">
+            <div data-pane="relics" class="ab-bestiary-pane" style="display:none">
                 ${renderBestiaryRelics(collection, t)}
             </div>
         </div>
@@ -207,11 +213,20 @@ function wireBestiaryTabs(container: HTMLElement): void {
     tabs.forEach((tab) => {
         tab.addEventListener("click", () => {
             const target = tab.dataset.tab
-            tabs.forEach((t) => t.classList.remove("active"))
+            if (!target) return
+            // Update tab active state
+            tabs.forEach((bt) => bt.classList.remove("active"))
             tab.classList.add("active")
-            panes.forEach((p) => p.classList.remove("active"))
-            const targetPane = container.querySelector(`#ab-bestiary-${target}`)
-            targetPane?.classList.add("active")
+            // Show/hide panes via inline style (reliable regardless of CSS load)
+            panes.forEach((p) => {
+                if (p.dataset.pane === target) {
+                    p.style.display = "block"
+                    p.classList.add("active")
+                } else {
+                    p.style.display = "none"
+                    p.classList.remove("active")
+                }
+            })
         })
     })
 }
@@ -220,7 +235,13 @@ function renderBestiaryThinkers(
     collection: ReturnType<typeof getCollectionManager>,
     t: (key: string, opts?: Record<string, unknown>) => string
 ): string {
-    const factions: FactionId[] = ["quickdraw", "deputies", "clockwork", "prospectors", "drifters"]
+    const factions: FactionId[] = [
+        "quickdraw",
+        "deputies",
+        "clockwork",
+        "prospectors",
+        "drifters",
+    ]
     const unlockedIds = collection.getUnlockedUnitIds()
     let html = ""
 
@@ -230,7 +251,9 @@ function renderBestiaryThinkers(
         if (factionUnits.length === 0) continue
 
         const fc = factionColor(faction)
-        const progressPct = Math.round((unlocked.length / factionUnits.length) * 100)
+        const progressPct = Math.round(
+            (unlocked.length / factionUnits.length) * 100
+        )
 
         html += `
             <div class="ab-faction-group">
@@ -274,7 +297,9 @@ function renderBestiaryAdversaries(
 
     for (const [bossId, boss] of BOSS_MAP) {
         const defeated = collection.hasBossDefeated(bossId)
-        const bossName = t(`symposium.units.${bossId}`, { defaultValue: boss.name })
+        const bossName = t(`symposium.units.${bossId}`, {
+            defaultValue: boss.name,
+        })
         const fc = factionColor(boss.faction)
         const badge = defeated
             ? `<span class="ab-boss-badge defeated">${t("symposium.bestiary.defeated")}</span>`
@@ -294,7 +319,13 @@ function renderBestiaryAdversaries(
     html += `</div>`
 
     html += `<div class="ab-section-heading">${t("symposium.bestiary.opponents")}</div>`
-    const oppFactions: FactionId[] = ["quickdraw", "deputies", "clockwork", "prospectors", "drifters"]
+    const oppFactions: FactionId[] = [
+        "quickdraw",
+        "deputies",
+        "clockwork",
+        "prospectors",
+        "drifters",
+    ]
     html += `<div class="ab-opponent-schools">`
     for (const faction of oppFactions) {
         const fc = factionColor(faction)
@@ -318,14 +349,19 @@ function renderBestiaryRelics(
     for (const tier of tiers) {
         const tierRelics = RELIC_DEFS.filter((r) => r.tier === tier)
         // Secret relics only show if unlocked (fully hidden otherwise)
-        const visibleRelics = tier === "secret"
-            ? tierRelics.filter((r) => collection.hasRelicUnlocked(r.id))
-            : tierRelics
+        const visibleRelics =
+            tier === "secret"
+                ? tierRelics.filter((r) => collection.hasRelicUnlocked(r.id))
+                : tierRelics
 
         if (visibleRelics.length === 0 && tier === "secret") continue
 
-        const tierLabel = t(`symposium.bestiary.relicTiers.${tier}`, { defaultValue: tier })
-        const unlockedCount = visibleRelics.filter((r) => collection.hasRelicUnlocked(r.id)).length
+        const tierLabel = t(`symposium.bestiary.relicTiers.${tier}`, {
+            defaultValue: tier,
+        })
+        const unlockedCount = visibleRelics.filter((r) =>
+            collection.hasRelicUnlocked(r.id)
+        ).length
 
         html += `
             <div class="ab-relic-tier-section">
@@ -336,8 +372,12 @@ function renderBestiaryRelics(
         for (const relic of visibleRelics) {
             const unlocked = collection.hasRelicUnlocked(relic.id)
             if (unlocked) {
-                const name = t(`symposium.relics.${relic.id}.name`, { defaultValue: relic.id })
-                const desc = t(`symposium.relics.${relic.id}.description`, { defaultValue: "" })
+                const name = t(`symposium.relics.${relic.id}.name`, {
+                    defaultValue: relic.id,
+                })
+                const desc = t(`symposium.relics.${relic.id}.description`, {
+                    defaultValue: "",
+                })
                 html += `
                     <div class="ab-relic-entry relic-${tier} unlocked">
                         <div class="ab-relic-name">${name}</div>
@@ -345,7 +385,9 @@ function renderBestiaryRelics(
                     </div>
                 `
             } else {
-                const unlockHint = t(`symposium.relics.${relic.id}.unlock`, { defaultValue: "???" })
+                const unlockHint = t(`symposium.relics.${relic.id}.unlock`, {
+                    defaultValue: "???",
+                })
                 html += `
                     <div class="ab-relic-entry relic-${tier} locked">
                         <div class="ab-relic-name">${t("symposium.bestiary.locked")}</div>
@@ -530,7 +572,12 @@ function checkRelicUnlocks(
     state: ReturnType<RunManager["getState"]>,
     run: RunManager
 ): void {
-    const THEMED_FACTIONS = ["quickdraw", "deputies", "clockwork", "prospectors"] as const
+    const THEMED_FACTIONS = [
+        "quickdraw",
+        "deputies",
+        "clockwork",
+        "prospectors",
+    ] as const
 
     for (const relic of RELIC_DEFS) {
         if (coll.hasRelicUnlocked(relic.id)) continue
@@ -551,12 +598,15 @@ function checkRelicUnlocks(
                 }
                 break
             case "defeatBoss":
-                if (cond.bossId && summary.bossesDefeated.includes(cond.bossId)) {
+                if (
+                    cond.bossId &&
+                    summary.bossesDefeated.includes(cond.bossId)
+                ) {
                     coll.unlockRelic(relic.id)
                 }
                 break
             case "completeFaction":
-                if (cond.faction && coll.isFactionComplete(cond.faction as FactionId)) {
+                if (cond.faction && coll.isFactionComplete(cond.faction)) {
                     coll.unlockRelic(relic.id)
                 }
                 break
@@ -591,7 +641,9 @@ function checkRelicUnlocks(
                 break
             case "allFactionsInLineup": {
                 const lineupFactions = new Set(
-                    state.lineup.map((u) => u.faction).filter((f) => f !== "drifters")
+                    state.lineup
+                        .map((u) => u.faction)
+                        .filter((f) => f !== "drifters")
                 )
                 if (THEMED_FACTIONS.every((f) => lineupFactions.has(f))) {
                     coll.unlockRelic(relic.id)
@@ -599,7 +651,10 @@ function checkRelicUnlocks(
                 break
             }
             case "lowSpendRun":
-                if (summary.totalScrapSpent <= (cond.count ?? 20) && state.phase === "finished") {
+                if (
+                    summary.totalScrapSpent <= (cond.count ?? 20) &&
+                    state.phase === "finished"
+                ) {
                     coll.unlockRelic(relic.id)
                 }
                 break
@@ -1186,7 +1241,7 @@ function executeDrop(
 
 // ── Combat phase ────────────────────────────────────────────────────────────
 
-async function renderCombatPhase(container: HTMLElement): Promise<void> {
+function renderCombatPhase(container: HTMLElement): void {
     if (!activeRun) return
     removeStaleTooltips()
 
@@ -1207,7 +1262,7 @@ async function renderCombatPhase(container: HTMLElement): Promise<void> {
         createCombatUnit(u.unitDefId, u.level, activeRun?.combatBonuses)
     )
 
-    const result = await activeRun.executeCombat()
+    const result = activeRun.executeCombat()
     if (!result) return
     const updatedState = activeRun.getState()
 
@@ -1222,8 +1277,7 @@ async function renderCombatPhase(container: HTMLElement): Promise<void> {
             const baseQty =
                 typeof reward.quantity === "number" ? reward.quantity : 1
             const hasFrontier = getPrestigeManager().hasFrontierDispatch()
-            const qty =
-                baseQty + (hasFrontier && Math.random() < 0.25 ? 1 : 0)
+            const qty = baseQty + (hasFrontier && Math.random() < 0.25 ? 1 : 0)
             getMarketGame().grantCommodity(reward.value as CommodityId, qty)
         }
         if (reward.type === "unit" && typeof reward.value === "string") {
@@ -1459,8 +1513,12 @@ function renderResultPhase(container: HTMLElement): void {
         for (const relicId of pendingRelics) {
             const rDef = RELIC_MAP.get(relicId)
             if (!rDef) continue
-            const name = t(`symposium.relics.${relicId}.name`, { defaultValue: relicId })
-            const desc = t(`symposium.relics.${relicId}.description`, { defaultValue: "" })
+            const name = t(`symposium.relics.${relicId}.name`, {
+                defaultValue: relicId,
+            })
+            const desc = t(`symposium.relics.${relicId}.description`, {
+                defaultValue: "",
+            })
             const tierClass = `relic-${rDef.tier}`
             html += `<button class="ab-relic-card ${tierClass}" data-relic-id="${relicId}">
                 <div class="ab-relic-name">${name}</div>
@@ -1522,8 +1580,12 @@ function renderRelicBar(
     for (const r of relics) {
         const def = RELIC_MAP.get(r.relicId)
         if (!def) continue
-        const name = t(`symposium.relics.${r.relicId}.name`, { defaultValue: r.relicId })
-        const desc = t(`symposium.relics.${r.relicId}.description`, { defaultValue: "" })
+        const name = t(`symposium.relics.${r.relicId}.name`, {
+            defaultValue: r.relicId,
+        })
+        const desc = t(`symposium.relics.${r.relicId}.description`, {
+            defaultValue: "",
+        })
         const tierClass = `relic-${def.tier}`
         html += `<span class="ab-relic-pip ${tierClass}" title="${name}: ${desc}">${name.charAt(0)}</span>`
     }
@@ -1551,8 +1613,12 @@ function renderEventPhase(container: HTMLElement): void {
     const lm = getLocaleManager()
     const t = lm.t.bind(lm)
 
-    const title = t(`symposium.events.${event.eventId}.title`, { defaultValue: event.eventId })
-    const description = t(`symposium.events.${event.eventId}.description`, { defaultValue: "" })
+    const title = t(`symposium.events.${event.eventId}.title`, {
+        defaultValue: event.eventId,
+    })
+    const description = t(`symposium.events.${event.eventId}.description`, {
+        defaultValue: "",
+    })
 
     let html = `
         <div class="ab-run-header">
@@ -1572,7 +1638,9 @@ function renderEventPhase(container: HTMLElement): void {
 
     for (let i = 0; i < event.choices.length; i++) {
         const choice = event.choices[i]
-        const label = t(`symposium.events.${event.eventId}.choices.${i}`, { defaultValue: choice.label })
+        const label = t(`symposium.events.${event.eventId}.choices.${i}`, {
+            defaultValue: choice.label,
+        })
         html += `<button class="ab-event-choice-btn" data-choice-index="${i}">${label}</button>`
     }
 
@@ -1581,7 +1649,10 @@ function renderEventPhase(container: HTMLElement): void {
 
     container.querySelectorAll(".ab-event-choice-btn").forEach((btn) => {
         btn.addEventListener("click", () => {
-            const idx = parseInt((btn as HTMLElement).dataset.choiceIndex ?? "0", 10)
+            const idx = parseInt(
+                (btn as HTMLElement).dataset.choiceIndex ?? "0",
+                10
+            )
             if (activeRun) {
                 playSound("ab_boop")
                 activeRun.resolveEvent(idx)
@@ -1603,7 +1674,7 @@ function renderRunSummary(
         : null
 
     const majorityLabel = summary.majorityFaction
-        ? factionLabel(summary.majorityFaction as FactionId)
+        ? factionLabel(summary.majorityFaction)
         : "—"
 
     const bossNames =

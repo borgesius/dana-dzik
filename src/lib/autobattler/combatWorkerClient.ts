@@ -17,10 +17,9 @@ function getWorker(): Worker | null {
     if (worker) return worker
 
     try {
-        worker = new Worker(
-            new URL("./combat.worker.ts", import.meta.url),
-            { type: "module" }
-        )
+        worker = new Worker(new URL("./combat.worker.ts", import.meta.url), {
+            type: "module",
+        })
         return worker
     } catch {
         workerFailed = true

@@ -9,7 +9,7 @@ class PacketBuffer {
     private nextId = 1
     private listeners: PacketListener[] = []
 
-    push(packet: Omit<Packet, "id">): Packet {
+    public push(packet: Omit<Packet, "id">): Packet {
         const p: Packet = { ...packet, id: this.nextId++ }
         if (this.buffer.length >= CAPACITY) {
             this.buffer.shift()
@@ -21,15 +21,15 @@ class PacketBuffer {
         return p
     }
 
-    snapshot(): Packet[] {
+    public snapshot(): Packet[] {
         return [...this.buffer]
     }
 
-    recent(n: number): Packet[] {
+    public recent(n: number): Packet[] {
         return this.buffer.slice(-n)
     }
 
-    subscribe(fn: PacketListener): () => void {
+    public subscribe(fn: PacketListener): () => void {
         this.listeners.push(fn)
         return () => {
             const idx = this.listeners.indexOf(fn)
@@ -37,11 +37,11 @@ class PacketBuffer {
         }
     }
 
-    get size(): number {
+    public get size(): number {
         return this.buffer.length
     }
 
-    get totalCount(): number {
+    public get totalCount(): number {
         return this.nextId - 1
     }
 }

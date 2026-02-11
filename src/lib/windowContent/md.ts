@@ -94,19 +94,15 @@ function matchesFilter(packet: Packet, filter: string): boolean {
 // ── Render ───────────────────────────────────────────────────────────────
 
 let expandedPacketId = -1
-let expandCount = 0
+let _expandCount = 0
 
 export function renderMDWindow(): void {
     const canvas = document.getElementById(
         "md-topology-canvas"
     ) as HTMLCanvasElement | null
-    const logBody = document.getElementById("md-log-body") as HTMLElement | null
-    const filterInput = document.querySelector(
-        ".md-filter-input"
-    ) as HTMLInputElement | null
-    const pauseBtn = document.querySelector(
-        ".md-pause-btn"
-    ) as HTMLButtonElement | null
+    const logBody = document.getElementById("md-log-body")
+    const filterInput = document.querySelector(".md-filter-input")
+    const pauseBtn = document.querySelector(".md-pause-btn")
 
     if (!canvas || !logBody) return
 
@@ -133,7 +129,7 @@ export function renderMDWindow(): void {
     })
 
     filterInput?.addEventListener("input", () => {
-        filterText = filterInput.value
+        filterText = (filterInput as HTMLInputElement).value
         if (!paused) rebuildLog()
     })
 
@@ -183,7 +179,7 @@ export function renderMDWindow(): void {
 
                 expandedPacketId = p.id
                 tr.classList.add("selected")
-                expandCount++
+                _expandCount++
                 emitAppEvent("netmon:packet-expanded")
 
                 const detailRow = document.createElement("tr")

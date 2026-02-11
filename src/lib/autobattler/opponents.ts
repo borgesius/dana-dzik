@@ -1,5 +1,12 @@
 import { getLocaleManager } from "../localeManager"
-import type { BossId, BossModifierId, FactionId, OpponentDef, UnitId, UnitTier } from "./types"
+import type {
+    BossId,
+    BossModifierId,
+    FactionId,
+    OpponentDef,
+    UnitId,
+    UnitTier,
+} from "./types"
 import { getUnitsForFaction } from "./units"
 
 // ── Round parameters ────────────────────────────────────────────────────────
@@ -310,9 +317,8 @@ export const BOSS_MODIFIERS: BossModifier[] = [
     },
 ]
 
-export const BOSS_MODIFIER_MAP: ReadonlyMap<BossModifierId, BossModifier> = new Map(
-    BOSS_MODIFIERS.map((m) => [m.id, m])
-)
+export const BOSS_MODIFIER_MAP: ReadonlyMap<BossModifierId, BossModifier> =
+    new Map(BOSS_MODIFIERS.map((m) => [m.id, m]))
 
 /**
  * Pick a random modifier for a boss encounter.

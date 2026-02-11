@@ -1,11 +1,14 @@
 import { beforeEach, describe, expect, it, vi } from "vitest"
 
+import {
+    getDefaultUnlockedRelicIds,
+    RELIC_DEFS,
+} from "../lib/autobattler/relics"
+import type { RunBuff } from "../lib/autobattler/runBuffs"
 import { RunManager } from "../lib/autobattler/RunManager"
 import { INITIAL_SCRAP } from "../lib/autobattler/shop"
-import { ALL_UNITS } from "../lib/autobattler/units"
-import { getDefaultUnlockedRelicIds, RELIC_DEFS } from "../lib/autobattler/relics"
-import type { RunBuff } from "../lib/autobattler/runBuffs"
 import type { RelicId, UnitId } from "../lib/autobattler/types"
+import { ALL_UNITS } from "../lib/autobattler/units"
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -189,10 +192,10 @@ describe("RunManager phase transitions", () => {
         expect(mgr.getState().phase).toBe("combat")
     })
 
-    it("executeCombat returns a result and transitions phase", async () => {
+    it("executeCombat returns a result and transitions phase", () => {
         mgr.buyUnit(0)
         mgr.readyForCombat()
-        const result = await mgr.executeCombat()
+        const result = mgr.executeCombat()
         expect(result).not.toBeNull()
         expect(result!.winner).toBeDefined()
         // Should be either "reward" or "finished"
@@ -200,18 +203,18 @@ describe("RunManager phase transitions", () => {
         expect(["reward", "finished"]).toContain(phase)
     })
 
-    it("executeCombat returns null if not in combat phase", async () => {
-        expect(await mgr.executeCombat()).toBeNull()
+    it("executeCombat returns null if not in combat phase", () => {
+        expect(mgr.executeCombat()).toBeNull()
     })
 
-    it("full round cycle: shop -> combat -> reward -> shop", async () => {
+    it("full round cycle: shop -> combat -> reward -> shop", () => {
         mgr.buyUnit(0)
         expect(mgr.getState().phase).toBe("shop")
 
         mgr.readyForCombat()
         expect(mgr.getState().phase).toBe("combat")
 
-        await mgr.executeCombat()
+        mgr.executeCombat()
         const phaseAfterCombat = mgr.getState().phase
         expect(["reward", "finished"]).toContain(phaseAfterCombat)
 
@@ -296,7 +299,7 @@ describe("RunManager combat tracking", () => {
 // ── Event system ─────────────────────────────────────────────────────────────
 
 describe("RunManager events", () => {
-    it("emits shopOpened on construction (via transitionToShop)", async () => {
+    it("emits shopOpened on construction (via transitionToShop)", () => {
         // shopOpened is emitted during nextRound transition
         vi.spyOn(Math, "random").mockReturnValue(0.99) // avoid event phase
         const mgr = createManager()
@@ -306,7 +309,7 @@ describe("RunManager events", () => {
         // Do a full round cycle to trigger shopOpened
         mgr.buyUnit(0)
         mgr.readyForCombat()
-        await mgr.executeCombat()
+        mgr.executeCombat()
         if (mgr.getState().phase === "reward") {
             mgr.nextRound()
         }
@@ -322,7 +325,9 @@ describe("RunManager events", () => {
         vi.spyOn(Math, "random").mockReturnValue(0.5)
         const mgr = createManager()
         let called = false
-        mgr.on("combatStarted", () => { called = true })
+        mgr.on("combatStarted", () => {
+            called = true
+        })
 
         mgr.buyUnit(0)
         mgr.readyForCombat()
@@ -330,15 +335,17 @@ describe("RunManager events", () => {
         vi.restoreAllMocks()
     })
 
-    it("emits combatEnded after combat execution", async () => {
+    it("emits combatEnded after combat execution", () => {
         vi.spyOn(Math, "random").mockReturnValue(0.5)
         const mgr = createManager()
         let resultData: unknown = null
-        mgr.on("combatEnded", (data) => { resultData = data })
+        mgr.on("combatEnded", (data) => {
+            resultData = data
+        })
 
         mgr.buyUnit(0)
         mgr.readyForCombat()
-        await mgr.executeCombat()
+        mgr.executeCombat()
         expect(resultData).not.toBeNull()
         vi.restoreAllMocks()
     })
@@ -373,7 +380,9 @@ describe("RunManager relics", () => {
     it("emits relicGained when adding a relic", () => {
         const mgr = createManager([], allRelicIds)
         let emitted = false
-        mgr.on("relicGained", () => { emitted = true })
+        mgr.on("relicGained", () => {
+            emitted = true
+        })
         mgr.addRelic("wuji")
         expect(emitted).toBe(true)
     })

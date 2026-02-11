@@ -9,9 +9,9 @@ import {
 } from "../../lib/prestige/ascension"
 import {
     HINDSIGHT_UPGRADES,
+    hindsightUpgradeCostAt,
     type HindsightUpgradeDef,
     type HindsightUpgradeId,
-    hindsightUpgradeCostAt,
 } from "../../lib/prestige/constants"
 import {
     getPrestigeManager,
@@ -257,7 +257,8 @@ export class PrestigeSection {
                 const tierUpgrades = tiers.get(tierReq)
                 if (!tierUpgrades) continue
                 const isUnlocked = prestigeCount >= tierReq
-                const label = TIER_LABELS[tierReq] ?? `Tier (${tierReq}+ prestiges)`
+                const label =
+                    TIER_LABELS[tierReq] ?? `Tier (${tierReq}+ prestiges)`
 
                 html += `<div class="hindsight-tier ${isUnlocked ? "" : "locked"}">`
                 html += `<div class="tier-header">${label}</div>`
@@ -382,7 +383,10 @@ export class PrestigeSection {
             .querySelectorAll(".hindsight-item:not(.owned)[data-upgrade]")
             .forEach((btn) => {
                 btn.addEventListener("click", () => {
-                    const upgradeId = getDataAttribute<HindsightUpgradeId>(btn, "upgrade")
+                    const upgradeId = getDataAttribute<HindsightUpgradeId>(
+                        btn,
+                        "upgrade"
+                    )
                     if (upgradeId && this.prestige.purchaseUpgrade(upgradeId)) {
                         this.playSound("notify")
                         this.render()
@@ -411,7 +415,10 @@ export class PrestigeSection {
             .querySelectorAll(".hindsight-item:not(.owned)[data-foresight]")
             .forEach((btn) => {
                 btn.addEventListener("click", () => {
-                    const upgradeId = getDataAttribute<ForesightUpgradeId>(btn, "foresight")
+                    const upgradeId = getDataAttribute<ForesightUpgradeId>(
+                        btn,
+                        "foresight"
+                    )
                     if (
                         upgradeId &&
                         this.prestige.purchaseForesightUpgrade(upgradeId)

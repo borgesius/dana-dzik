@@ -1,13 +1,18 @@
 /**
  * Shared test helpers used across multiple test files.
  */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-explicit-any */
 
 import { vi } from "vitest"
-import { ALL_UNITS } from "../../lib/autobattler/units"
-import { RELIC_DEFS, getDefaultUnlockedRelicIds } from "../../lib/autobattler/relics"
+
+import {
+    getDefaultUnlockedRelicIds,
+    RELIC_DEFS,
+} from "../../lib/autobattler/relics"
 import type { RunBuff } from "../../lib/autobattler/runBuffs"
 import { RunManager } from "../../lib/autobattler/RunManager"
 import type { RelicId } from "../../lib/autobattler/types"
+import { ALL_UNITS } from "../../lib/autobattler/units"
 
 // ── Unit / Relic collections ─────────────────────────────────────────────────
 
@@ -35,7 +40,6 @@ export function createTestRunManager(
 
 // ── Mock API request/response ────────────────────────────────────────────────
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 type MockRes = Record<string, any>
 
 /** Create a mock Vercel-style API response object with spy methods */
@@ -66,8 +70,10 @@ export function createMockApiResponse(): MockRes {
 }
 
 /** Create a mock Vercel-style API request object */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function createMockApiRequest(overrides: Record<string, any> = {}): Record<string, any> {
+
+export function createMockApiRequest(
+    overrides: Record<string, any> = {}
+): Record<string, any> {
     return {
         method: "GET",
         headers: {},

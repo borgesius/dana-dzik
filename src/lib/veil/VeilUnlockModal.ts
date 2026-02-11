@@ -14,7 +14,7 @@ export class VeilUnlockModal {
 
     constructor() {
         onAppEvent("veil:unlocked", (detail) => {
-            this.show(detail.veilId as VeilId)
+            this.show(detail.veilId)
         })
     }
 

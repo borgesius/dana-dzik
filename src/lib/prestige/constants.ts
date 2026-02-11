@@ -242,8 +242,7 @@ export const HINDSIGHT_UPGRADES: HindsightUpgradeDef[] = [
     {
         id: "factory-blueprints",
         name: "Factory Blueprints",
-        description:
-            "Factory cost scaling reduced (1.19x → 1.16x → 1.14x)",
+        description: "Factory cost scaling reduced (1.19x → 1.16x → 1.14x)",
         cost: 7,
         maxPurchases: 2,
         category: "production",
@@ -477,5 +476,7 @@ export const HINDSIGHT_UPGRADES: HindsightUpgradeDef[] = [
     },
 ]
 
-export const HINDSIGHT_UPGRADE_MAP: ReadonlyMap<HindsightUpgradeId, HindsightUpgradeDef> =
-    new Map(HINDSIGHT_UPGRADES.map((u) => [u.id, u]))
+export const HINDSIGHT_UPGRADE_MAP: ReadonlyMap<
+    HindsightUpgradeId,
+    HindsightUpgradeDef
+> = new Map(HINDSIGHT_UPGRADES.map((u) => [u.id, u]))

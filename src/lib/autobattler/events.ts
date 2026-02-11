@@ -1,5 +1,5 @@
-import type { EventId } from "./types"
 import type { RelicTier } from "./relics"
+import type { EventId } from "./types"
 
 // ── Event types ──────────────────────────────────────────────────────────────
 

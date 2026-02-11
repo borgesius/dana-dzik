@@ -39,7 +39,8 @@ export class CostWidget {
         const update = (): void => {
             const breakdown = tracker.getBreakdown()
             const costText = this.formatCostValue(breakdown.lifetimeCost)
-            if (this.el.firstChild) this.el.firstChild.textContent = `💸 ${costText}`
+            if (this.el.firstChild)
+                this.el.firstChild.textContent = `💸 ${costText}`
             this.tooltipEl.innerHTML = this.renderTooltip(breakdown)
         }
 

@@ -51,7 +51,9 @@ export class ProgressionManager {
     ): void {
         this.eventListeners
             .get(event)
-            ?.forEach((cb) => (cb as (data: ProgressionEventMap[K]) => void)(data))
+            ?.forEach((cb) =>
+                (cb as (data: ProgressionEventMap[K]) => void)(data)
+            )
     }
 
     // ── XP ───────────────────────────────────────────────────────────────────

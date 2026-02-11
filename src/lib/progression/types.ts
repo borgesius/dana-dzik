@@ -10,10 +10,10 @@ export interface CareerHistoryEntry {
 
 // ── Progression save data ────────────────────────────────────────────────────
 
-import type { CareerNodeId } from "./careers"
+import type { BossId, FactionId, RelicId, UnitId } from "../autobattler/types"
 import type { ForesightUpgradeId } from "../prestige/ascension"
 import type { HindsightUpgradeId } from "../prestige/constants"
-import type { BossId, FactionId, RelicId, UnitId } from "../autobattler/types"
+import type { CareerNodeId } from "./careers"
 
 export interface ExplorationSaveData {
     seenWindows: string[]

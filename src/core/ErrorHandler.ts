@@ -43,7 +43,7 @@ export function setupErrorHandlers(): void {
     }
 
     window.onunhandledrejection = (event: PromiseRejectionEvent): void => {
-        const reason = event.reason
+        const reason: unknown = event.reason
         if (reason instanceof AppError) {
             log.app(
                 "[Unhandled Rejection] code=%s context=%o message=%s",

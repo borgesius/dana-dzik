@@ -15,11 +15,11 @@ import {
     moveBenchToLineup,
     moveLineupToBench,
     moveUnit,
-    rerollShop,
     REROLL_COST,
+    rerollShop,
     SCRAP_PER_ROUND,
-    sellUnit,
     SELL_REFUND_MULT,
+    sellUnit,
     setLineSlotProvider,
     SHOP_SIZE,
     type ShopState,
@@ -160,8 +160,16 @@ describe("buyUnit", () => {
         state = {
             scrap: 10,
             offers: [
-                { unitDefId: "drifter-brawler" as UnitId, cost: 1, sold: false },
-                { unitDefId: "qd-sharpshooter" as UnitId, cost: 2, sold: false },
+                {
+                    unitDefId: "drifter-brawler" as UnitId,
+                    cost: 1,
+                    sold: false,
+                },
+                {
+                    unitDefId: "qd-sharpshooter" as UnitId,
+                    cost: 2,
+                    sold: false,
+                },
                 { unitDefId: "dep-barricader" as UnitId, cost: 2, sold: false },
             ],
             lineup: [],
@@ -198,9 +206,17 @@ describe("buyUnit", () => {
 
     it("puts unit on bench when lineup is full", () => {
         // Fill lineup with non-matching units to avoid tryCombine
-        const fillerIds: UnitId[] = ["drifter-scout", "drifter-medic", "drifter-heavy", "qd-sharpshooter", "dep-barricader"]
+        const fillerIds: UnitId[] = [
+            "drifter-scout",
+            "drifter-medic",
+            "drifter-heavy",
+            "qd-sharpshooter",
+            "dep-barricader",
+        ]
         for (let i = 0; i < BASE_LINE_SLOTS; i++) {
-            state.lineup.push(createCombatUnit(fillerIds[i % fillerIds.length], 1))
+            state.lineup.push(
+                createCombatUnit(fillerIds[i % fillerIds.length], 1)
+            )
         }
         const success = buyUnit(state, 0) // drifter-brawler not in lineup
         expect(success).toBe(true)
@@ -208,11 +224,24 @@ describe("buyUnit", () => {
     })
 
     it("refunds when both lineup and bench are full", () => {
-        const fillerIds: UnitId[] = ["drifter-scout", "drifter-medic", "drifter-heavy", "qd-sharpshooter", "dep-barricader"]
+        const fillerIds: UnitId[] = [
+            "drifter-scout",
+            "drifter-medic",
+            "drifter-heavy",
+            "qd-sharpshooter",
+            "dep-barricader",
+        ]
         for (let i = 0; i < BASE_LINE_SLOTS; i++) {
-            state.lineup.push(createCombatUnit(fillerIds[i % fillerIds.length], 1))
+            state.lineup.push(
+                createCombatUnit(fillerIds[i % fillerIds.length], 1)
+            )
         }
-        const benchFillers: UnitId[] = ["qd-deadeye", "qd-dynamiter", "dep-marshal", "dep-trapper"]
+        const benchFillers: UnitId[] = [
+            "qd-deadeye",
+            "qd-dynamiter",
+            "dep-marshal",
+            "dep-trapper",
+        ]
         for (let i = 0; i < MAX_BENCH_SIZE; i++) {
             state.bench.push(createCombatUnit(benchFillers[i], 1))
         }

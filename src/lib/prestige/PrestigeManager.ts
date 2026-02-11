@@ -16,7 +16,11 @@ import {
 } from "./constants"
 
 interface PrestigeEventMap {
-    prestigeTriggered: { count: number; hindsightGained: number; totalHindsight: number }
+    prestigeTriggered: {
+        count: number
+        hindsightGained: number
+        totalHindsight: number
+    }
     hindsightPurchase: { upgradeId: HindsightUpgradeId; remaining: number }
     ascensionTriggered: { count: number; foresightGained: number }
     foresightPurchase: { upgradeId: ForesightUpgradeId; remaining: number }
@@ -42,7 +46,8 @@ export class PrestigeManager {
     // ── Ascension state ───────────────────────────────────────────────────
     private ascensionCount: number = 0
     private foresight: number = 0
-    private purchasedForesightUpgrades: Map<ForesightUpgradeId, number> = new Map()
+    private purchasedForesightUpgrades: Map<ForesightUpgradeId, number> =
+        new Map()
     private totalHindsightSpent: number = 0
 
     /** Optional external hindsight rate bonus (returns flat additive, e.g. 0.1 = +10%) */
@@ -64,7 +69,9 @@ export class PrestigeManager {
         event: K,
         data: PrestigeEventMap[K]
     ): void {
-        this.eventListeners.get(event)?.forEach((cb) => (cb as (data: unknown) => void)(data))
+        this.eventListeners
+            .get(event)
+            ?.forEach((cb) => (cb as (data: unknown) => void)(data))
     }
 
     // ── Dirty callback ───────────────────────────────────────────────────────

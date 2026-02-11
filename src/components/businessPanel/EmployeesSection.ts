@@ -13,7 +13,6 @@ import {
     REFRESH_POOL_BASE_COST,
 } from "../../lib/marketGame/employees"
 import type { MarketEngine } from "../../lib/marketGame/MarketEngine"
-import type { MoraleEvent } from "../../lib/marketGame/orgChart"
 
 interface DragState {
     vpIndex: number
@@ -49,7 +48,7 @@ export class EmployeesSection {
         this.updateVisibility()
 
         this.game.on("moraleEvent", (data) => {
-            const evt = data as MoraleEvent
+            const evt = data
             this.showMoraleNotification(evt.message)
         })
     }

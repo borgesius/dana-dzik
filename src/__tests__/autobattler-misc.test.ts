@@ -8,7 +8,11 @@ import {
     RUN_BUFFS,
 } from "../lib/autobattler/runBuffs"
 import type { FactionId, UnitTier } from "../lib/autobattler/types"
-import { ALL_UNITS, getUnitsForFaction, UNIT_MAP } from "../lib/autobattler/units"
+import {
+    ALL_UNITS,
+    getUnitsForFaction,
+    UNIT_MAP,
+} from "../lib/autobattler/units"
 
 // ── runBuffs: getBuffCost ────────────────────────────────────────────────────
 

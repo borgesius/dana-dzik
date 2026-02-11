@@ -38,13 +38,14 @@ export const ASCENSION_SPEND_THRESHOLD = 200
  * Hindsight upgrades that survive ascension (comfort floor).
  * All others are reset.
  */
-export const ASCENSION_PRESERVED_UPGRADES: ReadonlySet<HindsightUpgradeId> = new Set<HindsightUpgradeId>([
-    "starting-capital",
-    "generous-capital",
-    "lavish-capital",
-    "phase-memory",
-    "deep-phase-memory",
-])
+export const ASCENSION_PRESERVED_UPGRADES: ReadonlySet<HindsightUpgradeId> =
+    new Set<HindsightUpgradeId>([
+        "starting-capital",
+        "generous-capital",
+        "lavish-capital",
+        "phase-memory",
+        "deep-phase-memory",
+    ])
 
 /**
  * Foresight earned on ascension = floor(totalHindsightEverSpent / 15)
@@ -161,5 +162,7 @@ export const FORESIGHT_UPGRADES: ForesightUpgradeDef[] = [
     },
 ]
 
-export const FORESIGHT_UPGRADE_MAP: ReadonlyMap<ForesightUpgradeId, ForesightUpgradeDef> =
-    new Map(FORESIGHT_UPGRADES.map((u) => [u.id, u]))
+export const FORESIGHT_UPGRADE_MAP: ReadonlyMap<
+    ForesightUpgradeId,
+    ForesightUpgradeDef
+> = new Map(FORESIGHT_UPGRADES.map((u) => [u.id, u]))

@@ -394,13 +394,13 @@ export class VeilManager {
 
         if (data.completed) {
             for (const id of data.completed) {
-                this.completedVeils.add(id as VeilId)
+                this.completedVeils.add(id)
             }
         }
 
         if (data.unlocked) {
             for (const id of data.unlocked) {
-                this.unlockedVeils.add(id as VeilId)
+                this.unlockedVeils.add(id)
             }
         }
 

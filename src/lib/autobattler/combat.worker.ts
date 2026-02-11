@@ -4,8 +4,8 @@
  * Receives player and opponent lineups, returns the full CombatResult.
  */
 
-import type { CombatResult, CombatUnit } from "./types"
 import { resolveCombat } from "./combat"
+import type { CombatResult, CombatUnit } from "./types"
 
 export interface CombatWorkerRequest {
     playerLineup: CombatUnit[]

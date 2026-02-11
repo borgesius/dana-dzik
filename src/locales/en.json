@@ -2219,7 +2219,7 @@
             },
             "golden-mean": {
                 "name": "The Golden Mean",
-                "description": "+4 HP to all units at combat start",
+                "description": "+2 HP to all units at combat start",
                 "unlock": "Available by default"
             },
             "ubuntu": {
@@ -2229,17 +2229,17 @@
             },
             "amor-fati": {
                 "name": "Amor Fati",
-                "description": "After losing combat, gain +3 bonus Thoughts next round",
+                "description": "After losing combat, gain +2 bonus Thoughts next round",
                 "unlock": "Reach round 6"
             },
             "uncarved-block": {
                 "name": "The Uncarved Block (朴)",
-                "description": "All units start combat with 3 Shield",
+                "description": "All units start combat with 2 Shield",
                 "unlock": "Defeat any boss"
             },
             "ibn-rushds-mirror": {
                 "name": "Ibn Rushd's Mirror",
-                "description": "Heal 3 HP to all surviving units after combat",
+                "description": "Heal 2 HP to all surviving units after combat",
                 "unlock": "Reach round 10"
             },
             "pratityasamutpada": {
@@ -2249,7 +2249,7 @@
             },
             "maat": {
                 "name": "Maat",
-                "description": "+2 ATK and +2 HP when lineup has 2+ factions",
+                "description": "+1 ATK and +1 HP when lineup has 2+ factions",
                 "unlock": "Win with 3+ factions in lineup"
             },
             "tabula-rasa": {
@@ -2259,7 +2259,7 @@
             },
             "tetrapharmakos": {
                 "name": "Tetrapharmakos",
-                "description": "Heal all units for 2 HP at combat start",
+                "description": "Heal all units for 1 HP at combat start",
                 "unlock": "Complete Idealist faction"
             },
             "yi-jing-trigram": {
@@ -2284,7 +2284,7 @@
             },
             "philosophers-stone": {
                 "name": "The Philosopher's Stone",
-                "description": "All tier 1 units gain +3 ATK and +3 HP",
+                "description": "All tier 1 units gain +2 ATK and +2 HP",
                 "unlock": "Reach round 15 with a majority-Adjuncts lineup"
             },
             "indras-net": {
@@ -2294,7 +2294,7 @@
             },
             "rubber-duck": {
                 "name": "Rubber Duck",
-                "description": "Before combat, a random ally gains +3 ATK",
+                "description": "Before combat, a random ally gains +2 ATK",
                 "unlock": "Complete 20 runs"
             },
             "loaded-dice": {

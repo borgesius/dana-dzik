@@ -561,16 +561,10 @@ const COMMANDS: Record<string, CommandHandler> = {
     nmap: (): CommandResult => {
         emitAppEvent("netmon:nmap-run")
 
-        const lines: string[] = [
-            "",
-            "Starting NMAP scan of 10.0.0.0/24...",
-            "",
-        ]
+        const lines: string[] = ["", "Starting NMAP scan of 10.0.0.0/24...", ""]
 
         for (const def of REGISTERED_SERVICES) {
-            lines.push(
-                `Host ${def.service.addr} (${def.service.name})`
-            )
+            lines.push(`Host ${def.service.addr} (${def.service.name})`)
             for (const port of def.ports) {
                 lines.push(
                     `  ${String(port.port).padEnd(5)}/${port.protocol.toLowerCase().padEnd(4)} open     ${port.name}`

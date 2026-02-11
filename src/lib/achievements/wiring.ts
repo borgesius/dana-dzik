@@ -5,12 +5,10 @@ import { getLocaleManager } from "../localeManager"
 import { getMarketGame } from "../marketGame/MarketEngine"
 import {
     COMMODITIES,
-    type CommodityId,
     CORNER_MARKET_FLOAT,
     CORNER_MARKET_THRESHOLD,
     FACTORIES,
     TICK_INTERVAL_MS,
-    type TradeResult,
     UPGRADES,
 } from "../marketGame/types"
 import { FORESIGHT_UPGRADES } from "../prestige/ascension"
@@ -1136,7 +1134,10 @@ function wirePhase6Achievements(mgr: AchievementManager): void {
         if (data.direction === "downgrade") mgr.earn("arcana-tower")
 
         // VIII - Strength: survive 100+ ticks after a margin event (on upgrade)
-        if (data.direction === "upgrade" && game.getTicksSinceMarginEvent() >= 100) {
+        if (
+            data.direction === "upgrade" &&
+            game.getTicksSinceMarginEvent() >= 100
+        ) {
             mgr.earn("arcana-strength")
         }
     })
