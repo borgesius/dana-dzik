@@ -416,6 +416,25 @@
     background: rgb(255 68 68 / 10%);
 }
 
+/* Disabled / selected choice states */
+.veil-dialogue-choice-btn:disabled {
+    cursor: default;
+    opacity: 0.45;
+    pointer-events: none;
+}
+
+.veil-dialogue-choice-btn.veil-choice-selected {
+    border-color: #00ff80;
+    background: rgb(0 255 128 / 12%);
+    opacity: 1;
+}
+
+.veil-choice-boss.veil-choice-selected {
+    border-color: #ff4444;
+    background: rgb(255 68 68 / 12%);
+    opacity: 1;
+}
+
 /* ── Retry prompt ────────────────────────────────────────────────────────── */
 
 .veil-retry {
