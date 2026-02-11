@@ -1,3 +1,9 @@
+## [2.14.1](https://github.com/borgesius/dana-dzik/compare/v2.14.0...v2.14.1) (2026-02-11)
+
+### Bug Fixes
+
+* ui bugs ([#69](https://github.com/borgesius/dana-dzik/issues/69)) ([0f60174](https://github.com/borgesius/dana-dzik/commit/0f60174689ca9466717d22d33f326dcc1421a955))
+
 ## [2.14.0](https://github.com/borgesius/dana-dzik/compare/v2.13.0...v2.14.0) (2026-02-10)
 
 ### Features
