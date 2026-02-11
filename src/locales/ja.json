@@ -1990,6 +1990,10 @@
         "widget": {
             "pierced": "VEIL PIERCED"
         },
+        "ui": {
+            "continue": "続ける",
+            "enter_facility": "施設に入る"
+        },
         "modal": {
             "title": "The veil thins...",
             "subtitle": "A signal pushes through the wire.",
