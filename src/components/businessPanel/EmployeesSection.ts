@@ -466,8 +466,8 @@ export class EmployeesSection {
 
         orgCards.forEach((card) => {
             card.addEventListener("mousedown", (e) => {
-                // Don't start drag on fire button
-                if ((e.target as HTMLElement).closest(".hr-fire-btn")) return
+                // Don't start drag on interactive elements (fire, raise, etc.)
+                if ((e.target as HTMLElement).closest("button")) return
                 e.preventDefault()
 
                 const vpIdx = parseInt(card.getAttribute("data-org-vp") ?? "-1")
