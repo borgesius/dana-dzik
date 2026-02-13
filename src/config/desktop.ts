@@ -5,7 +5,7 @@ export interface DesktopItemConfig {
     filename: string
     label?: string
     icon: string
-    windowId: RoutableWindow
+    windowId?: RoutableWindow
     fileType: "file" | "executable" | "shortcut" | "directory"
 }
 

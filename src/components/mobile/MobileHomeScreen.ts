@@ -17,17 +17,19 @@ export class MobileHomeScreen {
 
         const gridItems = DESKTOP_ITEMS.filter(
             (item) =>
+                item.windowId &&
                 MOBILE_ALLOWED_IDS.includes(item.id) &&
                 !MOBILE_DOCK_IDS.includes(item.id)
         )
-        const dockItems = DESKTOP_ITEMS.filter((item) =>
-            MOBILE_DOCK_IDS.includes(item.id)
+        const dockItems = DESKTOP_ITEMS.filter(
+            (item) => item.windowId && MOBILE_DOCK_IDS.includes(item.id)
         )
 
         const grid = document.createElement("div")
         grid.className = "ios-home-icons"
 
         for (const item of gridItems) {
+            if (!item.windowId) continue
             grid.appendChild(
                 this.createAppIcon(
                     item.icon,
@@ -50,6 +52,7 @@ export class MobileHomeScreen {
         dock.className = "ios-dock"
 
         for (const item of dockItems) {
+            if (!item.windowId) continue
             dock.appendChild(
                 this.createAppIcon(
                     item.icon,

@@ -160,6 +160,8 @@ export class TopologyRenderer {
     private selectedNodeAddr = ""
     private onNodeClick: ((addr: string) => void) | null = null
     private dpr = 1
+    private draggedNodeIdx = -1
+    private isDragging = false
 
     constructor(canvas: HTMLCanvasElement) {
         this.canvas = canvas
@@ -191,12 +193,42 @@ export class TopologyRenderer {
             const rect = this.canvas.getBoundingClientRect()
             const mx = (e.clientX - rect.left) / rect.width
             const my = (e.clientY - rect.top) / rect.height
-            this.hoveredNodeIdx = this.hitTestNode(mx, my)
-            this.canvas.style.cursor =
-                this.hoveredNodeIdx >= 0 ? "pointer" : "default"
+
+            if (this.isDragging && this.draggedNodeIdx >= 0) {
+                // Update dragged node position
+                const node = NODES[this.draggedNodeIdx]
+                node.x = Math.max(0.05, Math.min(0.95, mx))
+                node.y = Math.max(0.05, Math.min(0.95, my))
+            } else {
+                this.hoveredNodeIdx = this.hitTestNode(mx, my)
+                this.canvas.style.cursor =
+                    this.hoveredNodeIdx >= 0 ? "grab" : "default"
+            }
+        })
+
+        this.canvas.addEventListener("mousedown", (e) => {
+            const rect = this.canvas.getBoundingClientRect()
+            const mx = (e.clientX - rect.left) / rect.width
+            const my = (e.clientY - rect.top) / rect.height
+            const idx = this.hitTestNode(mx, my)
+            if (idx >= 0) {
+                this.isDragging = true
+                this.draggedNodeIdx = idx
+                this.canvas.style.cursor = "grabbing"
+                e.preventDefault()
+            }
+        })
+
+        this.canvas.addEventListener("mouseup", () => {
+            this.isDragging = false
+            this.draggedNodeIdx = -1
+            this.canvas.style.cursor = "grab"
         })
 
         this.canvas.addEventListener("click", (e) => {
+            // Only trigger click if we weren't dragging
+            if (this.isDragging) return
+
             const rect = this.canvas.getBoundingClientRect()
             const mx = (e.clientX - rect.left) / rect.width
             const my = (e.clientY - rect.top) / rect.height
@@ -216,6 +248,8 @@ export class TopologyRenderer {
 
         this.canvas.addEventListener("mouseleave", () => {
             this.hoveredNodeIdx = -1
+            this.isDragging = false
+            this.draggedNodeIdx = -1
             this.canvas.style.cursor = "default"
         })
     }
