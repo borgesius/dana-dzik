@@ -8,7 +8,7 @@ export function getMDContent(): string {
     return `<div id="md-content" class="md-container">
     <div class="md-header">
         <span class="md-title">M.D.</span>
-        <span class="md-subtitle">Monitoring and Analysis of Traffic Daemon v1.0</span>
+        <span class="md-subtitle">how do you like them packets?</span>
     </div>
     <div class="md-topology">
         <canvas id="md-topology-canvas"></canvas>

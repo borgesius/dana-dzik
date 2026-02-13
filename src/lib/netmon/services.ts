@@ -6,12 +6,39 @@ export interface ServiceDef {
 }
 
 const SYSTEM: Service = { addr: "10.0.0.1", name: "SYSTEM", port: 443 }
-const MARKET: Service = { addr: "10.0.1.2", name: "MARKET", port: 8080 }
-const FACTORY: Service = { addr: "10.0.2.1", name: "FACTORY", port: 5000 }
-const SYMPOSIUM: Service = { addr: "10.0.3.1", name: "SYMPOSIUM", port: 9090 }
-const WELT_VM: Service = { addr: "10.0.4.1", name: "WELT-VM", port: 2121 }
-const PRESTIGE: Service = { addr: "10.0.5.1", name: "PRESTIGE", port: 8443 }
-const CAREER: Service = { addr: "10.0.6.1", name: "CAREER", port: 443 }
+const MARKET: Service = {
+    addr: "10.0.80.80",
+    name: "TRADING-FLOOR",
+    port: 8080,
+}
+const FACTORY: Service = { addr: "10.0.24.7", name: "PRODUCTION", port: 5000 }
+const SYMPOSIUM: Service = {
+    addr: "10.0.90.90",
+    name: "COMBAT-SIM",
+    port: 9090,
+}
+const WELT_VM: Service = { addr: "10.0.19.89", name: "DAS-RUNTIME", port: 2121 }
+const PRESTIGE: Service = {
+    addr: "10.0.255.255",
+    name: "LIFECYCLE-MGR",
+    port: 8443,
+}
+const CAREER: Service = {
+    addr: "10.0.100.1",
+    name: "HUMAN-RESOURCES",
+    port: 443,
+}
+const COSMETICS: Service = {
+    addr: "10.0.123.45",
+    name: "APPEARANCE-SVC",
+    port: 3000,
+}
+const VEIL: Service = { addr: "10.0.66.6", name: "????", port: 6666 }
+const PERSISTENCE: Service = {
+    addr: "10.0.54.32",
+    name: "LOCAL-DB",
+    port: 5432,
+}
 
 // Unregistered facility hosts — no name, just addresses
 const FACILITY_A: Service = { addr: "10.0.7.3", name: "", port: 0 }
@@ -26,6 +53,9 @@ export const SERVICES = {
     WELT_VM,
     PRESTIGE,
     CAREER,
+    COSMETICS,
+    VEIL,
+    PERSISTENCE,
     FACILITY_A,
     FACILITY_B,
     FACILITY_C,
@@ -59,6 +89,7 @@ export const REGISTERED_SERVICES: ServiceDef[] = [
         ports: [
             { port: 9090, protocol: "WS", name: "combat-stream" },
             { port: 9091, protocol: "TCP", name: "matchmaker" },
+            { port: 9092, protocol: "TCP", name: "shop-api" },
         ],
     },
     {
@@ -75,6 +106,27 @@ export const REGISTERED_SERVICES: ServiceDef[] = [
     {
         service: CAREER,
         ports: [{ port: 443, protocol: "TCP", name: "progression-api" }],
+    },
+    {
+        service: COSMETICS,
+        ports: [
+            { port: 3000, protocol: "TCP", name: "theme-service" },
+            { port: 3001, protocol: "UDP", name: "cosmetic-stream" },
+        ],
+    },
+    {
+        service: VEIL,
+        ports: [
+            { port: 6666, protocol: "TCP", name: "????" },
+            { port: 6667, protocol: "WS", name: "????" },
+        ],
+    },
+    {
+        service: PERSISTENCE,
+        ports: [
+            { port: 5432, protocol: "TCP", name: "save-db" },
+            { port: 5433, protocol: "TCP", name: "sync-handler" },
+        ],
     },
 ]
 

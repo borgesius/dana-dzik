@@ -25,42 +25,63 @@ const NODES: NodeLayout[] = [
         service: SERVICES.MARKET,
         x: 0.2,
         y: 0.25,
-        label: "MARKET",
+        label: "TRADING-FLOOR",
         registered: true,
     },
     {
         service: SERVICES.FACTORY,
         x: 0.2,
         y: 0.75,
-        label: "FACTORY",
+        label: "PRODUCTION",
         registered: true,
     },
     {
         service: SERVICES.SYMPOSIUM,
         x: 0.8,
         y: 0.25,
-        label: "SYMPOSIUM",
+        label: "COMBAT-SIM",
         registered: true,
     },
     {
         service: SERVICES.WELT_VM,
         x: 0.8,
         y: 0.75,
-        label: "WELT-VM",
+        label: "DAS-RUNTIME",
         registered: true,
     },
     {
         service: SERVICES.PRESTIGE,
         x: 0.35,
         y: 0.12,
-        label: "PRESTIGE",
+        label: "LIFECYCLE-MGR",
         registered: true,
     },
     {
         service: SERVICES.CAREER,
         x: 0.65,
         y: 0.88,
-        label: "CAREER",
+        label: "HUMAN-RESOURCES",
+        registered: true,
+    },
+    {
+        service: SERVICES.COSMETICS,
+        x: 0.12,
+        y: 0.5,
+        label: "APPEARANCE-SVC",
+        registered: true,
+    },
+    {
+        service: SERVICES.VEIL,
+        x: 0.88,
+        y: 0.5,
+        label: "????",
+        registered: true,
+    },
+    {
+        service: SERVICES.PERSISTENCE,
+        x: 0.5,
+        y: 0.08,
+        label: "LOCAL-DB",
         registered: true,
     },
     // Unregistered facility node — peripheral, dim, unlabeled
@@ -383,14 +404,26 @@ export class TopologyRenderer {
 
             const isHovered = i === this.hoveredNodeIdx
             const isSelected = this.selectedNodeAddr === n.service.addr
+            const isVeil = n.service.addr === SERVICES.VEIL.addr
+
+            // Glitch effect for VEIL node
+            const glitchOffset = isVeil
+                ? {
+                      x: (Math.random() - 0.5) * 2,
+                      y: (Math.random() - 0.5) * 2,
+                  }
+                : { x: 0, y: 0 }
+            const glitchAlpha = isVeil && Math.random() > 0.85 ? 0.3 : 1
 
             c.font = "bold 10px monospace"
             const labelW = c.measureText(n.label).width
             c.font = "9px monospace"
             const addrW = c.measureText(n.service.addr).width
             const boxW = Math.max(labelW, addrW) + padding * 2
-            const bx = n.x * w - boxW / 2
-            const by = n.y * h - nodeH / 2
+            const bx = n.x * w - boxW / 2 + glitchOffset.x
+            const by = n.y * h - nodeH / 2 + glitchOffset.y
+
+            c.globalAlpha = glitchAlpha
 
             if (isHovered || isSelected) {
                 c.strokeStyle = isSelected
@@ -400,27 +433,36 @@ export class TopologyRenderer {
                 c.strokeRect(bx - 2, by - 2, boxW + 4, nodeH + 4)
             }
 
-            // Background
-            c.fillStyle = isSelected ? "#1a2233" : "#111822"
+            // Background - darker/glitchier for VEIL
+            c.fillStyle = isVeil
+                ? "#0a0a14"
+                : isSelected
+                  ? "#1a2233"
+                  : "#111822"
             c.fillRect(bx, by, boxW, nodeH)
 
-            // Border
-            c.strokeStyle = "#2a3a4a"
+            // Border - red tint for VEIL
+            c.strokeStyle = isVeil ? "#3a1a2a" : "#2a3a4a"
             c.lineWidth = 1
             c.strokeRect(bx, by, boxW, nodeH)
 
-            // Label
+            // Label - corrupted color for VEIL
             c.font = "bold 10px monospace"
-            c.fillStyle = "#c8d8e8"
+            c.fillStyle = isVeil ? "#a88898" : "#c8d8e8"
             c.textAlign = "center"
-            c.fillText(n.label, n.x * w, n.y * h - 5)
+            c.fillText(n.label, n.x * w + glitchOffset.x, n.y * h - 5)
 
             // Address
             c.font = "9px monospace"
-            c.fillStyle = "#607888"
-            c.fillText(n.service.addr, n.x * w, n.y * h + 8)
+            c.fillStyle = isVeil ? "#604858" : "#607888"
+            c.fillText(
+                n.service.addr,
+                n.x * w + glitchOffset.x,
+                n.y * h + 8
+            )
 
             c.textAlign = "left"
+            c.globalAlpha = 1
         }
     }
 }

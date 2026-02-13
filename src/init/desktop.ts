@@ -27,6 +27,7 @@ import { getLocaleManager } from "../lib/localeManager"
 import { getMarketGame } from "../lib/marketGame/MarketEngine"
 import {
     initPacketBridge,
+    wireAdditionalManagersToPacketBridge,
     wireMarketEngineToPacketBridge,
 } from "../lib/netmon/packetBridge"
 import { getPrestigeManager } from "../lib/prestige/PrestigeManager"
@@ -65,6 +66,15 @@ export function initDesktop(app: HTMLElement): void {
     // ── Network monitor (M.D.) ───────────────────────────────────────────
     initPacketBridge()
     wireMarketEngineToPacketBridge(getMarketGame())
+    wireAdditionalManagersToPacketBridge({
+        prestige: getPrestigeManager(),
+        career: getCareerManager(),
+        collection: getCollectionManager(),
+        progression: getProgressionManager(),
+        theme: getThemeManager(),
+        locale: getLocaleManager(),
+        veil: getVeilManager(),
+    })
 
     wireCosmeticUnlocks()
 
