@@ -306,7 +306,7 @@ export class TopologyRenderer {
 
         const now = Date.now()
 
-        if (this.facilityVisible && now - this.facilityFadeStart > 8000) {
+        if (this.facilityVisible && now - this.facilityFadeStart > 30000) {
             this.facilityVisible = false
         }
 
@@ -400,7 +400,7 @@ export class TopologyRenderer {
                 const fadeAge = now - this.facilityFadeStart
                 const alpha = Math.min(
                     1,
-                    Math.max(0, 1 - (fadeAge - 6000) / 2000)
+                    Math.max(0, 1 - (fadeAge - 24000) / 6000)
                 )
 
                 c.globalAlpha = alpha * 0.5

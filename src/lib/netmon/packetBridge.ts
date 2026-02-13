@@ -185,13 +185,13 @@ function randInt(min: number, max: number): number {
     return Math.floor(Math.random() * (max - min + 1)) + min
 }
 
-let nextFacilityAt = randInt(30, 60)
+let nextFacilityAt = randInt(15, 30)
 
 function maybePushFacilityPacket(): void {
     packetsSinceLastFacility++
     if (packetsSinceLastFacility >= nextFacilityAt) {
         packetsSinceLastFacility = 0
-        nextFacilityAt = randInt(30, 60)
+        nextFacilityAt = randInt(15, 30)
 
         const frag =
             FACILITY_FRAGMENTS[

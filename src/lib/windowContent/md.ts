@@ -7,7 +7,7 @@ import type { Packet, Protocol } from "../netmon/types"
 export function getMDContent(): string {
     return `<div id="md-content" class="md-container">
     <div class="md-header">
-        <span class="md-title">M.D.</span>
+        <span class="md-title">M.A.T. Daemon</span>
         <span class="md-subtitle">how do you like them packets?</span>
     </div>
     <div class="md-topology">

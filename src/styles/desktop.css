@@ -58,6 +58,36 @@ body {
     padding: 10px;
 }
 
+.desktop-footer {
+    position: absolute;
+    bottom: 8px;
+    right: 12px;
+    z-index: 10;
+    pointer-events: none;
+}
+
+.desktop-footer-links {
+    pointer-events: auto;
+    font-size: 11px;
+    font-family: var(--theme-font-system);
+    color: var(--theme-desktop-icon-text);
+    text-shadow:
+        1px 1px 1px #000000,
+        -1px -1px 1px #000000,
+        1px -1px 1px #000000,
+        -1px 1px 1px #000000;
+}
+
+.desktop-footer-links a {
+    color: var(--theme-desktop-icon-text);
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.desktop-footer-links a:hover {
+    text-decoration: underline;
+}
+
 .desktop-icon {
     display: flex;
     flex-direction: column;
