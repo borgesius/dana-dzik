@@ -1,3 +1,9 @@
+## [3.0.3](https://github.com/borgesius/dana-dzik/compare/v3.0.2...v3.0.3) (2026-02-13)
+
+### Bug Fixes
+
+* M.A.T. Daemon full name ([5902d1c](https://github.com/borgesius/dana-dzik/commit/5902d1ccb1bb3672437bf0abba2f5f848479e24d))
+
 ## [3.0.2](https://github.com/borgesius/dana-dzik/compare/v3.0.1...v3.0.2) (2026-02-13)
 
 ### Bug Fixes
