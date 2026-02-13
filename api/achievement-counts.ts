@@ -182,6 +182,7 @@ async function handleGet(res: VercelResponse): Promise<void> {
 }
 
 async function fetchCounts(client: Redis): Promise<AchievementCounts> {
+    // Discover all achievement keys by scanning for the pattern
     const prefix = prefixKey("achiev:users:")
     const counts: Record<string, number> = {}
 
@@ -201,6 +202,7 @@ async function fetchCounts(client: Redis): Promise<AchievementCounts> {
             const results = await pipeline.exec<number[]>()
 
             for (let i = 0; i < keys.length; i++) {
+                // Strip the prefix to get the achievement ID
                 const id = keys[i].slice(prefix.length)
                 counts[id] = results[i] ?? 0
             }

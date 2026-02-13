@@ -57,7 +57,6 @@ export function wireAchievements(
     wireSessionCost(mgr)
     wireQAReports(mgr)
     wireProgressionEvents(mgr)
-    wireNetmonEvents(mgr)
     wireAchievementReporting(mgr)
 }
 
@@ -1173,29 +1172,6 @@ function wirePhase6Achievements(mgr: AchievementManager): void {
         if (game.getDebt() <= 0 && game.getSecurities().length >= 3) {
             mgr.earn("rainy-day")
         }
-    })
-}
-
-// ── Network monitor (M.D.) achievements ─────────────────────────────────
-
-function wireNetmonEvents(mgr: AchievementManager): void {
-    onAppEvent("netmon:opened", () => {
-        mgr.earn("packet-sniffing")
-    })
-
-    onAppEvent("netmon:packet-expanded", () => {
-        const count = mgr.incrementCounter("packets-expanded" as CounterKey)
-        if (count >= 10) {
-            mgr.earn("deep-packet-inspection")
-        }
-    })
-
-    onAppEvent("netmon:unknown-host-filtered", () => {
-        mgr.earn("unknown-host")
-    })
-
-    onAppEvent("netmon:nmap-run", () => {
-        mgr.earn("port-scan")
     })
 }
 

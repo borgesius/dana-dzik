@@ -1,11 +1,6 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node"
 
-import {
-    cachedRead,
-    getRedis,
-    prefixKey,
-    writeThrough,
-} from "./lib/redisGateway"
+import { cachedRead, getRedis, prefixKey, writeThrough } from "./lib/redisGateway"
 
 interface TokenResponse {
     access_token: string
@@ -43,9 +38,7 @@ async function getAccessToken(): Promise<string> {
     const now = Math.floor(Date.now() / 1000)
     const redis = getRedis()
 
-    const cached = redis
-        ? await redis.get<CachedTokens>(prefixKey(REDIS_KEY))
-        : null
+    const cached = redis ? await redis.get<CachedTokens>(prefixKey(REDIS_KEY)) : null
     if (cached && cached.expiresAt > now + 60) {
         return cached.accessToken
     }
@@ -325,9 +318,7 @@ export default async function handler(
         const stats = computeStats(activities)
 
         await writeThrough(async (client) => {
-            await client.set(prefixKey(STRAVA_STATS_CACHE_KEY), stats, {
-                ex: STATS_TTL_SECONDS,
-            })
+            await client.set(prefixKey(STRAVA_STATS_CACHE_KEY), stats, { ex: STATS_TTL_SECONDS })
         })
 
         res.status(200).json({ ok: true, data: stats, cached: false })

@@ -1,3 +1,21 @@
+## [2.14.1](https://github.com/borgesius/dana-dzik/compare/v2.14.0...v2.14.1) (2026-02-11)
+
+### Bug Fixes
+
+* ui bugs ([#69](https://github.com/borgesius/dana-dzik/issues/69)) ([0f60174](https://github.com/borgesius/dana-dzik/commit/0f60174689ca9466717d22d33f326dcc1421a955))
+
+## [2.14.0](https://github.com/borgesius/dana-dzik/compare/v2.13.0...v2.14.0) (2026-02-10)
+
+### Features
+
+* stats for achievs and lifetime cost view ([#68](https://github.com/borgesius/dana-dzik/issues/68)) ([0608f43](https://github.com/borgesius/dana-dzik/commit/0608f43203f64ac76abbf665589861faecd689bb))
+
+## [2.13.0](https://github.com/borgesius/dana-dzik/compare/v2.12.0...v2.13.0) (2026-02-10)
+
+### Features
+
+* **ui:** update resume flavor text ([2418e57](https://github.com/borgesius/dana-dzik/commit/2418e57e41998606acae0d20b93cf9a16c90132e))
+
 ## [2.12.0](https://github.com/borgesius/dana-dzik/compare/v2.11.0...v2.12.0) (2026-02-10)
 
 ### Features
