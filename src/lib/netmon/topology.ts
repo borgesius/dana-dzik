@@ -1,5 +1,6 @@
 import { CanvasError } from "@/core/errors"
 
+import { getVeilManager } from "../veil/VeilManager"
 import { SERVICES } from "./services"
 import type { Packet, Protocol, Service } from "./types"
 
@@ -84,11 +85,25 @@ const NODES: NodeLayout[] = [
         label: "LOCAL-DB",
         registered: true,
     },
-    // Unregistered facility node — peripheral, dim, unlabeled
+    // Unregistered facility nodes — peripheral, dim, unlabeled
     {
         service: SERVICES.FACILITY_A,
         x: 0.06,
         y: 0.06,
+        label: "",
+        registered: false,
+    },
+    {
+        service: SERVICES.FACILITY_B,
+        x: 0.94,
+        y: 0.06,
+        label: "",
+        registered: false,
+    },
+    {
+        service: SERVICES.FACILITY_C,
+        x: 0.06,
+        y: 0.94,
         label: "",
         registered: false,
     },
@@ -406,6 +421,12 @@ export class TopologyRenderer {
             const isSelected = this.selectedNodeAddr === n.service.addr
             const isVeil = n.service.addr === SERVICES.VEIL.addr
 
+            let displayLabel = n.label
+            if (isVeil) {
+                const veilMgr = getVeilManager()
+                displayLabel = veilMgr.getCompletedCount() > 0 ? "VEIL" : "????"
+            }
+
             // Glitch effect for VEIL node
             const glitchOffset = isVeil
                 ? {
@@ -416,7 +437,7 @@ export class TopologyRenderer {
             const glitchAlpha = isVeil && Math.random() > 0.85 ? 0.3 : 1
 
             c.font = "bold 10px monospace"
-            const labelW = c.measureText(n.label).width
+            const labelW = c.measureText(displayLabel).width
             c.font = "9px monospace"
             const addrW = c.measureText(n.service.addr).width
             const boxW = Math.max(labelW, addrW) + padding * 2
@@ -450,7 +471,7 @@ export class TopologyRenderer {
             c.font = "bold 10px monospace"
             c.fillStyle = isVeil ? "#a88898" : "#c8d8e8"
             c.textAlign = "center"
-            c.fillText(n.label, n.x * w + glitchOffset.x, n.y * h - 5)
+            c.fillText(displayLabel, n.x * w + glitchOffset.x, n.y * h - 5)
 
             // Address
             c.font = "9px monospace"

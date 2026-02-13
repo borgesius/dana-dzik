@@ -33,7 +33,7 @@ const COSMETICS: Service = {
     name: "APPEARANCE-SVC",
     port: 3000,
 }
-const VEIL: Service = { addr: "10.0.66.6", name: "????", port: 6666 }
+const VEIL: Service = { addr: "10.0.18.18", name: "????", port: 1818 }
 const PERSISTENCE: Service = {
     addr: "10.0.54.32",
     name: "LOCAL-DB",
@@ -117,8 +117,8 @@ export const REGISTERED_SERVICES: ServiceDef[] = [
     {
         service: VEIL,
         ports: [
-            { port: 6666, protocol: "TCP", name: "????" },
-            { port: 6667, protocol: "WS", name: "????" },
+            { port: 1818, protocol: "TCP", name: "????" },
+            { port: 1819, protocol: "WS", name: "????" },
         ],
     },
     {
