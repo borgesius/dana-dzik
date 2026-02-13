@@ -158,7 +158,7 @@ const WINDOW_CONFIGS: Record<RoutableWindow, WindowConfig> = {
     },
     md: {
         id: "md",
-        title: "Monitoring and Analysis of Traffic",
+        title: "Monitoring and Analysis of Traffic Daemon",
         icon: icon("md"),
         width: 620,
         height: 500,
