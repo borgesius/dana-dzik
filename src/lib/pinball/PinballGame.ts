@@ -875,17 +875,19 @@ export class PinballGame {
                 isHit: t.isHit,
                 hitAnimation: t.hitAnimation,
             })),
-            walls: this.walls.map((w) => ({
-                start: toVec(w.start),
-                end: toVec(w.end),
-                damping: w.damping,
-            })),
+            walls: this.walls
+                .filter((w) => !(w instanceof OneWayWall))
+                .map((w) => ({
+                    start: toVec(w.start),
+                    end: toVec(w.end),
+                    damping: w.damping,
+                })),
             guideRails: this.guideRails.map((r) => ({
                 start: toVec(r.start),
                 end: toVec(r.end),
                 damping: r.damping,
             })),
-            oneWayWalls: this.guideRails
+            oneWayWalls: this.walls
                 .filter((r): r is OneWayWall => r instanceof OneWayWall)
                 .map((r) => ({
                     start: toVec(r.start),
