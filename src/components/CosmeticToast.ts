@@ -18,7 +18,7 @@ const DURATION_BY_RARITY: Record<CosmeticRarity, number> = {
 export class CosmeticToast {
     constructor() {
         onAppEvent("cosmetic:unlocked", (detail) => {
-            this.show(detail.type as CosmeticType, detail.id)
+            this.show(detail.type, detail.id)
         })
     }
 

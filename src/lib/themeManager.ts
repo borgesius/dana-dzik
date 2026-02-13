@@ -423,7 +423,7 @@ class ThemeManager {
         if (!this.listeners.has(event)) {
             this.listeners.set(event, new Set())
         }
-        this.listeners.get(event)!.add(callback)
+        this.listeners.get(event)?.add(callback)
     }
 
     public off(event: ThemeEvent, callback: ThemeEventCallback): void {

@@ -3,9 +3,11 @@ import { getAboutContent } from "./windowContent/about"
 import { getAchievementsContent } from "./windowContent/achievements"
 import { getAutobattlerContent } from "./windowContent/autobattler"
 import { getCustomizeContent } from "./windowContent/customize"
+import { getDivinationContent } from "./windowContent/divination"
 import { getFelixGPTContent } from "./windowContent/felixgpt"
 import { getGuestbookContent } from "./windowContent/guestbook"
 import { getLinksContent } from "./windowContent/links"
+import { getMDContent } from "./windowContent/md"
 import { getPinballContent } from "./windowContent/pinball"
 import { getProjectsContent } from "./windowContent/projects"
 import { getResumeContent } from "./windowContent/resume"
@@ -15,6 +17,8 @@ import { getWelcomeContent } from "./windowContent/welcome"
 export { renderAchievementsWindow } from "./windowContent/achievements"
 export { renderAutobattlerWindow } from "./windowContent/autobattler"
 export { renderCustomizeWindow } from "./windowContent/customize"
+export { renderDivinationWindow } from "./windowContent/divination"
+export { renderMDWindow } from "./windowContent/md"
 export { renderResumeWindow } from "./windowContent/resume"
 export { requestResumeCareerTab } from "./windowContent/resume"
 
@@ -50,6 +54,10 @@ export function getWindowContent(contentType: RoutableWindow): string {
             return getCustomizeContent()
         case "finder":
             return `<div id="finder-content"></div>`
+        case "md":
+            return getMDContent()
+        case "divination":
+            return getDivinationContent()
         default:
             return "<p>Content not found</p>"
     }

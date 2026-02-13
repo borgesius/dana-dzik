@@ -1,3 +1,4 @@
+import { StorageError } from "@/core/errors"
 import { log } from "@/core/Logger"
 
 import type { AchievementSaveData } from "./achievements/types"
@@ -242,7 +243,8 @@ class SaveManagerImpl {
             const migrated = migrate(data)
             this.writeBackIndividualKeys(migrated)
             return migrated
-        } catch {
+        } catch (err) {
+            log.save("Failed to parse save data: %O", err)
             const empty = createEmptySaveData()
             this.writeBackIndividualKeys(empty)
             return empty
@@ -289,8 +291,15 @@ class SaveManagerImpl {
                 "pinball-high-score",
                 data.pinball.highScore.toString()
             )
-        } catch {
-            /* localStorage unavailable */
+        } catch (err) {
+            log.save(
+                "localStorage write failed: %O",
+                new StorageError(
+                    "Failed to write individual keys",
+                    "STORAGE_UNAVAILABLE",
+                    { cause: err }
+                )
+            )
         }
     }
 

@@ -354,7 +354,9 @@
             "harvest": "HARVEST",
             "harvest_EMAIL": "SCRAPE",
             "harvest_ADS": "CLICK",
+            "harvest_LIVE": "RANCH",
             "harvest_DOM": "SQUAT",
+            "harvest_GLUE": "BOIL",
             "harvest_BW": "LEECH",
             "harvest_SOFT": "PIRATE",
             "harvest_VC": "PITCH",
@@ -372,7 +374,7 @@
             "unlockAt": "Unlock at ${{threshold}} lifetime earnings",
             "phaseLocked": "🔒 {{name}}",
             "phaseEarningsHint": "Earn {{threshold}} in lifetime earnings to unlock",
-            "phase5Hint": "Requires: 1st Prestige · Level 8 · 3 symposium wins"
+            "phase5Hint": "Requires: 1st Prestige · Level 8 · 1st symposium boss clear"
         },
         "commodities": {
             "EMAIL": {
@@ -383,9 +385,17 @@
                 "name": "Banner Impressions",
                 "description": "Premium 468x60 ad placements."
             },
+            "LIVE": {
+                "name": "Livestock",
+                "description": "Grade-A cattle futures. Delivery not included."
+            },
             "DOM": {
                 "name": ".com Domains",
                 "description": "Pre-registered premium domain names."
+            },
+            "GLUE": {
+                "name": "Glue",
+                "description": "Industrial-strength adhesive. Handle with care."
             },
             "BW": {
                 "name": "Bandwidth",
@@ -409,9 +419,17 @@
                 "name": "Banner Exchange",
                 "description": "Rotating ad network. Impressions generated automatically."
             },
+            "cattle-ranch": {
+                "name": "Cattle Ranch",
+                "description": "Free-range livestock operation. Output varies with season."
+            },
             "colocation-rack": {
                 "name": "Co-Location Rack",
                 "description": "Dedicated server hosting. Uptime not guaranteed."
+            },
+            "rendering-plant": {
+                "name": "Rendering Plant",
+                "description": "Converts livestock into industrial adhesive. Smells terrible."
             },
             "offshore-dev": {
                 "name": "Offshore Dev Team",
@@ -495,9 +513,17 @@
                 "name": "ADS Generator",
                 "description": "Impression bot. +1 ADS per harvest click."
             },
+            "harvest-live": {
+                "name": "LIVE Wrangler",
+                "description": "Automated herder. +1 LIVE per harvest click."
+            },
             "harvest-dom": {
                 "name": "DOM Registrar",
                 "description": "Bulk registration script. +1 DOM per harvest click."
+            },
+            "harvest-glue": {
+                "name": "GLUE Renderer",
+                "description": "Industrial boiler. +1 GLUE per harvest click."
             },
             "harvest-bw": {
                 "name": "BW Allocator",
@@ -522,6 +548,78 @@
             "autoscript-iii": {
                 "name": "Autoscript III",
                 "description": "Full automation suite. +75% harvest yield for all commodities."
+            },
+            "algorithmic-trading": {
+                "name": "Algorithmic Trading",
+                "description": "Auto-execute limit orders when trends reverse. Requires Limit Orders."
+            },
+            "dark-pool": {
+                "name": "Dark Pool Access",
+                "description": "Execute trades off-exchange. Your orders don't move the market price."
+            },
+            "market-maker": {
+                "name": "Market Maker License",
+                "description": "Earn passive spread income: 0.1% of portfolio value per tick."
+            },
+            "sovereign-fund": {
+                "name": "Sovereign Fund Charter",
+                "description": "Nation-state-size lots. Execute trades in quantities of 100 and 500."
+            },
+            "parallel-processing": {
+                "name": "Parallel Processing",
+                "description": "Multi-threaded production. Factories produce 2x output every 5th cycle."
+            },
+            "lean-manufacturing": {
+                "name": "Lean Manufacturing",
+                "description": "Optimised supply lines. Factory conversion inputs reduced by 25%."
+            },
+            "vertical-integration": {
+                "name": "Vertical Integration",
+                "description": "Factory chains auto-feed: output commodities route to higher-tier inputs."
+            },
+            "quantum-forecast": {
+                "name": "Quantum Forecast",
+                "description": "Probabilistic modelling. See 2 trend segments ahead instead of 1."
+            },
+            "sentiment-engine": {
+                "name": "Sentiment Engine",
+                "description": "NLP analysis of market chatter. Event probability indicator and type prediction."
+            },
+            "full-spectrum": {
+                "name": "Full Spectrum Intelligence",
+                "description": "Total information awareness. Market events always arrive at optimal timing."
+            },
+            "autoscript-iv": {
+                "name": "Autoscript IV",
+                "description": "Machine learning harvester. +100% harvest yield for all commodities."
+            },
+            "autoscript-v": {
+                "name": "Autoscript V",
+                "description": "Autonomous harvest agent. +125% harvest yield for all commodities."
+            },
+            "neural-harvester": {
+                "name": "Neural Harvester",
+                "description": "Self-optimising harvest AI. Triggers harvests automatically at optimal prices."
+            },
+            "harvest-mastery": {
+                "name": "Harvest Mastery",
+                "description": "+2% harvest yield per level."
+            },
+            "factory-mastery": {
+                "name": "Factory Mastery",
+                "description": "+3% factory output per level."
+            },
+            "trade-mastery": {
+                "name": "Trade Mastery",
+                "description": "+1% trade profit bonus per level."
+            },
+            "das-yield-mastery": {
+                "name": "DAS Yield Mastery",
+                "description": "+2% DAS yield per level."
+            },
+            "cost-mastery": {
+                "name": "Cost Mastery",
+                "description": "-1% all purchase costs per level (max -50%)."
             }
         },
         "influence": {
@@ -778,6 +876,18 @@
         "irrational-exuberance": {
             "name": "Technological Magnate",
             "description": "Earn $10,000 in lifetime earnings."
+        },
+        "corporate-raider": {
+            "name": "Corporate Raider",
+            "description": "Earn $50,000 in lifetime earnings."
+        },
+        "market-mogul": {
+            "name": "Market Mogul",
+            "description": "Earn $100,000 in lifetime earnings."
+        },
+        "too-big-to-fail": {
+            "name": "Too Big to Fail",
+            "description": "Earn $1,000,000 in lifetime earnings."
         },
         "fire-sale": {
             "name": "It's a Fire Sale",
@@ -1114,6 +1224,18 @@
             "name": "Doesn't Matter What Floor They're On",
             "description": "Prestige 5 times."
         },
+        "serial-entrepreneur": {
+            "name": "Serial Entrepreneur",
+            "description": "Prestige 5 times."
+        },
+        "bubble-addict": {
+            "name": "Bubble Addict",
+            "description": "Prestige 10 times."
+        },
+        "bubble-eternal": {
+            "name": "Eternal Return",
+            "description": "Prestige 25 times."
+        },
         "hindsight-shopper": {
             "name": "Hindsight Shopper",
             "description": "Purchase your first Hindsight upgrade."
@@ -1134,6 +1256,18 @@
             "name": "Budding Professional",
             "description": "Unlock 5 skill tree nodes."
         },
+        "apprentice": {
+            "name": "Apprentice",
+            "description": "Buy 10 total mastery levels."
+        },
+        "journeyman": {
+            "name": "Journeyman",
+            "description": "Buy 50 total mastery levels."
+        },
+        "grandmaster": {
+            "name": "Grandmaster",
+            "description": "Buy 100 total mastery levels."
+        },
         "skill-tree-master": {
             "name": "Career Completionist",
             "description": "Unlock 15 skill tree nodes."
@@ -1145,6 +1279,10 @@
         "full-stack": {
             "name": "Full Stack",
             "description": "Prestige, win a symposium, and choose a career."
+        },
+        "self-sustaining": {
+            "name": "Self-Sustaining",
+            "description": "Earn $1,000 in a single run using only factory income (no manual trades)."
         },
         "that-ones-a-person": {
             "name": "So That One's a Person",
@@ -1260,6 +1398,18 @@
             "name": "Post-Structural Reader",
             "description": "Collect all Post-Structuralist units."
         },
+        "relic-hunter": {
+            "name": "Relic Hunter",
+            "description": "Collect 5 relics in a single run."
+        },
+        "curator": {
+            "name": "Curator",
+            "description": "Unlock all common relics."
+        },
+        "full-collection": {
+            "name": "Full Collection",
+            "description": "Unlock every relic in the game."
+        },
         "tenure-track": {
             "name": "Tenure Track",
             "description": "Reach round 10 in a single run."
@@ -1336,6 +1486,14 @@
             "name": "Someone Is Going to Have to Pay for This",
             "description": "Trigger a margin event."
         },
+        "triple-a-streak": {
+            "name": "Triple-A Streak",
+            "description": "Maintain AAA credit rating for 500 ticks."
+        },
+        "diversified-portfolio": {
+            "name": "Diversified Portfolio",
+            "description": "Hold DAS in all 6 commodity types simultaneously."
+        },
         "harvest-100": {
             "name": "Cookie Clicker",
             "description": "Harvest 100 times."
@@ -1364,9 +1522,17 @@
             "name": "Impression Farmer",
             "description": "Click ADS 500 times."
         },
+        "harvest-live-500": {
+            "name": "Cattle Baron",
+            "description": "Ranch LIVE 500 times."
+        },
         "harvest-dom-500": {
             "name": "Domain Squatter",
             "description": "Squat DOM 500 times."
+        },
+        "harvest-glue-500": {
+            "name": "Glue Sniffer",
+            "description": "Boil GLUE 500 times."
         },
         "harvest-bw-500": {
             "name": "Bandwidth Hog",
@@ -1683,6 +1849,22 @@
         "pferd-couture": {
             "name": "Pferd Couture",
             "description": "Equip 3 Pferd-themed cosmetics at once."
+        },
+        "packet-sniffing": {
+            "name": "Packet Sniffing",
+            "description": "Open M.D. for the first time."
+        },
+        "deep-packet-inspection": {
+            "name": "Deep Packet Inspection",
+            "description": "Expand 10 packet details in the network monitor."
+        },
+        "unknown-host": {
+            "name": "Unknown Host",
+            "description": "Notice traffic from an unregistered address."
+        },
+        "port-scan": {
+            "name": "Port Scan",
+            "description": "Run nmap in the terminal."
         }
     },
     "veil": {
@@ -1851,7 +2033,11 @@
             "unitsSold": "Units Released:",
             "majorityFaction": "Primary School:",
             "noBosses": "None yet",
-            "combatsSurvived": "{{count}} combats survived"
+            "combatsSurvived": "{{count}} combats survived",
+            "chooseRelic": "Choose a Relic",
+            "relics": "Relics",
+            "relicsCollected": "Relics Collected:",
+            "event": "Event"
         },
         "units": {
             "drifter-brawler": "The Grader",
@@ -1894,7 +2080,15 @@
             "boss-gadfly": "The Gadfly",
             "boss-noumenon": "The Noumenon",
             "boss-automaton": "The Automaton",
-            "boss-simulacrum": "The Simulacrum"
+            "boss-simulacrum": "The Simulacrum",
+            "boss-absurdist": "The Absurdist",
+            "boss-phenomenologist": "The Phenomenologist",
+            "boss-theodicist": "The Theodicist",
+            "boss-archivist": "The Archivist",
+            "boss-sophist": "The Sophist",
+            "boss-dean": "The Dean",
+            "boss-pedagogue": "The Pedagogue",
+            "boss-empiricist": "The Empiricist"
         },
         "opponents": {
             "adjectives": [
@@ -1972,6 +2166,340 @@
                 "name": "VC Funding",
                 "description": "Start with +3 bonus Thoughts"
             }
+        },
+        "bossMods": {
+            "mod-enraged": {
+                "name": "Enraged",
+                "description": "Boss gains +4 ATK"
+            },
+            "mod-fortified": {
+                "name": "Fortified",
+                "description": "Boss gains +10 HP"
+            },
+            "mod-inspiring": {
+                "name": "Inspiring",
+                "description": "All escort units gain +2 ATK"
+            },
+            "mod-armored": {
+                "name": "Armored",
+                "description": "Boss starts with shield equal to 30% max HP"
+            },
+            "mod-first-blood": {
+                "name": "First Blood",
+                "description": "Boss deals 4 damage to front enemy at combat start"
+            },
+            "mod-aegis": {
+                "name": "Aegis",
+                "description": "All allies start with +3 Shield"
+            },
+            "mod-overclocked": {
+                "name": "Overclocked",
+                "description": "Boss gains +3 ATK and +3 HP"
+            },
+            "mod-swarm-spawn": {
+                "name": "Swarm Spawn",
+                "description": "Two 2/2 Traces join the fight at combat start"
+            }
+        },
+        "relics": {
+            "aletheia": {
+                "name": "Aletheia",
+                "description": "+2 ATK to front-line unit at combat start",
+                "unlock": "Available by default"
+            },
+            "wuji": {
+                "name": "Wuji (無極)",
+                "description": "+1 Thought per round",
+                "unlock": "Available by default"
+            },
+            "shoshin": {
+                "name": "Shoshin (初心)",
+                "description": "+1 free reroll per shop phase",
+                "unlock": "Available by default"
+            },
+            "golden-mean": {
+                "name": "The Golden Mean",
+                "description": "+2 HP to all units at combat start",
+                "unlock": "Available by default"
+            },
+            "ubuntu": {
+                "name": "Ubuntu",
+                "description": "When an ally dies, all remaining allies gain +1 ATK",
+                "unlock": "Reach round 4"
+            },
+            "amor-fati": {
+                "name": "Amor Fati",
+                "description": "After losing combat, gain +2 bonus Thoughts next round",
+                "unlock": "Reach round 6"
+            },
+            "uncarved-block": {
+                "name": "The Uncarved Block (朴)",
+                "description": "All units start combat with 2 Shield",
+                "unlock": "Defeat any boss"
+            },
+            "ibn-rushds-mirror": {
+                "name": "Ibn Rushd's Mirror",
+                "description": "Heal 2 HP to all surviving units after combat",
+                "unlock": "Reach round 10"
+            },
+            "pratityasamutpada": {
+                "name": "Pratītyasamutpāda",
+                "description": "When a unit triggers an ability, a random ally gains +1 ATK",
+                "unlock": "Defeat The Automaton"
+            },
+            "maat": {
+                "name": "Maat",
+                "description": "+1 ATK and +1 HP when lineup has 2+ factions",
+                "unlock": "Win with 3+ factions in lineup"
+            },
+            "tabula-rasa": {
+                "name": "Tabula Rasa",
+                "description": "Shop offers +1 extra unit",
+                "unlock": "Defeat The Noumenon"
+            },
+            "tetrapharmakos": {
+                "name": "Tetrapharmakos",
+                "description": "Heal all units for 1 HP at combat start",
+                "unlock": "Complete Idealist faction"
+            },
+            "yi-jing-trigram": {
+                "name": "Yi Jing Trigram (易經)",
+                "description": "After each victory, a random unit gains +1/+1 permanently",
+                "unlock": "Complete Rationalist faction"
+            },
+            "eternal-return": {
+                "name": "Eternal Return",
+                "description": "+1 extra life (4 losses to end run)",
+                "unlock": "Reach round 20"
+            },
+            "metempsychosis": {
+                "name": "Metempsychosis",
+                "description": "On unit death, 25% chance to resummon at 50% HP",
+                "unlock": "Complete Post-Structuralist faction"
+            },
+            "wu-wei": {
+                "name": "Wu Wei (無為)",
+                "description": "Deal 1 passive damage to all enemies each combat round",
+                "unlock": "Complete Existentialist faction"
+            },
+            "philosophers-stone": {
+                "name": "The Philosopher's Stone",
+                "description": "All tier 1 units gain +2 ATK and +2 HP",
+                "unlock": "Reach round 15 with a majority-Adjuncts lineup"
+            },
+            "indras-net": {
+                "name": "Indra's Net",
+                "description": "Faction bonuses trigger as if you have +1 extra ally",
+                "unlock": "Defeat all 4 bosses in a single run"
+            },
+            "rubber-duck": {
+                "name": "Rubber Duck",
+                "description": "Before combat, a random ally gains +2 ATK",
+                "unlock": "Complete 20 runs"
+            },
+            "loaded-dice": {
+                "name": "Loaded Dice",
+                "description": "Rerolls always include a unit matching your majority faction",
+                "unlock": "Buy 50 total units across all runs"
+            },
+            "newtons-cradle": {
+                "name": "Newton's Cradle",
+                "description": "When front unit dies, next unit inherits +50% of its ATK",
+                "unlock": "Win a combat where your front unit died first"
+            },
+            "rosetta-stone": {
+                "name": "The Rosetta Stone",
+                "description": "Cross-faction bridge bonuses need 1 fewer ally",
+                "unlock": "Win with all 4 factions in lineup"
+            },
+            "maxwells-demon": {
+                "name": "Maxwell's Demon",
+                "description": "Gain +2 Thoughts when you buy nothing in a shop phase",
+                "unlock": "Win a run spending under 20 Thoughts"
+            },
+            "pandoras-box": {
+                "name": "Pandora's Box",
+                "description": "Start runs with 2 random relics, but only 2 lives",
+                "unlock": "Hold 6+ relics in a single run"
+            }
+        },
+        "events": {
+            "allegory-of-the-cave": {
+                "title": "The Allegory of the Cave",
+                "description": "Shadows flicker on the wall before you. Will you turn toward the light?",
+                "choices": {
+                    "0": "Turn toward the light (sacrifice weakest unit, gain a relic)",
+                    "1": "Remain in darkness (+4 Thoughts)"
+                }
+            },
+            "trolley-problem": {
+                "title": "The Trolley Problem",
+                "description": "The tracks diverge before you. There is no right answer.",
+                "choices": {
+                    "0": "Pull the lever (all units lose 2 HP, gain a relic)",
+                    "1": "Do nothing (front unit loses 5 HP, +6 Thoughts)"
+                }
+            },
+            "nirvana": {
+                "title": "Nirvana",
+                "description": "Release all attachment. Let go of what you hold dear.",
+                "choices": {
+                    "0": "Release attachment (sell all bench at 2x, gain a rare relic)",
+                    "1": "Cling to the material (+2 Thoughts)"
+                }
+            },
+            "zhuangzis-butterfly": {
+                "title": "Zhuangzi's Butterfly",
+                "description": "Am I a philosopher dreaming I am a butterfly, or a butterfly dreaming I am a philosopher?",
+                "choices": {
+                    "0": "Embrace the dream (swap ATK and HP of all units)",
+                    "1": "Wake up (+2 Thoughts)"
+                }
+            },
+            "pascals-wager": {
+                "title": "Pascal's Wager",
+                "description": "Bet everything on the unknown. Faith or reason?",
+                "choices": {
+                    "0": "Wager it all (50% double Thoughts, 50% lose half)",
+                    "1": "Decline the wager (+1 Thought)"
+                }
+            },
+            "burning-library": {
+                "title": "The Burning Library",
+                "description": "The flames of Alexandria rise. What will you save from the ashes?",
+                "choices": {
+                    "0": "Rush in (lose 5 Thoughts, gain 2 relics)",
+                    "1": "Let it burn (+8 Thoughts)"
+                }
+            },
+            "garden-of-forking-paths": {
+                "title": "The Garden of Forking Paths",
+                "description": "Every path is taken, every path abandoned. Choose wisely.",
+                "choices": {
+                    "0": "Take the left path (gain a relic)",
+                    "1": "Take the right path (+5 Thoughts)",
+                    "2": "Take the center path (+2 ATK to all units)"
+                }
+            },
+            "karma": {
+                "title": "Karma",
+                "description": "What you give returns threefold. What you hoard turns to dust.",
+                "choices": {
+                    "0": "Give freely (lose 3 Thoughts, all units +2 ATK & +2 HP)",
+                    "1": "Keep your fortune (+1 ATK to a random unit)"
+                }
+            },
+            "memento-mori": {
+                "title": "Memento Mori",
+                "description": "Remember: you too shall pass. Use your time wisely.",
+                "choices": {
+                    "0": "Embrace mortality (strongest +4 ATK, loses 3 HP)",
+                    "1": "Seek longevity (all units +1 HP)"
+                }
+            },
+            "the-agora": {
+                "title": "The Agora",
+                "description": "Scholars peddle their wares in the marketplace of ideas.",
+                "choices": {
+                    "0": "Browse the common stall (buy common relic for 3 Thoughts)",
+                    "1": "Examine the rare collection (buy rare relic for 5 Thoughts)",
+                    "2": "Approach the legendary dealer (buy legendary relic for 8 Thoughts)"
+                }
+            },
+            "diogenes-lantern": {
+                "title": "Diogenes' Lantern",
+                "description": "He wanders with his lantern, searching for an honest thinker.",
+                "choices": {
+                    "0": "Follow his light (3 free rerolls next shop)",
+                    "1": "Ignore him (+2 Thoughts)"
+                }
+            },
+            "socratic-method": {
+                "title": "The Socratic Method",
+                "description": "I know that I know nothing. But perhaps I can know better.",
+                "choices": {
+                    "0": "Question everything (lose a relic, gain 2 new relics)",
+                    "1": "Accept what you know (+2 Thoughts)"
+                }
+            }
+        },
+        "bestiary": {
+            "thinkers": "Thinkers",
+            "adversaries": "Adversaries",
+            "relicsTab": "Relics",
+            "bosses": "Bosses",
+            "opponents": "Opponent Schools",
+            "defeated": "Defeated",
+            "undefeated": "Undefeated",
+            "locked": "???",
+            "unlockHint": "Unlock: {{hint}}",
+            "relicTiers": {
+                "common": "Common",
+                "rare": "Rare",
+                "legendary": "Legendary",
+                "secret": "Secret"
+            }
+        }
+    },
+    "divination": {
+        "title": "🔮 Deployment Divination",
+        "loading": "Consulting the aether...",
+        "noReading": "No divination reading available yet.",
+        "noReadingHint": "A reading is cast with each deployment.",
+        "starsNotAligned": "The stars were not aligned for this reading.",
+        "spiritsSilent": "The spirits could not be reached.",
+        "sections": {
+            "numerology": "🔢 Numerology",
+            "tarot": "🃏 Tarot Spread",
+            "iching": "☯️ I Ching",
+            "biorhythm": "📊 Biorhythm",
+            "horoscope": "Horoscope",
+            "natalChart": "🌌 Natal Chart"
+        },
+        "numerology": {
+            "lifePath": "Life Path",
+            "destiny": "Destiny",
+            "soulUrge": "Soul Urge",
+            "personality": "Personality",
+            "master": "Master"
+        },
+        "tarot": {
+            "past": "Past",
+            "present": "Present",
+            "future": "Future",
+            "reversed": "Reversed"
+        },
+        "biorhythm": {
+            "physical": "Physical",
+            "emotional": "Emotional",
+            "intellectual": "Intellectual",
+            "overall": "Overall"
+        },
+        "horoscope": {
+            "mood": "Mood",
+            "luckyNumber": "Lucky #",
+            "luckyTime": "Lucky Time",
+            "color": "Color",
+            "compatibility": "Compat"
+        },
+        "natalChart": {
+            "sun": "Sun",
+            "moon": "Moon",
+            "rising": "Rising",
+            "planet": "Planet",
+            "sign": "Sign",
+            "degree": "Degree",
+            "house": "House"
+        },
+        "familiar": {
+            "name": "Familiar"
+        },
+        "widget": {
+            "title": "🔮 Divination",
+            "expand": "Expand to consult the oracle",
+            "loading": "Consulting the aether...",
+            "unavailable": "Oracle unavailable",
+            "noReading": "No reading yet — awaiting next deployment"
         }
     }
 }

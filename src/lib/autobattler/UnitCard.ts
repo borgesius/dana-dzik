@@ -1,6 +1,6 @@
 import { getLocaleManager } from "../localeManager"
 import { getSellRefund } from "./shop"
-import type { CombatUnit, FactionId, UnitDef } from "./types"
+import type { AbilityTrigger, CombatUnit, FactionId, UnitDef } from "./types"
 import { UNIT_MAP } from "./units"
 
 // ── Faction display ─────────────────────────────────────────────────────────
@@ -19,6 +19,34 @@ const FACTION_COLORS: Record<FactionId, string> = {
     clockwork: "#996633",
     prospectors: "#669933",
     drifters: "#999999",
+}
+
+// ── Ability trigger icons ───────────────────────────────────────────────────
+
+const TRIGGER_ICONS: Record<AbilityTrigger, string> = {
+    combatStart: "🔔",
+    onFirstAttack: "🗡️",
+    onTakeDamage: "💥",
+    onDeath: "💀",
+    onAllyDeath: "🪦",
+    roundStart: "🔁",
+    onDealDamage: "⚔️",
+    onAllyAbility: "🤝",
+    onEnemyEnterFront: "👁️",
+}
+
+// ── Tier display ────────────────────────────────────────────────────────────
+
+function tierLabel(tier: number): string {
+    if (tier >= 3) return "T3"
+    if (tier >= 2) return "T2"
+    return "T1"
+}
+
+function tierClass(tier: number): string {
+    if (tier >= 3) return "uc-tier-3"
+    if (tier >= 2) return "uc-tier-2"
+    return "uc-tier-1"
 }
 
 export function factionIcon(faction: FactionId): string {
@@ -108,33 +136,40 @@ export function renderDefCard(def: UnitDef, options: CardOptions): string {
                 : options.affordable
                   ? "uc-card uc-shop"
                   : "uc-card uc-shop unaffordable"
+            const triggerIcon = TRIGGER_ICONS[def.ability.trigger] ?? ""
+            const tCls = tierClass(def.tier)
             return `
-                <button class="${cls} ${lvlCls}" data-offer="${options.offerIndex}"
+                <button class="${cls} ${lvlCls} ${tCls}" data-offer="${options.offerIndex}"
                     style="--uc-faction-color: ${fc}"
                     ${options.sold ? "disabled" : ""}>
+                    <div class="uc-tier-ribbon">${tierLabel(def.tier)}</div>
                     <div class="uc-header">
                         <span class="uc-name">${unitDisplayName(def)}</span>
-                    </div>
-                    <div class="uc-body">
-                        <span class="uc-stats">⚔${def.baseATK} ♥${def.baseHP}</span>
                         <span class="uc-faction">${factionIcon(def.faction)}</span>
                     </div>
-                    <div class="uc-ability">${def.ability.description}</div>
+                    <div class="uc-body">
+                        <span class="uc-stat-atk">⚔ ${def.baseATK}</span>
+                        <span class="uc-stat-hp">♥ ${def.baseHP}</span>
+                    </div>
+                    <div class="uc-ability"><span class="uc-trigger-icon" title="${def.ability.trigger}">${triggerIcon}</span> ${def.ability.description}</div>
                     <div class="uc-cost">${options.sold ? getLocaleManager().t("symposium.ui.sold") : `${options.cost} 💭`}</div>
                 </button>
             `
         }
         case "collection": {
+            const tCls = tierClass(def.tier)
             return `
-                <div class="uc-card uc-collection ${lvlCls}"
+                <div class="uc-card uc-collection ${lvlCls} ${tCls}"
                     style="--uc-faction-color: ${fc}"
                     title="${def.ability.description}">
+                    <div class="uc-tier-ribbon">${tierLabel(def.tier)}</div>
                     <div class="uc-header">
                         <span class="uc-name">${unitDisplayName(def)}</span>
                     </div>
                     <div class="uc-body">
-                        <span class="uc-stats">⚔${def.baseATK} ♥${def.baseHP}</span>
-                        <span class="uc-faction">${factionLabel(def.faction)}</span>
+                        <span class="uc-stat-atk">⚔ ${def.baseATK}</span>
+                        <span class="uc-stat-hp">♥ ${def.baseHP}</span>
+                        <span class="uc-faction">${factionIcon(def.faction)}</span>
                     </div>
                 </div>
             `
@@ -165,8 +200,9 @@ export function renderUnitCard(unit: CombatUnit, options: CardOptions): string {
             const factionBonusText = def?.ability.factionBonus
                 ? `+${def.ability.factionBonus.perAlly}/ally`
                 : ""
+            const tCls = def ? tierClass(def.tier) : "uc-tier-1"
             return `
-                <div class="uc-card uc-owned ${lvlCls}" ${dragAttr}
+                <div class="uc-card uc-owned ${lvlCls} ${tCls}" ${dragAttr}
                     style="--uc-faction-color: ${fc}"
                     data-ability="${abilityText}"
                     data-faction-bonus="${factionBonusText}"
@@ -180,7 +216,8 @@ export function renderUnitCard(unit: CombatUnit, options: CardOptions): string {
                         <span class="uc-level">${stars}</span>
                     </div>
                     <div class="uc-body">
-                        <span class="uc-stats">⚔${unit.currentATK} ♥${unit.currentHP}</span>
+                        <span class="uc-stat-atk">⚔ ${unit.currentATK}</span>
+                        <span class="uc-stat-hp">♥ ${unit.currentHP}</span>
                         <span class="uc-faction">${factionIcon(unit.faction)}</span>
                     </div>
                     <button class="uc-sell-btn" data-source="${options.source}" data-idx="${options.index}">${getLocaleManager().t("symposium.ui.sell", { amount: refund })}</button>
@@ -198,14 +235,15 @@ export function renderUnitCard(unit: CombatUnit, options: CardOptions): string {
                 <div class="uc-card uc-combat ${lvlCls} ${options.side}"
                     style="--uc-faction-color: ${fc}"
                     data-instance="${unit.instanceId}"
-                    data-unit-def="${unit.unitDefId}">
+                    data-unit-def="${unit.unitDefId}"
+                    data-max-hp="${unit.maxHP}">
                     <div class="uc-header">
                         <span class="uc-name">${def ? unitDisplayName(def) : unit.unitDefId}</span>
                         <span class="uc-level">${stars}</span>
                     </div>
                     <div class="uc-body">
-                        <span class="uc-stats">⚔${unit.currentATK}</span>
-                        ${unit.shield > 0 ? `<span class="uc-shield">🛡${unit.shield}</span>` : ""}
+                        <span class="uc-stat-atk">⚔ ${unit.currentATK}</span>
+                        ${unit.shield > 0 ? `<span class="uc-shield">🛡 ${unit.shield}</span>` : ""}
                     </div>
                     <div class="uc-hp-bar">
                         <div class="uc-hp-fill" style="width: ${hpPct}%; background: ${hpColor}"></div>

@@ -1,5 +1,12 @@
 import { getLocaleManager } from "../localeManager"
-import type { FactionId, OpponentDef, UnitTier } from "./types"
+import type {
+    BossId,
+    BossModifierId,
+    FactionId,
+    OpponentDef,
+    UnitId,
+    UnitTier,
+} from "./types"
 import { getUnitsForFaction } from "./units"
 
 // ── Round parameters ────────────────────────────────────────────────────────
@@ -89,7 +96,7 @@ export const ROUND_PARAMS = BASE_ROUND_PARAMS
 // ── Boss definitions ────────────────────────────────────────────────────────
 
 export interface BossDef {
-    id: string
+    id: BossId
     name: string
     faction: FactionId
     mechanic:
@@ -97,6 +104,14 @@ export interface BossDef {
         | "categoricalShield"
         | "sufficientReason"
         | "deconstruction"
+        | "sisyphean"
+        | "epoché"
+        | "preEstablishedHarmony"
+        | "palimpsest"
+        | "eristic"
+        | "tenure"
+        | "socraticMethod"
+        | "tabulaRasa"
     mechanicDescription: string
     /** Base ATK for the boss unit */
     baseATK: number
@@ -144,14 +159,94 @@ export const BOSS_DEFS: BossDef[] = [
         baseATK: 8,
         baseHP: 16,
     },
+    // ── New faction bosses ──────────────────────────────────────────────────
+    {
+        id: "boss-absurdist",
+        name: "The Absurdist",
+        faction: "quickdraw",
+        mechanic: "sisyphean",
+        mechanicDescription:
+            "Sisyphean: deals 2 damage to all enemies when hit",
+        baseATK: 7,
+        baseHP: 14,
+    },
+    {
+        id: "boss-phenomenologist",
+        name: "The Phenomenologist",
+        faction: "deputies",
+        mechanic: "epoché",
+        mechanicDescription:
+            "Epoché: heals all allies for 2 when taking damage",
+        baseATK: 5,
+        baseHP: 18,
+    },
+    {
+        id: "boss-theodicist",
+        name: "The Theodicist",
+        faction: "clockwork",
+        mechanic: "preEstablishedHarmony",
+        mechanicDescription:
+            "Pre-Established Harmony: all allies gain +1 ATK when any ally uses an ability",
+        baseATK: 6,
+        baseHP: 13,
+    },
+    {
+        id: "boss-archivist",
+        name: "The Archivist",
+        faction: "prospectors",
+        mechanic: "palimpsest",
+        mechanicDescription:
+            "Palimpsest: summons a 2/2 Trace on any ally death",
+        baseATK: 7,
+        baseHP: 12,
+    },
+    // ── Neutral / academic bosses ───────────────────────────────────────────
+    {
+        id: "boss-sophist",
+        name: "The Sophist",
+        faction: "drifters",
+        mechanic: "eristic",
+        mechanicDescription: "Eristic: gains +2 ATK each time it deals damage",
+        baseATK: 9,
+        baseHP: 10,
+    },
+    {
+        id: "boss-dean",
+        name: "The Dean",
+        faction: "drifters",
+        mechanic: "tenure",
+        mechanicDescription: "Tenure: all allies gain +2 Shield each round",
+        baseATK: 5,
+        baseHP: 18,
+    },
+    {
+        id: "boss-pedagogue",
+        name: "The Pedagogue",
+        faction: "drifters",
+        mechanic: "socraticMethod",
+        mechanicDescription:
+            "Socratic Method: when hit, a random ally gains +2 ATK",
+        baseATK: 6,
+        baseHP: 14,
+    },
+    {
+        id: "boss-empiricist",
+        name: "The Empiricist",
+        faction: "drifters",
+        mechanic: "tabulaRasa",
+        mechanicDescription:
+            "Tabula Rasa: deals 3 damage to all enemies at combat start",
+        baseATK: 8,
+        baseHP: 12,
+    },
 ]
 
-export const BOSS_MAP: ReadonlyMap<string, BossDef> = new Map(
+export const BOSS_MAP: ReadonlyMap<BossId, BossDef> = new Map(
     BOSS_DEFS.map((b) => [b.id, b])
 )
 
 /** Pick a random boss, avoiding the last one used */
-export function pickBoss(lastBossId?: string): BossDef {
+export function pickBoss(lastBossId?: BossId): BossDef {
     const pool = lastBossId
         ? BOSS_DEFS.filter((b) => b.id !== lastBossId)
         : BOSS_DEFS
@@ -161,6 +256,87 @@ export function pickBoss(lastBossId?: string): BossDef {
 /** Check if a given round is a boss round */
 export function isBossRound(round: number): boolean {
     return round >= 5 && round % 5 === 0
+}
+
+// ── Boss modifiers ─────────────────────────────────────────────────────────
+
+export interface BossModifier {
+    id: BossModifierId
+    name: string
+    description: string
+    /** If set, only appears on bosses of this faction */
+    faction?: FactionId
+}
+
+export const BOSS_MODIFIERS: BossModifier[] = [
+    // Generic modifiers (any boss)
+    {
+        id: "mod-enraged",
+        name: "Enraged",
+        description: "Boss gains +4 ATK",
+    },
+    {
+        id: "mod-fortified",
+        name: "Fortified",
+        description: "Boss gains +10 HP",
+    },
+    {
+        id: "mod-inspiring",
+        name: "Inspiring",
+        description: "All escort units gain +2 ATK",
+    },
+    {
+        id: "mod-armored",
+        name: "Armored",
+        description: "Boss starts with shield equal to 30% max HP",
+    },
+    // Faction modifiers
+    {
+        id: "mod-first-blood",
+        name: "First Blood",
+        description: "Boss deals 4 damage to front enemy at combat start",
+        faction: "quickdraw",
+    },
+    {
+        id: "mod-aegis",
+        name: "Aegis",
+        description: "All allies start with +3 Shield",
+        faction: "deputies",
+    },
+    {
+        id: "mod-overclocked",
+        name: "Overclocked",
+        description: "Boss gains +3 ATK and +3 HP",
+        faction: "clockwork",
+    },
+    {
+        id: "mod-swarm-spawn",
+        name: "Swarm Spawn",
+        description: "Two 2/2 Traces join the fight at combat start",
+        faction: "prospectors",
+    },
+]
+
+export const BOSS_MODIFIER_MAP: ReadonlyMap<BossModifierId, BossModifier> =
+    new Map(BOSS_MODIFIERS.map((m) => [m.id, m]))
+
+/**
+ * Pick a random modifier for a boss encounter.
+ * Builds a pool from generic modifiers + faction modifiers matching the boss.
+ * Returns undefined if no modifier is rolled (30% chance of no modifier on early boss rounds).
+ */
+export function pickBossModifier(
+    bossFaction: FactionId,
+    round: number
+): BossModifier | undefined {
+    // Chance of getting a modifier scales with round: 70% at round 5, 100% by round 15+
+    const modifierChance = Math.min(1.0, 0.5 + round * 0.05)
+    if (Math.random() > modifierChance) return undefined
+
+    const pool = BOSS_MODIFIERS.filter(
+        (m) => !m.faction || m.faction === bossFaction
+    )
+    return pool[Math.floor(Math.random() * pool.length)]
 }
 
 // ── Themed factions (excludes drifters) ─────────────────────────────────────
@@ -280,7 +456,7 @@ function generateOpponent(
     }
 
     const activePool = pool.length > 0 ? pool : drifterPool
-    const units: { unitId: string; level: number }[] = []
+    const units: { unitId: UnitId; level: number }[] = []
 
     for (let i = 0; i < params.unitCount; i++) {
         // Occasionally mix in a drifter for variety (20% chance, not on later rounds)
@@ -321,7 +497,7 @@ function generateBossOpponent(round: number, boss: BossDef): OpponentDef {
     // Boss escort: 2-3 faction units alongside the boss
     const escortCount = Math.min(3, Math.max(2, params.unitCount - 1))
     const pool = getUnitsForFaction(boss.faction)
-    const units: { unitId: string; level: number }[] = []
+    const units: { unitId: UnitId; level: number }[] = []
 
     // Add the boss unit itself (using the boss ID)
     units.push({ unitId: boss.id, level: 3 })
@@ -339,12 +515,16 @@ function generateBossOpponent(round: number, boss: BossDef): OpponentDef {
         }
     }
 
+    // Roll a random modifier for this boss encounter
+    const modifier = pickBossModifier(boss.faction, round)
+
     return {
         name: boss.name,
         faction: boss.faction,
         units,
         isBoss: true,
         bossId: boss.id,
+        modifierId: modifier?.id,
     }
 }
 
@@ -372,7 +552,7 @@ export function pickOpponent(
  */
 export function pickBossOpponent(
     round: number,
-    lastBossId?: string
+    lastBossId?: BossId
 ): OpponentDef {
     const boss = pickBoss(lastBossId)
     return generateBossOpponent(round, boss)

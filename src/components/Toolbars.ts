@@ -185,11 +185,7 @@ export class Toolbars {
         this.game.on("marketTick", () => this.ticker.update())
         this.game.on("commodityUnlocked", () => this.ticker.update())
         this.game.on("tradeExecuted", (data) => {
-            const result = data as {
-                action: string
-                totalCost: number
-            }
-            this.animateTradeResult(result.action === "sell", result.totalCost)
+            this.animateTradeResult(data.action === "sell", data.totalCost)
         })
     }
 

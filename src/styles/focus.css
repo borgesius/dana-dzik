@@ -1,0 +1,88 @@
+/**
+ * Global :focus-visible styles for keyboard accessibility.
+ *
+ * Uses :focus-visible (not :focus) so mouse clicks don't show outlines,
+ * but keyboard navigation always does.
+ */
+
+/* ── Windows ──────────────────────────────────────────────────────────────── */
+
+.window:focus-visible {
+    outline: 2px solid var(--focus-ring, #4a9eff);
+    outline-offset: 1px;
+}
+
+/* ── Window titlebar buttons (minimize, maximize, close) ──────────────── */
+
+.window-btn:focus-visible {
+    outline: 2px solid var(--focus-ring, #4a9eff);
+    outline-offset: -2px;
+    border-radius: 2px;
+}
+
+/* ── Taskbar buttons ──────────────────────────────────────────────────── */
+
+.taskbar-window-button:focus-visible,
+.start-button:focus-visible {
+    outline: 2px solid var(--focus-ring, #4a9eff);
+    outline-offset: -1px;
+}
+
+/* ── Quick launch icons ───────────────────────────────────────────────── */
+
+.quick-launch-icon:focus-visible {
+    outline: 2px solid var(--focus-ring, #4a9eff);
+    outline-offset: 1px;
+    border-radius: 2px;
+}
+
+/* ── System tray buttons ──────────────────────────────────────────────── */
+
+.system-tray button:focus-visible,
+.tray-theme-toggle:focus-visible {
+    outline: 2px solid var(--focus-ring, #4a9eff);
+    outline-offset: -1px;
+}
+
+/* ── Start menu items ─────────────────────────────────────────────────── */
+
+.start-menu-item:focus-visible {
+    outline: 2px solid var(--focus-ring, #4a9eff);
+    outline-offset: -2px;
+    background: var(--focus-bg, rgb(74 158 255 / 15%));
+}
+
+/* ── Toolbar dropdowns ────────────────────────────────────────────────── */
+
+.toolbar button:focus-visible,
+.toolbar select:focus-visible {
+    outline: 2px solid var(--focus-ring, #4a9eff);
+    outline-offset: -1px;
+}
+
+/* ── Terminal: restore focus indicator ─────────────────────────────────── */
+
+/* terminal.css sets outline: none on .terminal-input and .editor-textarea.
+ * We re-add a visible indicator for keyboard users. */
+
+.terminal-input:focus-visible {
+    outline: 1px solid var(--focus-ring, #4a9eff) !important;
+    outline-offset: -1px;
+}
+
+.editor-textarea:focus-visible {
+    outline: 1px solid var(--focus-ring, #4a9eff) !important;
+    outline-offset: -1px;
+}
+
+/* ── General interactive elements ─────────────────────────────────────── */
+
+button:focus-visible,
+[role="button"]:focus-visible,
+a:focus-visible,
+select:focus-visible,
+input:focus-visible,
+textarea:focus-visible {
+    outline: 2px solid var(--focus-ring, #4a9eff);
+    outline-offset: 1px;
+}

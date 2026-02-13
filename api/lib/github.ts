@@ -1,3 +1,5 @@
+import { serverFetch } from "./fetchUtils"
+
 export const GITHUB_OWNER = "borgesius"
 export const GITHUB_REPO = "dana-dzik"
 
@@ -34,19 +36,14 @@ export interface CommitStatus {
 }
 
 export async function fetchGitHub<T>(endpoint: string): Promise<T | null> {
-    try {
-        const response = await fetch(
-            `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}${endpoint}`,
-            {
-                headers: {
-                    Accept: "application/vnd.github.v3+json",
-                    "User-Agent": "dana-dzik-reports",
-                },
-            }
-        )
-        if (!response.ok) return null
-        return (await response.json()) as T
-    } catch {
-        return null
-    }
+    const result = await serverFetch<T>(
+        `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}${endpoint}`,
+        {
+            headers: {
+                Accept: "application/vnd.github.v3+json",
+                "User-Agent": "dana-dzik-reports",
+            },
+        }
+    )
+    return result.ok ? result.data : null
 }

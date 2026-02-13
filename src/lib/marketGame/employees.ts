@@ -4,6 +4,7 @@ export type EmployeeType =
     | "trader"
     | "engineer"
     | "analyst"
+    | "quant"
     | "recruiter"
     | "intern"
 
@@ -56,6 +57,15 @@ export const EMPLOYEE_DEFS: Record<EmployeeType, EmployeeDef> = {
         baseSalaryPerTick: 0.45,
         description: "Improves market read accuracy",
     },
+    quant: {
+        type: "quant",
+        label: "Quant",
+        icon: "🧮",
+        bonusType: "dasYield",
+        baseBonusPerLevel: 0.04, // +4% DAS yield per level
+        baseSalaryPerTick: 0.65,
+        description: "Structured products specialist. Boosts DAS yields.",
+    },
     recruiter: {
         type: "recruiter",
         label: "Recruiter",
@@ -85,12 +95,15 @@ export const REFRESH_POOL_BASE_COST = 5
 /** How many ticks between auto-refreshes of the hiring pool */
 export const POOL_REFRESH_TICKS = 20
 
-/** Max VP slots (3rd unlocks conditionally) */
-export const MAX_VP_SLOTS = 3
+/** Max VP slots (3rd and 4th unlock conditionally) */
+export const MAX_VP_SLOTS = 4
 export const INITIAL_VP_SLOTS = 2
 
-/** ICs per VP */
-export const ICS_PER_VP = 2
+/** ICs per VP (increased from 2 to 3) */
+export const ICS_PER_VP = 3
+
+/** Tenure bonus: +5% effectiveness per 100 ticks served */
+export const TENURE_BONUS_PER_100_TICKS = 0.05
 
 // ── Salary calculation ──────────────────────────────────────────────────────
 
@@ -114,10 +127,16 @@ export function getEmployeeBonus(emp: Employee): number {
 
 export function getEffectiveness(emp: Employee): number {
     const morale = emp.morale ?? 80
-    if (morale >= 70) return 1.0
-    if (morale >= 40) return 0.75
-    if (morale >= 25) return 0.5
-    return 0.25
+    let base: number
+    if (morale >= 70) base = 1.0
+    else if (morale >= 40) base = 0.75
+    else if (morale >= 25) base = 0.5
+    else base = 0.25
+
+    // Tenure bonus: +5% per 100 ticks served (caps at +25%)
+    const tenureStacks = Math.min(5, Math.floor((emp.tenure ?? 0) / 100))
+    const tenureBonus = tenureStacks * TENURE_BONUS_PER_100_TICKS
+    return base * (1 + tenureBonus)
 }
 
 // ── Department chemistry ────────────────────────────────────────────────────
@@ -129,6 +148,7 @@ export const CHEMISTRY: Record<EmployeeType, Record<EmployeeType, number>> = {
         trader: 0.4,
         engineer: -0.3,
         analyst: 0.1,
+        quant: 0.2,
         recruiter: 0,
         intern: 0,
     },
@@ -136,6 +156,7 @@ export const CHEMISTRY: Record<EmployeeType, Record<EmployeeType, number>> = {
         trader: -0.3,
         engineer: 0.4,
         analyst: 0.1,
+        quant: 0,
         recruiter: 0,
         intern: 0,
     },
@@ -143,13 +164,23 @@ export const CHEMISTRY: Record<EmployeeType, Record<EmployeeType, number>> = {
         trader: 0.1,
         engineer: 0.1,
         analyst: 0.4,
+        quant: 0.3,
         recruiter: 0,
+        intern: -0.2,
+    },
+    quant: {
+        trader: 0.2,
+        engineer: 0,
+        analyst: 0.3,
+        quant: 0.4,
+        recruiter: -0.1,
         intern: -0.2,
     },
     recruiter: {
         trader: 0.2,
         engineer: 0.2,
         analyst: 0.2,
+        quant: 0.1,
         recruiter: 0.2,
         intern: 0.2,
     },
@@ -157,6 +188,7 @@ export const CHEMISTRY: Record<EmployeeType, Record<EmployeeType, number>> = {
         trader: 0,
         engineer: 0,
         analyst: 0,
+        quant: 0,
         recruiter: 0,
         intern: 0,
     },
@@ -263,6 +295,7 @@ export function generateCandidate(maxLevel: number = 2): Employee {
     const types: EmployeeType[] = [
         "trader",
         "engineer",
+        "quant",
         "analyst",
         "recruiter",
         "intern",

@@ -5,6 +5,7 @@ import type { CareerBranch } from "./types"
 export type BonusType =
     | "factoryOutput"
     | "tradeProfit"
+    | "masteryScaling"
     | "xpRate"
     | "autobattlerATK"
     | "autobattlerATK_clockwork"
@@ -20,8 +21,56 @@ export type BonusType =
     | "hindsightRate"
     | "switchPenaltyReduction"
 
+export type CareerNodeId =
+    // Engineering
+    | "eng-senior"
+    | "eng-staff"
+    | "eng-principal"
+    | "eng-distinguished"
+    | "eng-fellow"
+    | "eng-emeritus"
+    | "eng-research"
+    // Trading
+    | "trade-analyst"
+    | "trade-quant"
+    | "trade-pm"
+    | "trade-md"
+    | "trade-partner"
+    | "trade-strategist"
+    // Growth
+    | "growth-hacker"
+    | "growth-head"
+    | "growth-vp"
+    | "growth-cmo"
+    | "growth-cvo"
+    | "growth-empire"
+    // Executive
+    | "exec-pm"
+    | "exec-director"
+    | "exec-vp"
+    | "exec-ceo"
+    | "exec-chairman"
+    | "exec-board-chairman"
+    // Education
+    | "edu-hard-knocks"
+    | "edu-undergrad"
+    | "edu-honors"
+    | "edu-grad-cert"
+    | "edu-phd"
+    // Skills
+    | "skill-base"
+    | "skill-comms"
+    | "skill-passive-email"
+    | "skill-read-receipts"
+    | "skill-code-review"
+    | "skill-nitpicking"
+    | "skill-assassination"
+    | "skill-sql"
+    | "skill-dashboards"
+    | "skill-divination"
+
 export interface CareerNodeDef {
-    id: string
+    id: CareerNodeId
     name: string // job title
     company: string // company / org line
     dateRange: string // fake date range for the resume
@@ -29,7 +78,7 @@ export interface CareerNodeDef {
     bonusLabel: string // human-readable bonus description
     branch: CareerBranch | "education" | "skills"
     tier: number // 1-4, higher = deeper in tree
-    prerequisites: string[] // node IDs
+    prerequisites: CareerNodeId[] // node IDs
     bonusType: BonusType
     bonusValue: number // multiplier or flat amount
 }
@@ -144,6 +193,23 @@ const ENGINEERING_NODES: CareerNodeDef[] = [
         bonusType: "factoryOutput",
         bonusValue: 0.25,
     },
+    {
+        id: "eng-research",
+        name: "Research Director",
+        company: "R&D Division Zero · The Lab",
+        dateRange: "Post-Emeritus – Pre-Relevance",
+        bullets: [
+            "Directed research into research methodologies. Meta-conclusions pending",
+            "Allocated budget to projects whose ROI was 'strategically unmeasurable'",
+            "Mastery upgrades now scale 15% better. The interns noticed",
+        ],
+        bonusLabel: "+15% mastery scaling",
+        branch: "engineering",
+        tier: 6,
+        prerequisites: ["eng-emeritus"],
+        bonusType: "masteryScaling",
+        bonusValue: 0.15,
+    },
 ]
 
 // ── Trading / Finance Branch ─────────────────────────────────────────────────
@@ -234,6 +300,23 @@ const TRADING_NODES: CareerNodeDef[] = [
         prerequisites: ["trade-md"],
         bonusType: "hindsightRate",
         bonusValue: 0.25,
+    },
+    {
+        id: "trade-strategist",
+        name: "Chief Strategist",
+        company: "Strategic Imperatives Group · The Top Floor",
+        dateRange: "Leveraged – Compounded",
+        bullets: [
+            "Strategy so strategic it loops back to the beginning",
+            "Trade profits compound with the confidence of someone who's seen the backtest",
+            "Late-game bonuses now include this one. The spreadsheet approves",
+        ],
+        bonusLabel: "+20% trade profit (compounds)",
+        branch: "trading",
+        tier: 6,
+        prerequisites: ["trade-partner"],
+        bonusType: "tradeProfit",
+        bonusValue: 0.2,
     },
 ]
 
@@ -326,6 +409,23 @@ const GROWTH_NODES: CareerNodeDef[] = [
         bonusType: "xpRate",
         bonusValue: 0.12,
     },
+    {
+        id: "growth-empire",
+        name: "Growth Emperor",
+        company: "Empire of Growth Inc. · The Throne",
+        dateRange: "Viral – Eternal",
+        bullets: [
+            "Scaling so aggressive the y-axis had to be retired",
+            "Factory output compounds with mastery. The factories noticed",
+            "Crowned by a committee of growth hackers. The crown was A/B tested",
+        ],
+        bonusLabel: "+20% factory output (compounds)",
+        branch: "growth",
+        tier: 6,
+        prerequisites: ["growth-cvo"],
+        bonusType: "factoryOutput",
+        bonusValue: 0.2,
+    },
 ]
 
 // ── Executive Branch ─────────────────────────────────────────────────────────
@@ -416,6 +516,23 @@ const EXECUTIVE_NODES: CareerNodeDef[] = [
         prerequisites: ["exec-ceo"],
         bonusType: "factoryOutput",
         bonusValue: 0.25,
+    },
+    {
+        id: "exec-board-chairman",
+        name: "Chairman",
+        company: "Board of the Board · Abstracted",
+        dateRange: "Advisory² – ∞",
+        bullets: [
+            "Chair of the chair committee. Meetings consist of chairs",
+            "Strongest mastery scaling in the tree. The other branches are aware",
+            "Compensation is a percentage of the percentage of profits",
+        ],
+        bonusLabel: "+20% mastery scaling",
+        branch: "executive",
+        tier: 6,
+        prerequisites: ["exec-chairman"],
+        bonusType: "masteryScaling",
+        bonusValue: 0.2,
     },
 ]
 

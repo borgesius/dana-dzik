@@ -113,7 +113,6 @@ export class PortfolioMgmtSection {
             html += `<div class="desk-note">No active securities. Securitize commodity holdings to generate yield.</div>`
         }
 
-        // Securitize form
         if (securities.length < DAS_MAX_POSITIONS) {
             const availableCommodities = snapshot.unlockedCommodities.filter(
                 (cId) => {
@@ -154,7 +153,6 @@ export class PortfolioMgmtSection {
                 <span>Max Leverage: <b>${(RATING_LEVERAGE_RATIO[rating] * 100).toFixed(0)}%</b> of portfolio</span>
             </div>`
 
-        // Debt ratio warning
         if (debt > 0) {
             const portfolioVal = this.game.calculatePortfolioValue()
             const ratio = portfolioVal > 0 ? debt / portfolioVal : 0
@@ -205,7 +203,6 @@ export class PortfolioMgmtSection {
     }
 
     private wireButtons(): void {
-        // Unwind buttons
         this.contentEl
             .querySelectorAll<HTMLElement>("[data-unwind]")
             .forEach((btn) => {
@@ -218,7 +215,6 @@ export class PortfolioMgmtSection {
                 })
             })
 
-        // Securitize
         const securitizeBtn = this.contentEl.querySelector(
             ".desk-securitize-btn"
         )
@@ -243,7 +239,6 @@ export class PortfolioMgmtSection {
             })
         }
 
-        // Borrow
         const borrowBtn = this.contentEl.querySelector(".desk-borrow-btn")
         if (borrowBtn) {
             borrowBtn.addEventListener("click", () => {
@@ -258,7 +253,6 @@ export class PortfolioMgmtSection {
             })
         }
 
-        // Repay
         const repayBtn = this.contentEl.querySelector(".desk-repay-btn")
         if (repayBtn) {
             repayBtn.addEventListener("click", () => {
@@ -273,7 +267,6 @@ export class PortfolioMgmtSection {
             })
         }
 
-        // Repay All
         const repayAllBtn = this.contentEl.querySelector(".desk-repay-all-btn")
         if (repayAllBtn) {
             repayAllBtn.addEventListener("click", () => {

@@ -24,6 +24,142 @@ export const CROSS_AISLE: Record<FactionId, FactionId> = {
     drifters: "drifters",
 }
 
+// ── Unit IDs ────────────────────────────────────────────────────────────────
+
+export type UnitId =
+    // Drifters
+    | "drifter-brawler"
+    | "drifter-scout"
+    | "drifter-medic"
+    | "drifter-heavy"
+    // Existentialists (Quickdraw)
+    | "qd-sharpshooter"
+    | "qd-deadeye"
+    | "qd-dynamiter"
+    | "qd-outlaw"
+    | "qd-kingpin"
+    | "qd-rifler"
+    | "qd-ambusher"
+    | "qd-executioner"
+    // Idealists (Deputies)
+    | "dep-barricader"
+    | "dep-marshal"
+    | "dep-trapper"
+    | "dep-warden"
+    | "dep-judge"
+    | "dep-sentinel"
+    | "dep-field-medic"
+    | "dep-fortress"
+    // Rationalists (Clockwork)
+    | "cw-accumulator"
+    | "cw-gearsmith"
+    | "cw-tesla-coil"
+    | "cw-overcharger"
+    | "cw-architect"
+    | "cw-amplifier"
+    | "cw-disruptor"
+    | "cw-detonator"
+    // Post-Structuralists (Prospectors)
+    | "bp-tunneler"
+    | "bp-foreman"
+    | "bp-rattler"
+    | "bp-necrominer"
+    | "bp-patriarch"
+    | "bp-revenant"
+    | "bp-leech"
+    | "bp-sovereign"
+    // Tokens
+    | "bp-shade"
+    // Boss units
+    | "boss-gadfly"
+    | "boss-noumenon"
+    | "boss-automaton"
+    | "boss-simulacrum"
+    | "boss-absurdist"
+    | "boss-phenomenologist"
+    | "boss-theodicist"
+    | "boss-archivist"
+    | "boss-sophist"
+    | "boss-dean"
+    | "boss-pedagogue"
+    | "boss-empiricist"
+
+// ── Boss IDs ────────────────────────────────────────────────────────────────
+
+export type BossId =
+    | "boss-gadfly"
+    | "boss-noumenon"
+    | "boss-automaton"
+    | "boss-simulacrum"
+    | "boss-absurdist"
+    | "boss-phenomenologist"
+    | "boss-theodicist"
+    | "boss-archivist"
+    | "boss-sophist"
+    | "boss-dean"
+    | "boss-pedagogue"
+    | "boss-empiricist"
+
+// ── Relic IDs ───────────────────────────────────────────────────────────────
+
+export type RelicId =
+    // Common
+    | "aletheia"
+    | "wuji"
+    | "shoshin"
+    | "golden-mean"
+    | "ubuntu"
+    | "amor-fati"
+    // Rare
+    | "uncarved-block"
+    | "ibn-rushds-mirror"
+    | "pratityasamutpada"
+    | "maat"
+    | "tabula-rasa"
+    | "tetrapharmakos"
+    | "yi-jing-trigram"
+    // Legendary
+    | "eternal-return"
+    | "metempsychosis"
+    | "wu-wei"
+    | "philosophers-stone"
+    | "indras-net"
+    // Secret
+    | "rubber-duck"
+    | "loaded-dice"
+    | "newtons-cradle"
+    | "rosetta-stone"
+    | "maxwells-demon"
+    | "pandoras-box"
+
+// ── Autobattler Event IDs ───────────────────────────────────────────────────
+
+export type EventId =
+    | "allegory-of-the-cave"
+    | "trolley-problem"
+    | "nirvana"
+    | "zhuangzis-butterfly"
+    | "pascals-wager"
+    | "burning-library"
+    | "garden-of-forking-paths"
+    | "karma"
+    | "memento-mori"
+    | "the-agora"
+    | "diogenes-lantern"
+    | "socratic-method"
+
+// ── Boss Modifier IDs ───────────────────────────────────────────────────────
+
+export type BossModifierId =
+    | "mod-enraged"
+    | "mod-fortified"
+    | "mod-inspiring"
+    | "mod-armored"
+    | "mod-first-blood"
+    | "mod-aegis"
+    | "mod-overclocked"
+    | "mod-swarm-spawn"
+
 // ── Ability triggers ─────────────────────────────────────────────────────────
 
 export type AbilityTrigger =
@@ -51,7 +187,7 @@ export type AbilityEffect =
       }
     | {
           type: "summon"
-          unitId: string
+          unitId: UnitId
           position: "front" | "back"
           atkBonus?: number
           hpBonus?: number
@@ -81,7 +217,7 @@ export interface AbilityDef {
 export type UnitTier = 1 | 2 | 3
 
 export interface UnitDef {
-    id: string
+    id: UnitId
     name: string
     faction: FactionId
     tier: UnitTier
@@ -95,7 +231,7 @@ export interface UnitDef {
 // ── Combat state ─────────────────────────────────────────────────────────────
 
 export interface CombatUnit {
-    unitDefId: string
+    unitDefId: UnitId
     level: number // 1-3 (combine to level up)
     currentATK: number
     currentHP: number
@@ -121,6 +257,27 @@ export interface CombatLogEntry {
     description: string
 }
 
+// ── Relics ───────────────────────────────────────────────────────────────────
+
+export interface RelicInstance {
+    relicId: RelicId
+    /** Round the relic was acquired */
+    acquiredRound: number
+}
+
+// ── Events ───────────────────────────────────────────────────────────────────
+
+export interface EventInstance {
+    eventId: EventId
+    /** Pre-rolled choices for this event presentation */
+    choices: EventChoiceInstance[]
+}
+
+export interface EventChoiceInstance {
+    choiceIndex: number
+    label: string
+}
+
 // ── Run state ────────────────────────────────────────────────────────────────
 
 export interface RunState {
@@ -130,24 +287,32 @@ export interface RunState {
     bench: CombatUnit[]
     wins: number
     losses: number
-    phase: "shop" | "arrange" | "combat" | "reward" | "finished"
+    phase: "shop" | "arrange" | "combat" | "reward" | "event" | "finished"
     runRewards: RunReward[]
     /** Whether the current round is a boss round */
     isBossRound: boolean
     /** ID of the current boss (if boss round) */
-    currentBossId?: string
+    currentBossId?: BossId
+    /** Relics held during this run */
+    relics: RelicInstance[]
+    /** Active event being presented (if in event phase) */
+    activeEvent?: EventInstance
+    /** Pending relic choice from boss kill (pick 1 of N) */
+    pendingRelicChoices?: RelicId[]
 }
 
 export interface RunReward {
-    type: "unit" | "buff" | "commodity" | "xp" | "scrap"
+    type: "unit" | "buff" | "commodity" | "xp" | "scrap" | "relic"
     description: string
     value: string | number
+    /** Quantity for commodity rewards (used when present; otherwise consumer computes) */
+    quantity?: number
 }
 
 // ── Shop state ───────────────────────────────────────────────────────────────
 
 export interface ShopOffer {
-    unitDefId: string
+    unitDefId: UnitId
     cost: number
     sold: boolean
 }
@@ -157,11 +322,13 @@ export interface ShopOffer {
 export interface OpponentDef {
     name: string
     faction: FactionId
-    units: { unitId: string; level: number }[]
+    units: { unitId: UnitId; level: number }[]
     /** If this is a boss opponent */
     isBoss?: boolean
     /** Boss identifier for tracking */
-    bossId?: string
+    bossId?: BossId
+    /** Random modifier applied to this boss encounter */
+    modifierId?: BossModifierId
 }
 
 // ── Run summary ─────────────────────────────────────────────────────────────
@@ -169,11 +336,12 @@ export interface OpponentDef {
 export interface RunSummary {
     highestRound: number
     losses: number
-    bossesDefeated: string[]
-    majorityFaction?: string
-    bestUnit?: { unitDefId: string; combatsSurvived: number }
+    bossesDefeated: BossId[]
+    majorityFaction?: FactionId
+    bestUnit?: { unitDefId: UnitId; combatsSurvived: number }
     totalScrapEarned: number
     totalScrapSpent: number
     unitsBought: number
     unitsSold: number
+    relicsCollected: RelicId[]
 }

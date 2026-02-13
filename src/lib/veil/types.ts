@@ -10,10 +10,10 @@ export const BOSS_VEIL: VeilId = 4
 // ── Save data ───────────────────────────────────────────────────────────────
 
 export interface VeilSaveData {
-    completed: number[]
-    attempts: Record<number, number>
+    completed: VeilId[]
+    attempts: Partial<Record<VeilId, number>>
     /** Veils that have been triggered (available to play) but not yet completed */
-    unlocked?: number[]
+    unlocked?: VeilId[]
 }
 
 export function createEmptyVeilData(): VeilSaveData {

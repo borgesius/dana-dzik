@@ -147,11 +147,9 @@ export class DeployWidget {
         title.textContent = "Deployment"
         this.tooltipEl.appendChild(title)
 
-        // Info rows first (version, env, build time, commit)
         this.appendInfoRows(info, env)
         this.appendEnvLinks(env)
 
-        // Branch visualizer below
         const vis = document.createElement("div")
         vis.className = "deploy-branch-vis"
         this.tooltipEl.appendChild(vis)
@@ -243,7 +241,6 @@ export class DeployWidget {
         container.innerHTML = svg
         container.appendChild(this.subTooltipEl)
 
-        // Wire hover events on commit circles
         const circles =
             container.querySelectorAll<SVGCircleElement>("circle[data-sha]")
         circles.forEach((circle) => {
@@ -299,10 +296,10 @@ export class DeployWidget {
         // the most recent squash-merged PR to locate the branch point.
         if (mergeBaseIdx < 0 && data.lastReleasePR) {
             mergeBaseIdx = staging.findIndex(
-                (c) => c.sha === data.lastReleasePR!.stagingSha
+                (c) => c.sha === data.lastReleasePR?.stagingSha
             )
             const mainIdx = main.findIndex(
-                (c) => c.sha === data.lastReleasePR!.mainSha
+                (c) => c.sha === data.lastReleasePR?.mainSha
             )
             if (mainIdx >= 0) mergeTargetIdx = mainIdx
         }

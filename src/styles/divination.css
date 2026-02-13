@@ -1,0 +1,709 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   Deployment Divination System
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.divination-content {
+    font-family: inherit;
+    font-size: 12px;
+    line-height: 1.5;
+    padding: 8px;
+    overflow-y: auto;
+    max-height: 100%;
+}
+
+/* ─── Loading ────────────────────────────────────────────────────────────── */
+
+.divination-loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+    gap: 12px;
+}
+
+.divination-sigil {
+    font-size: 48px;
+    animation: divination-pulse 2s ease-in-out infinite;
+}
+
+@keyframes divination-pulse {
+    0%,
+    100% {
+        opacity: 0.4;
+        transform: scale(1);
+    }
+
+    50% {
+        opacity: 1;
+        transform: scale(1.1);
+    }
+}
+
+.divination-loading p {
+    font-style: italic;
+    opacity: 0.7;
+}
+
+.divination-empty {
+    text-align: center;
+    padding: 40px 20px;
+}
+
+.divination-empty .divination-sigil {
+    animation: none;
+}
+
+.divination-hint {
+    font-size: 11px;
+    opacity: 0.5;
+    margin-top: 8px;
+}
+
+/* ─── Header ─────────────────────────────────────────────────────────────── */
+
+.divination-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 12px;
+    margin-bottom: 12px;
+    border: 1px solid var(--window-border, #888888);
+    background: var(--input-bg, rgb(0 0 0 / 5%));
+}
+
+.divination-familiar-badge {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.familiar-emoji {
+    font-size: 32px;
+}
+
+.familiar-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.familiar-name {
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.familiar-traits {
+    font-size: 10px;
+    opacity: 0.7;
+    font-style: italic;
+}
+
+.divination-meta {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 2px;
+}
+
+.deploy-sha {
+    font-family: monospace;
+    font-size: 11px;
+    padding: 1px 6px;
+    background: var(--input-bg, rgb(0 0 0 / 10%));
+    border: 1px solid var(--window-border, #888888);
+}
+
+.deploy-date {
+    font-size: 10px;
+    opacity: 0.6;
+}
+
+/* ─── Sections ───────────────────────────────────────────────────────────── */
+
+.divination-section {
+    margin-bottom: 16px;
+    padding: 10px 12px;
+    border: 1px solid var(--window-border, #888888);
+}
+
+.section-title {
+    margin: 0 0 10px;
+    font-size: 13px;
+    font-weight: bold;
+    border-bottom: 1px solid var(--window-border, #888888);
+    padding-bottom: 4px;
+}
+
+/* ─── Numerology ─────────────────────────────────────────────────────────── */
+
+.numerology-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+.num-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 8px 4px;
+    border: 1px solid var(--window-border, #888888);
+    background: var(--input-bg, rgb(0 0 0 / 3%));
+}
+
+.num-value {
+    font-size: 24px;
+    font-weight: bold;
+    font-family: monospace;
+    line-height: 1;
+    text-shadow: 0 0 8px currentcolor;
+}
+
+.num-label {
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    opacity: 0.6;
+    margin-top: 4px;
+}
+
+.master-badge {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: bold;
+    padding: 2px 8px;
+    margin-bottom: 6px;
+    border: 1px solid gold;
+    color: gold;
+    background: rgb(255 215 0 / 10%);
+}
+
+.numerology-interp {
+    margin: 0;
+    font-style: italic;
+    font-size: 11px;
+    opacity: 0.8;
+}
+
+/* ─── Tarot ──────────────────────────────────────────────────────────────── */
+
+.tarot-spread {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-bottom: 10px;
+}
+
+.tarot-card {
+    flex: 1;
+    max-width: 130px;
+    border: 2px solid var(--window-border, #888888);
+    padding: 8px;
+    text-align: center;
+    transition: transform 0.3s ease;
+}
+
+.tarot-card:hover {
+    transform: translateY(-4px);
+}
+
+.tarot-card.reversed .tarot-face {
+    transform: rotate(180deg);
+}
+
+.tarot-position {
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    opacity: 0.5;
+    margin-bottom: 6px;
+}
+
+.tarot-face {
+    padding: 10px 4px;
+    border: 1px solid var(--window-border, #888888);
+    margin-bottom: 8px;
+    background: var(--input-bg, rgb(0 0 0 / 3%));
+    min-height: 70px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.3s ease;
+}
+
+.tarot-numeral {
+    font-family: monospace;
+    font-size: 18px;
+    font-weight: bold;
+    opacity: 0.4;
+}
+
+.tarot-name {
+    font-size: 11px;
+    font-weight: bold;
+    margin-top: 4px;
+}
+
+.tarot-reversed-mark {
+    font-size: 9px;
+    color: #c0392b;
+    margin-top: 2px;
+    transform: rotate(180deg);
+}
+
+.tarot-meaning {
+    font-size: 10px;
+    line-height: 1.4;
+    opacity: 0.8;
+}
+
+.tarot-synthesis {
+    text-align: center;
+    font-style: italic;
+    font-size: 11px;
+    opacity: 0.7;
+    margin: 0;
+}
+
+/* ─── I Ching ────────────────────────────────────────────────────────────── */
+
+.iching-layout {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+}
+
+.iching-hexagram {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 8px;
+    flex-shrink: 0;
+}
+
+.iching-line {
+    display: flex;
+    align-items: center;
+    height: 8px;
+    width: 60px;
+    position: relative;
+}
+
+.iching-line.yang .line-solid {
+    width: 100%;
+    height: 4px;
+    background: currentcolor;
+}
+
+.iching-line.yin {
+    gap: 0;
+}
+
+.iching-line.yin .line-broken-l,
+.iching-line.yin .line-broken-r {
+    flex: 1;
+    height: 4px;
+    background: currentcolor;
+}
+
+.iching-line.yin .line-gap {
+    width: 12px;
+}
+
+.iching-line.changing {
+    opacity: 1;
+}
+
+.change-dot {
+    position: absolute;
+    right: -16px;
+    font-size: 10px;
+    opacity: 0.6;
+}
+
+.iching-text {
+    flex: 1;
+    min-width: 0;
+}
+
+.iching-name {
+    font-weight: bold;
+    font-size: 13px;
+    margin-bottom: 2px;
+}
+
+.iching-trigrams {
+    font-size: 10px;
+    opacity: 0.5;
+    text-transform: capitalize;
+    margin-bottom: 6px;
+}
+
+.iching-judgment {
+    font-size: 11px;
+    margin: 0 0 4px;
+}
+
+.iching-image {
+    font-size: 10px;
+    margin: 0 0 4px;
+    opacity: 0.7;
+}
+
+.iching-changing {
+    font-size: 10px;
+    opacity: 0.6;
+    font-style: italic;
+    margin: 4px 0 0;
+}
+
+/* ─── Biorhythm ──────────────────────────────────────────────────────────── */
+
+.bio-chart {
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    margin-bottom: 8px;
+    color: var(--text-color, #333333);
+}
+
+.bio-bars {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.bio-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.bio-label {
+    width: 70px;
+    font-size: 10px;
+    text-align: right;
+    flex-shrink: 0;
+}
+
+.bio-track {
+    flex: 1;
+    height: 8px;
+    background: var(--input-bg, rgb(0 0 0 / 10%));
+    border: 1px solid var(--window-border, #888888);
+    position: relative;
+    overflow: hidden;
+}
+
+.bio-fill {
+    height: 100%;
+    opacity: 0.6;
+    transition: width 0.5s ease;
+}
+
+.bio-marker {
+    position: absolute;
+    top: -1px;
+    width: 2px;
+    height: calc(100% + 2px);
+    background: currentcolor;
+    transform: translateX(-1px);
+}
+
+.bio-value {
+    width: 32px;
+    font-size: 10px;
+    font-family: monospace;
+    text-align: right;
+    flex-shrink: 0;
+}
+
+.bio-phase {
+    width: 65px;
+    font-size: 9px;
+    opacity: 0.5;
+    flex-shrink: 0;
+}
+
+.bio-overall {
+    text-align: center;
+    font-size: 11px;
+    margin-top: 8px;
+    font-weight: bold;
+    opacity: 0.7;
+}
+
+/* ─── Horoscope ──────────────────────────────────────────────────────────── */
+
+.horoscope-text {
+    font-size: 12px;
+    line-height: 1.6;
+    margin: 0 0 10px;
+}
+
+.horoscope-details {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 14px;
+    font-size: 10px;
+}
+
+.horoscope-detail {
+    opacity: 0.8;
+}
+
+/* ─── Natal Chart ────────────────────────────────────────────────────────── */
+
+.natal-big-three {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.natal-sign {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 8px;
+    border: 1px solid var(--window-border, #888888);
+    background: var(--input-bg, rgb(0 0 0 / 3%));
+}
+
+.natal-label {
+    font-size: 10px;
+    opacity: 0.6;
+}
+
+.natal-value {
+    font-weight: bold;
+    font-size: 13px;
+}
+
+.natal-planets {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 10px;
+}
+
+.natal-planets th {
+    text-align: left;
+    padding: 3px 6px;
+    border-bottom: 1px solid var(--window-border, #888888);
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    opacity: 0.6;
+}
+
+.natal-planets td {
+    padding: 2px 6px;
+    border-bottom: 1px solid var(--input-bg, rgb(0 0 0 / 5%));
+}
+
+.natal-unavailable {
+    text-align: center;
+    font-style: italic;
+    opacity: 0.5;
+    padding: 20px;
+}
+
+/* ─── Desktop Pet ────────────────────────────────────────────────────────── */
+
+.desktop-pet {
+    position: fixed;
+    bottom: 32px;
+    z-index: 9000;
+    cursor: pointer;
+    font-size: 24px;
+    transition: left 0.8s linear;
+    user-select: none;
+    filter: drop-shadow(0 1px 2px rgb(0 0 0 / 30%));
+}
+
+.desktop-pet:hover {
+    transform: scale(1.2);
+}
+
+.desktop-pet.state-walking {
+    animation: pet-bob 0.6s ease-in-out infinite;
+}
+
+.desktop-pet.state-sleeping {
+    opacity: 0.6;
+    animation: pet-sleep 2s ease-in-out infinite;
+}
+
+.desktop-pet.state-reading {
+    animation: pet-think 1.5s ease-in-out infinite;
+}
+
+.desktop-pet.state-bouncing {
+    animation: pet-bounce 0.4s ease-in-out infinite;
+}
+
+.desktop-pet.state-sad {
+    opacity: 0.7;
+    filter: drop-shadow(0 1px 2px rgb(0 0 0 / 30%)) saturate(0.5);
+}
+
+.desktop-pet.facing-left {
+    transform: scaleX(-1);
+}
+
+.desktop-pet.facing-left:hover {
+    transform: scaleX(-1) scale(1.2);
+}
+
+@keyframes pet-bob {
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-3px);
+    }
+}
+
+@keyframes pet-sleep {
+    0%,
+    100% {
+        transform: translateY(0) rotate(0deg);
+    }
+
+    25% {
+        transform: translateY(1px) rotate(-2deg);
+    }
+
+    75% {
+        transform: translateY(1px) rotate(2deg);
+    }
+}
+
+@keyframes pet-think {
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-1px);
+    }
+}
+
+@keyframes pet-bounce {
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-8px);
+    }
+}
+
+/* Sleep z's */
+.pet-zzz {
+    position: absolute;
+    top: -16px;
+    right: -8px;
+    font-size: 10px;
+    opacity: 0;
+    animation: pet-zzz-float 2s ease-in-out infinite;
+}
+
+@keyframes pet-zzz-float {
+    0% {
+        opacity: 0;
+        transform: translateY(0);
+    }
+
+    30% {
+        opacity: 0.7;
+    }
+
+    100% {
+        opacity: 0;
+        transform: translateY(-12px) translateX(4px);
+    }
+}
+
+/* Book for reading state */
+.pet-book {
+    position: absolute;
+    bottom: -2px;
+    right: -10px;
+    font-size: 10px;
+}
+
+/* Tooltip */
+.pet-tooltip {
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--window-bg, #ffffff);
+    border: 1px solid var(--window-border, #888888);
+    padding: 4px 8px;
+    font-size: 10px;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.2s;
+    margin-bottom: 4px;
+    max-width: 200px;
+    white-space: normal;
+    text-align: center;
+}
+
+.desktop-pet:hover .pet-tooltip {
+    opacity: 1;
+}
+
+/* ─── Widget ─────────────────────────────────────────────────────────────── */
+
+.divination-widget-content {
+    padding: 6px;
+    font-size: 11px;
+}
+
+.widget-familiar-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 6px;
+}
+
+.widget-familiar-emoji {
+    font-size: 20px;
+}
+
+.widget-familiar-name {
+    font-weight: bold;
+}
+
+.widget-bio-mini {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 4px;
+}
+
+.widget-bio-bar {
+    flex: 1;
+    height: 4px;
+    background: var(--input-bg, rgb(0 0 0 / 10%));
+    border: 1px solid var(--window-border, #888888);
+    overflow: hidden;
+}
+
+.widget-bio-bar-fill {
+    height: 100%;
+}
+
+.widget-lucky {
+    font-size: 10px;
+    opacity: 0.7;
+    text-align: center;
+}

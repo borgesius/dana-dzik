@@ -156,6 +156,24 @@ const WINDOW_CONFIGS: Record<RoutableWindow, WindowConfig> = {
         style: "win95",
         contentType: "finder",
     },
+    md: {
+        id: "md",
+        title: "Monitoring and Analysis of Traffic",
+        icon: icon("md"),
+        width: 620,
+        height: 500,
+        style: "win95",
+        contentType: "md",
+    },
+    divination: {
+        id: "divination",
+        title: "Divination",
+        icon: icon("divination"),
+        width: 520,
+        height: 600,
+        style: "win95",
+        contentType: "divination",
+    },
 }
 
 /**
@@ -171,6 +189,10 @@ export class WindowManager {
 
     constructor(container: HTMLElement) {
         this.container = container
+        // Allow the desktop container to receive focus when no windows are open
+        if (!container.hasAttribute("tabindex")) {
+            container.tabIndex = -1
+        }
         this.setupKeyboardShortcuts()
     }
 
@@ -209,6 +231,8 @@ export class WindowManager {
         this.windows.set(windowId, win)
         this.container.appendChild(win.getElement())
         this.focusWindow(windowId)
+        // Focus the DOM element for keyboard accessibility
+        win.getElement().focus()
         this.notifyChange()
         this.newWindowCallbacks.forEach((cb) => cb(windowId))
     }
@@ -228,6 +252,13 @@ export class WindowManager {
                 const remaining = Array.from(this.windows.keys())
                 if (remaining.length > 0) {
                     this.focusWindow(remaining[remaining.length - 1])
+                    const nextWin = this.windows.get(
+                        remaining[remaining.length - 1]
+                    )
+                    nextWin?.getElement().focus()
+                } else {
+                    // No windows remain — return focus to desktop container
+                    this.container.focus()
                 }
             }
             this.notifyChange()
@@ -265,6 +296,7 @@ export class WindowManager {
         win.setZIndex(this.zIndexCounter)
         win.setActive(true)
         win.restore()
+        win.getElement().focus()
         this.activeWindowId = windowId
         this.notifyChange()
     }
@@ -322,10 +354,46 @@ export class WindowManager {
 
     private setupKeyboardShortcuts(): void {
         document.addEventListener("keydown", (e) => {
+            // Escape — close the active window
             if (e.key === "Escape" && this.activeWindowId) {
                 this.closeWindow(this.activeWindowId)
+                return
+            }
+
+            // Alt+Tab / Alt+Shift+Tab — cycle through open windows
+            if (e.altKey && e.key === "Tab") {
+                e.preventDefault()
+                this.cycleWindow(e.shiftKey ? "backward" : "forward")
             }
         })
+    }
+
+    /**
+     * Cycles focus through open windows in z-index order.
+     * @param direction - "forward" for Alt+Tab, "backward" for Alt+Shift+Tab
+     */
+    private cycleWindow(direction: "forward" | "backward"): void {
+        const windowIds = Array.from(this.windows.keys())
+        if (windowIds.length === 0) return
+        if (windowIds.length === 1) {
+            this.focusWindow(windowIds[0])
+            return
+        }
+
+        const currentIndex = this.activeWindowId
+            ? windowIds.indexOf(this.activeWindowId)
+            : -1
+
+        let nextIndex: number
+        if (direction === "forward") {
+            nextIndex =
+                currentIndex < 0 ? 0 : (currentIndex + 1) % windowIds.length
+        } else {
+            nextIndex =
+                currentIndex <= 0 ? windowIds.length - 1 : currentIndex - 1
+        }
+
+        this.focusWindow(windowIds[nextIndex])
     }
 
     private notifyChange(): void {

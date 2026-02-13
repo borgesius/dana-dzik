@@ -34,7 +34,10 @@ async function fetchAndDisplayEntries(): Promise<void> {
 
         // SAFETY: response shape per GitHub Issues REST API v3 contract
         const allIssues = (await response.json()) as GitHubIssue[]
-        const issues = allIssues.filter((issue) => !issue.pull_request)
+        const issues = allIssues.filter(
+            (issue) =>
+                !issue.pull_request && issue.title.includes("[Guestbook]")
+        )
 
         if (issues.length === 0) {
             container.innerHTML = `<p class="empty">No entries yet. Be the first to sign!</p>`

@@ -2,6 +2,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest"
 
 import { MarketEngine } from "../lib/marketGame/MarketEngine"
 import {
+    CAPITAL_GAINS_BONUS,
     COMMODITIES,
     FACTORIES,
     FACTORY_COST_SCALING,
@@ -422,16 +423,16 @@ describe("MarketEngine", () => {
     })
 
     describe("data constants", () => {
-        it("has 6 commodities", () => {
-            expect(COMMODITIES.length).toBe(6)
+        it("has 8 commodities", () => {
+            expect(COMMODITIES.length).toBe(8)
         })
 
-        it("has 4 factories", () => {
-            expect(FACTORIES.length).toBe(4)
+        it("has 6 factories", () => {
+            expect(FACTORIES.length).toBe(6)
         })
 
-        it("has 26 upgrades", () => {
-            expect(UPGRADES.length).toBe(26)
+        it("has 28 upgrades", () => {
+            expect(UPGRADES.length).toBe(28)
         })
 
         it("has 3 influences", () => {
@@ -449,6 +450,144 @@ describe("MarketEngine", () => {
             expect(snap.lifetimeEarnings).toBeGreaterThan(0)
             expect(snap.unlockedPhases).toContain(1)
             expect(snap.unlockedCommodities).toContain("EMAIL")
+        })
+    })
+
+    // ── purchasedQuantity tracking ────────────────────────────────────────
+    describe("purchasedQuantity tracking", () => {
+        it("buying sets purchasedQuantity", () => {
+            engine.addBonus(5)
+            engine.buy("EMAIL", 10)
+
+            const holding = engine.getHolding("EMAIL")
+            expect(holding).not.toBeNull()
+            expect(holding!.purchasedQuantity).toBe(10)
+        })
+
+        it("harvesting does not increase purchasedQuantity", () => {
+            engine.harvest("EMAIL")
+            engine.harvest("EMAIL")
+
+            const holding = engine.getHolding("EMAIL")
+            expect(holding).not.toBeNull()
+            expect(holding!.purchasedQuantity).toBe(0)
+            expect(holding!.quantity).toBeGreaterThan(0)
+        })
+
+        it("mixed buy + harvest tracks purchased portion correctly", () => {
+            engine.addBonus(5)
+            engine.buy("EMAIL", 10)
+            engine.harvest("EMAIL")
+
+            const holding = engine.getHolding("EMAIL")
+            expect(holding).not.toBeNull()
+            expect(holding!.purchasedQuantity).toBe(10)
+            expect(holding!.quantity).toBeGreaterThan(10)
+        })
+
+        it("selling reduces purchasedQuantity proportionally", () => {
+            engine.addBonus(5)
+            engine.buy("EMAIL", 10)
+            engine.harvest("EMAIL") // adds some harvested units
+
+            const holdingBefore = engine.getHolding("EMAIL")!
+            const totalBefore = holdingBefore.quantity
+            const purchasedBefore = holdingBefore.purchasedQuantity
+
+            // Sell half of total
+            const halfQty = Math.floor(totalBefore / 2)
+            engine.sell("EMAIL", halfQty)
+
+            const holdingAfter = engine.getHolding("EMAIL")
+            expect(holdingAfter).not.toBeNull()
+            // purchasedQuantity should shrink proportionally
+            const expectedPurchased =
+                purchasedBefore - purchasedBefore * (halfQty / totalBefore)
+            expect(holdingAfter!.purchasedQuantity).toBeCloseTo(
+                expectedPurchased,
+                4
+            )
+        })
+
+        it("selling all removes holding including purchasedQuantity", () => {
+            engine.addBonus(5)
+            engine.buy("EMAIL", 10)
+            engine.sellAll("EMAIL")
+
+            expect(engine.getHolding("EMAIL")).toBeNull()
+        })
+    })
+
+    // ── Capital gains bonus ──────────────────────────────────────────────
+    describe("capital gains bonus", () => {
+        it("selling purchased stock at a profit yields more than base revenue", () => {
+            engine.addBonus(10)
+            const buyPrice = engine.getPrice("EMAIL")
+            engine.buy("EMAIL", 50)
+
+            // Advance time to let price rise
+            for (let i = 0; i < 50; i++) engine.tick()
+
+            const sellPrice = engine.getPrice("EMAIL")
+            if (sellPrice > buyPrice) {
+                const cashBefore = engine.getCash()
+                engine.sell("EMAIL", 50)
+                const cashAfter = engine.getCash()
+                const revenue = cashAfter - cashBefore
+
+                // Base revenue without any bonus would be sellPrice * 50
+                // Capital gains bonus adds CAPITAL_GAINS_BONUS * profit portion
+                const baseRevenue = sellPrice * 50
+                const profit = (sellPrice - buyPrice) * 50
+                const expectedBonus = profit * CAPITAL_GAINS_BONUS
+                // Revenue should be at least baseRevenue + some bonus
+                expect(revenue).toBeGreaterThanOrEqual(baseRevenue)
+                if (profit > 0) {
+                    expect(revenue).toBeCloseTo(baseRevenue + expectedBonus, 2)
+                }
+            }
+        })
+
+        it("selling harvested-only stock gets no capital gains bonus", () => {
+            // Harvest some EMAIL (free, purchasedQuantity = 0)
+            for (let i = 0; i < 10; i++) engine.harvest("EMAIL")
+
+            const holding = engine.getHolding("EMAIL")!
+            expect(holding.purchasedQuantity).toBe(0)
+
+            const cashBefore = engine.getCash()
+            const sellPrice = engine.getPrice("EMAIL")
+            const qty = holding.quantity
+            engine.sellAll("EMAIL")
+            const cashAfter = engine.getCash()
+            const revenue = cashAfter - cashBefore
+
+            // With no purchased units, no capital gains bonus applies
+            // Revenue = sellPrice * qty * (1 + tradeBonus)
+            // tradeBonus is 0 by default
+            expect(revenue).toBeCloseTo(sellPrice * qty, 4)
+        })
+
+        it("selling at a loss yields no capital gains bonus", () => {
+            engine.addBonus(100)
+
+            // Buy at current price
+            const buyPrice = engine.getPrice("EMAIL")
+            engine.buy("EMAIL", 100)
+
+            // Force a lower price by advancing time
+            for (let i = 0; i < 200; i++) engine.tick()
+
+            const sellPrice = engine.getPrice("EMAIL")
+            if (sellPrice < buyPrice) {
+                const cashBefore = engine.getCash()
+                engine.sell("EMAIL", 100)
+                const cashAfter = engine.getCash()
+                const revenue = cashAfter - cashBefore
+
+                // No bonus when at a loss: revenue = sellPrice * qty
+                expect(revenue).toBeCloseTo(sellPrice * 100, 2)
+            }
         })
     })
 })

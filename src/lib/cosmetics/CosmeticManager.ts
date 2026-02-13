@@ -14,7 +14,7 @@ export type CosmeticRarity = "common" | "uncommon" | "rare" | "legendary"
 
 export interface CosmeticSaveData {
     unlocked: string[]
-    active: Record<string, string>
+    active: Partial<Record<CosmeticType, string>>
 }
 
 type CosmeticCallback = (type: CosmeticType, id: string) => void

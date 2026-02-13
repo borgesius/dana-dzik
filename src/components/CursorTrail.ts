@@ -46,14 +46,13 @@ export class CursorTrail {
         this.canvas.height = window.innerHeight
         document.body.appendChild(this.canvas)
 
-        this.ctx = this.canvas.getContext("2d")!
+        this.ctx = this.canvas.getContext("2d") as CanvasRenderingContext2D
 
         this.loadTrailConfig()
         this.bindEvents()
         this.startCursorChange()
         this.animate()
 
-        // Listen for cosmetic changes
         getCosmeticManager().onChange((type) => {
             if (type === "cursor-trail") {
                 this.loadTrailConfig()
@@ -150,7 +149,6 @@ export class CursorTrail {
             sparkle.opacity *= 0.95
             sparkle.size *= 0.98
 
-            // Draw shape character
             this.ctx.globalAlpha = sparkle.opacity
             this.ctx.font = `${Math.max(sparkle.size * 2, 8)}px sans-serif`
             this.ctx.fillStyle = sparkle.color
@@ -158,7 +156,6 @@ export class CursorTrail {
             this.ctx.textBaseline = "middle"
             this.ctx.fillText(sparkle.shape, sparkle.x, sparkle.y)
 
-            // Also draw a small glow circle behind
             this.ctx.beginPath()
             this.ctx.arc(
                 sparkle.x,

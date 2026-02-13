@@ -15,6 +15,8 @@ import {
     renderAchievementsWindow,
     renderAutobattlerWindow,
     renderCustomizeWindow,
+    renderDivinationWindow,
+    renderMDWindow,
     renderResumeWindow,
 } from "../lib/windowContent"
 import { FileExplorer } from "./FileExplorer"
@@ -143,6 +145,10 @@ export class Window {
             renderCustomizeWindow()
         } else if (this.config.contentType === "finder") {
             this.initFinder()
+        } else if (this.config.contentType === "md") {
+            renderMDWindow()
+        } else if (this.config.contentType === "divination") {
+            renderDivinationWindow()
         }
     }
 
@@ -204,6 +210,7 @@ export class Window {
 
         const minimizeBtn = document.createElement("button")
         minimizeBtn.className = "window-btn minimize"
+        minimizeBtn.tabIndex = 0
         minimizeBtn.textContent = labels.minimizeButton || "_"
         minimizeBtn.setAttribute("aria-label", lm.t("window.minimize"))
         minimizeBtn.addEventListener("click", (e) => {
@@ -214,12 +221,14 @@ export class Window {
 
         const maximizeBtn = document.createElement("button")
         maximizeBtn.className = "window-btn maximize"
+        maximizeBtn.tabIndex = 0
         maximizeBtn.textContent = labels.maximizeButton || "\u25A1"
         maximizeBtn.setAttribute("aria-label", lm.t("window.maximize"))
         buttons.appendChild(maximizeBtn)
 
         const closeBtn = document.createElement("button")
         closeBtn.className = "window-btn close"
+        closeBtn.tabIndex = 0
         closeBtn.textContent = labels.closeButton || "\u00D7"
         closeBtn.setAttribute("aria-label", lm.t("window.close"))
         closeBtn.addEventListener("click", (e) => {

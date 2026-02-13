@@ -2,6 +2,7 @@ import { compileProgram } from "./compiler"
 import { interpretGrund } from "./grundInterpreter"
 import { parseGrund } from "./grundParser"
 import { interpret } from "./interpreter"
+import { runWeltInWorker } from "./interpreterWorkerClient"
 import { tokenize } from "./lexer"
 import { parse } from "./parser"
 import type { WeltCallbacks, WeltValue } from "./types"
@@ -15,7 +16,7 @@ export async function runWeltProgram(
 ): Promise<WeltValue[]> {
     const tokens = tokenize(source)
     const program = parse(tokens)
-    return interpret(program, callbacks, initialMemory)
+    return runWeltInWorker(program, callbacks, initialMemory)
 }
 
 export function compileWeltProgram(

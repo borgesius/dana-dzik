@@ -12,6 +12,7 @@ import {
     renderAchievementsWindow,
     renderAutobattlerWindow,
     renderCustomizeWindow,
+    renderDivinationWindow,
     renderResumeWindow,
 } from "../../lib/windowContent"
 import { FileExplorer } from "../FileExplorer"
@@ -184,6 +185,8 @@ export class MobileAppView {
             renderResumeWindow()
         } else if (contentType === "customize") {
             renderCustomizeWindow()
+        } else if (contentType === "divination") {
+            renderDivinationWindow()
         }
     }
 

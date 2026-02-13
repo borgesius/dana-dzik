@@ -6,7 +6,6 @@ import {
     getRedis,
     isConfigured,
     prefixKey,
-    writeThrough,
 } from "./lib/redisGateway"
 
 // ─── Configuration ──────────────────────────────────────────────────────────

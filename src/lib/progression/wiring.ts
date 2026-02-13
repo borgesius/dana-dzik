@@ -197,7 +197,16 @@ function wireCrossSystemHooks(): void {
     const career = getCareerManager()
 
     // WELT exercise pass -> grant commodity units, scaled by weltBonus
-    const commodities = ["EMAIL", "ADS", "DOM", "BW", "SOFT", "VC"] as const
+    const commodities = [
+        "EMAIL",
+        "ADS",
+        "LIVE",
+        "DOM",
+        "GLUE",
+        "BW",
+        "SOFT",
+        "VC",
+    ] as const
     onAppEvent("welt:exercise-passed", () => {
         const weltBonus = career.getBonus("weltBonus")
         const qty = Math.max(1, Math.ceil(1 * (1 + weltBonus)))
@@ -246,12 +255,10 @@ function wireCrossSystemHooks(): void {
 
     // Relay MarketEngine employee events to app events
     game.on("employeeHired", (data) => {
-        const emp = data as { type?: string }
-        emitAppEvent("market:employee-hired", { type: emp?.type ?? "" })
+        emitAppEvent("market:employee-hired", { type: data.type })
     })
     game.on("employeeFired", (data) => {
-        const emp = data as { type?: string }
-        emitAppEvent("market:employee-fired", { type: emp?.type ?? "" })
+        emitAppEvent("market:employee-fired", { type: data.type })
     })
 }
 

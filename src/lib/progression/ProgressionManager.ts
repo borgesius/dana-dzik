@@ -3,8 +3,10 @@ import { levelFromXP, xpForLevel, xpToNextLevel } from "./constants"
 import type { ProgressionSaveData } from "./types"
 import { createEmptyProgressionData } from "./types"
 
-type ProgressionEventType = "xpGained" | "levelUp"
-type ProgressionCallback = (data?: unknown) => void
+interface ProgressionEventMap {
+    xpGained: { amount: number; totalXP: number }
+    levelUp: { oldLevel: number; newLevel: number; totalXP: number }
+}
 
 let instance: ProgressionManager | null = null
 
@@ -19,8 +21,7 @@ export class ProgressionManager {
     private totalXP: number = 0
     private level: number = 0
     private onDirty: (() => void) | null = null
-    private eventListeners: Map<ProgressionEventType, ProgressionCallback[]> =
-        new Map()
+    private eventListeners = new Map<string, ((data: never) => void)[]>()
 
     /** Optional external XP rate bonus provider (returns a flat additive bonus, e.g. 0.1 = +10% XP) */
     public xpBonusProvider: (() => number) | null = null
@@ -34,18 +35,25 @@ export class ProgressionManager {
 
     // ── Events ───────────────────────────────────────────────────────────────
 
-    public on(
-        event: ProgressionEventType,
-        callback: ProgressionCallback
+    public on<K extends keyof ProgressionEventMap>(
+        event: K,
+        callback: (data: ProgressionEventMap[K]) => void
     ): void {
         if (!this.eventListeners.has(event)) {
             this.eventListeners.set(event, [])
         }
-        this.eventListeners.get(event)?.push(callback)
+        this.eventListeners.get(event)?.push(callback as (data: never) => void)
     }
 
-    private emit(event: ProgressionEventType, data?: unknown): void {
-        this.eventListeners.get(event)?.forEach((cb) => cb(data))
+    private emit<K extends keyof ProgressionEventMap>(
+        event: K,
+        data: ProgressionEventMap[K]
+    ): void {
+        this.eventListeners
+            .get(event)
+            ?.forEach((cb) =>
+                (cb as (data: ProgressionEventMap[K]) => void)(data)
+            )
     }
 
     // ── XP ───────────────────────────────────────────────────────────────────

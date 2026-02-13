@@ -1,9 +1,10 @@
+import { playSound } from "../audio"
 import { createCombatUnit } from "./combat"
-import type { CombatLogEntry, CombatResult, CombatUnit } from "./types"
+import type { CombatLogEntry, CombatResult, CombatUnit, UnitId } from "./types"
 import { renderUnitCard, unitDisplayName } from "./UnitCard"
 import { UNIT_MAP } from "./units"
 
-const ACTION_DELAY_MS = 350
+const BASE_ACTION_DELAY_MS = 350
 const DEATH_DELAY_MS = 500
 
 type AnimatorCallback = (result: CombatResult) => void
@@ -18,6 +19,7 @@ export class CombatAnimator {
     private playerStart: CombatUnit[]
     private opponentStart: CombatUnit[]
     private onComplete: AnimatorCallback
+    private isBossRound: boolean
 
     // Live state (cloned from start)
     private playerUnits: CombatUnit[] = []
@@ -28,18 +30,28 @@ export class CombatAnimator {
     private skipped = false
     private logContainer: HTMLElement | null = null
 
+    // Speed control: 1 = normal, 2 = fast
+    private speedMultiplier = 1
+    private lastRound = 0
+
     constructor(
         container: HTMLElement,
         result: CombatResult,
         playerLineup: CombatUnit[],
         opponentLineup: CombatUnit[],
-        onComplete: AnimatorCallback
+        onComplete: AnimatorCallback,
+        isBossRound = false
     ) {
         this.container = container
         this.result = result
         this.playerStart = playerLineup.map((u) => ({ ...u }))
         this.opponentStart = opponentLineup.map((u) => ({ ...u }))
         this.onComplete = onComplete
+        this.isBossRound = isBossRound
+    }
+
+    private get actionDelay(): number {
+        return Math.round(BASE_ACTION_DELAY_MS / this.speedMultiplier)
     }
 
     public start(): void {
@@ -47,8 +59,10 @@ export class CombatAnimator {
         this.opponentUnits = this.opponentStart.map((u) => ({ ...u }))
         this.logIndex = 0
         this.skipped = false
+        this.lastRound = 0
 
         this.render()
+        this.highlightFrontUnits()
         this.scheduleNext()
     }
 
@@ -72,12 +86,16 @@ export class CombatAnimator {
     // ── Rendering ─────────────────────────────────────────────────────────
 
     private render(): void {
+        const arenaClass = this.isBossRound
+            ? "ab-combat-arena ab-boss-arena"
+            : "ab-combat-arena"
         const html = `
-            <div class="ab-combat-arena">
+            <div class="${arenaClass}" id="ab-combat-arena">
                 <div class="ab-arena-side opponent" id="ab-opponent-side">
                     <span class="ab-arena-label">ENEMY</span>
                     ${this.renderSideUnits(this.opponentUnits, "opponent")}
                 </div>
+                <div class="ab-combat-round" id="ab-combat-round">Round 1</div>
                 <div class="ab-arena-vs">⚔ VS ⚔</div>
                 <div class="ab-arena-side player" id="ab-player-side">
                     <span class="ab-arena-label">YOU</span>
@@ -85,6 +103,8 @@ export class CombatAnimator {
                 </div>
             </div>
             <div class="ab-combat-controls">
+                <button class="ab-speed-btn ${this.speedMultiplier === 1 ? "active" : ""}" data-speed="1">1x</button>
+                <button class="ab-speed-btn ${this.speedMultiplier === 2 ? "active" : ""}" data-speed="2">2x</button>
                 <button class="ab-skip-btn" id="ab-skip-combat">Skip ⏩</button>
             </div>
             <div class="ab-combat-log" id="ab-combat-log"></div>
@@ -97,6 +117,23 @@ export class CombatAnimator {
             .getElementById("ab-skip-combat")
             ?.addEventListener("click", () => {
                 this.skip()
+            })
+
+        // Speed controls
+        this.container
+            .querySelectorAll<HTMLElement>(".ab-speed-btn")
+            .forEach((btn) => {
+                btn.addEventListener("click", () => {
+                    const speed = parseInt(
+                        btn.getAttribute("data-speed") ?? "1"
+                    )
+                    this.speedMultiplier = speed
+                    // Update active state
+                    this.container
+                        .querySelectorAll(".ab-speed-btn")
+                        .forEach((b) => b.classList.remove("active"))
+                    btn.classList.add("active")
+                })
             })
     }
 
@@ -126,22 +163,76 @@ export class CombatAnimator {
         this.updateArenaCards(this.result.opponentSurvivors, "opponent")
     }
 
+    // ── Front unit highlighting ──────────────────────────────────────────
+
+    private highlightFrontUnits(): void {
+        this.container
+            .querySelectorAll(".uc-front-unit")
+            .forEach((el) => el.classList.remove("uc-front-unit"))
+
+        const playerSide = document.getElementById("ab-player-side")
+        const opponentSide = document.getElementById("ab-opponent-side")
+
+        if (playerSide) {
+            const firstAlive = playerSide.querySelector(
+                ".uc-card.uc-combat:not(.dead)"
+            )
+            firstAlive?.classList.add("uc-front-unit")
+        }
+        if (opponentSide) {
+            const cards = opponentSide.querySelectorAll(
+                ".uc-card.uc-combat:not(.dead)"
+            )
+            // Opponent side is row-reversed, so last in DOM = first visually
+            if (cards.length > 0) {
+                cards[cards.length - 1].classList.add("uc-front-unit")
+            }
+        }
+    }
+
     // ── Animation loop ────────────────────────────────────────────────────
 
     private scheduleNext(): void {
         if (this.skipped) return
         if (this.logIndex >= this.result.log.length) {
             setTimeout(() => {
-                if (!this.skipped) this.onComplete(this.result)
+                if (!this.skipped) {
+                    playSound(
+                        this.result.winner === "player"
+                            ? "ab_victory"
+                            : "ab_defeat"
+                    )
+                    this.onComplete(this.result)
+                }
             }, DEATH_DELAY_MS)
             return
         }
 
         this.timerId = setTimeout(() => {
-            this.processLogEntry(this.result.log[this.logIndex])
+            const entry = this.result.log[this.logIndex]
+
+            if (entry.round !== this.lastRound) {
+                this.lastRound = entry.round
+                this.updateRoundIndicator(entry.round)
+            }
+
+            this.processLogEntry(entry)
             this.logIndex++
+
+            this.highlightFrontUnits()
+
             this.scheduleNext()
-        }, ACTION_DELAY_MS)
+        }, this.actionDelay)
+    }
+
+    private updateRoundIndicator(round: number): void {
+        const el = document.getElementById("ab-combat-round")
+        if (!el) return
+        el.textContent = `Round ${round}`
+        el.classList.remove("ab-round-pulse")
+        // Force reflow to restart animation
+        void el.offsetWidth
+        el.classList.add("ab-round-pulse")
     }
 
     private processLogEntry(entry: CombatLogEntry): void {
@@ -161,6 +252,10 @@ export class CombatAnimator {
             this.animateSummon(desc)
         } else if (desc.includes(" gains +") && desc.includes(" HP")) {
             this.animateHpGain(desc)
+        } else if (desc.includes(" gains +") && desc.includes(" ATK")) {
+            this.animateBuffEffect(desc)
+        } else if (desc.includes(" gains +") && desc.includes(" shield")) {
+            this.animateBuffEffect(desc)
         }
     }
 
@@ -176,7 +271,6 @@ export class CombatAnimator {
     private formatLogEntry(entry: CombatLogEntry): string {
         // Translate unit def IDs to display names for user-facing text
         let desc = entry.description
-        // Replace known unit IDs with display names
         for (const [id, def] of UNIT_MAP) {
             if (desc.includes(id)) {
                 desc = desc.split(id).join(unitDisplayName(def))
@@ -196,6 +290,32 @@ export class CombatAnimator {
         return ""
     }
 
+    // ── Screen shake ──────────────────────────────────────────────────────
+
+    private triggerScreenShake(): void {
+        const arena = document.getElementById("ab-combat-arena")
+        if (!arena) return
+        arena.classList.remove("ab-screen-shake")
+        void arena.offsetWidth
+        arena.classList.add("ab-screen-shake")
+        setTimeout(() => arena.classList.remove("ab-screen-shake"), 300)
+    }
+
+    // ── Ability callout ───────────────────────────────────────────────────
+
+    private showAbilityCallout(card: HTMLElement, unitDefId: string): void {
+        const def = UNIT_MAP.get(unitDefId as UnitId)
+        if (!def) return
+
+        const displayName = unitDisplayName(def)
+        const callout = document.createElement("div")
+        callout.className = "uc-ability-callout"
+        callout.textContent = displayName
+        card.style.position = "relative"
+        card.appendChild(callout)
+        setTimeout(() => callout.remove(), 800)
+    }
+
     // ── Individual animations ─────────────────────────────────────────────
 
     private animateAttack(desc: string): void {
@@ -209,14 +329,24 @@ export class CombatAnimator {
         const attackerCard = this.findCardByUnitDefId(attackerId)
         if (attackerCard) {
             attackerCard.classList.add("attacking")
-            setTimeout(() => attackerCard.classList.remove("attacking"), 300)
+            setTimeout(() => attackerCard.classList.remove("attacking"), 350)
         }
 
         const targetCard = this.findCardByUnitDefId(targetId)
         if (targetCard) {
             targetCard.classList.add("hit")
-            setTimeout(() => targetCard.classList.remove("hit"), 200)
+            setTimeout(() => targetCard.classList.remove("hit"), 300)
             this.showDamageNumber(targetCard, dmg)
+
+            const maxHp = parseInt(
+                targetCard.getAttribute("data-max-hp") ?? "0"
+            )
+            if (maxHp > 0 && dmg > maxHp * 0.4) {
+                this.triggerScreenShake()
+                playSound("ab_bighit")
+            } else {
+                playSound("ab_hit")
+            }
         }
 
         this.applyDamageToUnit(targetId, dmg)
@@ -230,6 +360,8 @@ export class CombatAnimator {
         const card = this.findCardByUnitDefId(match[1])
         if (card) {
             card.classList.add("dead")
+            this.triggerScreenShake()
+            playSound("ab_death")
         }
     }
 
@@ -238,14 +370,28 @@ export class CombatAnimator {
         const match = desc.match(/^(\S+) ability deals (\d+) to (\S+)/)
         if (!match) return
 
-        const [, , dmgStr, targetId] = match
+        const [, casterId, dmgStr, targetId] = match
         const dmg = parseInt(dmgStr)
+
+        const casterCard = this.findCardByUnitDefId(casterId)
+        if (casterCard) {
+            this.showAbilityCallout(casterCard, casterId)
+        }
+
+        playSound("ab_ding")
 
         const targetCard = this.findCardByUnitDefId(targetId)
         if (targetCard) {
             targetCard.classList.add("hit")
-            setTimeout(() => targetCard.classList.remove("hit"), 200)
+            setTimeout(() => targetCard.classList.remove("hit"), 300)
             this.showDamageNumber(targetCard, dmg)
+
+            const maxHp = parseInt(
+                targetCard.getAttribute("data-max-hp") ?? "0"
+            )
+            if (maxHp > 0 && dmg > maxHp * 0.4) {
+                this.triggerScreenShake()
+            }
         }
 
         this.applyDamageToUnit(targetId, dmg)
@@ -255,12 +401,20 @@ export class CombatAnimator {
         const match = desc.match(/^(\S+) ability heals (\S+) for (\d+)/)
         if (!match) return
 
-        const [, , targetId, healStr] = match
+        const [, casterId, targetId, healStr] = match
         const heal = parseInt(healStr)
+
+        const casterCard = this.findCardByUnitDefId(casterId)
+        if (casterCard) {
+            this.showAbilityCallout(casterCard, casterId)
+        }
 
         const card = this.findCardByUnitDefId(targetId)
         if (card) {
+            card.classList.add("buffed")
+            setTimeout(() => card.classList.remove("buffed"), 400)
             this.showHealNumber(card, heal)
+            playSound("ab_boop")
         }
 
         this.applyHealToUnit(targetId, heal, false)
@@ -275,10 +429,36 @@ export class CombatAnimator {
 
         const card = this.findCardByUnitDefId(targetId)
         if (card) {
+            card.classList.add("buffed")
+            setTimeout(() => card.classList.remove("buffed"), 400)
             this.showHealNumber(card, amount)
         }
 
         this.applyHealToUnit(targetId, amount, true)
+    }
+
+    private animateBuffEffect(desc: string): void {
+        // Generic buff animation for ATK/shield gains
+        const match = desc.match(/^(\S+) gains/)
+        if (!match) return
+
+        const card = this.findCardByUnitDefId(match[1])
+        if (card) {
+            card.classList.add("buffed")
+            setTimeout(() => card.classList.remove("buffed"), 400)
+
+            // Check for shield break (shield going to 0)
+            if (desc.includes("shield")) {
+                const shieldEl = card.querySelector(".uc-shield")
+                if (shieldEl && shieldEl.textContent?.includes("0")) {
+                    card.classList.add("uc-shield-break")
+                    setTimeout(
+                        () => card.classList.remove("uc-shield-break"),
+                        400
+                    )
+                }
+            }
+        }
     }
 
     private showHealNumber(card: HTMLElement, amount: number): void {
@@ -287,7 +467,7 @@ export class CombatAnimator {
         numEl.textContent = `+${amount}`
         card.style.position = "relative"
         card.appendChild(numEl)
-        setTimeout(() => numEl.remove(), 600)
+        setTimeout(() => numEl.remove(), 700)
     }
 
     private applyHealToUnit(
@@ -322,7 +502,13 @@ export class CombatAnimator {
         )
         if (!match) return
 
-        const [, , summonedId, sideTag] = match
+        const [, casterId, summonedId, sideTag] = match
+
+        const casterCard = this.findCardByUnitDefId(casterId)
+        if (casterCard) {
+            this.showAbilityCallout(casterCard, casterId)
+        }
+        playSound("ab_ding")
 
         let side: "player" | "opponent" = "player"
         if (sideTag === "player" || sideTag === "opponent") {
@@ -340,7 +526,7 @@ export class CombatAnimator {
         )
         if (!sideEl) return
 
-        const summoned = createCombatUnit(summonedId, 1)
+        const summoned = createCombatUnit(summonedId as UnitId, 1)
 
         if (side === "player") {
             this.playerUnits.push(summoned)
@@ -355,7 +541,7 @@ export class CombatAnimator {
         if (cardEl) {
             cardEl.classList.add("uc-summon-enter")
             sideEl.appendChild(cardEl)
-            setTimeout(() => cardEl.classList.remove("uc-summon-enter"), 400)
+            setTimeout(() => cardEl.classList.remove("uc-summon-enter"), 500)
         }
     }
 
@@ -374,7 +560,7 @@ export class CombatAnimator {
             if (card.classList.contains("dead")) continue
             const nameEl = card.querySelector(".uc-name")
             if (!nameEl) continue
-            const def = UNIT_MAP.get(unitDefId)
+            const def = UNIT_MAP.get(unitDefId as UnitId)
             if (def && nameEl.textContent?.includes(def.name)) {
                 return card
             }
@@ -384,11 +570,13 @@ export class CombatAnimator {
 
     private showDamageNumber(card: HTMLElement, dmg: number): void {
         const numEl = document.createElement("span")
-        numEl.className = "uc-damage-number"
+        const maxHp = parseInt(card.getAttribute("data-max-hp") ?? "0")
+        const isBigHit = maxHp > 0 && dmg > maxHp * 0.4
+        numEl.className = `uc-damage-number${isBigHit ? " uc-big-hit" : ""}`
         numEl.textContent = `-${dmg}`
         card.style.position = "relative"
         card.appendChild(numEl)
-        setTimeout(() => numEl.remove(), 600)
+        setTimeout(() => numEl.remove(), isBigHit ? 800 : 700)
     }
 
     private applyDamageToUnit(unitDefId: string, dmg: number): void {

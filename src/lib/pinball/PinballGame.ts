@@ -1,3 +1,5 @@
+import { CanvasError } from "@/core/errors"
+
 import { emitAppEvent } from "../events"
 import {
     Ball,
@@ -11,7 +13,9 @@ import {
     Wall,
 } from "./entities"
 import { ParticleSystem } from "./particles"
-import { LOGICAL_HEIGHT, LOGICAL_WIDTH, SUBSTEPS } from "./physics"
+import { LOGICAL_HEIGHT, LOGICAL_WIDTH, SUBSTEPS, Vector2D } from "./physics"
+import type { PhysicsInput, PhysicsOutput } from "./physicsTypes"
+import { requestPhysicsStep } from "./physicsWorkerClient"
 import { PinballRenderer } from "./renderer"
 
 export type GameState = "idle" | "launching" | "playing" | "gameOver"
@@ -109,7 +113,10 @@ export class PinballGame {
     constructor(canvas: HTMLCanvasElement) {
         this.canvas = canvas
         const ctx = canvas.getContext("2d")
-        if (!ctx) throw new Error("Could not get canvas context")
+        if (!ctx)
+            throw new CanvasError("Could not get canvas context", {
+                component: "PinballGame",
+            })
 
         this.renderer = new PinballRenderer(ctx, canvas.width, canvas.height)
 
@@ -463,24 +470,20 @@ export class PinballGame {
         const points = basePoints * totalMultiplier
         this._score += points
 
-        // Floating text
         const label =
             totalMultiplier > 1
                 ? `+${points} x${totalMultiplier}`
                 : `+${points}`
         this.particleSystem.addFloatingText(x, y - 10, label, color)
 
-        // Particle burst
         this.particleSystem.burst(x, y, particleCount, color, 2.5, 2.5, 25)
 
-        // Screen shake scales with multiplier
         const shakeBase = particleCount > 8 ? 3 : 2
         this.triggerShake(
             Math.min(shakeBase + (this._multiplier - 1), 6),
             8 + this._multiplier * 2
         )
 
-        // Check fever activation
         if (
             !this._feverActive &&
             this.comboCount >= FEVER_COMBO_THRESHOLD &&
@@ -495,12 +498,10 @@ export class PinballGame {
         this._feverTimer = FEVER_DURATION
         this.triggerShake(5, 15)
 
-        // Force the fever quote onto the ticker
         this.tickerMessage = FEVER_QUOTE
         this.tickerX = LOGICAL_WIDTH + 10
         this.tickerPauseFrames = 0
 
-        // Big celebratory burst from center
         const cx = LOGICAL_WIDTH / 2
         const cy = LOGICAL_HEIGHT / 2
         this.particleSystem.burst(cx, cy, 20, "#FF4444", 3.5, 3, 35)
@@ -556,7 +557,6 @@ export class PinballGame {
 
     private checkAllTargets(): void {
         if (this.targets.every((t) => t.isHit)) {
-            // Big celebration
             const cx = LOGICAL_WIDTH / 2
             const cy = LOGICAL_HEIGHT / 2 - 30
             this.particleSystem.burst(cx, cy, 20, "#FFD700", 4, 3, 40)
@@ -698,7 +698,6 @@ export class PinballGame {
                 this.resetBallPosition()
                 this.ballSaveFrames = 0
             } else {
-                // Drain effects
                 this.particleSystem.burst(
                     this.ball.position.x,
                     LOGICAL_HEIGHT - 10,
@@ -757,7 +756,6 @@ export class PinballGame {
             if (this.tickerPauseFrames > 0) {
                 this.tickerPauseFrames -= this.gameSpeed
             } else {
-                // During fever, always show the fever quote
                 if (this._feverActive) {
                     this.tickerMessage = FEVER_QUOTE
                     this.tickerX = LOGICAL_WIDTH + 10
@@ -794,11 +792,9 @@ export class PinballGame {
         this.renderer.drawLauncher(this.launcher)
         this.renderer.drawBall(this.ball, this._feverActive)
 
-        // Particles on top of entities
         this.renderer.drawParticles(this.particleSystem.particles)
         this.renderer.drawFloatingTexts(this.particleSystem.floatingTexts)
 
-        // Flash overlay (all-targets)
         if (this.flashAlpha > 0) {
             this.renderer.drawFlash(this.flashAlpha)
         }
@@ -836,8 +832,243 @@ export class PinballGame {
         this.renderer.endFrame()
     }
 
+    private workerBusy = false
+
+    /** Serialize current game state into a plain object for the worker. */
+    private serializePhysicsInput(): PhysicsInput {
+        const toVec = (v: Vector2D): { x: number; y: number } => ({
+            x: v.x,
+            y: v.y,
+        })
+
+        const physicsState =
+            this._gameState === "launching" ? "playing" : this._gameState
+
+        return {
+            ball: {
+                position: toVec(this.ball.position),
+                velocity: toVec(this.ball.velocity),
+                radius: this.ball.radius,
+                active: this.ball.active,
+            },
+            flippers: this.flippers.map((f) => ({
+                pivot: toVec(f.pivot),
+                length: f.length,
+                angle: f.angle,
+                restAngle: f.restAngle,
+                activeAngle: f.activeAngle,
+                side: f.side,
+                isPressed: f.isPressed,
+                angularVelocity: f.angularVelocity,
+            })),
+            bumpers: this.bumpers.map((b) => ({
+                position: toVec(b.position),
+                radius: b.radius,
+                points: b.points,
+                hitAnimation: b.hitAnimation,
+            })),
+            targets: this.targets.map((t) => ({
+                position: toVec(t.position),
+                width: t.width,
+                height: t.height,
+                points: t.points,
+                isHit: t.isHit,
+                hitAnimation: t.hitAnimation,
+            })),
+            walls: this.walls.map((w) => ({
+                start: toVec(w.start),
+                end: toVec(w.end),
+                damping: w.damping,
+            })),
+            guideRails: this.guideRails.map((r) => ({
+                start: toVec(r.start),
+                end: toVec(r.end),
+                damping: r.damping,
+            })),
+            oneWayWalls: this.guideRails
+                .filter((r): r is OneWayWall => r instanceof OneWayWall)
+                .map((r) => ({
+                    start: toVec(r.start),
+                    end: toVec(r.end),
+                    damping: r.damping,
+                    blockNormal: toVec(r.blockNormal),
+                })),
+            posts: this.posts.map((p) => ({
+                position: toVec(p.position),
+                radius: p.radius,
+                points: p.points,
+                hitAnimation: p.hitAnimation,
+                damping: 0.85,
+            })),
+            slingshots: this.slingshots.map((s) => ({
+                vertices: s.vertices.map(toVec) as [
+                    { x: number; y: number },
+                    { x: number; y: number },
+                    { x: number; y: number },
+                ],
+                points: s.points,
+                hitAnimation: s.hitAnimation,
+                damping: s.damping,
+            })),
+            launcher: {
+                position: toVec(this.launcher.position),
+                power: this.launcher.power,
+                maxPower: this.launcher.maxPower,
+                isCharging: this.launcher.isCharging,
+            },
+            gameSpeed: this.gameSpeed,
+            paused: this.paused,
+            gameState: physicsState,
+            ballSaveFrames: this.ballSaveFrames,
+            comboCount: this.comboCount,
+            comboTimer: this.comboTimer,
+            multiplier: this._multiplier,
+            feverActive: this._feverActive,
+            feverTimer: this._feverTimer,
+            ballsRemaining: this._ballsRemaining,
+            score: this._score,
+            highScore: this._highScore,
+            launcherSettleFrames: this.launcherSettleFrames,
+        }
+    }
+
+    /** Apply the worker's physics output back to game entities. */
+    private applyPhysicsOutput(out: PhysicsOutput): void {
+        // Ball
+        this.ball.position = new Vector2D(
+            out.ball.position.x,
+            out.ball.position.y
+        )
+        this.ball.velocity = new Vector2D(
+            out.ball.velocity.x,
+            out.ball.velocity.y
+        )
+        this.ball.active = out.ball.active
+
+        // Flippers
+        for (
+            let i = 0;
+            i < this.flippers.length && i < out.flippers.length;
+            i++
+        ) {
+            this.flippers[i].angle = out.flippers[i].angle
+            this.flippers[i].angularVelocity = out.flippers[i].angularVelocity
+        }
+
+        // Bumpers
+        for (
+            let i = 0;
+            i < this.bumpers.length && i < out.bumpers.length;
+            i++
+        ) {
+            this.bumpers[i].hitAnimation = out.bumpers[i].hitAnimation
+        }
+
+        // Targets
+        for (
+            let i = 0;
+            i < this.targets.length && i < out.targets.length;
+            i++
+        ) {
+            this.targets[i].isHit = out.targets[i].isHit
+            this.targets[i].hitAnimation = out.targets[i].hitAnimation
+        }
+
+        // Posts
+        for (let i = 0; i < this.posts.length && i < out.posts.length; i++) {
+            this.posts[i].hitAnimation = out.posts[i].hitAnimation
+        }
+
+        // Slingshots
+        for (
+            let i = 0;
+            i < this.slingshots.length && i < out.slingshots.length;
+            i++
+        ) {
+            this.slingshots[i].hitAnimation = out.slingshots[i].hitAnimation
+        }
+
+        // Launcher
+        this.launcher.power = out.launcher.power
+
+        // Scalar state
+        this.ballSaveFrames = out.ballSaveFrames
+        this.comboCount = out.comboCount
+        this.comboTimer = out.comboTimer
+        this._multiplier = out.multiplier
+        this._feverActive = out.feverActive
+        this._feverTimer = out.feverTimer
+        this._ballsRemaining = out.ballsRemaining
+        this.launcherSettleFrames = out.launcherSettleFrames
+
+        // Process hit events (sounds + particles)
+        for (const hit of out.hits) {
+            this.registerHit(
+                hit.points,
+                hit.x,
+                hit.y,
+                hit.color,
+                hit.particleSize
+            )
+            this.playSound(hit.sound)
+        }
+
+        if (out.allTargetsHit) {
+            this.checkAllTargets()
+        }
+
+        if (out.drainBurst) {
+            this.particleSystem.burst(
+                this.ball.position.x,
+                LOGICAL_HEIGHT - 10,
+                6,
+                "#FF6633",
+                1.5,
+                2,
+                20
+            )
+            this.triggerShake(3, 10)
+            this.playSound("pinball_drain")
+        }
+
+        if (out.gameOver) {
+            this._gameState = "gameOver"
+            this.saveHighScore()
+            this.playSound("pinball_gameover")
+            const allTargetsHit = this.targets.every((t) => t.isHit)
+            emitAppEvent("pinball:gameover", {
+                score: this._score,
+                highScore: this._highScore,
+                allTargetsHit,
+            })
+        }
+
+        this.updateCombo(this.gameSpeed)
+        this.updateFever(this.gameSpeed)
+        this.updateShake(this.gameSpeed)
+        this.updateBallTrail()
+        this.updateFlash(this.gameSpeed)
+        this.particleSystem.update(this.gameSpeed)
+        this.updateTicker()
+    }
+
     private gameLoop = (): void => {
-        this.stepPhysics()
+        if (!this.workerBusy) {
+            const input = this.serializePhysicsInput()
+            const promise = requestPhysicsStep(input)
+
+            if (promise) {
+                this.workerBusy = true
+                void promise.then((output) => {
+                    this.applyPhysicsOutput(output)
+                    this.workerBusy = false
+                })
+            } else {
+                // Worker unavailable — fall back to synchronous physics
+                this.stepPhysics()
+            }
+        }
+
         this.render()
         this.animationId = requestAnimationFrame(this.gameLoop)
     }

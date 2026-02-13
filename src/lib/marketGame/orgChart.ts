@@ -72,6 +72,7 @@ export interface OrgChartSaveData {
     candidatePool: EmployeeSaveData[]
     poolTickCounter: number
     thirdVPUnlocked: boolean
+    fourthVPUnlocked?: boolean
 }
 
 export class OrgChart {
@@ -79,6 +80,7 @@ export class OrgChart {
     private candidatePool: Employee[] = []
     private poolTickCounter: number = 0
     private thirdVPUnlocked: boolean = false
+    private fourthVPUnlocked: boolean = false
 
     constructor() {
         this.initSlots()
@@ -98,15 +100,25 @@ export class OrgChart {
     // ── Slot access ─────────────────────────────────────────────────────
 
     public getActiveVPSlotCount(): number {
-        return this.thirdVPUnlocked ? MAX_VP_SLOTS : INITIAL_VP_SLOTS
+        if (this.fourthVPUnlocked) return MAX_VP_SLOTS // 4
+        if (this.thirdVPUnlocked) return 3
+        return INITIAL_VP_SLOTS // 2
     }
 
     public isThirdVPUnlocked(): boolean {
         return this.thirdVPUnlocked
     }
 
+    public isFourthVPUnlocked(): boolean {
+        return this.fourthVPUnlocked
+    }
+
     public unlockThirdVP(): void {
         this.thirdVPUnlocked = true
+    }
+
+    public unlockFourthVP(): void {
+        this.fourthVPUnlocked = true
     }
 
     public getVPSlots(): readonly VPSlot[] {
@@ -185,11 +197,14 @@ export class OrgChart {
                 // VP quits -- ICs also leave (no manager)
                 for (let i = 0; i < ICS_PER_VP; i++) {
                     if (slot.ics[i]) {
-                        events.push({
-                            type: "quit",
-                            employeeName: slot.ics[i]!.name,
-                            message: `${slot.ics[i]!.name} has departed following a management vacancy`,
-                        })
+                        const emp = slot.ics[i]
+                        if (emp) {
+                            events.push({
+                                type: "quit",
+                                employeeName: emp.name,
+                                message: `${emp.name} has departed following a management vacancy`,
+                            })
+                        }
                     }
                     slot.ics[i] = null
                 }
@@ -235,7 +250,6 @@ export class OrgChart {
             emp.morale -= emptyICs * UNDERSTAFFED_PENALTY
         }
 
-        // Clamp
         emp.morale = Math.max(0, Math.min(100, emp.morale))
     }
 
@@ -428,11 +442,14 @@ export class OrgChart {
             // Check ICs first (firing ICs doesn't cascade)
             for (let i = 0; i < ICS_PER_VP; i++) {
                 if (slot.ics[i]) {
-                    const salary = getEmployeeSalary(slot.ics[i]!)
-                    if (salary > maxSalary) {
-                        maxSalary = salary
-                        maxVP = v
-                        maxIC = i
+                    const emp = slot.ics[i]
+                    if (emp) {
+                        const salary = getEmployeeSalary(emp)
+                        if (salary > maxSalary) {
+                            maxSalary = salary
+                            maxVP = v
+                            maxIC = i
+                        }
                     }
                 }
             }
@@ -456,9 +473,9 @@ export class OrgChart {
             for (let v = 0; v < activeSlots; v++) {
                 for (let i = 0; i < ICS_PER_VP; i++) {
                     if (this.vpSlots[v].ics[i]) {
-                        const salary = getEmployeeSalary(
-                            this.vpSlots[v].ics[i]!
-                        )
+                        const emp = this.vpSlots[v].ics[i]
+                        if (!emp) continue
+                        const salary = getEmployeeSalary(emp)
                         if (salary > maxSalary || maxVP === -1) {
                             maxSalary = salary
                             maxVP = v
@@ -551,7 +568,7 @@ export class OrgChart {
 
             // VP bonus at 1.5x, scaled by effectiveness
             const vpBonus = getEmployeeBonus(vp) * 1.5 * vpEff
-            const vpDiminish = diminishingFactor(typeCounts.get(vp.type)!)
+            const vpDiminish = diminishingFactor(typeCounts.get(vp.type) ?? 0)
 
             if (vpDef.bonusType !== "_internFlat") {
                 addBonus(bonuses, vpDef.bonusType, vpBonus * vpDiminish)
@@ -564,6 +581,7 @@ export class OrgChart {
                 addBonus(bonuses, "tradeProfit", flatBonus)
                 addBonus(bonuses, "factoryOutput", flatBonus)
                 addBonus(bonuses, "trendVisibility", flatBonus)
+                addBonus(bonuses, "dasYield", flatBonus)
             }
 
             for (let i = 0; i < ICS_PER_VP; i++) {
@@ -575,7 +593,9 @@ export class OrgChart {
                 typeCounts.set(ic.type, (typeCounts.get(ic.type) ?? 0) + 1)
 
                 const icBonus = getEmployeeBonus(ic) * icEff
-                const icDiminish = diminishingFactor(typeCounts.get(ic.type)!)
+                const icDiminish = diminishingFactor(
+                    typeCounts.get(ic.type) ?? 0
+                )
 
                 if (icDef.bonusType !== "_internFlat") {
                     addBonus(bonuses, icDef.bonusType, icBonus * icDiminish)
@@ -587,6 +607,7 @@ export class OrgChart {
                     addBonus(bonuses, "tradeProfit", flatBonus)
                     addBonus(bonuses, "factoryOutput", flatBonus)
                     addBonus(bonuses, "trendVisibility", flatBonus)
+                    addBonus(bonuses, "dasYield", flatBonus)
                 }
             }
         }
@@ -638,11 +659,13 @@ export class OrgChart {
             candidatePool: this.candidatePool.map(serializeEmployee),
             poolTickCounter: this.poolTickCounter,
             thirdVPUnlocked: this.thirdVPUnlocked,
+            fourthVPUnlocked: this.fourthVPUnlocked,
         }
     }
 
     public deserialize(data: OrgChartSaveData): void {
         this.thirdVPUnlocked = data.thirdVPUnlocked ?? false
+        this.fourthVPUnlocked = data.fourthVPUnlocked ?? false
         this.poolTickCounter = data.poolTickCounter ?? 0
 
         // Restore VP slots

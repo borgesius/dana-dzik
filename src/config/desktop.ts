@@ -5,7 +5,7 @@ export interface DesktopItemConfig {
     filename: string
     label?: string
     icon: string
-    windowId: RoutableWindow
+    windowId?: RoutableWindow
     fileType: "file" | "executable" | "shortcut" | "directory"
 }
 
@@ -109,5 +109,26 @@ export const DESKTOP_ITEMS: DesktopItemConfig[] = [
         icon: "🖥️",
         windowId: "finder",
         fileType: "executable",
+    },
+    {
+        id: "md",
+        filename: "M.D.",
+        icon: "🩺",
+        windowId: "md",
+        fileType: "executable",
+    },
+    {
+        id: "divination",
+        filename: "divination.exe",
+        icon: "🔮",
+        windowId: "divination",
+        fileType: "executable",
+    },
+    {
+        id: "bug-reports",
+        filename: "Bug Reports.url",
+        label: "Bug Reports",
+        icon: "🐛",
+        fileType: "shortcut",
     },
 ]

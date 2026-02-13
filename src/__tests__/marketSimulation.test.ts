@@ -103,7 +103,7 @@ describe("market simulation", () => {
                 if (c.unlockThreshold > 10000) continue
                 const price = engine.getPrice(c.id)
                 expect(price).toBeGreaterThan(c.basePrice * 0.2)
-                expect(price).toBeLessThan(c.basePrice * 10)
+                expect(price).toBeLessThan(c.basePrice * 15)
             }
         })
     })

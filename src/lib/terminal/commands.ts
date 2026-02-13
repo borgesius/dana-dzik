@@ -1,6 +1,9 @@
 import type { RoutableWindow } from "../../config/routing"
 import { emitAppEvent } from "../events"
 import { getLocaleManager } from "../localeManager"
+import { getPacketBuffer } from "../netmon/packetBuffer"
+import { REGISTERED_SERVICES, resolveHost } from "../netmon/services"
+import type { Packet } from "../netmon/types"
 import { EXERCISES } from "../welt/exercises"
 import {
     compileWeltProgram,
@@ -111,6 +114,12 @@ const COMMANDS: Record<string, CommandHandler> = {
     clear, cls    Clear terminal
     whoami        Display user info
     exit          Close terminal
+
+  Network
+    matd          Open M.A.T. Daemon (network monitor)
+    netstat       Show active connections
+    tcpdump       Stream live packets (-s SRC, -p PROTO, -x hex)
+    nmap          Scan network for services
 
   ${lm.t("terminalCommands.tip")} Type an .exe filename to run it directly`,
         }
@@ -479,6 +488,178 @@ const COMMANDS: Record<string, CommandHandler> = {
     rename: (args, ctx) => COMMANDS.mv(args, ctx),
 
     sl: (): CommandResult => ({ action: "sl" }),
+
+    // ── Network monitor commands ─────────────────────────────────────────
+
+    matd: (_, ctx): CommandResult => {
+        ctx.openWindow("md" as RoutableWindow)
+        return {
+            output: "Starting M.A.T. Daemon (Monitoring and Analysis of Traffic)...",
+            className: "success",
+        }
+    },
+
+    netstat: (): CommandResult => {
+        const buf = getPacketBuffer()
+        const packets = buf.snapshot()
+        const now = Date.now()
+        const recentMs = 30000
+
+        // Build connection summary from recent packets
+        const connections = new Map<
+            string,
+            {
+                proto: string
+                local: string
+                foreign: string
+                state: string
+                count: number
+            }
+        >()
+
+        for (const p of packets) {
+            if (now - p.timestamp > recentMs) continue
+            const key = `${p.src.addr}->${p.dst.addr}`
+            const existing = connections.get(key)
+            if (existing) {
+                existing.count++
+            } else {
+                const srcName = resolveHost(p.src.addr)
+                const state = srcName ? "ESTABLISHED" : "UNKNOWN"
+                connections.set(key, {
+                    proto: srcName ? p.protocol : "???",
+                    local: `${p.src.addr}:${p.src.port || "????"}`,
+                    foreign: `${p.dst.addr}:${p.dst.port || "????"}`,
+                    state,
+                    count: 1,
+                })
+            }
+        }
+
+        const lines: string[] = [
+            "",
+            "Active Network Connections",
+            "",
+            "Proto  Local Address        Foreign Address      State        Pkts",
+            "─────  ──────────────────── ──────────────────── ──────────── ────",
+        ]
+
+        for (const c of connections.values()) {
+            lines.push(
+                `${c.proto.padEnd(6)} ${c.local.padEnd(20)} ${c.foreign.padEnd(20)} ${c.state.padEnd(12)} ${c.count}`
+            )
+        }
+
+        if (connections.size === 0) {
+            lines.push("  (no recent connections)")
+        }
+
+        lines.push("")
+        return { output: lines.join("\n") }
+    },
+
+    nmap: (): CommandResult => {
+        emitAppEvent("netmon:nmap-run")
+
+        const lines: string[] = ["", "Starting NMAP scan of 10.0.0.0/24...", ""]
+
+        for (const def of REGISTERED_SERVICES) {
+            lines.push(`Host ${def.service.addr} (${def.service.name})`)
+            for (const port of def.ports) {
+                lines.push(
+                    `  ${String(port.port).padEnd(5)}/${port.protocol.toLowerCase().padEnd(4)} open     ${port.name}`
+                )
+            }
+            lines.push("")
+        }
+
+        // Unknown host
+        const buf = getPacketBuffer()
+        const hasUnknown = buf
+            .snapshot()
+            .some((p) => p.src.addr.startsWith("10.0.7."))
+
+        if (hasUnknown) {
+            lines.push("Host 10.0.7.3 (???)")
+            lines.push("  ????/tcp  filtered unknown")
+            lines.push("")
+        }
+
+        lines.push("NMAP scan complete.")
+        lines.push("")
+        return { output: lines.join("\n") }
+    },
+
+    tcpdump: async (args, ctx): Promise<CommandResult> => {
+        const buf = getPacketBuffer()
+
+        // Parse flags
+        let srcFilter = ""
+        let protoFilter = ""
+        let showHex = false
+
+        for (let i = 0; i < args.length; i++) {
+            if (args[i] === "-s" && args[i + 1]) {
+                srcFilter = args[i + 1].toLowerCase()
+                i++
+            } else if (args[i] === "-p" && args[i + 1]) {
+                protoFilter = args[i + 1].toLowerCase()
+                i++
+            } else if (args[i] === "-x") {
+                showHex = true
+            }
+        }
+
+        ctx.print("tcpdump: listening... (Ctrl+C to stop)")
+        ctx.print("")
+
+        const formatPacket = (p: Packet): string => {
+            const time = new Date(p.timestamp)
+            const ts = `${String(time.getHours()).padStart(2, "0")}:${String(time.getMinutes()).padStart(2, "0")}:${String(time.getSeconds()).padStart(2, "0")}.${String(time.getMilliseconds()).padStart(3, "0")}`
+            const srcPort = p.src.port || 0
+            const dstPort = p.dst.port || 0
+            let line = `${ts} ${p.src.addr}:${srcPort} > ${p.dst.addr}:${dstPort} ${p.protocol} ${p.summary}`
+            if (showHex) {
+                const hex = Array.from(new TextEncoder().encode(p.payload))
+                    .slice(0, 32)
+                    .map((b) => b.toString(16).padStart(2, "0"))
+                    .join(" ")
+                line += `\n         ${hex}`
+            }
+            return line
+        }
+
+        const shouldShow = (p: Packet): boolean => {
+            if (srcFilter) {
+                const name = resolveHost(p.src.addr).toLowerCase()
+                if (
+                    !name.includes(srcFilter) &&
+                    !p.src.addr.includes(srcFilter)
+                )
+                    return false
+            }
+            if (protoFilter) {
+                if (!p.protocol.toLowerCase().includes(protoFilter))
+                    return false
+            }
+            return true
+        }
+
+        // Stream packets until user presses Ctrl+C (which resolves requestInput with "")
+        const unsubscribe = buf.subscribe((packet) => {
+            if (shouldShow(packet)) {
+                ctx.print(formatPacket(packet))
+            }
+        })
+
+        // Block until Ctrl+C
+        await ctx.requestInput()
+
+        unsubscribe()
+        ctx.print("")
+        ctx.print("tcpdump: stopped.")
+        return { output: "" }
+    },
 }
 
 async function runWeltCommand(

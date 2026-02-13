@@ -76,7 +76,8 @@ export class CrashCounterWidget {
 
     private render(): void {
         const total = this.crashData.total
-        this.el.firstChild!.textContent = `\uD83D\uDCA5 ${this.formatNumber(total)}`
+        if (this.el.firstChild)
+            this.el.firstChild.textContent = `\uD83D\uDCA5 ${this.formatNumber(total)}`
         this.tooltipEl.innerHTML = this.renderTooltip()
     }
 

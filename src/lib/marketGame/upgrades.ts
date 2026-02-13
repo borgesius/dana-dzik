@@ -18,7 +18,9 @@ export type UpgradeId =
     | "insider-calendar"
     | "harvest-email"
     | "harvest-ads"
+    | "harvest-live"
     | "harvest-dom"
+    | "harvest-glue"
     | "harvest-bw"
     | "harvest-soft"
     | "harvest-vc"
@@ -189,6 +191,13 @@ export const UPGRADES: UpgradeDef[] = [
         cost: 50,
     },
     {
+        id: "harvest-live",
+        name: "LIVE Wrangler",
+        description: "Automated herder. +1 LIVE per harvest click.",
+        category: "automation",
+        cost: 75,
+    },
+    {
         id: "autoscript-i",
         name: "Autoscript I",
         description:
@@ -202,6 +211,13 @@ export const UPGRADES: UpgradeDef[] = [
         description: "Bulk registration script. +1 DOM per harvest click.",
         category: "automation",
         cost: 150,
+    },
+    {
+        id: "harvest-glue",
+        name: "GLUE Renderer",
+        description: "Industrial boiler. +1 GLUE per harvest click.",
+        category: "automation",
+        cost: 300,
     },
     {
         id: "harvest-bw",

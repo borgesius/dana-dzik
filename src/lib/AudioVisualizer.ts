@@ -1,3 +1,5 @@
+import { CanvasError } from "@/core/errors"
+
 const BAR_COUNT = 16
 const PEAK_DECAY_RATE = 0.4
 const PEAK_HOLD_FRAMES = 12
@@ -28,7 +30,9 @@ export class AudioVisualizer {
         this.canvas = canvas
         const ctx = canvas.getContext("2d")
         if (!ctx) {
-            throw new Error("Failed to get canvas 2d context")
+            throw new CanvasError("Failed to get canvas 2d context", {
+                component: "AudioVisualizer",
+            })
         }
         this.ctx = ctx
         this.getAnalyser = getAnalyser

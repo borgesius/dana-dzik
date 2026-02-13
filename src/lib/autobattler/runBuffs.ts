@@ -69,6 +69,13 @@ export const RUN_BUFFS: RunBuff[] = [
         commodityId: "VC",
         icon: "💰",
     },
+    {
+        id: "market-intel",
+        name: "Market Intel",
+        description: "Start with trend analysis for first battle",
+        commodityId: "DOM",
+        icon: "📊",
+    },
 ]
 
 export const RUN_BUFF_MAP: ReadonlyMap<string, RunBuff> = new Map(

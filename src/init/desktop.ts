@@ -20,10 +20,16 @@ import { recordBootEnd } from "../lib/bootTime"
 import { isCalmMode } from "../lib/calmMode"
 import { getCosmeticManager } from "../lib/cosmetics/CosmeticManager"
 import { wireCosmeticUnlocks } from "../lib/cosmetics/wiring"
+import { DesktopPet } from "../lib/divination/DesktopPet"
 import { onAppEvent } from "../lib/events"
 import { GlitchManager } from "../lib/glitchEffects"
 import { getLocaleManager } from "../lib/localeManager"
 import { getMarketGame } from "../lib/marketGame/MarketEngine"
+import {
+    initPacketBridge,
+    wireAdditionalManagersToPacketBridge,
+    wireMarketEngineToPacketBridge,
+} from "../lib/netmon/packetBridge"
 import { getPrestigeManager } from "../lib/prestige/PrestigeManager"
 import { getCareerManager } from "../lib/progression/CareerManager"
 import { getProgressionManager } from "../lib/progression/ProgressionManager"
@@ -55,6 +61,19 @@ export function initDesktop(app: HTMLElement): void {
 
     wireProgression(getProgressionManager(), (cb) => {
         windowManager.onNewWindowOpen(cb)
+    })
+
+    // ── Network monitor (M.D.) ───────────────────────────────────────────
+    initPacketBridge()
+    wireMarketEngineToPacketBridge(getMarketGame())
+    wireAdditionalManagersToPacketBridge({
+        prestige: getPrestigeManager(),
+        career: getCareerManager(),
+        collection: getCollectionManager(),
+        progression: getProgressionManager(),
+        theme: getThemeManager(),
+        locale: getLocaleManager(),
+        veil: getVeilManager(),
     })
 
     wireCosmeticUnlocks()
@@ -165,6 +184,7 @@ export function initDesktop(app: HTMLElement): void {
     getCosmeticManager().onChange(() => applyCosmetics())
     new SystemCrashHandler()
     new Widgets(app)
+    new DesktopPet()
 
     recordBootEnd()
 

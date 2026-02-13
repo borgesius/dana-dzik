@@ -1,0 +1,280 @@
+/* ── M.D. (M.A.T. Daemon) — Network Monitor ─────────────────────────── */
+
+.md-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    background: #0a0e14;
+    color: #c8d8e8;
+    font-family: "Courier New", Courier, monospace;
+    font-size: 11px;
+    overflow: hidden;
+}
+
+/* ── Header ──────────────────────────────────────────────────────────── */
+
+.md-header {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    padding: 6px 10px 4px;
+    border-bottom: 1px solid #1a2a3a;
+    flex-shrink: 0;
+}
+
+.md-title {
+    font-size: 13px;
+    font-weight: bold;
+    color: #e0e8f0;
+    letter-spacing: 1px;
+}
+
+.md-subtitle {
+    font-size: 9px;
+    color: #4a6070;
+    letter-spacing: 0.5px;
+}
+
+/* ── Topology canvas ─────────────────────────────────────────────────── */
+
+.md-topology {
+    flex: 3;
+    min-height: 120px;
+    position: relative;
+    border-bottom: 1px solid #1a2a3a;
+}
+
+.md-topology canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+/* ── Packet log ──────────────────────────────────────────────────────── */
+
+.md-log-section {
+    flex: 2;
+    display: flex;
+    flex-direction: column;
+    min-height: 80px;
+    overflow: hidden;
+}
+
+/* ── Filter bar ──────────────────────────────────────────────────────── */
+
+.md-filter-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 4px 8px;
+    border-bottom: 1px solid #1a2a3a;
+    flex-shrink: 0;
+}
+
+.md-filter-input {
+    flex: 1;
+    background: #0d1218;
+    border: 1px solid #1a2a3a;
+    color: #a0b0c0;
+    font-family: "Courier New", Courier, monospace;
+    font-size: 11px;
+    padding: 3px 6px;
+    outline: none;
+}
+
+.md-filter-input:focus {
+    border-color: #3a5a7a;
+}
+
+.md-filter-input::placeholder {
+    color: #3a4a5a;
+}
+
+.md-pause-btn {
+    background: none;
+    border: 1px solid #2a3a4a;
+    color: #7090a0;
+    font-family: "Courier New", Courier, monospace;
+    font-size: 10px;
+    padding: 2px 8px;
+    cursor: pointer;
+}
+
+.md-pause-btn:hover {
+    border-color: #4a6a8a;
+    color: #a0c0d0;
+}
+
+.md-pause-btn.active {
+    border-color: #e0a030;
+    color: #e0a030;
+}
+
+/* ── Packet table ────────────────────────────────────────────────────── */
+
+.md-log-table-wrap {
+    flex: 1;
+    overflow: hidden auto;
+}
+
+.md-log-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.md-log-table th {
+    position: sticky;
+    top: 0;
+    background: #0d1218;
+    color: #5a7a8a;
+    font-weight: normal;
+    font-size: 10px;
+    text-align: left;
+    padding: 3px 6px;
+    border-bottom: 1px solid #1a2a3a;
+    white-space: nowrap;
+}
+
+.md-log-table td {
+    padding: 2px 6px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 0;
+    border-bottom: 1px solid #0d1218;
+}
+
+.md-log-table tr {
+    cursor: pointer;
+}
+
+.md-log-table tr:hover {
+    background: #111a24;
+}
+
+.md-log-table tr.selected {
+    background: #141e2a;
+}
+
+/* Column widths */
+.md-col-time {
+    width: 70px;
+    color: #4a6070;
+}
+
+.md-col-src {
+    width: 90px;
+}
+
+.md-col-dst {
+    width: 90px;
+}
+
+.md-col-proto {
+    width: 42px;
+}
+
+.md-col-summary {
+    width: auto;
+    color: #8898a8;
+}
+
+/* Protocol colors */
+.md-proto-http {
+    color: #5b9bd5;
+}
+
+.md-proto-ws {
+    color: #70c070;
+}
+
+.md-proto-udp {
+    color: #e0a030;
+}
+
+.md-proto-ftp {
+    color: #60c8c8;
+}
+
+.md-proto-smtp {
+    color: #d080b0;
+}
+
+.md-proto-icmp {
+    color: #888888;
+}
+
+/* Address coloring */
+.md-addr-name {
+    color: #a0b8c8;
+}
+
+.md-addr-unknown {
+    color: #4a5a6a;
+}
+
+/* ── Expanded packet detail ──────────────────────────────────────────── */
+
+.md-packet-detail {
+    background: #0d1218;
+    padding: 6px 10px;
+    border-top: 1px solid #1a2a3a;
+    border-bottom: 1px solid #1a2a3a;
+    font-size: 10px;
+    line-height: 1.5;
+    color: #7090a0;
+}
+
+.md-packet-detail-label {
+    color: #4a6a7a;
+    margin-right: 8px;
+}
+
+.md-packet-detail-value {
+    color: #a0c0d0;
+}
+
+.md-packet-detail-payload {
+    margin-top: 4px;
+    padding: 4px 6px;
+    background: #080c10;
+    border: 1px solid #1a2230;
+    color: #607888;
+    word-break: break-all;
+    white-space: pre-wrap;
+    max-height: 60px;
+    overflow-y: auto;
+}
+
+/* ── Scrollbar ───────────────────────────────────────────────────────── */
+
+.md-log-table-wrap::-webkit-scrollbar {
+    width: 6px;
+}
+
+.md-log-table-wrap::-webkit-scrollbar-track {
+    background: #0a0e14;
+}
+
+.md-log-table-wrap::-webkit-scrollbar-thumb {
+    background: #1a2a3a;
+    border-radius: 3px;
+}
+
+.md-log-table-wrap::-webkit-scrollbar-thumb:hover {
+    background: #2a3a5a;
+}
+
+.md-packet-detail-payload::-webkit-scrollbar {
+    width: 4px;
+}
+
+.md-packet-detail-payload::-webkit-scrollbar-track {
+    background: #080c10;
+}
+
+.md-packet-detail-payload::-webkit-scrollbar-thumb {
+    background: #1a2a3a;
+}

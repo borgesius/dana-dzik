@@ -3,8 +3,11 @@ import { emitAppEvent } from "../events"
 import type { VeilId, VeilSaveData } from "./types"
 import { BOSS_VEIL } from "./types"
 
-type VeilEventType = "veilTriggered" | "veilCompleted" | "veilFailed"
-type VeilCallback = (data?: unknown) => void
+interface VeilEventMap {
+    veilTriggered: { veilId: VeilId }
+    veilCompleted: { veilId: VeilId; attempts: number }
+    veilFailed: { veilId: VeilId }
+}
 
 let instance: VeilManager | null = null
 
@@ -51,7 +54,7 @@ export class VeilManager {
     private active: boolean = false
     private lastTriggerAttempt: number = 0
     private onDirty: (() => void) | null = null
-    private eventListeners: Map<VeilEventType, VeilCallback[]> = new Map()
+    private eventListeners = new Map<string, ((data: never) => void)[]>()
 
     // ── External providers (set during wiring) ─────────────────────────────
 
@@ -70,15 +73,23 @@ export class VeilManager {
 
     // ── Events ─────────────────────────────────────────────────────────────
 
-    public on(event: VeilEventType, callback: VeilCallback): void {
+    public on<K extends keyof VeilEventMap>(
+        event: K,
+        callback: (data: VeilEventMap[K]) => void
+    ): void {
         if (!this.eventListeners.has(event)) {
             this.eventListeners.set(event, [])
         }
-        this.eventListeners.get(event)?.push(callback)
+        this.eventListeners.get(event)?.push(callback as (data: never) => void)
     }
 
-    private emit(event: VeilEventType, data?: unknown): void {
-        this.eventListeners.get(event)?.forEach((cb) => cb(data))
+    private emit<K extends keyof VeilEventMap>(
+        event: K,
+        data: VeilEventMap[K]
+    ): void {
+        this.eventListeners
+            .get(event)
+            ?.forEach((cb) => (cb as (data: VeilEventMap[K]) => void)(data))
     }
 
     // ── Dirty callback ─────────────────────────────────────────────────────
@@ -383,13 +394,13 @@ export class VeilManager {
 
         if (data.completed) {
             for (const id of data.completed) {
-                this.completedVeils.add(id as VeilId)
+                this.completedVeils.add(id)
             }
         }
 
         if (data.unlocked) {
             for (const id of data.unlocked) {
-                this.unlockedVeils.add(id as VeilId)
+                this.unlockedVeils.add(id)
             }
         }
 
