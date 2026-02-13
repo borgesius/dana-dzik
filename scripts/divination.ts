@@ -62,13 +62,13 @@ interface RawFamiliar {
 }
 
 const tarotDeck: RawTarotCard[] = JSON.parse(
-    readFileSync(join(DATA_DIR, "tarot.json"), "utf-8"),
+    readFileSync(join(DATA_DIR, "tarot.json"), "utf-8")
 )
 const hexagrams: RawHexagram[] = JSON.parse(
-    readFileSync(join(DATA_DIR, "iching.json"), "utf-8"),
+    readFileSync(join(DATA_DIR, "iching.json"), "utf-8")
 )
 const familiarsList: RawFamiliar[] = JSON.parse(
-    readFileSync(join(DATA_DIR, "familiars.json"), "utf-8"),
+    readFileSync(join(DATA_DIR, "familiars.json"), "utf-8")
 )
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
@@ -167,7 +167,7 @@ function getDiffStats(): DiffStats {
 
 function getFirstCommitDate(): string {
     try {
-        return execSync('git log --reverse --format=%aI | head -1', {
+        return execSync("git log --reverse --format=%aI | head -1", {
             encoding: "utf-8",
         }).trim()
     } catch {
@@ -197,11 +197,9 @@ function computeNumerology(sha: string, timestamp: string): NumerologyReading {
     const destiny = reduceToSingle(sumDigits(timestamp.replace(/\D/g, "")))
 
     // Soul urge: hex digits at "vowel positions" (a=10, e=14 in hex)
-    const vowelHex = sha
-        .split("")
-        .filter((ch) => ch === "a" || ch === "e")
+    const vowelHex = sha.split("").filter((ch) => ch === "a" || ch === "e")
     const soulUrge = reduceToSingle(
-        vowelHex.reduce((s, ch) => s + parseInt(ch, 16), 0) || 1,
+        vowelHex.reduce((s, ch) => s + parseInt(ch, 16), 0) || 1
     )
 
     // Personality: non-vowel hex digits
@@ -209,11 +207,11 @@ function computeNumerology(sha: string, timestamp: string): NumerologyReading {
         .split("")
         .filter((ch) => ch !== "a" && ch !== "e" && /[0-9a-f]/.test(ch))
     const personality = reduceToSingle(
-        consonantHex.reduce((s, ch) => s + parseInt(ch, 16), 0) || 1,
+        consonantHex.reduce((s, ch) => s + parseInt(ch, 16), 0) || 1
     )
 
     const masterNumbers = [lifePath, destiny, soulUrge, personality].filter(
-        (n) => n === 11 || n === 22 || n === 33,
+        (n) => n === 11 || n === 22 || n === 33
     )
 
     const interpretation =
@@ -300,7 +298,7 @@ function computeIChing(diff: DiffStats, sha: string): IChingReading {
         diff.filesChanged + diff.deletions,
     ]
 
-    const lineTypes: IChingLine[] = values.map((v) => {
+    const lineTypes = values.map((v) => {
         const r = (v + Math.floor(rng() * 4)) % 4
         switch (r) {
             case 0:
@@ -314,22 +312,28 @@ function computeIChing(diff: DiffStats, sha: string): IChingReading {
             default:
                 return "young_yang"
         }
-    }) as [IChingLine, IChingLine, IChingLine, IChingLine, IChingLine, IChingLine]
+    }) as [
+        IChingLine,
+        IChingLine,
+        IChingLine,
+        IChingLine,
+        IChingLine,
+        IChingLine,
+    ]
 
     // Convert to binary lines (0=yin, 1=yang)
     const lines = lineTypes.map((lt) =>
-        lt === "young_yang" || lt === "old_yang" ? 1 : 0,
+        lt === "young_yang" || lt === "old_yang" ? 1 : 0
     ) as [number, number, number, number, number, number]
 
     // Find hexagram by matching line pattern
     const hexagram =
-        hexagrams.find(
-            (h) => h.lines.every((l, i) => l === lines[i]),
-        ) ?? hexagrams[0]
+        hexagrams.find((h) => h.lines.every((l, i) => l === lines[i])) ??
+        hexagrams[0]
 
     // Compute changing hexagram if there are changing lines
     const hasChanging = lineTypes.some(
-        (lt) => lt === "old_yin" || lt === "old_yang",
+        (lt) => lt === "old_yin" || lt === "old_yang"
     )
     let changingTo: number | null = null
     if (hasChanging) {
@@ -339,7 +343,7 @@ function computeIChing(diff: DiffStats, sha: string): IChingReading {
             return lt === "young_yang" ? 1 : 0
         })
         const changedHex = hexagrams.find((h) =>
-            h.lines.every((l, i) => l === changedLines[i]),
+            h.lines.every((l, i) => l === changedLines[i])
         )
         if (changedHex) changingTo = changedHex.number
     }
@@ -360,17 +364,14 @@ function computeIChing(diff: DiffStats, sha: string): IChingReading {
 
 function computeBiorhythm(
     deployDate: Date,
-    birthDateStr: string,
+    birthDateStr: string
 ): BiorhythmReading {
     const birthDate = new Date(birthDateStr)
     const daysSinceBirth = Math.floor(
-        (deployDate.getTime() - birthDate.getTime()) / (1000 * 60 * 60 * 24),
+        (deployDate.getTime() - birthDate.getTime()) / (1000 * 60 * 60 * 24)
     )
 
-    function makeCycle(
-        label: string,
-        period: number,
-    ): BiorhythmCycle {
+    function makeCycle(label: string, period: number): BiorhythmCycle {
         const value = Math.sin((2 * Math.PI * daysSinceBirth) / period)
         const percentage = Math.round(((value + 1) / 2) * 100)
         const derivative = Math.cos((2 * Math.PI * daysSinceBirth) / period)
@@ -380,7 +381,13 @@ function computeBiorhythm(
         else if (Math.abs(value) < 0.05) phase = "critical"
         else phase = derivative > 0 ? "ascending" : "descending"
 
-        return { label, period, value: Math.round(value * 1000) / 1000, percentage, phase }
+        return {
+            label,
+            period,
+            value: Math.round(value * 1000) / 1000,
+            percentage,
+            phase,
+        }
     }
 
     const physical = makeCycle("Physical", 23)
@@ -394,7 +401,10 @@ function computeBiorhythm(
         emotional,
         intellectual,
         overallPercentage: Math.round(
-            (physical.percentage + emotional.percentage + intellectual.percentage) / 3,
+            (physical.percentage +
+                emotional.percentage +
+                intellectual.percentage) /
+                3
         ),
     }
 }
@@ -402,18 +412,90 @@ function computeBiorhythm(
 // ─── Layer 5: Horoscope ─────────────────────────────────────────────────────
 
 const ZODIAC_SIGNS = [
-    { sign: "Capricorn", emoji: "♑", range: "Dec 22 – Jan 19", start: [12, 22], end: [1, 19] },
-    { sign: "Aquarius", emoji: "♒", range: "Jan 20 – Feb 18", start: [1, 20], end: [2, 18] },
-    { sign: "Pisces", emoji: "♓", range: "Feb 19 – Mar 20", start: [2, 19], end: [3, 20] },
-    { sign: "Aries", emoji: "♈", range: "Mar 21 – Apr 19", start: [3, 21], end: [4, 19] },
-    { sign: "Taurus", emoji: "♉", range: "Apr 20 – May 20", start: [4, 20], end: [5, 20] },
-    { sign: "Gemini", emoji: "♊", range: "May 21 – Jun 20", start: [5, 21], end: [6, 20] },
-    { sign: "Cancer", emoji: "♋", range: "Jun 21 – Jul 22", start: [6, 21], end: [7, 22] },
-    { sign: "Leo", emoji: "♌", range: "Jul 23 – Aug 22", start: [7, 23], end: [8, 22] },
-    { sign: "Virgo", emoji: "♍", range: "Aug 23 – Sep 22", start: [8, 23], end: [9, 22] },
-    { sign: "Libra", emoji: "♎", range: "Sep 23 – Oct 22", start: [9, 23], end: [10, 22] },
-    { sign: "Scorpio", emoji: "♏", range: "Oct 23 – Nov 21", start: [10, 23], end: [11, 21] },
-    { sign: "Sagittarius", emoji: "♐", range: "Nov 22 – Dec 21", start: [11, 22], end: [12, 21] },
+    {
+        sign: "Capricorn",
+        emoji: "♑",
+        range: "Dec 22 – Jan 19",
+        start: [12, 22],
+        end: [1, 19],
+    },
+    {
+        sign: "Aquarius",
+        emoji: "♒",
+        range: "Jan 20 – Feb 18",
+        start: [1, 20],
+        end: [2, 18],
+    },
+    {
+        sign: "Pisces",
+        emoji: "♓",
+        range: "Feb 19 – Mar 20",
+        start: [2, 19],
+        end: [3, 20],
+    },
+    {
+        sign: "Aries",
+        emoji: "♈",
+        range: "Mar 21 – Apr 19",
+        start: [3, 21],
+        end: [4, 19],
+    },
+    {
+        sign: "Taurus",
+        emoji: "♉",
+        range: "Apr 20 – May 20",
+        start: [4, 20],
+        end: [5, 20],
+    },
+    {
+        sign: "Gemini",
+        emoji: "♊",
+        range: "May 21 – Jun 20",
+        start: [5, 21],
+        end: [6, 20],
+    },
+    {
+        sign: "Cancer",
+        emoji: "♋",
+        range: "Jun 21 – Jul 22",
+        start: [6, 21],
+        end: [7, 22],
+    },
+    {
+        sign: "Leo",
+        emoji: "♌",
+        range: "Jul 23 – Aug 22",
+        start: [7, 23],
+        end: [8, 22],
+    },
+    {
+        sign: "Virgo",
+        emoji: "♍",
+        range: "Aug 23 – Sep 22",
+        start: [8, 23],
+        end: [9, 22],
+    },
+    {
+        sign: "Libra",
+        emoji: "♎",
+        range: "Sep 23 – Oct 22",
+        start: [9, 23],
+        end: [10, 22],
+    },
+    {
+        sign: "Scorpio",
+        emoji: "♏",
+        range: "Oct 23 – Nov 21",
+        start: [10, 23],
+        end: [11, 21],
+    },
+    {
+        sign: "Sagittarius",
+        emoji: "♐",
+        range: "Nov 22 – Dec 21",
+        start: [11, 22],
+        end: [12, 21],
+    },
 ]
 
 function getZodiacSign(date: Date) {
@@ -421,14 +503,14 @@ function getZodiacSign(date: Date) {
     const day = date.getDate()
     const md = month * 100 + day
 
-    if (md >= 120 && md <= 218) return ZODIAC_SIGNS[1]  // Aquarius
-    if (md >= 219 && md <= 320) return ZODIAC_SIGNS[2]  // Pisces
-    if (md >= 321 && md <= 419) return ZODIAC_SIGNS[3]  // Aries
-    if (md >= 420 && md <= 520) return ZODIAC_SIGNS[4]  // Taurus
-    if (md >= 521 && md <= 620) return ZODIAC_SIGNS[5]  // Gemini
-    if (md >= 621 && md <= 722) return ZODIAC_SIGNS[6]  // Cancer
-    if (md >= 723 && md <= 822) return ZODIAC_SIGNS[7]  // Leo
-    if (md >= 823 && md <= 922) return ZODIAC_SIGNS[8]  // Virgo
+    if (md >= 120 && md <= 218) return ZODIAC_SIGNS[1] // Aquarius
+    if (md >= 219 && md <= 320) return ZODIAC_SIGNS[2] // Pisces
+    if (md >= 321 && md <= 419) return ZODIAC_SIGNS[3] // Aries
+    if (md >= 420 && md <= 520) return ZODIAC_SIGNS[4] // Taurus
+    if (md >= 521 && md <= 620) return ZODIAC_SIGNS[5] // Gemini
+    if (md >= 621 && md <= 722) return ZODIAC_SIGNS[6] // Cancer
+    if (md >= 723 && md <= 822) return ZODIAC_SIGNS[7] // Leo
+    if (md >= 823 && md <= 922) return ZODIAC_SIGNS[8] // Virgo
     if (md >= 923 && md <= 1022) return ZODIAC_SIGNS[9] // Libra
     if (md >= 1023 && md <= 1121) return ZODIAC_SIGNS[10] // Scorpio
     if (md >= 1122 && md <= 1221) return ZODIAC_SIGNS[11] // Sagittarius
@@ -451,23 +533,47 @@ const HOROSCOPE_TEMPLATES = [
 ]
 
 const MOODS = [
-    "Optimistic", "Contemplative", "Energetic", "Cautious", "Inspired",
-    "Restless", "Focused", "Playful", "Determined", "Serene",
+    "Optimistic",
+    "Contemplative",
+    "Energetic",
+    "Cautious",
+    "Inspired",
+    "Restless",
+    "Focused",
+    "Playful",
+    "Determined",
+    "Serene",
 ]
 
 const COLORS = [
-    "Cerulean", "Crimson", "Emerald", "Amber", "Violet",
-    "Indigo", "Coral", "Sage", "Obsidian", "Gold",
+    "Cerulean",
+    "Crimson",
+    "Emerald",
+    "Amber",
+    "Violet",
+    "Indigo",
+    "Coral",
+    "Sage",
+    "Obsidian",
+    "Gold",
 ]
 
 const LUCKY_TIMES = [
-    "2:00 AM", "4:44 AM", "7:30 AM", "11:11 AM", "1:37 PM",
-    "3:33 PM", "5:55 PM", "8:08 PM", "10:10 PM", "11:59 PM",
+    "2:00 AM",
+    "4:44 AM",
+    "7:30 AM",
+    "11:11 AM",
+    "1:37 PM",
+    "3:33 PM",
+    "5:55 PM",
+    "8:08 PM",
+    "10:10 PM",
+    "11:59 PM",
 ]
 
 async function computeHoroscope(
     deployDate: Date,
-    sha: string,
+    sha: string
 ): Promise<HoroscopeReading> {
     const zodiac = getZodiacSign(deployDate)
     const rng = mulberry32(hashString(sha + "horoscope"))
@@ -479,7 +585,7 @@ async function computeHoroscope(
 
         const response = await fetch(
             `https://aztro.sameerkumar.website/?sign=${zodiac.sign.toLowerCase()}&day=today`,
-            { method: "POST", signal: controller.signal },
+            { method: "POST", signal: controller.signal }
         )
         clearTimeout(timeout)
 
@@ -498,7 +604,8 @@ async function computeHoroscope(
                 dateRange: zodiac.range,
                 horoscope: data.description,
                 mood: data.mood,
-                luckyNumber: parseInt(data.lucky_number) || Math.floor(rng() * 99) + 1,
+                luckyNumber:
+                    parseInt(data.lucky_number) || Math.floor(rng() * 99) + 1,
                 luckyTime: data.lucky_time,
                 color: data.color,
                 compatibility: data.compatibility,
@@ -515,7 +622,8 @@ async function computeHoroscope(
         sign: zodiac.sign,
         signEmoji: zodiac.emoji,
         dateRange: zodiac.range,
-        horoscope: HOROSCOPE_TEMPLATES[Math.floor(rng() * HOROSCOPE_TEMPLATES.length)],
+        horoscope:
+            HOROSCOPE_TEMPLATES[Math.floor(rng() * HOROSCOPE_TEMPLATES.length)],
         mood: MOODS[Math.floor(rng() * MOODS.length)],
         luckyNumber: Math.floor(rng() * 99) + 1,
         luckyTime: LUCKY_TIMES[Math.floor(rng() * LUCKY_TIMES.length)],
@@ -527,18 +635,36 @@ async function computeHoroscope(
 // ─── Layer 6: Natal Chart ───────────────────────────────────────────────────
 
 const ASTRO_SIGNS = [
-    "Aries", "Taurus", "Gemini", "Cancer", "Leo", "Virgo",
-    "Libra", "Scorpio", "Sagittarius", "Capricorn", "Aquarius", "Pisces",
+    "Aries",
+    "Taurus",
+    "Gemini",
+    "Cancer",
+    "Leo",
+    "Virgo",
+    "Libra",
+    "Scorpio",
+    "Sagittarius",
+    "Capricorn",
+    "Aquarius",
+    "Pisces",
 ]
 
 const PLANETS = [
-    "Sun", "Moon", "Mercury", "Venus", "Mars",
-    "Jupiter", "Saturn", "Uranus", "Neptune", "Pluto",
+    "Sun",
+    "Moon",
+    "Mercury",
+    "Venus",
+    "Mars",
+    "Jupiter",
+    "Saturn",
+    "Uranus",
+    "Neptune",
+    "Pluto",
 ]
 
 async function computeNatalChart(
     deployDate: Date,
-    sha: string,
+    sha: string
 ): Promise<NatalChartReading | null> {
     // Vercel iad1 = Ashburn, VA
     const lat = 39.0438
@@ -566,7 +692,7 @@ async function computeNatalChart(
                 {
                     headers: { "X-Api-Key": apiKey },
                     signal: controller.signal,
-                },
+                }
             )
             clearTimeout(timeout)
 
@@ -582,11 +708,14 @@ async function computeNatalChart(
                 }
                 if (data.planets) {
                     const sunPlanet = data.planets.find((p) => p.name === "Sun")
-                    const moonPlanet = data.planets.find((p) => p.name === "Moon")
+                    const moonPlanet = data.planets.find(
+                        (p) => p.name === "Moon"
+                    )
 
                     return {
                         location: "Ashburn, VA (Vercel iad1)",
-                        sunSign: sunPlanet?.sign ?? getZodiacSign(deployDate).sign,
+                        sunSign:
+                            sunPlanet?.sign ?? getZodiacSign(deployDate).sign,
                         moonSign: moonPlanet?.sign ?? "Unknown",
                         risingSign: data.ascendant?.sign ?? "Unknown",
                         planets: data.planets.map((p) => ({
@@ -609,7 +738,7 @@ async function computeNatalChart(
         planet,
         sign: ASTRO_SIGNS[(hashString(sha + planet) + i) % 12],
         degree: Math.round(rng() * 29 * 100) / 100,
-        house: (Math.floor(rng() * 12) + 1),
+        house: Math.floor(rng() * 12) + 1,
     }))
 
     const zodiac = getZodiacSign(deployDate)
@@ -625,10 +754,7 @@ async function computeNatalChart(
 
 // ─── Familiar Selection ─────────────────────────────────────────────────────
 
-function selectFamiliar(
-    lifePath: number,
-    deployHour: number,
-): Familiar {
+function selectFamiliar(lifePath: number, deployHour: number): Familiar {
     const idx = (lifePath * 7 + deployHour) % familiarsList.length
     const raw = familiarsList[idx]
     return {
@@ -654,7 +780,9 @@ async function main(): Promise<void> {
 
     console.log(`SHA: ${sha}`)
     console.log(`Timestamp: ${timestamp}`)
-    console.log(`Diff: ${diff.filesChanged} files, +${diff.insertions} -${diff.deletions}`)
+    console.log(
+        `Diff: ${diff.filesChanged} files, +${diff.insertions} -${diff.deletions}`
+    )
     console.log(`Repo birth: ${birthDate}\n`)
 
     // Compute all layers
@@ -703,9 +831,13 @@ async function main(): Promise<void> {
         await redis.set("divination:latest", JSON.stringify(profile))
 
         // Store by SHA (30 day expiry)
-        await redis.set(`divination:${sha.slice(0, 8)}`, JSON.stringify(profile), {
-            ex: 30 * 24 * 60 * 60,
-        })
+        await redis.set(
+            `divination:${sha.slice(0, 8)}`,
+            JSON.stringify(profile),
+            {
+                ex: 30 * 24 * 60 * 60,
+            }
+        )
 
         // Add to history sorted set (score = timestamp)
         await redis.zadd("divination:history", {
@@ -721,17 +853,25 @@ async function main(): Promise<void> {
 
         console.log("✅ Divination written to Redis")
     } else {
-        console.log("\n⚠️  No Redis credentials found. Printing profile to stdout:\n")
+        console.log(
+            "\n⚠️  No Redis credentials found. Printing profile to stdout:\n"
+        )
         console.log(JSON.stringify(profile, null, 2))
     }
 
     // Summary
     console.log("\n═══════════════════════════════")
-    console.log(`🔢 Life Path: ${numerology.lifePath} — ${numerology.interpretation}`)
+    console.log(
+        `🔢 Life Path: ${numerology.lifePath} — ${numerology.interpretation}`
+    )
     console.log(`🃏 Tarot: ${tarot.cards.map((c) => c.name).join(" → ")}`)
-    console.log(`☯️  I Ching: Hexagram ${iching.hexagramNumber} — ${iching.name}`)
+    console.log(
+        `☯️  I Ching: Hexagram ${iching.hexagramNumber} — ${iching.name}`
+    )
     console.log(`📊 Biorhythm: ${biorhythm.overallPercentage}% overall`)
-    console.log(`${horoscope.signEmoji} Horoscope: ${horoscope.sign} — Mood: ${horoscope.mood}`)
+    console.log(
+        `${horoscope.signEmoji} Horoscope: ${horoscope.sign} — Mood: ${horoscope.mood}`
+    )
     console.log(`${familiar.emoji} Familiar: ${familiar.name}`)
     console.log("═══════════════════════════════\n")
 }
