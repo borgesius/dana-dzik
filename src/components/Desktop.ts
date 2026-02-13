@@ -6,13 +6,24 @@ import { Toolbars } from "./Toolbars"
 import { WindowManager } from "./WindowManager"
 
 function getDesktopIcons(): IconConfig[] {
-    return DESKTOP_ITEMS.map((item) => ({
-        id: item.id,
-        label: item.label ?? item.filename,
-        icon: item.icon,
-        action: "window" as const,
-        windowId: item.windowId,
-    }))
+    return DESKTOP_ITEMS.map((item) => {
+        if (item.id === "bug-reports") {
+            return {
+                id: item.id,
+                label: item.label ?? item.filename,
+                icon: item.icon,
+                action: "link" as const,
+                url: "https://github.com/borgesius/dana-dzik/issues/new?title=%5BBug+Report%5D%20",
+            }
+        }
+        return {
+            id: item.id,
+            label: item.label ?? item.filename,
+            icon: item.icon,
+            action: "window" as const,
+            windowId: item.windowId,
+        }
+    })
 }
 
 export class Desktop {
@@ -58,9 +69,6 @@ export class Desktop {
             this.icons.push(icon)
             iconsContainer.appendChild(icon.getElement())
         })
-
-        const footer = this.createDesktopFooter()
-        this.desktopArea.appendChild(footer)
 
         this.taskbar = new Taskbar(this.windowManager)
         this.container.appendChild(this.taskbar.getElement())
@@ -132,40 +140,6 @@ export class Desktop {
         img.style.left = `${x}px`
         img.style.top = `${y}px`
         this.floatingGifsContainer.appendChild(img)
-    }
-
-    private createDesktopFooter(): HTMLElement {
-        const footer = document.createElement("div")
-        footer.className = "desktop-footer"
-
-        const links = document.createElement("div")
-        links.className = "desktop-footer-links"
-
-        const guestbookLink = document.createElement("a")
-        guestbookLink.href =
-            "https://github.com/borgesius/dana-dzik/issues?q=is%3Aissue+is%3Aopen+%5BGuestbook%5D"
-        guestbookLink.target = "_blank"
-        guestbookLink.rel = "noopener noreferrer"
-        guestbookLink.textContent = "[Guestbook]"
-        guestbookLink.title = "View all guestbook entries"
-
-        const separator = document.createTextNode(" | ")
-
-        const bugReportLink = document.createElement("a")
-        bugReportLink.href =
-            "https://github.com/borgesius/dana-dzik/issues/new?title=%5BBug+Report%5D%20"
-        bugReportLink.target = "_blank"
-        bugReportLink.rel = "noopener noreferrer"
-        bugReportLink.textContent = "[Bug Reports]"
-        bugReportLink.title = "Report a bug"
-
-        links.appendChild(guestbookLink)
-        links.appendChild(separator)
-        links.appendChild(bugReportLink)
-
-        footer.appendChild(links)
-
-        return footer
     }
 
     public getWindowManager(): WindowManager {

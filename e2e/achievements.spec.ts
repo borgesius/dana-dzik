@@ -59,7 +59,7 @@ test.describe("Achievements", () => {
         // Verify the desktop loaded properly (achievements didn't break anything)
         await expect(page.locator(".desktop")).toBeVisible()
         await expect(page.locator(".taskbar")).toBeVisible()
-        await expect(page.locator(".desktop-icon")).toHaveCount(16, {
+        await expect(page.locator(".desktop-icon")).toHaveCount(17, {
             timeout: 5000,
         })
     })

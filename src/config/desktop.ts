@@ -124,4 +124,11 @@ export const DESKTOP_ITEMS: DesktopItemConfig[] = [
         windowId: "divination",
         fileType: "executable",
     },
+    {
+        id: "bug-reports",
+        filename: "Bug Reports.url",
+        label: "Bug Reports",
+        icon: "🐛",
+        fileType: "shortcut",
+    },
 ]
