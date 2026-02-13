@@ -455,11 +455,7 @@ export class TopologyRenderer {
             // Address
             c.font = "9px monospace"
             c.fillStyle = isVeil ? "#604858" : "#607888"
-            c.fillText(
-                n.service.addr,
-                n.x * w + glitchOffset.x,
-                n.y * h + 8
-            )
+            c.fillText(n.service.addr, n.x * w + glitchOffset.x, n.y * h + 8)
 
             c.textAlign = "left"
             c.globalAlpha = 1

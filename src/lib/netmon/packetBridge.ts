@@ -1169,28 +1169,28 @@ export function wireMarketEngineToPacketBridge(game: {
 
 export function wireAdditionalManagersToPacketBridge(managers: {
     prestige: {
-        on(event: string, callback: (...args: never[]) => void): void
+        on(event: string, callback: (data: unknown) => void): void
     }
     career: {
-        on(event: string, callback: (...args: never[]) => void): void
+        on(event: string, callback: (data: unknown) => void): void
     }
     collection: {
-        on(event: string, callback: (...args: never[]) => void): void
+        on(event: string, callback: (data: unknown) => void): void
     }
     progression: {
-        on(event: string, callback: (...args: never[]) => void): void
+        on(event: string, callback: (data: unknown) => void): void
     }
     theme: {
-        on(event: string, callback: (...args: never[]) => void): void
+        on(event: string, callback: (data: unknown) => void): void
     }
     locale: {
-        on(event: string, callback: (...args: never[]) => void): void
+        on(event: string, callback: (data: unknown) => void): void
     }
     veil: {
-        on(event: string, callback: (...args: never[]) => void): void
+        on(event: string, callback: (data: unknown) => void): void
     }
     runManager?: {
-        on(event: string, callback: (...args: never[]) => void): void
+        on(event: string, callback: (data: unknown) => void): void
     }
 }): void {
     // ── PrestigeManager events ───────────────────────────────────────────────
