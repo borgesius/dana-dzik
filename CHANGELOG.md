@@ -1,3 +1,9 @@
+## [3.0.1](https://github.com/borgesius/dana-dzik/compare/v3.0.0...v3.0.1) (2026-02-13)
+
+### Bug Fixes
+
+* **divination:** fix imports ([a9802e3](https://github.com/borgesius/dana-dzik/commit/a9802e3ca5dedd4295da4e349c98c156e25ac679))
+
 ## [2.14.1](https://github.com/borgesius/dana-dzik/compare/v2.14.0...v2.14.1) (2026-02-11)
 
 ### Bug Fixes
