@@ -1,3 +1,9 @@
+## [3.0.4](https://github.com/borgesius/dana-dzik/compare/v3.0.3...v3.0.4) (2026-02-13)
+
+### Bug Fixes
+
+* **pinball:** exclude one way wall from main walls array ([4e25ddf](https://github.com/borgesius/dana-dzik/commit/4e25ddfa4cae7f9d6163340b1af7d5cc246ef99a))
+
 ## [3.0.3](https://github.com/borgesius/dana-dzik/compare/v3.0.2...v3.0.3) (2026-02-13)
 
 ### Bug Fixes
