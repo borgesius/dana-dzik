@@ -1,3 +1,9 @@
+## [3.0.2](https://github.com/borgesius/dana-dzik/compare/v3.0.1...v3.0.2) (2026-02-13)
+
+### Bug Fixes
+
+* **divination:** types ([35e26a7](https://github.com/borgesius/dana-dzik/commit/35e26a7ded652209ed49433e69e363d52116bcab))
+
 ## [3.0.1](https://github.com/borgesius/dana-dzik/compare/v3.0.0...v3.0.1) (2026-02-13)
 
 ### Bug Fixes
