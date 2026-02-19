@@ -84,6 +84,8 @@ const LANE_SHIFT_PERIOD = 4
 const EASE_RATE = 40 // exponential ease-out factor (~25ms to 95%)
 const GRACE_PERIOD = 0.5 // invulnerability seconds after GO
 const DEPTH_PERSPECTIVE_K = 5 // non-linear perspective constant
+/** Reverse obstacles spawn this far "behind" the player so they're visible and dodgeable. Exported for tests. */
+export const REVERSE_SPAWN_DEPTH = -0.55
 
 const GLUE_COLOR = "#88aa22"
 
@@ -809,7 +811,7 @@ export class CubeRunner {
                 this.patternQueue.shift()
                 this.obstacles.push({
                     lane: next.lane,
-                    depth: next.reverse ? -0.1 : 1.0,
+                    depth: next.reverse ? REVERSE_SPAWN_DEPTH : 1.0,
                     type: next.type,
                     width: next.width,
                     reverse: next.reverse,
@@ -1040,7 +1042,7 @@ export class CubeRunner {
             }
 
             const isReverse = wave.reverse ?? false
-            const spawnDepth = isReverse ? -0.1 : 1.0
+            const spawnDepth = isReverse ? REVERSE_SPAWN_DEPTH : 1.0
 
             if (this.isLaneBlockedAt(lane, width, spawnDepth)) continue
             if (this.wouldBlockAllLanes(lane, width, spawnDepth)) continue
@@ -1139,7 +1141,7 @@ export class CubeRunner {
         if (type === "wall") width = Math.max(1, activeLanes - 1)
 
         const reverse = this.config.reverseObstacles && Math.random() < 0.2
-        const spawnDepth = reverse ? -0.1 : 1.0
+        const spawnDepth = reverse ? REVERSE_SPAWN_DEPTH : 1.0
 
         const MAX_ATTEMPTS = 5
         for (let attempt = 0; attempt < MAX_ATTEMPTS; attempt++) {
@@ -1635,7 +1637,8 @@ export class CubeRunner {
 
     private renderObstacle(ctx: CanvasRenderingContext2D, obs: Obstacle): void {
         const rawDepth = obs.depth + obs.depthJitter
-        if (rawDepth < 0 || rawDepth > 1) return
+        // Normal: 0..1. Reverse: REVERSE_SPAWN_DEPTH..0 (visible from below)
+        if (rawDepth < REVERSE_SPAWN_DEPTH - 0.05 || rawDepth > 1) return
 
         const theme = this.theme
         const scale = this.depthToScale(rawDepth)
@@ -2107,12 +2110,21 @@ export class CubeRunner {
     // ── Perspective math (Fix #8: non-linear) ───────────────────────────────
 
     private depthToY(depth: number): number {
+        // Reverse obstacles (depth < 0): appear below player and move up
+        if (depth < 0) {
+            const t = -depth / (1 - REVERSE_SPAWN_DEPTH)
+            return PLAYER_Y + (LOGICAL_H - PLAYER_Y) * t
+        }
         // Non-linear: objects compress faster near horizon
         const t = 1 / (1 + depth * DEPTH_PERSPECTIVE_K)
         return PLAYER_Y - (PLAYER_Y - HORIZON_Y) * (1 - t)
     }
 
     private depthToScale(depth: number): number {
+        // Reverse obstacles: scale down as they're further "behind"
+        if (depth < 0) {
+            return Math.max(0.3, 1 + depth)
+        }
         return 1 / (1 + depth * DEPTH_PERSPECTIVE_K)
     }
 
