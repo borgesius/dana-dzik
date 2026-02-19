@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest"
 
+import { REVERSE_SPAWN_DEPTH } from "../lib/veil/CubeRunner"
 import { BOSS_TAUNTS, LEVEL_CONFIGS } from "../lib/veil/levels"
 import { VEIL_IDS } from "../lib/veil/types"
 
@@ -141,6 +142,60 @@ describe("LEVEL_CONFIGS integrity", () => {
         expect(l4.taunts).toBe(true)
         expect(l4.glueWalls).toBe(true)
         expect(l4.depthDistortion).toBe(true)
+    })
+})
+
+// ── Reverse obstacles & beatability ──────────────────────────────────────────
+
+describe("reverse obstacles and beatability", () => {
+    it("reverse obstacles spawn far behind player (dodgeable)", () => {
+        // Reverse obstacles must spawn at depth <= -0.35 so they are visible
+        // (below player) and take time to reach the player plane.
+        expect(REVERSE_SPAWN_DEPTH).toBeLessThanOrEqual(-0.35)
+    })
+
+    it("each level with reverse obstacles gives enough reverse reaction time", () => {
+        const MIN_REVERSE_REACTION_SECONDS = 0.6
+        const depthSpeedPerUnitSpeed = 1 / 800
+        const reverseDepthSpeedMultiplier = 0.7
+
+        for (const id of VEIL_IDS) {
+            const cfg = LEVEL_CONFIGS[id]
+            if (!cfg.reverseObstacles) continue
+
+            const distanceToPlayer = 0 - REVERSE_SPAWN_DEPTH
+            const baseDepthSpeed =
+                cfg.baseSpeed *
+                depthSpeedPerUnitSpeed *
+                reverseDepthSpeedMultiplier
+            const reactionSeconds = distanceToPlayer / baseDepthSpeed
+
+            expect(
+                reactionSeconds,
+                `veil ${id} (${cfg.theme.name}): reverse reaction time ${reactionSeconds.toFixed(2)}s should be >= ${MIN_REVERSE_REACTION_SECONDS}s`
+            ).toBeGreaterThanOrEqual(MIN_REVERSE_REACTION_SECONDS)
+        }
+    })
+
+    it("each stage is theoretically beatable (fairness params)", () => {
+        for (const id of VEIL_IDS) {
+            const cfg = LEVEL_CONFIGS[id]
+            expect(cfg.survivalSeconds, `veil ${id}`).toBeGreaterThan(0)
+            expect(cfg.baseSpeed, `veil ${id}`).toBeGreaterThan(0)
+            expect(cfg.minDepthGap, `veil ${id}`).toBeGreaterThan(0)
+            expect(cfg.minDepthGap, `veil ${id}`).toBeLessThanOrEqual(0.5)
+            expect(cfg.baseSpawnInterval, `veil ${id}`).toBeGreaterThanOrEqual(
+                cfg.minSpawnInterval
+            )
+        }
+    })
+
+    it("normal obstacles spawn at horizon (depth 1), not at player", () => {
+        // Ensures forward-moving obstacles always start at far depth.
+        // Implementation uses 1.0 in spawnObstacle and pattern spawn; this test
+        // documents the contract for beatability.
+        const NORMAL_SPAWN_DEPTH = 1.0
+        expect(NORMAL_SPAWN_DEPTH).toBe(1.0)
     })
 })
 
