@@ -56,6 +56,7 @@ export function wireAchievements(
     wireSessionTimer(mgr)
     wireSessionCost(mgr)
     wireQAReports(mgr)
+    wireNetmonEvents(mgr)
     wireProgressionEvents(mgr)
     wireAchievementReporting(mgr)
 }
@@ -738,6 +739,28 @@ function wireSessionCost(mgr: AchievementManager): void {
 function wireQAReports(mgr: AchievementManager): void {
     onAppEvent("qa:report-clicked", () => {
         mgr.earn("qa-inspector")
+    })
+}
+
+function wireNetmonEvents(mgr: AchievementManager): void {
+    // "packet-sniffing" -- Open the Network Monitor window
+    onAppEvent("netmon:opened", () => {
+        mgr.earn("packet-sniffing")
+    })
+
+    // "deep-packet-inspection" -- Expand a packet row to see details
+    onAppEvent("netmon:packet-expanded", () => {
+        mgr.earn("deep-packet-inspection")
+    })
+
+    // "unknown-host" -- Filter packets by an unknown 10.0.7.x host
+    onAppEvent("netmon:unknown-host-filtered", () => {
+        mgr.earn("unknown-host")
+    })
+
+    // "port-scan" -- Run the nmap command in terminal
+    onAppEvent("netmon:nmap-run", () => {
+        mgr.earn("port-scan")
     })
 }
 
