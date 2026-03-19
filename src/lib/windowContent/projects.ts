@@ -22,15 +22,15 @@ export function getProjectsContent(): string {
             </div>
 
             <div class="project-card">
-                <h2>${lm.t("projects.babylonTitle")}</h2>
+                <h2>${lm.t("projects.styleGuideTitle")}</h2>
                 <p>
-                    ${lm.t("projects.babylonDescription")}
+                    ${lm.t("projects.styleGuideDescription")}
                 </p>
                 <p class="tech">
                     <strong>${lm.t("projects.stack")}</strong> TypeScript, Node.js
                 </p>
                 <p>
-                    <a href="https://github.com/borgesius/babylon-scriptorium" target="_blank">
+                    <a href="https://github.com/borgesius/openclaw-style-guide" target="_blank">
                         ${lm.t("projects.viewSource")}
                     </a>
                 </p>

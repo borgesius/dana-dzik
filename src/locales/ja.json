@@ -669,7 +669,7 @@
         "description": "今ご覧になっているものです！",
         "stack": "技術スタック:",
         "viewSource": "📦 GitHubでソースを見る",
-        "babylonTitle": "📜 babylon-scriptorium",
+        "styleGuideTitle": "📝 openclaw-style-guide",
         "babylonDescription": "分岐するエージェントの庭 — コーディングタスクのためのマルチエージェントLLMオーケストレーション。"
     },
     "resume": {

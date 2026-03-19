@@ -669,7 +669,7 @@
         "description": "Vous le regardez!",
         "stack": "Stack:",
         "viewSource": "📦 Voir la Source sur GitHub",
-        "babylonTitle": "📜 babylon-scriptorium",
+        "styleGuideTitle": "📝 openclaw-style-guide",
         "babylonDescription": "Un jardin aux sentiers qui bifurquent — orchestration LLM multi-agents pour les tâches de programmation."
     },
     "resume": {
