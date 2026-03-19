@@ -1,3 +1,10 @@
+## [3.1.1](https://github.com/borgesius/dana-dzik/compare/v3.1.0...v3.1.1) (2026-03-19)
+
+### Bug Fixes
+
+* check server response before marking achievements as reported ([#81](https://github.com/borgesius/dana-dzik/issues/81)) ([d146dc0](https://github.com/borgesius/dana-dzik/commit/d146dc01011bacbdcf2b575975684daed005964e)), closes [#72](https://github.com/borgesius/dana-dzik/issues/72) [#73](https://github.com/borgesius/dana-dzik/issues/73)
+* wire netmon achievements to event handlers ([#80](https://github.com/borgesius/dana-dzik/issues/80)) ([47b1851](https://github.com/borgesius/dana-dzik/commit/47b18510f97d2aac9435b73740ab88b230196561)), closes [#72](https://github.com/borgesius/dana-dzik/issues/72)
+
 ## [3.1.0](https://github.com/borgesius/dana-dzik/compare/v3.0.4...v3.1.0) (2026-03-19)
 
 ### Features
