@@ -338,15 +338,25 @@ async function reportAchievements(): Promise<void> {
     const visitorId = getVisitorId()
 
     try {
-        await apiPost(
+        const response = await apiFetch<{ ok: boolean; recorded?: number }>(
             "/api/achievement-counts",
-            { achievements: unreported },
-            { "X-Visitor-Id": visitorId }
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-Visitor-Id": visitorId,
+                },
+                body: JSON.stringify({ achievements: unreported }),
+            }
         )
 
-        for (const id of unreported) {
-            mgr.markReported(id)
+        // Only mark as reported if the server confirmed recording
+        if (response.ok && response.data.ok) {
+            for (const id of unreported) {
+                mgr.markReported(id)
+            }
         }
+        // If !response.ok or !response.data.ok, leave unreported so they retry next time
     } catch {
         // Silently fail — will retry on next earn
     }
