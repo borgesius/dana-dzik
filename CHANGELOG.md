@@ -1,3 +1,14 @@
+## [3.1.0](https://github.com/borgesius/dana-dzik/compare/v3.0.4...v3.1.0) (2026-03-19)
+
+### Features
+
+* replace babylon-scriptorium with openclaw-style-guide in projects ([#78](https://github.com/borgesius/dana-dzik/issues/78)) ([5bd7fe7](https://github.com/borgesius/dana-dzik/commit/5bd7fe71b21bf26c35da53a4f1d3b7c2e67f14b3))
+
+### Bug Fixes
+
+* persist form field values across tick renders ([#79](https://github.com/borgesius/dana-dzik/issues/79)) ([721ee1b](https://github.com/borgesius/dana-dzik/commit/721ee1b7b2c5579505d103fcae9fa03602e93b89)), closes [#74](https://github.com/borgesius/dana-dzik/issues/74)
+* **pierce the veil:** undodgeable obstactles ([#77](https://github.com/borgesius/dana-dzik/issues/77)) ([b37cff0](https://github.com/borgesius/dana-dzik/commit/b37cff0c70896137dac7d900d277eaf045c1ebe3))
+
 ## [3.0.4](https://github.com/borgesius/dana-dzik/compare/v3.0.3...v3.0.4) (2026-02-13)
 
 ### Bug Fixes
