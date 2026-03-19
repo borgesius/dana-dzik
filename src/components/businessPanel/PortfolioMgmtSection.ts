@@ -16,6 +16,10 @@ export class PortfolioMgmtSection {
     private contentEl: HTMLElement
     private game: MarketEngine
     private playSound: (type: string) => void
+    private savedQty = ""
+    private savedBorrow = ""
+    private savedRepay = ""
+    private savedCommodity = ""
 
     constructor(game: MarketEngine, playSound: (type: string) => void) {
         this.game = game
@@ -198,8 +202,50 @@ export class PortfolioMgmtSection {
         }
         html += `</table></div>`
 
+        this.saveInputValues()
         this.contentEl.innerHTML = html
+        this.restoreInputValues()
         this.wireButtons()
+    }
+
+    private saveInputValues(): void {
+        const qtyInput =
+            this.contentEl.querySelector<HTMLInputElement>(".desk-qty-input")
+        const borrowInput =
+            this.contentEl.querySelector<HTMLInputElement>(".desk-borrow-input")
+        const repayInput =
+            this.contentEl.querySelector<HTMLInputElement>(".desk-repay-input")
+        const commoditySelect = this.contentEl.querySelector<HTMLSelectElement>(
+            ".desk-commodity-select"
+        )
+
+        if (qtyInput) this.savedQty = qtyInput.value
+        if (borrowInput) this.savedBorrow = borrowInput.value
+        if (repayInput) this.savedRepay = repayInput.value
+        if (commoditySelect) this.savedCommodity = commoditySelect.value
+    }
+
+    private restoreInputValues(): void {
+        const qtyInput =
+            this.contentEl.querySelector<HTMLInputElement>(".desk-qty-input")
+        const borrowInput =
+            this.contentEl.querySelector<HTMLInputElement>(".desk-borrow-input")
+        const repayInput =
+            this.contentEl.querySelector<HTMLInputElement>(".desk-repay-input")
+        const commoditySelect = this.contentEl.querySelector<HTMLSelectElement>(
+            ".desk-commodity-select"
+        )
+
+        if (qtyInput && this.savedQty) qtyInput.value = this.savedQty
+        if (borrowInput && this.savedBorrow)
+            borrowInput.value = this.savedBorrow
+        if (repayInput && this.savedRepay) repayInput.value = this.savedRepay
+        if (commoditySelect && this.savedCommodity) {
+            const optionExists = Array.from(commoditySelect.options).some(
+                (opt) => opt.value === this.savedCommodity
+            )
+            if (optionExists) commoditySelect.value = this.savedCommodity
+        }
     }
 
     private wireButtons(): void {
@@ -233,6 +279,8 @@ export class PortfolioMgmtSection {
                     qty >= DAS_MIN_QUANTITY &&
                     this.game.securitize(cId, qty)
                 ) {
+                    this.savedQty = ""
+                    this.savedCommodity = ""
                     this.playSound("notify")
                     this.render()
                 }
@@ -247,6 +295,7 @@ export class PortfolioMgmtSection {
                 ) as HTMLInputElement
                 const amount = parseFloat(input?.value ?? "0")
                 if (amount > 0 && this.game.borrow(amount)) {
+                    this.savedBorrow = ""
                     this.playSound("notify")
                     this.render()
                 }
@@ -261,6 +310,7 @@ export class PortfolioMgmtSection {
                 ) as HTMLInputElement
                 const amount = parseFloat(input?.value ?? "0")
                 if (amount > 0 && this.game.repay(amount)) {
+                    this.savedRepay = ""
                     this.playSound("notify")
                     this.render()
                 }

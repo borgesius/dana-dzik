@@ -669,8 +669,8 @@
         "description": "你正在看的就是！",
         "stack": "技术栈：",
         "viewSource": "📦 在 GitHub 上查看源代码",
-        "babylonTitle": "📜 babylon-scriptorium",
-        "babylonDescription": "分叉代理的花园 — 用于编程任务的多代理LLM编排。"
+        "styleGuideTitle": "📝 openclaw-style-guide",
+        "styleGuideDescription": "OpenClaw 插件，将写作风格规则（芝加哥、AP、MLA）注入代理提示中。"
     },
     "resume": {
         "name": "Dana Dzik",

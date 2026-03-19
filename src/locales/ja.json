@@ -669,8 +669,8 @@
         "description": "今ご覧になっているものです！",
         "stack": "技術スタック:",
         "viewSource": "📦 GitHubでソースを見る",
-        "babylonTitle": "📜 babylon-scriptorium",
-        "babylonDescription": "分岐するエージェントの庭 — コーディングタスクのためのマルチエージェントLLMオーケストレーション。"
+        "styleGuideTitle": "📝 openclaw-style-guide",
+        "styleGuideDescription": "エージェントプロンプトに文章スタイルルール（シカゴ、AP、MLA）を注入するOpenClawプラグイン。"
     },
     "resume": {
         "name": "Dana Dzik",

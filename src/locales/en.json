@@ -669,8 +669,8 @@
         "description": "Why don't you click, drag and use keyboard arrows on danadzik.com?",
         "stack": "Stack:",
         "viewSource": "📦 View Source on GitHub",
-        "babylonTitle": "📜 babylon-scriptorium",
-        "babylonDescription": "Fun with multi-agent LLM orchestration."
+        "styleGuideTitle": "📝 openclaw-style-guide",
+        "styleGuideDescription": "OpenClaw plugin that injects writing style rules (Chicago, AP, MLA) into agent prompts."
     },
     "resume": {
         "name": "Dana Dzik",
