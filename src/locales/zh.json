@@ -670,7 +670,7 @@
         "stack": "技术栈：",
         "viewSource": "📦 在 GitHub 上查看源代码",
         "styleGuideTitle": "📝 openclaw-style-guide",
-        "babylonDescription": "分叉代理的花园 — 用于编程任务的多代理LLM编排。"
+        "styleGuideDescription": "OpenClaw 插件，将写作风格规则（芝加哥、AP、MLA）注入代理提示中。"
     },
     "resume": {
         "name": "Dana Dzik",

@@ -670,7 +670,7 @@
         "stack": "技術スタック:",
         "viewSource": "📦 GitHubでソースを見る",
         "styleGuideTitle": "📝 openclaw-style-guide",
-        "babylonDescription": "分岐するエージェントの庭 — コーディングタスクのためのマルチエージェントLLMオーケストレーション。"
+        "styleGuideDescription": "エージェントプロンプトに文章スタイルルール（シカゴ、AP、MLA）を注入するOpenClawプラグイン。"
     },
     "resume": {
         "name": "Dana Dzik",

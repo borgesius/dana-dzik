@@ -670,7 +670,7 @@
         "stack": "Stack:",
         "viewSource": "📦 Quellcode auf GitHub ansehen",
         "styleGuideTitle": "📝 openclaw-style-guide",
-        "babylonDescription": "Ein Garten sich verzweigender Agenten — Multi-Agenten-LLM-Orchestrierung für Programmieraufgaben."
+        "styleGuideDescription": "OpenClaw-Plugin, das Schreibstilregeln (Chicago, AP, MLA) in Agenten-Prompts einfügt."
     },
     "resume": {
         "name": "Dana Dzik",

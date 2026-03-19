@@ -670,7 +670,7 @@
         "stack": "Stack:",
         "viewSource": "📦 Voir la Source sur GitHub",
         "styleGuideTitle": "📝 openclaw-style-guide",
-        "babylonDescription": "Un jardin aux sentiers qui bifurquent — orchestration LLM multi-agents pour les tâches de programmation."
+        "styleGuideDescription": "Plugin OpenClaw qui injecte des règles de style d'écriture (Chicago, AP, MLA) dans les prompts des agents."
     },
     "resume": {
         "name": "Dana Dzik",
