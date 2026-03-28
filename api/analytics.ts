@@ -45,17 +45,9 @@ interface AnalyticsEvent {
         | "funnel"
         | "ab_assign"
         | "ab_convert"
-        | "perf"
-        | "crash"
     windowId?: string
     funnelStep?: string
     variant?: string
-    effectType?: string
-    perf?: {
-        resource: string
-        duration: number
-        type: string
-    }
 }
 
 interface Stats {
@@ -66,14 +58,6 @@ interface Stats {
     abTest: {
         name: string
         variants: Record<string, { assigned: number; converted: number }>
-    }
-    perf: {
-        avgLoadTime: number
-        byType: Record<string, { avg: number; count: number }>
-    }
-    crashes: {
-        total: number
-        byType: Record<string, number>
     }
 }
 
@@ -202,27 +186,6 @@ async function recordEvent(
             }
             break
 
-        case "perf":
-            if (event.perf) {
-                await client.hincrby(prefixKey("stats:perf:counts"), event.perf.type, 1)
-                await client.hincrby(
-                    prefixKey("stats:perf:totals"),
-                    event.perf.type,
-                    event.perf.duration
-                )
-            }
-            break
-
-        case "crash":
-            await client.incr(prefixKey("stats:crashes:total"))
-            if (event.effectType) {
-                await client.hincrby(
-                    prefixKey("stats:crashes:types"),
-                    event.effectType,
-                    1
-                )
-            }
-            break
     }
 }
 
@@ -233,20 +196,12 @@ async function getStats(client: Redis): Promise<Stats> {
         funnel,
         abAssigned,
         abConverted,
-        perfCounts,
-        perfTotals,
-        crashTotal,
-        crashTypes,
     ] = await Promise.all([
         client.get<number>(prefixKey("stats:views:total")),
         client.hgetall<Record<string, number>>(prefixKey("stats:windows")),
         client.hgetall<Record<string, number>>(prefixKey("stats:funnel")),
         client.hgetall<Record<string, number>>(prefixKey("stats:ab:assigned")),
         client.hgetall<Record<string, number>>(prefixKey("stats:ab:converted")),
-        client.hgetall<Record<string, number>>(prefixKey("stats:perf:counts")),
-        client.hgetall<Record<string, number>>(prefixKey("stats:perf:totals")),
-        client.get<number>(prefixKey("stats:crashes:total")),
-        client.hgetall<Record<string, number>>(prefixKey("stats:crashes:types")),
     ])
 
     const variants: Record<string, { assigned: number; converted: number }> = {}
@@ -262,8 +217,6 @@ async function getStats(client: Redis): Promise<Stats> {
         }
     }
 
-    const perf = computePerfStats(perfCounts || {}, perfTotals || {})
-
     return {
         totalViews: totalViews || 0,
         uniqueVisitors: 0,
@@ -273,43 +226,5 @@ async function getStats(client: Redis): Promise<Stats> {
             name: "welcome_cta",
             variants,
         },
-        perf,
-        crashes: {
-            total: crashTotal || 0,
-            byType: crashTypes || {},
-        },
-    }
-}
-
-function computePerfStats(
-    counts: Record<string, number>,
-    totals: Record<string, number>
-): Stats["perf"] {
-    const types = Object.keys(counts)
-
-    if (types.length === 0) {
-        return { avgLoadTime: 0, byType: {} }
-    }
-
-    const byType: Record<string, { avg: number; count: number }> = {}
-    let totalCount = 0
-    let totalDuration = 0
-
-    for (const type of types) {
-        const count = counts[type] || 0
-        const total = totals[type] || 0
-        const avg = count > 0 ? Math.round(total / count) : 0
-
-        byType[type] = { avg, count }
-        totalCount += count
-        totalDuration += total
-    }
-
-    const avgLoadTime =
-        totalCount > 0 ? Math.round(totalDuration / totalCount) : 0
-
-    return {
-        avgLoadTime,
-        byType,
     }
 }

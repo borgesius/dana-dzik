@@ -16,13 +16,6 @@ import {
     trackWindowOpen,
 } from "../lib/analytics"
 
-function makeSampledVisitorId(): string {
-    for (let i = 0; i < 100_000; i++) {
-        const id = `test-visitor-${i}`
-        if (isClientSampled(id)) return id
-    }
-    throw new Error("Could not find a sampled visitor ID in 100k attempts")
-}
 
 describe("Analytics", () => {
     beforeEach(() => {
@@ -303,76 +296,4 @@ describe("Analytics", () => {
         })
     })
 
-    describe("client-side sampling gate", () => {
-        it("sampled visitors can send non-critical events", () => {
-            const sampledId = makeSampledVisitorId()
-            localStorage.setItem("visitor_id", sampledId)
-
-            const fetchSpy = vi
-                .spyOn(globalThis, "fetch")
-                .mockResolvedValue(new Response())
-
-            trackFunnelStep("launched")
-
-            const funnelCalls = fetchSpy.mock.calls.filter((call) => {
-                const body = JSON.parse(call[1]?.body as string) as {
-                    type: string
-                }
-                return body.type === "funnel"
-            })
-            expect(funnelCalls).toHaveLength(1)
-        })
-
-        it("non-sampled visitors do not send non-critical events", () => {
-            localStorage.setItem("visitor_id", "definitely-not-sampled-id-xyz")
-            expect(isClientSampled("definitely-not-sampled-id-xyz")).toBe(false)
-
-            const fetchSpy = vi
-                .spyOn(globalThis, "fetch")
-                .mockResolvedValue(new Response())
-
-            trackFunnelStep("launched")
-
-            const funnelCalls = fetchSpy.mock.calls.filter((call) => {
-                const body = JSON.parse(call[1]?.body as string) as {
-                    type: string
-                }
-                return body.type === "funnel"
-            })
-            expect(funnelCalls).toHaveLength(0)
-        })
-
-        it("non-sampled visitors can still send pageviews", () => {
-            localStorage.setItem("visitor_id", "definitely-not-sampled-id-xyz")
-
-            const fetchSpy = vi
-                .spyOn(globalThis, "fetch")
-                .mockResolvedValue(new Response())
-
-            trackPageview()
-
-            expect(fetchSpy).toHaveBeenCalledTimes(1)
-        })
-
-        it("sampled visitors are capped by session budget", () => {
-            const sampledId = makeSampledVisitorId()
-            localStorage.setItem("visitor_id", sampledId)
-
-            const fetchSpy = vi
-                .spyOn(globalThis, "fetch")
-                .mockResolvedValue(new Response())
-
-            for (let i = 0; i < 30; i++) {
-                trackFunnelStep(`step_${i}`)
-            }
-
-            const funnelCalls = fetchSpy.mock.calls.filter((call) => {
-                const body = JSON.parse(call[1]?.body as string) as {
-                    type: string
-                }
-                return body.type === "funnel"
-            })
-            expect(funnelCalls.length).toBeLessThanOrEqual(15)
-        })
-    })
 })

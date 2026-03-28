@@ -2,32 +2,21 @@ import { Redis } from "@upstash/redis"
 
 // ─── Configuration ──────────────────────────────────────────────────────────
 
-/** Fraction of clients in the "sampled" cohort that get full event tracking */
-const SAMPLE_RATE = 0.01
-
-/** Max non-critical events a sampled client can write per day */
-const SAMPLED_CLIENT_BUDGET = 50
-
-/** TTL for per-client rate-limit keys (24 hours) */
-const CLIENT_BUDGET_TTL_SECONDS = 86_400
-
 /** Max fresh (uncached) reads allowed per hour across all clients */
 const MAX_FRESH_READS_PER_HOUR = 60
 
-/** Event types that bypass sampling entirely — always recorded */
+/** Event types that are always recorded (all current event types are critical) */
 const CRITICAL_EVENT_TYPES: ReadonlySet<string> = new Set([
     "pageview",
-    "crash",
+    "funnel",
+    "ab_assign",
+    "ab_convert",
+    "window",
 ])
 
 // ─── Types ──────────────────────────────────────────────────────────────────
 
-type WriteReason =
-    | "critical"
-    | "sampled"
-    | "not_sampled"
-    | "budget_exhausted"
-    | "no_redis"
+type WriteReason = "critical" | "no_redis"
 
 export interface WriteResult {
     recorded: boolean
@@ -77,9 +66,7 @@ export function isConfigured(): boolean {
     return getRedis() !== null
 }
 
-// ─── Hashing & Sampling ────────────────────────────────────────────────────
-//     Deterministic so both client and server agree on who is sampled.
-//     These are pure functions — safe to duplicate on the client side.
+// ─── Hashing ────────────────────────────────────────────────────────────────
 
 export function hashString(value: string): number {
     let hash = 0
@@ -89,43 +76,17 @@ export function hashString(value: string): number {
     return Math.abs(hash)
 }
 
-export function isClientSampled(visitorId: string): boolean {
-    return (hashString(visitorId) % 10_000) < SAMPLE_RATE * 10_000
-}
-
 export function isCriticalEvent(eventType: string): boolean {
     return CRITICAL_EVENT_TYPES.has(eventType)
 }
 
 // ─── Write Throttling ───────────────────────────────────────────────────────
-//
-//     Flow per incoming event:
-//
-//     1. Critical event (e.g. pageview) → always write (0 extra Redis ops)
-//     2. Client NOT in 1% sample         → drop silently  (0 Redis ops)
-//     3. Client IS sampled              → check daily budget via INCR
-//        3a. Budget remaining           → execute write
-//        3b. Budget exhausted           → drop
-//
-//     Net effect: 99% of non-critical traffic costs zero Redis commands.
-
-async function consumeWriteBudget(
-    client: Redis,
-    visitorId: string
-): Promise<boolean> {
-    const key = prefixKey(`ratelimit:w:${visitorId}`)
-    const count = await client.incr(key)
-
-    if (count === 1) {
-        await client.expire(key, CLIENT_BUDGET_TTL_SECONDS)
-    }
-
-    return count <= SAMPLED_CLIENT_BUDGET
-}
+//     All current event types are critical (guarded by client-side localStorage/
+//     sessionStorage deduplication), so every event is always recorded.
 
 export async function throttledWrite(
-    visitorId: string,
-    eventType: string,
+    _visitorId: string,
+    _eventType: string,
     writeFn: (client: Redis) => Promise<void>
 ): Promise<WriteResult> {
     const client = getRedis()
@@ -133,22 +94,8 @@ export async function throttledWrite(
         return { recorded: false, reason: "no_redis" }
     }
 
-    if (isCriticalEvent(eventType)) {
-        await writeFn(client)
-        return { recorded: true, reason: "critical" }
-    }
-
-    if (!isClientSampled(visitorId)) {
-        return { recorded: false, reason: "not_sampled" }
-    }
-
-    const hasBudget = await consumeWriteBudget(client, visitorId)
-    if (!hasBudget) {
-        return { recorded: false, reason: "budget_exhausted" }
-    }
-
     await writeFn(client)
-    return { recorded: true, reason: "sampled" }
+    return { recorded: true, reason: "critical" }
 }
 
 // ─── Read Throttling ────────────────────────────────────────────────────────

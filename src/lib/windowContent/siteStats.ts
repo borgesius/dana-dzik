@@ -41,10 +41,6 @@ export function getSiteStatsContent(): string {
                 <div class="ab-results" id="ab-results"></div>
             </div>
 
-            <div class="stats-section" id="stats-perf" style="display: none;">
-                <h3>${lm.t("stats.performance")}</h3>
-                <div id="perf-stats"></div>
-            </div>
         </div>
     `
 }

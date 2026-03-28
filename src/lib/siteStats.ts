@@ -9,10 +9,6 @@ interface Stats {
         name: string
         variants: Record<string, { assigned: number; converted: number }>
     }
-    perf: {
-        avgLoadTime: number
-        byType: Record<string, { avg: number; count: number }>
-    }
 }
 
 interface StatsResponse {
@@ -31,7 +27,6 @@ async function fetchAndDisplayStats(): Promise<void> {
     const heatmapSection = document.getElementById("stats-heatmap")
     const funnelSection = document.getElementById("stats-funnel")
     const abSection = document.getElementById("stats-ab")
-    const perfSection = document.getElementById("stats-perf")
 
     try {
         const response = await fetch("/api/analytics")
@@ -62,13 +57,11 @@ async function fetchAndDisplayStats(): Promise<void> {
         if (heatmapSection) heatmapSection.style.display = "block"
         if (funnelSection) funnelSection.style.display = "block"
         if (abSection) abSection.style.display = "block"
-        if (perfSection) perfSection.style.display = "block"
 
         renderOverview(stats)
         renderHeatmap(stats.windowViews)
         renderFunnel(stats.funnel)
         renderAbTest(stats.abTest)
-        renderPerf(stats.perf)
     } catch {
         if (loadingEl) {
             loadingEl.textContent = "Could not load analytics"
@@ -203,43 +196,3 @@ function renderAbTest(abTest: Stats["abTest"]): void {
         .join("")
 }
 
-function renderPerf(perf: Stats["perf"]): void {
-    const container = document.getElementById("perf-stats")
-    if (!container) return
-
-    const typeLabels: Record<string, string> = {
-        script: "📜 Scripts",
-        style: "🎨 Styles",
-        image: "🖼️ Images",
-        font: "🔤 Fonts",
-        audio: "🔊 Audio",
-        other: "📦 Other",
-    }
-
-    const entries = Object.entries(perf.byType).sort(
-        (a, b) => b[1].avg - a[1].avg
-    )
-
-    container.innerHTML = `
-        <div class="perf-overview">
-            <div class="perf-stat">
-                <span class="perf-value">${perf.avgLoadTime}ms</span>
-                <span class="perf-label">Avg Load</span>
-            </div>
-        </div>
-        <div class="perf-breakdown">
-            ${entries
-                .map(([type, data]) => {
-                    const label = typeLabels[type] || type
-                    return `
-                        <div class="perf-row">
-                            <span class="perf-type">${label}</span>
-                            <span class="perf-avg">${data.avg}ms avg</span>
-                            <span class="perf-count">(${data.count})</span>
-                        </div>
-                    `
-                })
-                .join("")}
-        </div>
-    `
-}

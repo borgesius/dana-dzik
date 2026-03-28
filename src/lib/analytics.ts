@@ -1,7 +1,6 @@
 import { ANALYTICS_CONFIG } from "../config/analytics"
 import type { RoutableWindow } from "../config/routing"
 import { apiFetch, apiPost } from "./api/client"
-import { emitAppEvent, onAppEvent } from "./events"
 
 function isBot(): boolean {
     const ua = navigator.userAgent.toLowerCase()
@@ -48,10 +47,8 @@ function isBot(): boolean {
 const AB_TEST_KEY = "ab_variant"
 const AB_TRACKED_KEY = "ab_variant_tracked"
 const VISITOR_KEY = "visitor_id"
-const PERF_COUNT_KEY = "perf_event_count"
 const WINDOW_TRACKED_PREFIX = "window_tracked_"
 const PAGEVIEW_TRACKED_KEY = "pageview_tracked"
-const SESSION_BUDGET_KEY = "analytics_session_budget"
 
 export const PHOTO_VARIANTS = [
     {
@@ -85,22 +82,14 @@ interface AnalyticsEvent {
         | "funnel"
         | "ab_assign"
         | "ab_convert"
-        | "perf"
-        | "crash"
     windowId?: string
     funnelStep?: string
     variant?: string
-    effectType?: string
-    perf?: {
-        resource: string
-        duration: number
-        type: string
-    }
 }
 
-// ─── Sampling ───────────────────────────────────────────────────────────────
-//     Deterministic hash so both client and server agree on who is sampled.
-//     Must match the implementation in api/lib/redisGateway.ts.
+// ─── Hashing & Sampling ────────────────────────────────────────────────────
+//     hashString and isClientSampled are kept as pure utilities used by
+//     sessionCost.ts for cost-tracking sampling.
 
 export function hashString(value: string): number {
     let hash = 0
@@ -115,20 +104,6 @@ export function isClientSampled(visitorId: string): boolean {
     return hashString(visitorId) % 10_000 < sampleRate * 10_000
 }
 
-function isCriticalEvent(eventType: string): boolean {
-    return eventType === "pageview" || eventType === "crash"
-}
-
-function consumeSessionBudget(): boolean {
-    const count = parseInt(
-        sessionStorage.getItem(SESSION_BUDGET_KEY) || "0",
-        10
-    )
-    if (count >= ANALYTICS_CONFIG.sessionEventBudget) return false
-    sessionStorage.setItem(SESSION_BUDGET_KEY, (count + 1).toString())
-    return true
-}
-
 // ─── Visitor ID ─────────────────────────────────────────────────────────────
 
 function getVisitorId(): string {
@@ -141,17 +116,8 @@ function getVisitorId(): string {
 }
 
 // ─── Event Sending ──────────────────────────────────────────────────────────
-//
-//     Client-side gating mirrors the server-side redisGateway:
-//
-//     1. Critical events (pageview) → always sent
-//     2. Non-sampled visitors (99%) → non-critical events dropped here,
-//        never hitting the server or Redis at all
-//     3. Sampled visitors (1%) → non-critical events sent up to the
-//        per-session budget, then stopped
-//
-//     The server enforces the same rules as defense-in-depth, but the
-//     client-side gating avoids unnecessary network requests entirely.
+//     All event types are guarded by localStorage/sessionStorage deduplication
+//     on the client, so every sendEvent call goes directly to the server.
 
 const ANALYTICS_TOKEN = "dk-analytics-2026"
 
@@ -159,12 +125,6 @@ async function sendEvent(event: AnalyticsEvent): Promise<void> {
     if (isBot()) return
 
     const visitorId = getVisitorId()
-
-    if (!isCriticalEvent(event.type)) {
-        emitAppEvent("analytics:intent", { type: event.type })
-        if (!isClientSampled(visitorId)) return
-        if (!consumeSessionBudget()) return
-    }
 
     await apiPost("/api/analytics", event, {
         "X-Analytics-Token": ANALYTICS_TOKEN,
@@ -229,86 +189,6 @@ export function trackAbConversion(): void {
         localStorage.setItem(AB_CONVERTED_KEY, "true")
         void sendEvent({ type: "ab_convert", variant })
     }
-}
-
-export function trackCrash(effectType: string): void {
-    void sendEvent({ type: "crash", effectType })
-}
-
-function getPerfEventCount(): number {
-    const stored = localStorage.getItem(PERF_COUNT_KEY)
-    return stored ? parseInt(stored, 10) : 0
-}
-
-function incrementPerfEventCount(): number {
-    const count = getPerfEventCount() + 1
-    localStorage.setItem(PERF_COUNT_KEY, count.toString())
-    return count
-}
-
-export function initPerfTracking(): void {
-    if (typeof PerformanceObserver === "undefined") return
-
-    const { maxPerfEvents, minPerfDuration } = ANALYTICS_CONFIG
-
-    if (getPerfEventCount() >= maxPerfEvents) return
-
-    const observer = new PerformanceObserver((list) => {
-        for (const entry of list.getEntries()) {
-            if (getPerfEventCount() >= maxPerfEvents) {
-                observer.disconnect()
-                return
-            }
-
-            if (entry.entryType === "resource") {
-                const resource = entry as PerformanceResourceTiming
-                const url = new URL(resource.name, window.location.origin)
-                const ext = url.pathname.split(".").pop() || "other"
-                const type = getResourceType(ext)
-
-                if (resource.duration > minPerfDuration) {
-                    incrementPerfEventCount()
-                    void sendEvent({
-                        type: "perf",
-                        perf: {
-                            resource: url.pathname,
-                            duration: Math.round(resource.duration),
-                            type,
-                        },
-                    })
-                }
-            }
-        }
-    })
-
-    observer.observe({ entryTypes: ["resource"] })
-}
-
-function getResourceType(ext: string): string {
-    const types: Record<string, string> = {
-        js: "script",
-        css: "style",
-        jpg: "image",
-        jpeg: "image",
-        png: "image",
-        gif: "image",
-        webp: "image",
-        svg: "image",
-        woff: "font",
-        woff2: "font",
-        ttf: "font",
-        mp3: "audio",
-        wav: "audio",
-        mid: "audio",
-        midi: "audio",
-    }
-    return types[ext.toLowerCase()] || "other"
-}
-
-export function initCrashTracking(): void {
-    onAppEvent("system-crash:triggered", (detail) => {
-        trackCrash(detail.effectType)
-    })
 }
 
 // ─── Achievement Reporting ──────────────────────────────────────────────────
