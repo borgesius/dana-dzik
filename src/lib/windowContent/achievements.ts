@@ -174,7 +174,7 @@ export function renderAchievementsWindow(): void {
                 let rarityHtml = ""
                 if (globalCounts && globalCounts.totalUsers > 0) {
                     const count = globalCounts.counts[def.id] ?? 0
-                    rarityHtml = `<div class="achievement-card-rarity">${count} / ${globalCounts.totalUsers} users</div>`
+                    rarityHtml = `<div class="achievement-card-rarity">${count} user${count === 1 ? "" : "s"}</div>`
                 }
 
                 html += `
