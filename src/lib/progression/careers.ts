@@ -23,6 +23,7 @@ export type BonusType =
 
 export type CareerNodeId =
     // Engineering
+    | "eng-coval"
     | "eng-senior"
     | "eng-staff"
     | "eng-principal"
@@ -84,17 +85,36 @@ export interface CareerNodeDef {
 }
 
 // ── Engineering Branch ───────────────────────────────────────────────────────
-// The player already holds the Senior SWE role (shown on resume from the
-// start), so the tree begins at Staff.  The Senior SWE entry is exported
-// separately for the resume display and its bonus is applied passively.
+// The player holds both the Coval and Volley roles (shown on resume from the
+// start), so the tree begins at Staff.  Both entries are exported separately
+// for the resume display and their bonuses are applied passively.
 
-/** Starting role — not part of the unlockable tree; displayed on the resume
- *  and its bonus (+5 % WELT thermal protection) is applied passively. */
+/** Current role — not part of the unlockable tree; displayed on the resume
+ *  and its bonus (+7% Synthetic Wisdom Yield) is applied passively. */
+export const COVAL_STARTER_NODE: CareerNodeDef = {
+    id: "eng-coval",
+    name: "Software Engineer",
+    company: "Coval · San Francisco, CA",
+    dateRange: "2026 – Present",
+    bullets: [
+        "Making the talking computers fight each other in the cloud",
+        "Instrumenting LLM behavior at scale so the next model has slightly fewer opinions about what counts as a haiku",
+    ],
+    bonusLabel: "+7% Synthetic Wisdom Yield",
+    branch: "engineering",
+    tier: 0,
+    prerequisites: [],
+    bonusType: "weltBonus",
+    bonusValue: 0.07,
+}
+
+/** Prior role — not part of the unlockable tree; displayed on the resume
+ *  and its bonus (+5% WELT thermal protection) is applied passively. */
 export const ENGINEERING_STARTER_NODE: CareerNodeDef = {
     id: "eng-senior",
     name: "Senior Software Engineer",
     company: "Volley · San Francisco, CA",
-    dateRange: "2021 – Present",
+    dateRange: "2021 – 2026",
     bullets: [
         "Leading development on voice-first web apps used by 100Ks",
         "Bringing the users joy with features, reliability, and endless E2E workflow wank",
@@ -553,24 +573,27 @@ export const EDUCATION_STARTER_NODE: CareerNodeDef = {
     bonusValue: 0.01,
 }
 
+/** Primary education — not part of the unlockable tree; displayed on the resume
+ *  and its bonus is applied passively. */
+export const EDUCATION_UNDERGRAD_NODE: CareerNodeDef = {
+    id: "edu-undergrad",
+    name: "B.A. Mathematics & Philosophy",
+    company: "University of Chicago · Chicago, IL",
+    dateRange: "2015 – 2019",
+    bullets: [
+        "Graduated with honors",
+        "Wrote an edgy thesis on Kant and Nietzsche read by none",
+        "Fourth week, am I right?",
+    ],
+    bonusLabel: "+4% GRUND compilation tolerance",
+    branch: "education",
+    tier: 0,
+    prerequisites: [],
+    bonusType: "grundBonus",
+    bonusValue: 0.04,
+}
+
 const EDUCATION_NODES: CareerNodeDef[] = [
-    {
-        id: "edu-undergrad",
-        name: "B.A. Mathematics & Philosophy",
-        company: "University of Chicago · Chicago, IL",
-        dateRange: "2015 – 2019",
-        bullets: [
-            "Graduated with honors",
-            "Wrote an edgy thesis on Kant and Nietzsche read by none",
-            "Fourth week, am I right?",
-        ],
-        bonusLabel: "+4% GRUND compilation tolerance",
-        branch: "education",
-        tier: 1,
-        prerequisites: [],
-        bonusType: "grundBonus",
-        bonusValue: 0.04,
-    },
     {
         id: "edu-honors",
         name: "Honors Thesis (Read by Three People)",
@@ -582,8 +605,8 @@ const EDUCATION_NODES: CareerNodeDef[] = [
         ],
         bonusLabel: "+6% Hindsight rate",
         branch: "education",
-        tier: 2,
-        prerequisites: ["edu-undergrad"],
+        tier: 1,
+        prerequisites: [],
         bonusType: "hindsightRate",
         bonusValue: 0.06,
     },

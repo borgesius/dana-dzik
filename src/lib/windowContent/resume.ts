@@ -5,7 +5,9 @@ import {
     CAREER_BRANCHES,
     CAREER_NODE_MAP,
     type CareerNodeDef,
+    COVAL_STARTER_NODE,
     EDUCATION_STARTER_NODE,
+    EDUCATION_UNDERGRAD_NODE,
     ENGINEERING_STARTER_NODE,
     getNodesForBranch,
     SKILLS_STARTER_NODE,
@@ -14,9 +16,12 @@ import { renderCareerTreeWindow } from "./careerTree"
 
 // ── Base resume entries (always shown, even before unlock) ──────────────────
 
-const BASE_EXPERIENCE: CareerNodeDef = ENGINEERING_STARTER_NODE
+const BASE_EXPERIENCE: CareerNodeDef[] = [
+    COVAL_STARTER_NODE,
+    ENGINEERING_STARTER_NODE,
+]
 const BASE_EDUCATION: CareerNodeDef[] = [
-    CAREER_NODE_MAP.get("edu-undergrad") ?? ({} as CareerNodeDef),
+    EDUCATION_UNDERGRAD_NODE,
     EDUCATION_STARTER_NODE,
 ]
 
@@ -152,9 +157,9 @@ function renderResumeTab(): void {
             activeJobId = activeNodes[0].id
         }
     }
-    // If no career nodes unlocked, the base experience is the active job
+    // If no career nodes unlocked, Coval (first BASE_EXPERIENCE entry) is the active job
     if (!activeJobId) {
-        activeJobId = BASE_EXPERIENCE.id
+        activeJobId = BASE_EXPERIENCE[0].id
     }
 
     const shownNodeIds = new Set<string>()
@@ -177,13 +182,15 @@ function renderResumeTab(): void {
         }
     }
 
-    // Always show the base Volley entry if it hasn't appeared via unlock
-    if (!shownNodeIds.has(BASE_EXPERIENCE.id) && BASE_EXPERIENCE.id) {
-        const isActiveJob = BASE_EXPERIENCE.id === activeJobId
-        experienceHtml =
-            renderResumeEntry(BASE_EXPERIENCE, false, isActiveJob) +
-            experienceHtml
+    // Always show base entries (Coval first, then Volley) if not shown via unlock
+    let baseHtml = ""
+    for (const baseEntry of BASE_EXPERIENCE) {
+        if (!shownNodeIds.has(baseEntry.id) && baseEntry.id) {
+            const isActiveJob = baseEntry.id === activeJobId
+            baseHtml += renderResumeEntry(baseEntry, false, isActiveJob)
+        }
     }
+    experienceHtml = baseHtml + experienceHtml
 
     html += experienceHtml
 

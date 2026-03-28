@@ -646,7 +646,7 @@
         "taglineMobile": "Welcome to my website! Feel free to explore by tapping the icons.",
         "ctaGuestbook": "📖 Sign my guestbook!",
         "underConstruction": "🚧 UNDER CONSTRUCTION 🚧",
-        "footer": "Last updated: February 2026 | Made with ❤️"
+        "footer": "Last updated: March 2026 | Made with ❤️"
     },
     "about": {
         "title": "📝 About Me",
@@ -675,9 +675,9 @@
     "resume": {
         "name": "Dana Dzik",
         "experience": "Experience",
-        "title": "Senior Software Engineer",
-        "company": "Volley · San Francisco, CA",
-        "dates": "2021 – Present",
+        "title": "Software Engineer",
+        "company": "Coval · San Francisco, CA",
+        "dates": "2026 – Present",
         "education": "Education",
         "school": "University of Chicago",
         "degree": "B.A. with Honors in Mathematics and Philosophy",

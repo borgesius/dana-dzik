@@ -6,7 +6,6 @@ import {
     type CosmeticDefinition,
     getCosmeticsForType,
 } from "../cosmetics/definitions"
-import { getLocaleManager, type LocaleId } from "../localeManager"
 import {
     type ColorScheme,
     getThemeManager,
@@ -50,7 +49,6 @@ const TABS: TabDef[] = [
     { id: "taskbar-style", label: "Taskbar", icon: "▬" },
     { id: "window-animation", label: "Animation", icon: "▶️" },
     { id: "startup-sound", label: "Startup Sound", icon: "🔔" },
-    { id: "language", label: "Language", icon: "🌐" },
 ]
 
 const COSMETIC_TABS: CosmeticType[] = [
@@ -70,7 +68,6 @@ export function renderCustomizeWindow(): void {
 
     const cm = getCosmeticManager()
     const tm = getThemeManager()
-    const lm = getLocaleManager()
     let activeTab = pendingTab ?? "theme"
     pendingTab = null
 
@@ -98,9 +95,6 @@ export function renderCustomizeWindow(): void {
     function renderTabContent(tabId: string): string {
         if (tabId === "color-scheme") {
             return renderColorSchemeSection()
-        }
-        if (tabId === "language") {
-            return renderLanguageSection()
         }
         if (COSMETIC_TABS.includes(tabId as CosmeticType)) {
             return renderCosmeticSection(tabId as CosmeticType)
@@ -153,26 +147,6 @@ export function renderCustomizeWindow(): void {
         return html
     }
 
-    function renderLanguageSection(): string {
-        const currentLocale = lm.getCurrentLocale()
-        const localeIds = lm.getLocaleIds()
-
-        let html = `<div class="customize-grid">`
-        for (const localeId of localeIds) {
-            const flag = lm.getLocaleFlag(localeId)
-            const name = lm.getLocaleName(localeId)
-            const isActive = currentLocale === localeId
-            html += `
-                <div class="cosmetic-card ${isActive ? "active" : ""}" data-locale="${localeId}">
-                    <div class="cosmetic-icon">${flag}</div>
-                    <div class="cosmetic-name">${name}</div>
-                    ${isActive ? '<div class="cosmetic-active-badge">Active</div>' : ""}
-                </div>`
-        }
-        html += `</div>`
-        return html
-    }
-
     function attachListeners(): void {
         if (!root) return
 
@@ -188,7 +162,6 @@ export function renderCustomizeWindow(): void {
                 const type = card.getAttribute("data-type") as CosmeticType
                 const id = card.getAttribute("data-id")
                 const scheme = card.getAttribute("data-scheme")
-                const locale = card.getAttribute("data-locale")
 
                 if (type && id) {
                     if (type === "theme") {
@@ -201,9 +174,6 @@ export function renderCustomizeWindow(): void {
                 } else if (scheme) {
                     tm.setColorScheme(scheme as ColorScheme)
                     render()
-                } else if (locale) {
-                    void lm.setLocale(locale as LocaleId)
-                    render()
                 }
             })
         })
@@ -215,7 +185,6 @@ export function renderCustomizeWindow(): void {
     cm.onChange(() => render())
     tm.on("themeChanged", () => render())
     tm.on("colorSchemeChanged", () => render())
-    lm.on("localeChanged", () => render())
 }
 
 function renderCosmeticCard(

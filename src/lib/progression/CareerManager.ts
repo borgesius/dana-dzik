@@ -5,7 +5,9 @@ import {
     CAREER_NODE_MAP,
     CAREER_SWITCH_LEVEL_PENALTY,
     type CareerNodeId,
+    COVAL_STARTER_NODE,
     DORMANT_MULTIPLIER,
+    EDUCATION_UNDERGRAD_NODE,
     ENGINEERING_STARTER_NODE,
     MASTERY_MAP,
     masteryCost,
@@ -373,13 +375,25 @@ export class CareerManager {
             }
         }
 
-        // Passive bonus from starting role (Senior SWE at Volley).
-        // The player already holds this position, so its bonus is free.
+        // Passive bonus from current role (Coval).
+        if (
+            COVAL_STARTER_NODE.bonusType === bonusType &&
+            this.careerHistory.some((e) => e.branch === "engineering")
+        ) {
+            total += COVAL_STARTER_NODE.bonusValue
+        }
+
+        // Passive bonus from prior role (Senior SWE at Volley).
         if (
             ENGINEERING_STARTER_NODE.bonusType === bonusType &&
             this.careerHistory.some((e) => e.branch === "engineering")
         ) {
             total += ENGINEERING_STARTER_NODE.bonusValue
+        }
+
+        // Passive bonus from B.A. in Mathematics & Philosophy (always active).
+        if (EDUCATION_UNDERGRAD_NODE.bonusType === bonusType) {
+            total += EDUCATION_UNDERGRAD_NODE.bonusValue
         }
 
         // Passive bonus from base skills (always active).
@@ -463,6 +477,10 @@ export class CareerManager {
                 this.educationNodes.add(nodeId)
             }
         }
+        // Migration: edu-undergrad was removed from the unlockable tree;
+        // its bonus is now applied passively. Drop it so it doesn't
+        // count as a spent skill point in old saves.
+        this.educationNodes.delete("edu-undergrad" as CareerNodeId)
 
         if (data.skillNodes) {
             for (const nodeId of data.skillNodes) {

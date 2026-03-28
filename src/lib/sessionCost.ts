@@ -1,6 +1,4 @@
-import { ANALYTICS_CONFIG } from "../config/analytics"
-import { getVisitorId, isClientSampled } from "./analytics"
-import { emitAppEvent, onAppEvent } from "./events"
+import { emitAppEvent } from "./events"
 
 const COST_PER_INVOCATION = 0.000006
 const COST_PER_REDIS_COMMAND = 0.000002
@@ -27,14 +25,12 @@ export const COST_TIERS: readonly CostTier[] = [
 
 export interface CostSaveData {
     lifetimeApiCalls: Record<string, number>
-    lifetimeSampledIntents: Record<string, number>
     lifetimeBandwidthBytes: number
 }
 
 export function createEmptyCostData(): CostSaveData {
     return {
         lifetimeApiCalls: {},
-        lifetimeSampledIntents: {},
         lifetimeBandwidthBytes: 0,
     }
 }
@@ -72,7 +68,6 @@ interface CostLineItem {
     label: string
     cost: number
     count: number
-    sampled: boolean
 }
 
 export interface CostBreakdown {
@@ -81,34 +76,21 @@ export interface CostBreakdown {
     bandwidthCost: number
     totalCost: number
     lifetimeCost: number
-    isSampled: boolean
-    totalSampledIntents: number
 }
 
 type CostUpdateCallback = (breakdown: CostBreakdown) => void
-
-const SAMPLED_EVENT_LABELS: Record<string, string> = {
-    window: "Window Opens",
-    funnel: "Funnel Steps",
-    ab_assign: "A/B Impressions",
-    ab_convert: "A/B Conversions",
-    perf: "Perf Metrics",
-}
 
 // ─── Tracker ────────────────────────────────────────────────────────────────
 
 export class SessionCostTracker {
     // Session-only counters (reset each page load)
     private sessionApiCalls: Map<string, number> = new Map()
-    private sessionSampledIntents: Map<string, number> = new Map()
     private sessionBandwidthBytes = 0
 
     // Lifetime counters (restored from save, accumulated across sessions)
     private prevLifetimeApiCalls: Map<string, number> = new Map()
-    private prevLifetimeSampledIntents: Map<string, number> = new Map()
     private prevLifetimeBandwidthBytes = 0
 
-    private isSampled = false
     private listeners: CostUpdateCallback[] = []
     private onDirty: (() => void) | null = null
 
@@ -116,15 +98,8 @@ export class SessionCostTracker {
     private firedTiers: Set<string> = new Set()
 
     constructor() {
-        try {
-            this.isSampled = isClientSampled(getVisitorId())
-        } catch {
-            this.isSampled = false
-        }
-
         this.interceptFetch()
         this.measureBandwidth()
-        this.listenForAnalyticsIntents()
     }
 
     public setDirtyCallback(fn: () => void): void {
@@ -143,17 +118,8 @@ export class SessionCostTracker {
             lifetimeApiCalls[k] = (lifetimeApiCalls[k] ?? 0) + v
         }
 
-        const lifetimeSampledIntents: Record<string, number> = {}
-        for (const [k, v] of this.prevLifetimeSampledIntents) {
-            lifetimeSampledIntents[k] = v
-        }
-        for (const [k, v] of this.sessionSampledIntents) {
-            lifetimeSampledIntents[k] = (lifetimeSampledIntents[k] ?? 0) + v
-        }
-
         return {
             lifetimeApiCalls,
-            lifetimeSampledIntents,
             lifetimeBandwidthBytes:
                 this.prevLifetimeBandwidthBytes + this.sessionBandwidthBytes,
         }
@@ -166,13 +132,6 @@ export class SessionCostTracker {
         if (data.lifetimeApiCalls) {
             for (const [k, v] of Object.entries(data.lifetimeApiCalls)) {
                 this.prevLifetimeApiCalls.set(k, v)
-            }
-        }
-
-        this.prevLifetimeSampledIntents.clear()
-        if (data.lifetimeSampledIntents) {
-            for (const [k, v] of Object.entries(data.lifetimeSampledIntents)) {
-                this.prevLifetimeSampledIntents.set(k, v)
             }
         }
 
@@ -212,7 +171,7 @@ export class SessionCostTracker {
             const entry = API_COST_MAP[methodKey] ?? API_COST_MAP[pathname]
             if (entry) {
                 if (entry.isAnalytics && method === "POST") {
-                    recordAnalyticsPost(init, methodKey)
+                    recordAnalyticsPost(methodKey)
                 } else {
                     recordApiCall(
                         API_COST_MAP[methodKey] ? methodKey : pathname
@@ -224,43 +183,14 @@ export class SessionCostTracker {
         }
     }
 
-    private recordAnalyticsPost(init?: RequestInit, key?: string): void {
-        try {
-            // SAFETY: init.body is our own serialized analytics payload
-            const body: Record<string, unknown> | null =
-                typeof init?.body === "string"
-                    ? (JSON.parse(init.body) as Record<string, unknown>)
-                    : null
-            const eventType = body?.type as string | undefined
-
-            if (eventType === "pageview") {
-                this.recordApiCall(key ?? "/api/analytics:POST")
-            }
-        } catch {
-            this.recordApiCall(key ?? "/api/analytics:POST")
-        }
-    }
-
-    private listenForAnalyticsIntents(): void {
-        onAppEvent("analytics:intent", (detail) => {
-            this.recordSampledIntent(detail.type)
-        })
-    }
-
-    private recordSampledIntent(eventType: string): void {
-        const current = this.sessionSampledIntents.get(eventType) ?? 0
-        this.sessionSampledIntents.set(eventType, current + 1)
-        this.emit()
+    private recordAnalyticsPost(key?: string): void {
+        this.recordApiCall(key ?? "/api/analytics:POST")
     }
 
     private recordApiCall(pathname: string): void {
         const current = this.sessionApiCalls.get(pathname) ?? 0
         this.sessionApiCalls.set(pathname, current + 1)
         this.emit()
-    }
-
-    public recordNonCriticalAnalyticsIntent(eventType = "unknown"): void {
-        this.recordSampledIntent(eventType)
     }
 
     // ── Bandwidth ─────────────────────────────────────────────────────────
@@ -306,13 +236,11 @@ export class SessionCostTracker {
 
     private computeCostForCounters(
         apiCalls: Map<string, number>,
-        sampledIntents: Map<string, number>,
         bandwidthBytes: number
     ): {
         items: CostLineItem[]
         bandwidthCost: number
         total: number
-        totalSampledIntents: number
     } {
         const items: CostLineItem[] = []
 
@@ -328,27 +256,6 @@ export class SessionCostTracker {
                 label: entry.label,
                 cost,
                 count,
-                sampled: false,
-            })
-        }
-
-        const sampleRate = ANALYTICS_CONFIG.sampleRate
-        const costPerSampledCall =
-            COST_PER_INVOCATION +
-            (API_COST_MAP["/api/analytics:POST"]?.redisCommands ?? 2) *
-                COST_PER_REDIS_COMMAND
-        let totalSampledIntents = 0
-
-        for (const [eventType, count] of sampledIntents.entries()) {
-            totalSampledIntents += count
-            const normalizedCount = count * sampleRate
-            const cost = normalizedCount * costPerSampledCall
-            const label = SAMPLED_EVENT_LABELS[eventType] ?? eventType
-            items.push({
-                label,
-                cost,
-                count,
-                sampled: true,
             })
         }
 
@@ -356,14 +263,13 @@ export class SessionCostTracker {
         const total =
             items.reduce((sum, item) => sum + item.cost, 0) + bandwidthCost
 
-        return { items, bandwidthCost, total, totalSampledIntents }
+        return { items, bandwidthCost, total }
     }
 
     public getBreakdown(): CostBreakdown {
         // Session cost (current page load only)
         const session = this.computeCostForCounters(
             this.sessionApiCalls,
-            this.sessionSampledIntents,
             this.sessionBandwidthBytes
         )
 
@@ -372,16 +278,11 @@ export class SessionCostTracker {
         for (const [k, v] of this.sessionApiCalls) {
             mergedApiCalls.set(k, (mergedApiCalls.get(k) ?? 0) + v)
         }
-        const mergedSampledIntents = new Map(this.prevLifetimeSampledIntents)
-        for (const [k, v] of this.sessionSampledIntents) {
-            mergedSampledIntents.set(k, (mergedSampledIntents.get(k) ?? 0) + v)
-        }
         const mergedBandwidth =
             this.prevLifetimeBandwidthBytes + this.sessionBandwidthBytes
 
         const lifetime = this.computeCostForCounters(
             mergedApiCalls,
-            mergedSampledIntents,
             mergedBandwidth
         )
 
@@ -391,8 +292,6 @@ export class SessionCostTracker {
             bandwidthCost: session.bandwidthCost,
             totalCost: session.total,
             lifetimeCost: lifetime.total,
-            isSampled: this.isSampled,
-            totalSampledIntents: session.totalSampledIntents,
         }
     }
 
