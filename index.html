@@ -279,7 +279,7 @@
             const HDDS = [
                 "IDE Primary: C:\\ (WELT filesystem)",
                 "ATA-33: Fatitech Industries (S/N: ????????)",
-                'HDD: C:\\WINDOWS\\system32 (7 files)',
+                "WELT: C:\\ (WELT filesystem, quaternary)",
                 "SCSI-0: 120MB (formatted as 2TB)",
                 '3.5" Floppy (quaternary formatted)',
             ]
@@ -320,11 +320,11 @@
                 "VERNEINUNG...",
             ]
             const BOOT_PATHS = [
-                "Executing C:\\WINDOWS\\system32\\boot.welt...",
-                "Loading C:\\WINDOWS\\system32\\config.welt...",
+                "Executing C:\\DAS\\boot.welt...",
+                "Loading DAS configuration from C:\\DAS\\config.welt...",
                 "ERWACHE... booting from boot.welt...",
                 "Booting from whatever boot.welt says...",
-                "Booting from C:\\WINDOWS\\system32\\...",
+                "Booting DAS from WELT partition...",
             ]
             const LOADING_TEXTS = [
                 [
@@ -343,9 +343,9 @@
                     "Ready",
                 ],
                 [
-                    "Mounting C:\\...",
-                    "Unmounting C:\\...",
-                    "Remounting C:\\...",
+                    "Mounting WELT partition...",
+                    "Unmounting WELT partition...",
+                    "Remounting...",
                 ],
                 ["Loading...", "Starting...", "KERNEL OK"],
             ]
