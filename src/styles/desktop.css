@@ -427,15 +427,6 @@ body {
     padding-bottom: 3px;
 }
 
-.cost-row-sampled .cost-label {
-    color: var(--theme-text-secondary);
-    font-style: italic;
-}
-
-.cost-row-sampled .cost-value {
-    color: var(--theme-text-secondary);
-}
-
 .cost-lottery {
     margin-top: 8px;
     font-size: 13px;

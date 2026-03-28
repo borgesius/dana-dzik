@@ -52,10 +52,7 @@ export class CostWidget {
     }
 
     private renderTooltip(breakdown: CostBreakdown): string {
-        const alwaysTracked = breakdown.items.filter((i) => !i.sampled)
-        const sampled = breakdown.items.filter((i) => i.sampled)
-
-        const alwaysRows = alwaysTracked
+        const rows = breakdown.items
             .map((item) => {
                 const costStr = this.formatCostValue(item.cost)
                 return `<div class="cost-row"><span class="cost-label">${item.label} ×${item.count}</span><span class="cost-value">${costStr}</span></div>`
@@ -65,21 +62,6 @@ export class CostWidget {
         const mbStr = (breakdown.bandwidthBytes / (1024 * 1024)).toFixed(2)
         const bwCostStr = this.formatCostValue(breakdown.bandwidthCost)
         const bandwidthRow = `<div class="cost-row"><span class="cost-label">Bandwidth ~${mbStr} MB</span><span class="cost-value">${bwCostStr}</span></div>`
-
-        const sampledSection =
-            sampled.length > 0
-                ? `<div class="cost-section-header">Sampled (1%)</div>` +
-                  sampled
-                      .map((item) => {
-                          const costStr = this.formatCostValue(item.cost)
-                          return `<div class="cost-row cost-row-sampled"><span class="cost-label">${item.label} ×${item.count}</span><span class="cost-value">${costStr}</span></div>`
-                      })
-                      .join("")
-                : ""
-
-        const lotteryHtml = breakdown.isSampled
-            ? `<div class="cost-lottery cost-blink">🎰 YOU WON THE LOTTERY</div>`
-            : ""
 
         const sessionStr = this.formatCostValue(breakdown.totalCost)
         const lifetimeStr = this.formatCostValue(breakdown.lifetimeCost)
@@ -92,10 +74,8 @@ export class CostWidget {
             <div class="cost-title">Normalized User Cost</div>
             <div class="cost-divider"></div>
             <div class="cost-section-header">This Session</div>
-            ${alwaysRows}
+            ${rows}
             ${bandwidthRow}
-            ${sampledSection}
-            ${lotteryHtml}
             <div class="cost-total-divider"></div>
             <div class="cost-row"><span class="cost-label">Session</span><span class="cost-value">-${sessionStr}</span></div>
             <div class="cost-total">-${lifetimeStr} lifetime :(</div>

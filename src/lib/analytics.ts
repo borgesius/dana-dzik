@@ -1,4 +1,3 @@
-import { ANALYTICS_CONFIG } from "../config/analytics"
 import type { RoutableWindow } from "../config/routing"
 import { apiFetch, apiPost } from "./api/client"
 
@@ -85,23 +84,6 @@ interface AnalyticsEvent {
     windowId?: string
     funnelStep?: string
     variant?: string
-}
-
-// ─── Hashing & Sampling ────────────────────────────────────────────────────
-//     hashString and isClientSampled are kept as pure utilities used by
-//     sessionCost.ts for cost-tracking sampling.
-
-export function hashString(value: string): number {
-    let hash = 0
-    for (let i = 0; i < value.length; i++) {
-        hash = ((hash << 5) - hash + value.charCodeAt(i)) | 0
-    }
-    return Math.abs(hash)
-}
-
-export function isClientSampled(visitorId: string): boolean {
-    const { sampleRate } = ANALYTICS_CONFIG
-    return hashString(visitorId) % 10_000 < sampleRate * 10_000
 }
 
 // ─── Visitor ID ─────────────────────────────────────────────────────────────

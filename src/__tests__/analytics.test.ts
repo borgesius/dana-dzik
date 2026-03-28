@@ -7,8 +7,6 @@ import {
     getAbVariant,
     getVariantPhoto,
     getVisitorId,
-    hashString,
-    isClientSampled,
     PHOTO_VARIANTS,
     trackAbConversion,
     trackFunnelStep,
@@ -42,50 +40,6 @@ describe("Analytics", () => {
             expect(ids).toContain("B")
             expect(ids).toContain("C")
             expect(ids).toContain("D")
-        })
-    })
-
-    describe("hashString", () => {
-        it("returns a non-negative integer", () => {
-            const hash = hashString("test")
-            expect(hash).toBeGreaterThanOrEqual(0)
-            expect(Number.isInteger(hash)).toBe(true)
-        })
-
-        it("is deterministic", () => {
-            expect(hashString("hello")).toBe(hashString("hello"))
-        })
-
-        it("produces different hashes for different inputs", () => {
-            expect(hashString("alpha")).not.toBe(hashString("beta"))
-        })
-
-        it("handles empty string", () => {
-            expect(hashString("")).toBe(0)
-        })
-    })
-
-    describe("isClientSampled", () => {
-        it("returns a boolean", () => {
-            expect(typeof isClientSampled("any-id")).toBe("boolean")
-        })
-
-        it("is deterministic for the same visitor ID", () => {
-            const id = "stable-id-123"
-            const result1 = isClientSampled(id)
-            const result2 = isClientSampled(id)
-            expect(result1).toBe(result2)
-        })
-
-        it("samples roughly 0.1% of visitors", () => {
-            let sampled = 0
-            const total = 100_000
-            for (let i = 0; i < total; i++) {
-                if (isClientSampled(`visitor-${i}`)) sampled++
-            }
-            const rate = sampled / total
-            expect(rate).toBeGreaterThan(0)
-            expect(rate).toBeLessThan(0.01)
         })
     })
 

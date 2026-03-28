@@ -11,7 +11,6 @@ const COST_PER_BYTE = 0.0004 / (1024 * 1024)
 
 vi.mock("../lib/analytics", () => ({
     getVisitorId: (): string => "test-visitor",
-    isClientSampled: (): boolean => false,
 }))
 
 describe("SessionCostTracker", () => {
@@ -60,64 +59,30 @@ describe("SessionCostTracker", () => {
         const stravaItem = breakdown.items.find((i) => i.label === "Strava")
         expect(stravaItem).toBeDefined()
         expect(stravaItem!.count).toBe(1)
-        expect(stravaItem!.sampled).toBe(false)
 
         const expectedCost = COST_PER_INVOCATION + 2 * COST_PER_REDIS_COMMAND
         expect(stravaItem!.cost).toBeCloseTo(expectedCost, 10)
         expect(mockFetch).toHaveBeenCalledTimes(1)
     })
 
-    it("normalizes analytics non-critical events by type", async () => {
+    it("records every analytics POST as a real API call", async () => {
         const tracker = await createTracker()
 
-        tracker.recordNonCriticalAnalyticsIntent("window")
-        tracker.recordNonCriticalAnalyticsIntent("window")
-        tracker.recordNonCriticalAnalyticsIntent("funnel")
+        void window.fetch("http://localhost/api/analytics", {
+            method: "POST",
+            body: JSON.stringify({ type: "window", windowId: "about" }),
+        })
+        void window.fetch("http://localhost/api/analytics", {
+            method: "POST",
+            body: JSON.stringify({ type: "funnel", funnelStep: "engaged" }),
+        })
 
         const breakdown = tracker.getBreakdown()
-        const windowItem = breakdown.items.find(
-            (i) => i.sampled && i.label === "Window Opens"
+        const analyticsItem = breakdown.items.find(
+            (i) => i.label === "Pageview"
         )
-        const funnelItem = breakdown.items.find(
-            (i) => i.sampled && i.label === "Funnel Steps"
-        )
-        expect(windowItem).toBeDefined()
-        expect(windowItem!.count).toBe(2)
-        expect(funnelItem).toBeDefined()
-        expect(funnelItem!.count).toBe(1)
-        expect(breakdown.totalSampledIntents).toBe(3)
-
-        const costPerCall = COST_PER_INVOCATION + 2 * COST_PER_REDIS_COMMAND
-        expect(windowItem!.cost).toBeCloseTo(2 * 0.01 * costPerCall, 10)
-    })
-
-    it("tracks sampled intents via analytics:intent event", async () => {
-        await createTracker()
-
-        document.dispatchEvent(
-            new CustomEvent("analytics:intent", {
-                detail: { type: "ab_assign" },
-            })
-        )
-        document.dispatchEvent(
-            new CustomEvent("analytics:intent", {
-                detail: { type: "perf" },
-            })
-        )
-
-        const mod = await import("../lib/sessionCost")
-        const tracker = mod.getSessionCostTracker()
-        expect(tracker).toBeNull()
-
-        const freshTracker = await createTracker()
-        freshTracker.recordNonCriticalAnalyticsIntent("ab_assign")
-
-        const breakdown = freshTracker.getBreakdown()
-        const abItem = breakdown.items.find(
-            (i) => i.label === "A/B Impressions"
-        )
-        expect(abItem).toBeDefined()
-        expect(abItem!.sampled).toBe(true)
+        expect(analyticsItem).toBeDefined()
+        expect(analyticsItem!.count).toBe(2)
     })
 
     it("fires session-cost:cost-1 when first tier threshold is crossed", async () => {
@@ -128,7 +93,6 @@ describe("SessionCostTracker", () => {
         // Deserialize with enough lifetime cost to cross cost-1 ($0.001)
         tracker.deserialize({
             lifetimeApiCalls: {},
-            lifetimeSampledIntents: {},
             lifetimeBandwidthBytes: 3 * 1024 * 1024, // ~3MB = ~$0.0012
         })
 
@@ -149,7 +113,6 @@ describe("SessionCostTracker", () => {
         // Deserialize with enough lifetime cost to cross cost-1 ($0.001) and cost-2 ($0.005)
         tracker.deserialize({
             lifetimeApiCalls: {},
-            lifetimeSampledIntents: {},
             lifetimeBandwidthBytes: 15 * 1024 * 1024, // ~15MB = ~$0.006
         })
 
@@ -169,7 +132,6 @@ describe("SessionCostTracker", () => {
         const tracker = await createTracker()
         tracker.deserialize({
             lifetimeApiCalls: {},
-            lifetimeSampledIntents: {},
             lifetimeBandwidthBytes: 3 * 1024 * 1024,
         })
 
@@ -196,12 +158,6 @@ describe("SessionCostTracker", () => {
         expect(lastCall[0].totalCost).toBeGreaterThan(0)
     })
 
-    it("reports isSampled from analytics module", async () => {
-        const tracker = await createTracker()
-        const breakdown = tracker.getBreakdown()
-        expect(breakdown.isSampled).toBe(false)
-    })
-
     describe("serialization", () => {
         it("serializes lifetime totals (previous + current session)", async () => {
             const tracker = await createTracker()
@@ -209,7 +165,6 @@ describe("SessionCostTracker", () => {
             // Restore some previous lifetime data
             tracker.deserialize({
                 lifetimeApiCalls: { "/api/strava": 5 },
-                lifetimeSampledIntents: { window: 10 },
                 lifetimeBandwidthBytes: 1000,
             })
 
@@ -218,7 +173,6 @@ describe("SessionCostTracker", () => {
 
             const saved = tracker.serialize()
             expect(saved.lifetimeApiCalls["/api/strava"]).toBe(6) // 5 previous + 1 session
-            expect(saved.lifetimeSampledIntents["window"]).toBe(10)
             expect(saved.lifetimeBandwidthBytes).toBe(1000) // no new bandwidth in test
         })
 
@@ -227,7 +181,6 @@ describe("SessionCostTracker", () => {
 
             tracker.deserialize({
                 lifetimeApiCalls: {},
-                lifetimeSampledIntents: {},
                 lifetimeBandwidthBytes: 1024 * 1024, // 1MB = $0.0004
             })
 
