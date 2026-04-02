@@ -1,3 +1,9 @@
+## [3.1.3](https://github.com/borgesius/dana-dzik/compare/v3.1.2...v3.1.3) (2026-04-02)
+
+### Bug Fixes
+
+* linttt ([e06021d](https://github.com/borgesius/dana-dzik/commit/e06021d098fc87e7b8bea9f820a8cc39024afa58))
+
 ## [3.1.2](https://github.com/borgesius/dana-dzik/compare/v3.1.1...v3.1.2) (2026-04-02)
 
 ### Bug Fixes
