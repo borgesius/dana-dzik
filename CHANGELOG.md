@@ -1,3 +1,9 @@
+## [3.1.2](https://github.com/borgesius/dana-dzik/compare/v3.1.1...v3.1.2) (2026-04-02)
+
+### Bug Fixes
+
+* bup: ([7adadf3](https://github.com/borgesius/dana-dzik/commit/7adadf3e711c6535f9482a36da47b317e2e72cef))
+
 ## [3.1.1](https://github.com/borgesius/dana-dzik/compare/v3.1.0...v3.1.1) (2026-03-19)
 
 ### Bug Fixes
