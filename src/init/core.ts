@@ -1,11 +1,7 @@
 import { ROUTABLE_WINDOWS, type RoutableWindow } from "../config/routing"
 import { setupErrorHandlers } from "../core/ErrorHandler"
 import { getAchievementManager } from "../lib/achievements/AchievementManager"
-import {
-    getAbVariant,
-    trackFunnelStep,
-    trackPageview,
-} from "../lib/analytics"
+import { getAbVariant, trackFunnelStep, trackPageview } from "../lib/analytics"
 import { getCollectionManager } from "../lib/autobattler/CollectionManager"
 import { setLineSlotProvider } from "../lib/autobattler/shop"
 import { initCalmMode } from "../lib/calmMode"

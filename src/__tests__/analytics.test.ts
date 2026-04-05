@@ -14,7 +14,6 @@ import {
     trackWindowOpen,
 } from "../lib/analytics"
 
-
 describe("Analytics", () => {
     beforeEach(() => {
         localStorage.clear()
@@ -249,5 +248,4 @@ describe("Analytics", () => {
             expect(headers["X-Visitor-Id"].length).toBeGreaterThan(0)
         })
     })
-
 })

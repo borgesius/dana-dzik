@@ -75,12 +75,7 @@ export const PHOTO_VARIANTS = [
 export type PhotoVariant = (typeof PHOTO_VARIANTS)[number]["id"]
 
 interface AnalyticsEvent {
-    type:
-        | "pageview"
-        | "window"
-        | "funnel"
-        | "ab_assign"
-        | "ab_convert"
+    type: "pageview" | "window" | "funnel" | "ab_assign" | "ab_convert"
     windowId?: string
     funnelStep?: string
     variant?: string
