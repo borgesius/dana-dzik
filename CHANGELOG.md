@@ -1,3 +1,9 @@
+## [3.1.4](https://github.com/borgesius/dana-dzik/compare/v3.1.3...v3.1.4) (2026-04-05)
+
+### Bug Fixes
+
+* prettier formatting to pass lint ([0fd3926](https://github.com/borgesius/dana-dzik/commit/0fd392606228e9c327e45d7d371167f20a6fe38e))
+
 ## [3.1.3](https://github.com/borgesius/dana-dzik/compare/v3.1.2...v3.1.3) (2026-04-02)
 
 ### Bug Fixes
